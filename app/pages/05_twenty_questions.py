@@ -41,7 +41,7 @@ def cached_mushroom_scores():
 def _():
     lesson.say(
         """
-In Chapter 3, a straight line failed on circles and XOR. We had two escapes:
+Time for a model with a clipboard. In Chapter 3, a straight line failed on circles and XOR. We had two escapes:
 **invent new features**, or use a **bendy model**. This chapter is the first
 bendy model: it bends by asking questions.
 """
@@ -103,7 +103,7 @@ def _():
         "Which first question will sklearn put at the top of its tree?",
         choices,
         correct=choices.index(winner),
-        why="It tries the same kind of split table and picks the question with the least mix left over.",
+        why="It builds the split table like a sorting tray: pour rows into buckets, measure the leftover mix, then choose the question with the smallest mess.",
         key="ch05_first_split",
     )
     if guess is None:
@@ -115,7 +115,7 @@ def _():
     lesson.show(fig)
     lesson.look_for("the top box. It matches the least-mixed first question from the table.")
     first = creature_feature_names()[int(model.tree_.feature[0])]
-    st.info(f"The computer's first split is **{first}** too.")
+    st.info(f"The computer's first split is **{first}** too. The split table did, as the adults apparently say, let him cook.")
 
 
 @lesson.step("A tree bends by making stairs", beat="play")
@@ -147,7 +147,7 @@ def _():
         "As a tree gets deeper and deeper, what usually happens to training score and test score?",
         ["Both rise forever", "Training can keep rising while test levels off or falls", "Both fall together"],
         correct=1,
-        why="A deep tree can make tiny boxes around training dots, including awkward dots that do not help on the next data.",
+        why="A deep tree can fence off tiny boxes around training dots, even oddball dots. Training score climbs; next-data score can skid because the boxes copied noise.",
         key="ch05_depth_gap",
     )
     if guess is None:

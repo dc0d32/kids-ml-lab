@@ -26,8 +26,8 @@ WORKBOOK = Workbook(
     chapter=9,
     title="Workbook · Escape Flatland",
     intro=(
-        "Real tables have word columns, blank cells, and lopsided answers. Work these out "
-        "on scrap paper, then check them here."
+        "Real tables bring word columns, blank cells, and lopsided answers. Work these out "
+        "on scrap paper; then this checker lights up the answer."
     ),
     questions=[
         Question(
@@ -36,8 +36,8 @@ WORKBOOK = Workbook(
             answer=1,
             table=WEATHER,
             why=(
-                "Thu's weather is storm, so the storm switch is 1. The other weather switches "
-                "for Thu are 0. One word turned into four yes/no switches."
+                "Thu's storm switch flips to 1. The other weather switches "
+                "for Thu stay 0. One word became four yes/no switches — click, click, click."
             ),
         ),
         Question(
@@ -47,7 +47,7 @@ WORKBOOK = Workbook(
             table=WEATHER,
             why=(
                 "Mon is clear, not rain. One-hot columns ask one tiny question each: 'is it this word?' "
-                "For rain on Monday, the answer is no, so the cell is 0."
+                "For rain on Monday, the answer is no, so the cell stays 0."
             ),
         ),
         Question(
@@ -60,8 +60,8 @@ WORKBOOK = Workbook(
             ],
             answer="The model may treat the numbers like a real ruler.",
             why=(
-                "If we use 1, 2, 3, 4, the model may believe storm is four times clear, or that "
-                "misty sits between clear and rain. Weather words do not always have that kind of ruler."
+                "If we use 1, 2, 3, 4, the model may treat the labels like ruler marks: storm four times clear, "
+                "misty halfway between clear and rain. Weather words do not carry that ruler."
             ),
         ),
         Question(
@@ -71,8 +71,8 @@ WORKBOOK = Workbook(
             table=LOPSIDED,
             tolerance=0.01,
             why=(
-                "It gets 8 out of 10 right, which is 80%. It learned nothing about the rows. "
-                "That is why every real model has to beat a boring baseline first."
+                "It gets 8 out of 10 right, which is 80%. It read zero rows and learned zero clues. "
+                "That is the trapdoor: every real model has to beat a boring baseline first."
             ),
         ),
         Question(
@@ -90,16 +90,16 @@ WORKBOOK = Workbook(
             kind="text",
             answer=["baseline", "the baseline", "baseline score"],
             why=(
-                "The baseline tells you what you get for free. A model that scores 82% sounds strong "
-                "until the most-common-answer baseline scores 80%."
+                "The baseline is the free score on the scoreboard. A model that scores 82% sounds strong "
+                "until the most-common-answer baseline already scores 80%."
             ),
         ),
         Question(
             prompt="You draft only one mushroom column. Which kind of column would you try first: smell, row number, or cap colour?",
             kind="open",
             why=(
-                "Smell is a smart first pick because some mushroom smells are strong clues. Row number is not a real trait. "
-                "Cap colour may help, but it is less direct. Feature drafting is making a bet, then checking it."
+                "Smell is a smart first pick because some mushroom smells are loud clues. Row number is not a real trait. "
+                "Cap colour may help, but it is less direct. Feature drafting is choosing a hunch, then testing it."
             ),
         ),
     ],

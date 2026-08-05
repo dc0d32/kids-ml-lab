@@ -7,13 +7,13 @@
 #
 # ---
 #
-# Hold up your hand and cast a shadow on a wall. Turn it. Some shadows tell you it is a
-# hand. Other shadows become a blob.
+# Hold up your hand and cast a shadow on a wall. Turn it. Some shadows shout hand. Other
+# shadows become a pancake blob.
 #
 # Choosing the angle is the whole of PCA.
 #
 # The goal is not to keep every fact. Squishing always throws something away. The goal is
-# to throw away the quiet directions first and keep the directions where points still look
+# to toss the quiet directions first and keep the directions where points still look
 # different from each other.
 
 # %%
@@ -53,7 +53,7 @@ use_house_style()
 #     D --> E[Check what stayed spread out]
 # ```
 #
-# Look at the last box. PCA judges a shadow by how much spread remains after the squish.
+# Look at the last box. PCA judges a shadow by how much spread survives the squish.
 #
 # > 🧸 **Little Kid Corner** — Use a flashlight and your hand. Turn your hand until the
 # > shadow gives the best clue.
@@ -114,7 +114,7 @@ plt.show()
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# Compress one digit to n components and rebuild it.
+# Compress one digit to n components and rebuild it. Watch the number turn ghostly, then readable again.
 
 # %%
 fig, curve = plot_reconstruction(index=8, n_components=12)
@@ -144,7 +144,7 @@ print("variance kept:", round(kept, 3))
 # %% [markdown]
 # Some digits still overlap. That matches the confusion-matrix idea from Chapter 17:
 # digits that tangled there often sit near or on top of each other here too. Two different
-# tools are agreeing about which digits look alike.
+# tools are agreeing about which digits look alike. Payoff!
 #
 # t-SNE is a different kind of squishing. It tries to keep neighbours together rather than
 # keeping global spread. It bends and stretches the map to make local neighbourhoods
@@ -180,7 +180,7 @@ print("first-component variance:", round(first_kept, 3))
 # 1. How many components before you can still read a digit?
 # 2. Which two digits stay tangled longest?
 # 3. Run PCA on penguins and decide whether the first component is basically size.
-# 4. 🧸 **Little Kid Corner:** Make hand shadows. Which angle tells the best story?
+# 4. 🧸 **Little Kid Corner side quest:** Make hand shadows. Which angle tells the best story?
 #
 # ---
 # **Next up:** Chapter 22 · *The Bigram Babbler* — where counting letter pairs starts making words.

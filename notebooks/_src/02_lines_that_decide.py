@@ -25,7 +25,7 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
+# Flip the line from price tag to referee. Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
 #
 # Same line, new question: **which side?** A point on one side becomes blue. A
 # point on the other side becomes red. The model still computes a number first,
@@ -89,7 +89,7 @@ print("new b:", b_after)
 
 # %% [markdown]
 # Why does adding the point help? The score for that same point jumps from **-9**
-# to **7(6) + 6(5) - 19 = 53**. The point is now strongly on the red side.
+# to **7(6) + 6(5) - 19 = 53**. Wham — now the point is strongly on the red side!
 #
 # Changing **b** is different from changing **w**. It adds the same amount to every
 # point's score, so the boundary slides without turning.
@@ -181,7 +181,7 @@ print("blobs score:", model.score(X, y))
 # Now look at shapes where the ruler is in trouble. A perceptron keeps fixing the
 # first mistake it sees. If the data overlaps, or if the correct boundary must
 # bend, one fix can undo an earlier fix. Then the weights keep moving because zero
-# mistakes is not available.
+# mistakes is locked behind a wall.
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
@@ -193,12 +193,12 @@ plt.show()
 
 # %% [markdown]
 # Notice the leftover mistakes. The algorithm is not lazy; one straight line has
-# run out of road.
+# run out of road. The ruler hit the curb!
 
 # %% [markdown]
 # ## 🏆 Go further
 #
-# 1. **Beat the algorithm.** Find slider values with zero mistakes on blobs.
+# 1. **Beat the algorithm, no cap.** Find slider values with zero mistakes on blobs.
 # 2. **Set b to 0.** What can the line no longer do?
 # 3. **Make overlap.** Add noise and watch the perceptron fail to settle.
 # 4. 🧸 **Little Kid Corner:** Lay a pencil between two piles of toys. One side is red

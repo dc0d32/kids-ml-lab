@@ -7,7 +7,7 @@
 #
 # ---
 #
-# No new algorithm. This is the victory lap.
+# No new algorithm. This is the victory lap, the map spread on the table, and the safety check.
 
 # %%
 import matplotlib.pyplot as plt
@@ -20,18 +20,18 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# You started with a secret-rule game. You ended by training a tiny Transformer.
+# You opened with a secret-rule game. You ended by training a tiny Transformer.
 #
-# That is not a toy achievement. It is the map of modern machine learning, built piece by
-# piece with small numbers you could touch.
+# That is not a toy achievement. It is the map of modern machine learning, built brick by
+# brick with small numbers you could touch. Nice work!
 #
 # > 🧸 **Little Kid Corner** — You did not get one magic wand. You filled a backpack with
-# > tools. Now you know which tool to pull out.
+# > tools. Now you can reach in and pick the tool for the job.
 
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# **You have personally built:**
+# **You have personally built this backpack of tools. Shake it and it rattles:**
 #
 # - a linear model
 # - a perceptron trained by hand
@@ -49,7 +49,7 @@ use_house_style()
 # %% [markdown]
 # ## 👀 Take a look
 #
-# One picture of the whole course.
+# One picture of the whole course. Follow the roads like a treasure map.
 
 # %%
 def course_map_figure():
@@ -93,7 +93,7 @@ plt.show()
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# Where these ideas already are in your life.
+# Where these ideas already are in your life. The map keeps showing up in the wild.
 
 # %%
 uses = pd.DataFrame(
@@ -116,27 +116,30 @@ uses
 # The honest limits:
 #
 # **Hallucination.** Your Chapter 24 model was never trained to be right. It was trained to
-# produce likely-looking text. Looking right and being right are different targets.
+# produce likely-looking text. Looking right and being right are different targets, so
+# important answers need checking.
 #
-# **Bias.** A model copies its data. Chapter 10 already warned you about lopsided examples.
+# **Bias.** A model copies patterns from its data. If the examples are lopsided, missing
+# people, or unfair, that shape can come along for the ride. Chapter 10 gave you the
+# warning lights.
 #
-# **Confidently wrong.** Out-of-distribution inputs can still get a confident answer.
-# Chapter 00 and Chapter 10 both showed that.
+# **Confidently wrong.** Out-of-distribution inputs can still get confident answers.
+# Chapter 00 and Chapter 10 both showed models stepping past the edge of the map.
 #
-# **No world inside.** A language model knows patterns in text. It does not know the world
-# the way you do.
+# **No world inside.** A language model knows patterns in text. It does not have a lived-in
+# world the way you do.
 #
 # Being smart about AI:
 #
 # - Check things that matter.
 # - Treat it as a tool, not an oracle.
-# - Do not put private stuff into it.
-# - Using it to learn is great. Using it to avoid learning is a bad trade.
+# - Keep private stuff out of the machine.
+# - Using it to learn is great. Using it to dodge learning is a bad trade.
 
 # %% [markdown]
 # ## 🏆 Go further
 #
-# Ten weekend projects.
+# Ten weekend projects. Weekend side quest accepted.
 
 # %%
 projects = pd.DataFrame(
@@ -162,7 +165,7 @@ projects
 # scale: bigger batches, bigger models, more experiments before dinner.
 #
 # 🧸 **Little Kid Corner:** Pick one tool from the backpack and use it on something in your
-# own room.
+# own room. Tiny project, real sparks!
 
 # %%
 from kidsml import workbook
@@ -170,4 +173,4 @@ workbook.render(25)
 
 # %% [markdown]
 # ---
-# **Next up:** keep building. Tiny, personal projects beat giant plans.
+# **Next up:** keep building. Tiny, personal projects beat giant plans!

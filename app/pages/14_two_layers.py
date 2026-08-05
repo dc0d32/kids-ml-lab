@@ -51,7 +51,7 @@ def overfit_pair():
 def _():
     lesson.say(
         """
-XOR is back because it is the test that tells us whether Part 3 worked.
+XOR is back, the tiny checkerboard that keeps catching one-neuron models in the act.
 
 One neuron cannot solve it: Chapter 3 proved one straight line cannot put opposite corners
 together. The escape route was inventing better features.
@@ -70,7 +70,7 @@ graph LR
 """,
         height=290,
     )
-    lesson.look_for("the middle layer. It invents new reports before the final neuron decides.")
+    lesson.look_for("the middle layer. It invents new reports before the final neuron makes the call.")
 
 
 @lesson.step("Make better features by hand", beat="byhand")
@@ -78,7 +78,7 @@ def _():
     lesson.say(
         """
 We will make two hidden features by hand: **OR-ish** and **AND-ish**. This table is the
-whole XOR story in miniature.
+whole XOR story shrunk to four dots.
 
 In the original `x1, x2` square, the red points sit in opposite corners.
 """
@@ -87,7 +87,7 @@ In the original `x1, x2` square, the red points sit in opposite corners.
         {"x1": [0, 0, 1, 1], "x2": [0, 1, 0, 1], "OR-ish": [0, 1, 1, 1], "AND-ish": [0, 0, 0, 1], "XOR": [0, 1, 1, 0]}
     )
     st.dataframe(xor_table, hide_index=True, width="content")
-    lesson.look_for("the two red rows. In the new columns, they can land together.")
+    lesson.look_for("the two red rows. In the new columns, they land together like two magnets clicking shut.")
 
 
 @lesson.step("Original space versus hidden space", beat="byhand")
@@ -114,8 +114,8 @@ def _():
     axes[1].set_ylim(-0.3, 1.3)
     axes[1].set_aspect("equal")
     lesson.show(fig)
-    lesson.look_for("the right picture: the red rows are together, and one straight line can separate them.")
-    lesson.aha("The hidden layer did not bend the output line. It moved the points into a new space where one straight line works.")
+    lesson.look_for("the right picture: the red rows are together, and one straight line can slice them away from blue.")
+    lesson.aha("The hidden layer did not bend the output line. It moved the points into a new space where one straight line works. Same ruler, better map!")
 
 
 @lesson.step("Predict the learned hidden space", beat="seeit")
@@ -146,7 +146,7 @@ def _():
         }
     )
     st.dataframe(table.round(3), hide_index=True, width="stretch")
-    lesson.look_for("hidden rows with the same XOR answer. They are no longer trapped in opposite corners.")
+    lesson.look_for("hidden rows with the same XOR answer. They are no longer trapped in opposite corners; the map has been folded.")
 
 
 @lesson.step("Plot the hidden space", beat="seeit")
@@ -172,7 +172,7 @@ def _():
         "Why do the three hidden neurons learn different lines?",
         ["They start with small random differences", "The output neuron orders them by name", "They all get the same gradients forever"],
         correct=0,
-        why="Small random starts give slightly different gradients, so the hidden jobs separate.",
+        why="Small random starts give slightly different gradients, so the hidden jobs peel apart.",
         key="ch13_hidden_lines_reason",
     )
     if guess is None:
@@ -197,7 +197,7 @@ def _():
 
 @lesson.step("Scrub the training", beat="play")
 def _():
-    lesson.say("Watch the hidden lines slide into place. This is the payoff: the features are learned, not typed by hand.")
+    lesson.say("Watch the hidden lines slide into place. This is the payoff: the features are learned, not typed by hand!")
     X_xor, y_xor, snaps = trained_xor_snapshots()
     knobs, picture = lesson.controls()
     with knobs:
@@ -208,7 +208,7 @@ def _():
         fig, ax = lesson.figure(5.2, 4.5)
         boundary_with_hidden(model, X_xor, y_xor, ax=ax, title="Training snapshot", steps=180)
         lesson.show(fig)
-    lesson.look_for("lines that rotate or slide as loss falls. They are becoming useful hidden features.")
+    lesson.look_for("lines that rotate or slide as loss falls. They are becoming useful hidden features, like scouts finding better lookout spots.")
 
 
 @lesson.step("Play with hidden neurons", beat="play")
@@ -228,7 +228,7 @@ def _():
         if hidden <= 8:
             hidden_lines(ax, play_model, labels=False)
         lesson.show(fig)
-    lesson.look_for("how extra hidden lines give the final boundary more ways to bend.")
+    lesson.look_for("how extra hidden lines give the final boundary more elbows and corners to work with.")
 
 
 @lesson.step("Watch the loss curve", beat="play")
@@ -250,14 +250,14 @@ def _():
 
 @lesson.step("More wiggle is a trade", beat="forreal")
 def _():
-    lesson.say("More hidden neurons give the network more ways to wiggle. That can help with real patterns, and it can over-study noise.")
+    lesson.say("More hidden neurons give the network more ways to wiggle around the dots. That can help with real patterns, and it can over-study noise.")
     X_over, y_over, small, big = overfit_pair()
     fig, axes = plt.subplots(1, 2, figsize=(10.2, 4.4))
     for ax, m, title in zip(axes, [small, big], ["3 hidden neurons: calmer", "8 hidden neurons: wobblier"]):
         decision_boundary(lambda G, model=m: model.predict_proba(G), X_over, y_over, ax=ax, steps=180, title=title)
     lesson.show(fig)
-    lesson.look_for("the wobblier edge. Extra power can fit pattern or noise.")
-    lesson.careful("Chapter 15 is about telling helpful wiggle from over-studying.")
+    lesson.look_for("the wobblier edge. Extra power can trace a real pattern or chase noise around the playground.")
+    lesson.careful("Chapter 15 is about telling helpful wiggle from over-studying before the boundary gets dramatic.")
 
 
 @lesson.step("Check yourself", beat="challenge")
@@ -270,14 +270,14 @@ def _():
     lesson.say(
         """
 1. **Smallest XOR solver.** What is the fewest hidden neurons that can solve XOR?
-2. **Try spiral.** How many hidden neurons does it need before it looks decent?
+2. **Try spiral.** How many hidden neurons does it need before it starts curling the right way?
 3. **Set XOR weights by hand.** Use OR-ish and AND-ish to beat training.
-4. **Watch the lines.** Scrub the training slider and say what each hidden line learned.
+4. **Read the hidden lines.** Scrub the training slider and say what each hidden line learned.
 """
     )
 
     lesson.kid_corner(
-        "Three friends, one job. Two of them each watch one thing: *are you left of the tree?* and *are you past the bench?* Neither knows the answer alone. The third friend hears both replies and calls it. That is a hidden layer."
+        "Three friends, one job. Two of them each watch one thing: *are you left of the tree?* and *are you past the bench?* Neither knows the answer alone. The third friend hears both replies and calls it. That is a hidden layer: little reports become one decision."
     )
 
 

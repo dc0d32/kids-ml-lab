@@ -1,4 +1,4 @@
-"""Chapter 17 workbook · Pictures Are Just Numbers."""
+"""Chapter 17 workbook · Pictures Are Numbers."""
 
 import pandas as pd
 
@@ -37,7 +37,7 @@ WORKBOOK = Workbook(
             answer=3,
             table=TINY_THREE,
             why=(
-                "It looks like a 3 because the high numbers make the stroke. The picture is not hidden behind the numbers; "
+                "It looks like a 3 because the high numbers build the strokes. The picture is not hidden behind the numbers; "
                 "the numbers are the picture."
             ),
         ),
@@ -67,7 +67,7 @@ WORKBOOK = Workbook(
             tolerance=0.5,
             why=(
                 "One million pixels, and each colour pixel has red, green, and blue. "
-                "That makes 3,000,000 numbers before the model has learned anything."
+                "That blasts up to 3,000,000 numbers before the model has learned anything."
             ),
         ),
         Question(
@@ -94,7 +94,7 @@ WORKBOOK = Workbook(
             choices=["real 9s were guessed as 4s", "real 4s were guessed as 9s", "the model saw no 9s"],
             answer="real 9s were guessed as 4s",
             why=(
-                "Rows are true answers and columns are guesses, like in Chapter 09. Off-diagonal cells are the model's mix-ups."
+                "Rows are true answers and columns are guesses, like in Chapter 09. Off-diagonal cells are the model's mix-up spots."
             ),
         ),
     ],

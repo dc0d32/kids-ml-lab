@@ -57,13 +57,13 @@ def comparison_numbers():
 def _():
     lesson.say(
         """
-The **T** in GPT stands for **Transformer**. Yours will be tiny, and it will read nursery rhymes and fables, but it is the same idea.
+Here comes the shiny machine. The **T** in GPT stands for **Transformer**. Yours is tiny, and it reads nursery rhymes and fables, but the idea is the same.
 
-The game still has not changed: **guess the next letter**.
+The game still has not changed: **guess the next letter**. New engine, same race!
 """
     )
     lesson.kid_corner(
-        "When you guess the next word in a story, you look back at the useful bits. Maybe the clue is nearby. Maybe it was two sentences ago."
+        "When you guess the next word in a story, your eyes zip back to useful clues. Maybe the clue is next door. Maybe it is two sentences back waving a tiny flag."
     )
 
 
@@ -71,9 +71,9 @@ The game still has not changed: **guess the next letter**.
 def _():
     lesson.say(
         """
-Before the mechanism, here is the question: **I am about to guess the next letter. Which earlier letters should I look at?**
+Before the mechanism, grab the real question: **I am about to guess the next letter. Which earlier letters should I look at?**
 
-In `the cat sat on the m`, the useful clue for the next letter might be far back. A fixed window of three cannot reach it.
+In `the cat sat on the m`, the useful clue may be far back, sitting on `cat`. A fixed window of three cannot reach that far.
 """
     )
     attention_toy = pd.DataFrame(
@@ -81,8 +81,8 @@ In `the cat sat on the m`, the useful clue for the next letter might be far back
         columns=["place", "attention weight tokens", "value number"],
     )
     st.dataframe(attention_toy, hide_index=True, width="content")
-    st.info("Weights 1/4, 2/4, 1/4 give a weighted average of 20. Attention mixes values using learned weights.")
-    lesson.jargon("query, key, value", "A position holds up a question, earlier positions wear labels, and the model copies more content from labels that match the question.")
+    st.info("Weights 1/4, 2/4, 1/4 make 10×1/4 + 20×2/4 + 30×1/4 = 20. Attention mixes value numbers using learned weights.")
+    lesson.jargon("query, key, value", "One position holds up a question, earlier positions wear labels, and the model copies more content from labels that match the question.")
 
 
 @lesson.step("The mask stops cheating", beat="seeit")
@@ -91,7 +91,7 @@ def _():
         "What happens if a position is allowed to peek at future letters while training?",
         ["It learns honestly", "It cheats and the score looks too good", "It forgets older letters"],
         correct=1,
-        why="The future contains the answer. That is data leakage from Chapter 10 in a new costume.",
+        why="The future contains the answer. That is data leakage from Chapter 10 wearing a new costume.",
         key="ch23_mask",
     )
     if guess is None:
@@ -102,13 +102,13 @@ def _():
     ax.set_xlabel("place it wants to look")
     ax.set_ylabel("place making a guess")
     lesson.show(fig)
-    lesson.look_for("the blank upper triangle. Those are future places the guesser is not allowed to inspect.")
-    lesson.careful("A position may only look backward. If it could see forward, it would peek at the answer.")
+    lesson.look_for("the blank upper triangle. Those are future places sealed behind glass.")
+    lesson.careful("A position may only look backward. If it could see forward, it would peek at the answer key.")
 
 
 @lesson.step("The four attention lines", beat="seeit")
 def _():
-    lesson.say("Here is the mechanism that uses the mask. Scores become weights, then weights mix values.")
+    lesson.say("Here is the mechanism with the panels off. Scores become weights; weights mix values; the mask blocks future peeking.")
     st.code(
         """
 scores = query @ key.T / sqrt(head_size)
@@ -118,12 +118,12 @@ out = weights @ value
 """,
         language="python",
     )
-    lesson.look_for("the mask line. It crushes future-looking scores before softmax can turn them into attention.")
+    lesson.look_for("the mask line. It squashes future-looking scores before softmax can turn them into attention.")
 
 
 @lesson.step("Inspect live attention", beat="play")
 def _():
-    lesson.say("A trained tiny Transformer has several attention heads. Pick one row and see which earlier characters it leaned on.")
+    lesson.say("A trained tiny Transformer has several attention heads. Pick one row and watch which earlier characters it leaned on.")
     bundle = trained_transformer()
     made = generate_transformer(bundle, start="the ", temperature=0.9, length=160, seed=5)
     chars, heads = attention_snapshot(bundle, made)
@@ -140,17 +140,17 @@ def _():
         ax.set_xlabel("looked-at earlier character")
         ax.set_ylabel("character doing the looking")
         lesson.show(fig)
-        lesson.look_for("the highlighted row. Bright squares are earlier characters this position leaned on.")
+        lesson.look_for("the highlighted row. Bright squares are earlier characters this position grabbed as clues.")
     row = heads[head, position]
     order = np.argsort(row)[::-1][:5]
     leans = [f"{shown_char(chars[int(i)])} ({row[int(i)]:.2f})" for i in order]
     st.caption("This position leaned most on: " + ", ".join(leans))
-    st.caption("Tiny heads often attend to nearby letters or spaces. Do not force a story onto every square.")
+    st.caption("Tiny heads often attend to nearby letters or spaces. Do not force a story onto every square; that is attention glazing in a lab coat.")
 
 
 @lesson.step("Generate with the Transformer", beat="play")
 def _():
-    lesson.say("Now use the model as a text machine. Temperature still controls safe versus weird choices.")
+    lesson.say("Now run the model as a text machine. Temperature still controls safe choices versus weird sparks.")
     bundle = trained_transformer()
     start = st.text_input("Starting phrase", value="the ", key="ch23_start")
     temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch23_temp")
@@ -158,7 +158,7 @@ def _():
     length = st.slider("How many new characters?", 80, 260, 180, 20, key="ch23_length")
     made = generate_transformer(bundle, start=start, temperature=temperature, length=length, seed=seed)
     st.text_area("Tiny Transformer says", made, height=150, key="ch23_text")
-    lesson.look_for("phrases that almost sound like a rhyme or fable, then wobble away.")
+    lesson.look_for("phrases that almost sound like a rhyme or fable, then wobble off the sidewalk.")
 
 
 @lesson.step("The Part 6 ladder", beat="forreal")
@@ -167,7 +167,7 @@ def _():
         "Which model do you expect to have the lowest surprise on hidden text?",
         ["Bigram", "Fixed-window MLP", "Tiny Transformer"],
         correct=2,
-        why="Attention can use any earlier position inside the block, so it wins this tiny ladder.",
+        why="Attention can reach any earlier position inside the block, so it wins this tiny ladder.",
         key="ch23_ladder",
     )
     if guess is None:
@@ -178,12 +178,12 @@ def _():
     ax.set_ylabel("average surprise (lower is better)")
     ax.set_title("The Part 6 ladder")
     lesson.show(fig)
-    lesson.look_for("the bars stepping down as the models get more ways to use context.")
+    lesson.look_for("the bars stepping down as the models get more ways to use context!")
 
 
 @lesson.step("Same prompt, three machines", beat="forreal")
 def _():
-    lesson.say("Listen to the same prompt through the last three chapters.")
+    lesson.say("Send the same prompt through the last three machines and listen to the echoes.")
     bundle, mlp, probs, _, _, _, _ = comparison_numbers()
     temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch23_compare_temp")
     seed = st.slider("Random seed", 0, 99, 5, key="ch23_compare_seed")
@@ -194,7 +194,7 @@ def _():
     st.text(sample_text_mlp(mlp, start="the ", temperature=temperature, length=150, seed=seed))
     st.markdown("**Tiny Transformer sample**")
     st.text(made[:220])
-    lesson.look_for("which sample remembers the shape of words and spaces for longest.")
+    lesson.look_for("which sample holds the shape of words and spaces for longest.")
 
 
 @lesson.step("Same idea, more scale", beat="forreal")
@@ -209,9 +209,9 @@ def _():
     st.info(f"Yes: {dial}. Real systems turn all of these up at once.")
     lesson.say(
         """
-GPT-class models use the same code shape, then turn every dial far up: hundreds of billions of parameters, huge text collections, many GPUs, and long training runs.
+GPT-class models use the same code shape, then crank every dial far up: hundreds of billions of parameters, huge text collections, many GPUs, and long training runs.
 
-Same idea. About a billion times more of everything.
+Same idea. About a billion times more of everything — mountain-sized!
 """
     )
 

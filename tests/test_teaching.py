@@ -83,3 +83,41 @@ def test_a_near_miss_pair_is_present_when_one_exists(rule: str):
         if labels[i] and not labels[j]
     )
     assert found, f"rule {rule!r}: the examples never pin the rule down"
+
+
+def test_the_vowels_really_do_cluster():
+    """Chapter 23's payoff: nobody tells the model what a vowel is, and it groups them.
+
+    This is the most striking claim in the course, so it gets checked rather than hoped
+    for. If a change to the model or the training makes the letters scatter, the chapter
+    stops being true and this test says so.
+    """
+    import numpy as np
+
+    from kidsml.datasets import load_words
+    from kidsml.langmodels import embedding_points, train_mlp_language_model
+    from kidsml.text import VOWELS
+
+    bundle = train_mlp_language_model(
+        load_words("names"), block_size=3, embed_dim=2, hidden=96,
+        n_words=8000, steps=1200, lr=0.03, seed=1,
+    )
+
+    points = np.asarray(embedding_points(bundle), dtype=float)
+    points = (points - points.mean(axis=0)) / (points.std(axis=0) + 1e-9)
+    is_vowel = np.array([c in VOWELS for c in bundle.vocab.chars])
+
+    vowels = np.where(is_vowel)[0]
+    others = np.where(~is_vowel)[0]
+
+    among_vowels = np.mean([
+        np.linalg.norm(points[i] - points[j]) for i in vowels for j in vowels if i < j
+    ])
+    vowel_to_other = np.mean([
+        np.linalg.norm(points[i] - points[j]) for i in vowels for j in others
+    ])
+
+    assert among_vowels < vowel_to_other * 0.85, (
+        f"the vowels stopped clustering: {among_vowels:.2f} apart from each other versus "
+        f"{vowel_to_other:.2f} from everything else — chapter 23's best moment is gone"
+    )

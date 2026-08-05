@@ -166,8 +166,8 @@ def _():
 You may have been told a matrix is a box of numbers. That is like being told a song is a
 box of dots on lines.
 
-Here is what it actually is: **an instruction for moving space**. In this chapter you will
-drag the instruction around until the grid starts to feel alive.
+Here is what it actually is: **an instruction for moving space**. Drag the instruction,
+and the grid skates, flips, stretches, and wakes up.
 """
     )
     lesson.mermaid(
@@ -185,7 +185,7 @@ graph LR
 
 @lesson.step("A vector is an arrow", beat="byhand")
 def _():
-    lesson.say("A vector tells you **how far** to go and **which way**. Drag the two parts of `[3, 4]` and watch the old 3-4-5 triangle appear.")
+    lesson.say("A vector is a little trip: **how far** and **which way**. Drag the two parts of `[3, 4]` and watch the old 3-4-5 triangle pop open.")
     knobs, picture = lesson.controls()
     with knobs:
         x = st.slider("sideways part", -6.0, 6.0, 3.0, 0.5, key="ch11_vec_x")
@@ -208,7 +208,7 @@ def _():
 
 @lesson.step("Add arrows tip to tail", beat="byhand")
 def _():
-    lesson.say("Adding vectors means walk one arrow, then walk the next arrow from that new tip. Scaling means make an arrow longer, shorter, or point backward.")
+    lesson.say("Adding vectors means walk one arrow, then launch the next arrow from that new tip. Scaling stretches, shrinks, or flips the arrow backward.")
     knobs, picture = lesson.controls()
     with knobs:
         ax1 = st.slider("first arrow x", -4.0, 4.0, 2.0, 0.5, key="ch11_add_ax")
@@ -261,7 +261,7 @@ def _():
 
 @lesson.step("Columns say where arrows land", beat="seeit")
 def _():
-    lesson.say("Read a matrix by its **columns**. Column one is where `(1, 0)` lands. Column two is where `(0, 1)` lands.")
+    lesson.say("Read a matrix by its **columns**. Column one is the landing pad for `(1, 0)`. Column two is the landing pad for `(0, 1)`.")
     knobs, picture = lesson.controls()
     with knobs:
         M = matrix_sliders("ch11_columns", (1.0, 1.0, 0.0, 1.0))
@@ -277,7 +277,7 @@ def _():
 
 @lesson.step("The grid mover", beat="play")
 def _():
-    lesson.say("This is the centre of the chapter. Pick a preset, then drag the four numbers. The grey grid is before. The blue grid is after.")
+    lesson.say("This is the centre of the chapter. Pick a preset, then drag the four numbers. Grey grid before; blue grid after. The whole floor moves!")
     knobs, picture = lesson.controls()
     with knobs:
         _, M = preset_matrix("ch11_grid", index=0)
@@ -292,14 +292,14 @@ def _():
 
 @lesson.step("Area is the determinant", beat="play")
 def _():
-    lesson.say("The orange unit square becomes a parallelogram. Its new signed area is the determinant: the area multiplier.")
+    lesson.say("The orange unit square gets grabbed and stretched into a parallelogram. Its new signed area is the determinant: the area multiplier.")
     names = list(la.PRESETS)
     picked = st.selectbox("Transformation to investigate", names, index=names.index("collapse onto a line"), key="ch11_area_preset")
     guess = lesson.predict(
         "What happens to the area with the 'collapse onto a line' preset?",
         ["It doubles", "It becomes zero", "It becomes negative"],
         correct=1,
-        why="A flat line has no area. The determinant is 0 because the square has been pressed into one dimension.",
+        why="A line has zero area. The square has been pancaked into one dimension, so the determinant reads 0.",
         key="ch11_area_predict",
     )
     if guess is None:
@@ -313,7 +313,7 @@ def _():
 
 @lesson.step("Collapse throws information away", beat="play")
 def _():
-    lesson.say("When the determinant is 0, the whole plane lands on one line. Points that used to be different can crash into the same spot.")
+    lesson.say("When the determinant is 0, the whole plane lands on one line. Different points can crash into the same spot like bumper cars.")
     knobs, picture = lesson.controls()
     with knobs:
         blend = st.slider("blend toward collapse", 0.0, 1.0, 1.0, 0.05, key="ch11_collapse_blend")
@@ -329,7 +329,7 @@ def _():
 
 @lesson.step("Projection is a shadow", beat="play")
 def _():
-    lesson.say("Projecting one arrow onto another means cast a straight-down shadow onto that direction. The shadow keeps only the part that agrees.")
+    lesson.say("Projecting one arrow onto another means drop a straight shadow onto that direction. The shadow keeps only the part that agrees.")
     knobs, picture = lesson.controls()
     with knobs:
         arrow_angle = st.slider("arrow angle", -180, 180, 55, 5, key="ch11_proj_arrow_angle")
@@ -353,7 +353,7 @@ def _():
 
 @lesson.step("3D to 2D: beat the shadow finder", beat="play")
 def _():
-    lesson.say("Now the object is a 3D cloud, and your shadow is a 2D picture. Your game: keep as much spread as possible.")
+    lesson.say("Now the object is a 3D cloud, and your shadow is a 2D picture. Spin the lamp. Keep as much spread as possible!")
     knobs, picture = lesson.controls()
     with knobs:
         angle_a = st.slider("spin the lamp", -180, 180, 20, 5, key="ch11_shadow_a")
@@ -379,7 +379,7 @@ def _():
         "Can a single matrix always do the same job as two linear transformations in a row?",
         ["Yes", "No", "Only for rotations"],
         correct=0,
-        why="The combined matrix is `B @ A`. It sends every test point to the same place as the two-step trip.",
+        why="The combined matrix is `B @ A`. It lands every test point exactly where the two-step trip lands. Same footprints!",
         key="ch11_chain_predict",
     )
     if guess is None:
@@ -406,7 +406,7 @@ def _():
 
 @lesson.step("Ten linear layers wear a costume", beat="play")
 def _():
-    lesson.say("Stacking linear layers with no squish does not buy new shapes. The stack collapses into one matrix, even if you stack ten.")
+    lesson.say("Stacking linear layers with no squish does not buy new shapes. Even ten layers fold down into one matrix wearing a tall hat.")
     layers = st.slider("number of no-squish layers", 1, 10, 10, 1, key="ch11_linear_layers")
     base = la.matrix(1.05, 0.2, -0.1, 0.95)
     combined = np.eye(2)
@@ -422,12 +422,12 @@ def _():
 
 @lesson.step("A squish bends the grid", beat="play")
 def _():
-    lesson.say("Put a squish between two matrices and the grid lines bend. That bend is the part a single matrix cannot copy.")
+    lesson.say("Put a squish between two matrices and the grid lines bend. That bend is the new magic trick a single matrix cannot copy.")
     guess = lesson.predict(
         "What do you think the squish does to the straight grid lines?",
         ["They stay straight", "They bend", "They disappear"],
         correct=1,
-        why="A squish changes different parts of space by different amounts, so the straight-line pattern breaks.",
+        why="A squish squeezes different parts of space by different amounts. The straight-line stamp bends and breaks.",
         key="ch11_squish_predict",
     )
     if guess is None:
@@ -449,7 +449,7 @@ def _():
         lesson.show(fig)
         lesson.look_for("the grid lines. Toggle the squish off and they snap straight again.")
     st.metric("difference from one plain matrix", f"{gap:.2f}")
-    lesson.aha("This is why every neural network has activation functions: now you have seen the reason rather than memorised the rule.")
+    lesson.aha("This is why every neural network has activation functions: you watched the bend happen. Rule recited? No. Rule earned!")
 
 
 @lesson.step("For real: the neuron equation", beat="forreal")

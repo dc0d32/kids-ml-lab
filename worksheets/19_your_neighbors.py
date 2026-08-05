@@ -38,7 +38,7 @@ WORKBOOK = Workbook(
             answer="A",
             why=(
                 "A is 5 away. The others are 6, 8, 15, and 16 away. The closest old point "
-                "gets the first chance to influence the new point's label."
+                "gets the first chance to tug the new point's label."
             ),
         ),
         Question(
@@ -48,7 +48,7 @@ WORKBOOK = Workbook(
             answer="red",
             why=(
                 "With k = 1, the closest point gets the whole vote. A is red. This is powerful but risky, "
-                "because one noisy neighbour can control the answer."
+                "because one noisy neighbour can grab the whole microphone."
             ),
         ),
         Question(

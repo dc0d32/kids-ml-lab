@@ -33,10 +33,10 @@ use_house_style()
 # enough for yesterday's dots, but it may be a nervous choice for tomorrow's dot.
 #
 # Imagine a new point lands a tiny bit away from where you expected. A line that hugs one
-# class has no safety space; a small wiggle can push the new point to the wrong side.
+# class has no shoulder; one small wiggle can shove the new point across the road.
 #
 # Your instinct says: pick the line with the biggest empty gap around it. Wider roads
-# survive small surprises better.
+# survive small surprises better!
 
 # %%
 X_hand, y_hand, candidates = svm_hand_points()
@@ -92,8 +92,8 @@ workbook.render(7)
 # %% [markdown]
 # ## 👀 Take a look
 #
-# Once the road is as wide as possible, most dots are not pushing on it. They are far back
-# inside their own side, so moving them a little would not shrink the road.
+# Once the road is as wide as possible, most dots are not pushing on it. They sit far
+# back on their own side, so nudging them a little would not shrink the road.
 #
 # The closest dots are different. They touch the edge of the road like fence posts. Move
 # or remove one of those, and the widest possible road may change.
@@ -107,8 +107,8 @@ plt.show()
 
 # %% [markdown]
 # The ringed points are the support vectors. Delete a far-away point and the road barely
-# moves. Delete a ringed point and the road can jump because the old road was resting
-# against it.
+# moves; that dot was, technically, an NPC. Delete a ringed point and the road can jump
+# because the old road was resting against it.
 
 # %% [markdown]
 # ## 🎛️ Your turn
@@ -132,8 +132,8 @@ plt.show()
 
 # %% [markdown]
 # Watch what happens near noisy dots. High C and high gamma can make the boundary curl
-# around individual points, which feels impressive on training data and may be fragile on
-# new data.
+# around individual points. It looks impressive on training data and may crack on new
+# data.
 #
 # > ⚠️ **Careful** A kid-repeat version: **C is strictness; gamma is reach**. Strict and
 # > short-reach can memorise islands. Forgiving and long-reach gives a smoother road.
@@ -170,8 +170,8 @@ print(f"support vectors: {len(support)} out of {len(X_peng)} penguins")
 #     C --> D[curved road back here]
 # ```
 #
-# The diagram is the kernel trick in kid language: make the data easier to cut somewhere
-# else, then read the cut back in the original picture.
+# The diagram is the kernel trick in kid language: lift the dots onto an easier cutting
+# board, slice there, then read the cut back in the original picture.
 
 # %%
 X_c, y_c, lifted_predict = fit_circles_lifted()

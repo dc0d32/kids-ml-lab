@@ -52,7 +52,7 @@ def _():
         """
 Hold up your hand and cast a shadow on a wall.
 
-Turn it. Some shadows still tell you it is a hand. Other shadows become a blob. Same hand.
+Turn it. Some shadows still shout hand. Other shadows become a pancake blob. Same hand.
 Same wall. Different angle. **Choosing the angle is the whole of PCA.**
 """
     )
@@ -67,7 +67,7 @@ graph LR
 """,
         height=240,
     )
-    lesson.look_for("the last box. PCA judges a shadow by how much spread remains after the squish.")
+    lesson.look_for("the last box. PCA judges a shadow by how much spread survives the squish.")
 
 
 @lesson.step("Keep one number", beat="byhand")
@@ -129,7 +129,7 @@ A tight blob means the shadow forgot most of the differences between the points.
         st.plotly_chart(plot_shadow_3d(X), width="stretch")
         lesson.look_for("the long direction in the 3D cloud. A good shadow does not point straight along it.")
         lesson.show(plot_shadow_2d(shadow, "Your shadow"))
-        lesson.look_for("whether the points stay wide apart or collapse into a small smudge.")
+        lesson.look_for("whether the points stay wide apart or collapse into a tiny smudge.")
     a, b = st.columns(2)
     a.metric("your variance kept", f"{your_keep:.1%}")
     b.metric("PCA variance kept", f"{pca_keep:.1%}")
@@ -156,7 +156,7 @@ def _():
         lesson.show(fig)
         lesson.look_for("the rebuilt digit. Drag until your eyes stop trusting it.")
     lesson.show(plot_variance_curve(curve, components))
-    lesson.look_for("where your component count hits the curve. The first few directions do most of the work.")
+    lesson.look_for("where your component count hits the curve. The first few directions do most of the work!")
 
 
 @lesson.step("The ghost digits", beat="play")
@@ -172,7 +172,7 @@ def _():
         """
 Now hide every digit label, squish the pixel numbers to two PCA shadows, and colour the labels after the fact.
 
-Clusters appear even though PCA never saw a digit label.
+Clusters appear even though PCA never saw a digit label. Surprise: the shadow kept enough shape to reveal islands!
 """
     )
     fig, kept = cached_digits_pca_plot()
@@ -220,7 +220,7 @@ def _():
 1. How many components before you can still read a digit?
 2. Which two digits stay tangled longest in the PCA plot?
 3. Run PCA on penguins and decide whether the first shadow is mostly penguin size.
-4. 🧸 **Little Kid Corner:** Make hand shadows. Which angle tells the best story?
+4. 🧸 **Little Kid Corner side quest:** Make hand shadows. Which angle tells the best story?
 """
     )
 

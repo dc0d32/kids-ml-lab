@@ -9,11 +9,12 @@
 #
 # Every model so far was shown the right answers. Somebody labelled the data.
 #
-# Part 5 asks what you can learn when nobody tells you the answers. This chapter is the
-# bridge: kNN still uses labels, so it is not unsupervised. But it skips training.
+# Part 5 opens a new door: what can you learn when nobody tells you the answers? This
+# chapter is the bridge: kNN still uses labels, so it is not unsupervised. But it skips
+# training.
 #
 # This should feel backward. Most models pay a training cost first, then predict quickly.
-# kNN saves almost all the work until a new point asks for an answer.
+# kNN saves almost all the work until a new point knocks and asks for an answer.
 
 # %%
 import matplotlib.pyplot as plt
@@ -50,8 +51,8 @@ use_house_style()
 #     E --> F[Prediction]
 # ```
 #
-# Follow the arrows slowly. The model is not drawing a formula; it is looking up old
-# cases and asking who is nearby.
+# Follow the arrows slowly. The model is not drawing a formula; it is pulling out a ruler,
+# looking up old cases, and asking who is nearby.
 #
 # > 🧸 **Little Kid Corner** — Drop a sock near toys from two teams. The closest toys vote
 # > on which team the sock joins.
@@ -62,8 +63,8 @@ use_house_style()
 # The new point is at **(0, 0)**. The old points are labelled.
 #
 # Distance is the ruler. For point A at (3, 4), the distance is
-# `√((3 - 0)² + (4 - 0)²) = √(9 + 16) = √25 = 5`. kNN repeats that calculation for every
-# old point, then sorts the list.
+# `√((3 - 0)² + (4 - 0)²) = √(9 + 16) = √25 = 5`. Nice 3-4-5 triangle. kNN repeats that
+# ruler move for every old point, then sorts the list.
 
 # %%
 distances = knn_distance_table()
@@ -78,8 +79,8 @@ for k in [1, 3, 5]:
 # %% [markdown]
 # The answer changes: k = 1 says red, k = 3 says blue, k = 5 says red again.
 #
-# With k = 1, one close neighbour has total power. With k = 5, the wider crowd can
-# overrule it. Changing **k** can change the answer.
+# With k = 1, one close neighbour grabs the whole microphone. With k = 5, the wider crowd
+# can overrule it. Changing **k** can change the answer.
 #
 # We can sort by squared distance because square roots keep the same order. If 25 < 36,
 # then √25 < √36.
@@ -93,7 +94,7 @@ workbook.render(19)
 # %% [markdown]
 # ## 👀 Take a look
 #
-# The dashed circle grows until it touches the k-th neighbour.
+# The dashed circle grows until it touches the k-th neighbour. That circle is the voting room.
 
 # %%
 fig = plot_knn_hand(k=3)
@@ -113,7 +114,7 @@ plt.show()
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# Change the query point and k in the app. Here is one frozen setup.
+# Change the query point and k in the app. Here is one frozen setup to poke.
 
 # %%
 fig, votes = plot_knn_play(k=7, qx=0.0, qy=0.0)
@@ -134,7 +135,7 @@ plt.show()
 
 # %% [markdown]
 # Look for the middle sweet spot. k = 1 memorises noisy points. Huge k smooths so much
-# that the whole plane starts giving one answer. Even k can tie in a two-class vote.
+# that the whole plane starts giving one sleepy answer. Even k can tie in a two-class vote.
 
 # %% [markdown]
 # ### Catch #1: prediction is the expensive part
@@ -177,14 +178,14 @@ penguin_knn_scores(k=7)
 print("8x8 digit accuracy with k = 3:", round(digits_knn_score(k=3), 3))
 
 # %% [markdown]
-# That is the surprise. kNN sounds tiny, but on small digit images it is strong because
-# similar-looking digits often sit near each other in pixel-number space.
+# That is the surprise. kNN sounds tiny, but on small digit images it hits hard because
+# similar-looking digits often sit near each other in pixel-number space!
 
 # %% [markdown]
 # ## 🏆 Go further
 #
 # 1. Find the k that scores best on moons.
-# 2. Find a dataset shape where kNN beats the early straight-line models.
+# 2. **No cap neighbour test.** Find a dataset shape where kNN beats the early straight-line models.
 # 3. Break kNN by multiplying one feature by 1000, then fix it with scaling.
 # 4. 🧸 **Little Kid Corner:** Put toys in two teams. Let one neighbour vote, then three.
 #

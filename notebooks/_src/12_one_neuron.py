@@ -25,12 +25,12 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Part 3 sounds like a new planet: **neural networks**. It is not. A neuron is the
-# straight-line score from Chapter 2, followed by the probability squish from Chapter 4.
+# Part 3 sounds like a new planet: **neural networks**. It is not. A neuron is Chapter 2's
+# straight-line score bolted to Chapter 4's probability squish.
 #
 # That matters because there is no missing spell. If you can read `w1*x1 + w2*x2 + b`,
-# you can read the inside of this circle. The circle wraps the score so a yes/no model can
-# say “barely yes”, “very yes”, or “I am near the fence”.
+# you can read the engine inside this circle. The circle wraps the score so a yes/no model
+# can say “barely yes”, “very yes”, or “I am near the fence”.
 #
 # ```mermaid
 # graph LR
@@ -53,7 +53,7 @@ use_house_style()
 # Use **w1 = 2**, **w2 = -1**, **b = 0.5**. First build the raw score `z`, then squish it.
 #
 # The raw score decides which side of the line the point is on. The squish keeps the same
-# side, but turns “how far from the line?” into a number between 0 and 1.
+# side, but turns “how far from the line?” into a 0-to-1 confidence gauge.
 
 # %%
 hand = pd.DataFrame(
@@ -71,7 +71,7 @@ hand
 # %% [markdown]
 # Why not leave the raw score alone? For a class answer, `z = 19` and `z = 1900` both mean
 # “red”, but a training rule needs a bounded target to compare with `0` and `1`. The squish
-# makes a soft confidence score without moving the fence.
+# clips the wild number into a soft confidence score without moving the fence.
 #
 # > ⚠️ **Careful:** If you double w1, w2, and b, every raw score doubles. The zero places
 # > stay zero, so the boundary stays put. Far-away points become more confident; the line
@@ -124,7 +124,7 @@ neuron_surface_figure(play_neuron, X, steps=45, title='Neuron output as a ramp')
 # %% [markdown]
 # Watch the green line first. That is where `z = 0`, so it is the same straight fence from
 # Chapter 2. Now watch the colours and the 3D ramp: steeper weights make the answer change
-# faster as you walk away from the fence.
+# faster as you walk away from the fence. The ramp snaps upward!
 #
 # XOR is still the Chapter 3 wall. Opposite corners need the same colour, and a single
 # straight boundary always cuts the square into two neighbouring chunks. One neuron has
@@ -145,7 +145,7 @@ pd.DataFrame(
 # ## 💻 In real code
 #
 # Now we train the neuron instead of choosing its numbers by hand. Scikit-learn calls the
-# same idea **logistic regression**: a line score, a sigmoid, and a training rule.
+# same idea **logistic regression**: a line score, a sigmoid, and a training rule turning the knobs.
 #
 # The learned numbers do not have to match exactly, because the two training recipes use
 # different loss details. What should match is the divider: it should point through the
@@ -173,8 +173,8 @@ decision_boundary(lambda G: mine.forward(G), X_fit, y_fit, ax=ax, steps=180, tit
 plt.show()
 
 # %% [markdown]
-# Look at the gap between the two blob clouds. The trained neuron found a straight divider
-# there, which is Chapter 2 plus Chapter 4 stacked together.
+# Look at the gap between the two blob clouds. The trained neuron drove a straight divider
+# through that gap, which is Chapter 2 plus Chapter 4 stacked together.
 #
 # ## 🏆 Go further
 #

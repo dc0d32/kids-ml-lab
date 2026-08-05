@@ -34,7 +34,7 @@ WORKBOOK = Workbook(
             hint="At z = 0, the bottom is 1 + 1.",
             why=(
                 "sigmoid(0) = **1 / (1 + 1) = 0.5**. That matters because z = 0 is the decision line, "
-                "so the model is exactly 50/50 on the boundary."
+                "so the model lands exactly 50/50 on the boundary."
             ),
         ),
         Question(
@@ -45,7 +45,7 @@ WORKBOOK = Workbook(
             table=Z_VALUES,
             hint="The notebook table rounds sigmoid(2) to 0.881.",
             why=(
-                "sigmoid(2) is about **0.88**. Positive scores become probabilities above 0.5, but they do not jump "
+                "sigmoid(2) is about **0.88**. Positive scores become probabilities above 0.5, but they do not rocket "
                 "straight to 1. The curve leaves room for uncertainty."
             ),
         ),
@@ -54,7 +54,7 @@ WORKBOOK = Workbook(
             kind="text",
             answer=["s", "an s", "s curve", "s-curve", "the letter s"],
             why=(
-                "It looks like an **S**: flat near 0, steep in the middle, and flat near 1. That shape turns any raw "
+                "It looks like an **S**: flat near 0, steep in the middle, and flat near 1. That shape funnels any raw "
                 "score into maybe, probably, or almost certain."
             ),
         ),
@@ -66,7 +66,7 @@ WORKBOOK = Workbook(
             table=PENALTIES,
             why=(
                 "A confident correct answer should have a small penalty. The model gave high probability to the true "
-                "answer, so training should not push hard against that choice."
+                "answer, so training taps the brakes instead of slamming them."
             ),
         ),
         Question(
@@ -85,8 +85,8 @@ WORKBOOK = Workbook(
             choices=["small", "medium", "huge"],
             answer="huge",
             why=(
-                "A wrong 99% promise gives the true class only 1% probability. Log loss treats that as a serious broken "
-                "promise, so the model learns to save near-certainty for safer cases."
+                "A wrong 99% promise gives the true class only 1% probability. Log loss treats that as a blaring siren, "
+                "so the model learns to save near-certainty for safer cases."
             ),
         ),
         Question(
@@ -95,7 +95,7 @@ WORKBOOK = Workbook(
             hint="Imagine someone saying, 'I am almost certain,' and then being wrong.",
             why=(
                 "Because the model did not merely choose the wrong class; it claimed near certainty. A 50/50 wrong answer "
-                "says, 'I was unsure.' A 99% wrong answer says, 'Trust me,' and then breaks that trust."
+                "says, 'I was unsure.' A 99% wrong answer says, 'Trust me,' and then drops the glass."
             ),
         ),
         Question(
@@ -105,7 +105,7 @@ WORKBOOK = Workbook(
             answer="no",
             why=(
                 "No. The boundary is still the line where **z = 0**, because sigmoid(z) equals 0.5 there. The new idea "
-                "is the smooth fade of probability around that straight line."
+                "is the smooth fade of probability glowing around that straight line."
             ),
         ),
         Question(
@@ -114,7 +114,7 @@ WORKBOOK = Workbook(
             answer=["confidence", "probability", "probabilities", "a probability", "uncertainty", "a fade", "maybe/probably/definitely"],
             why=(
                 "It gives **probability**: maybe, probably, definitely. A hard yes/no line turns into a line with a "
-                "shrug zone, so you can tell the difference between barely red and very red."
+                "shrug zone, so you can tell the difference between barely red and fire-alarm red."
             ),
         ),
     ],

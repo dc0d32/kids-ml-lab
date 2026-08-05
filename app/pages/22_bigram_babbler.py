@@ -41,19 +41,19 @@ def format_letter(ch: str) -> str:
 def _():
     lesson.say(
         """
-You want to know how ChatGPT works. Here is the honest answer: **it guesses the next letter. Over and over.**
+You want to know how ChatGPT works. Peek behind the shiny robot curtain: **it guesses the next letter, scoots forward, then guesses again.**
 
-The next three chapters are three ways of guessing. This first one is so small you could do it with a tally chart.
+The next three chapters build three guessers. This first one fits on a kitchen-table tally chart. Tiny! Loudly useful!
 """
     )
     lesson.kid_corner(
-        "Line up letter cards from a name. Every time two cards touch, put a tally mark in that box. Later, draw the next card from the busiest boxes."
+        "Line up letter cards from a name like dominoes. Every time two cards touch, drop a tally mark in that box. Later, draw the next card from the busiest boxes."
     )
 
 
 @lesson.step("Tally marks before code", beat="byhand")
 def _():
-    lesson.say("Every name secretly starts and ends with the blank character **`.`**. `mia` is really `.mia.`.")
+    lesson.say("Names get bumper pads: a blank **`.`** at the start and another at the finish. So `mia` enters the tally machine as `.mia.`.")
     tiny = pd.DataFrame(
         [[".mia.", ". → m, m → i, i → a, a → ."], [".mo.", ". → m, m → o, o → ."], [".mae.", ". → m, m → a, a → e, e → ."]],
         columns=["padded word", "pairs you tally"],
@@ -63,25 +63,25 @@ def _():
         "For these three words, which tally box gets the most marks?",
         [". → m", "m → a", "a → ."],
         correct=0,
-        why="All three padded words start with `. → m`, so that box gets 3 marks.",
+        why="All three padded words roll out of the start blank into `m`, so the `. → m` box gets 3 marks.",
         key="ch21_tally_box",
     )
     if guess is None:
         return
-    st.info("The `m → a`, `m → i`, and `m → o` boxes get 1 each.")
+    st.info("The `m → a`, `m → i`, and `m → o` boxes get 1 each. The chart is already taking shape!")
     lesson.jargon("bigram", "A pair of touching characters. `m → a` is one bigram.")
 
 
 @lesson.step("The whole tally chart", beat="seeit")
 def _():
-    lesson.say("A bright square means: **that pair happened a lot**. No magic. Tally marks.")
+    lesson.say("A bright square is a footprint: **that pair happened a lot**. No magic wand. Tally marks piled up.")
     _, vocab, _, _, counts, _ = bigram_bundle("names")
     fig, ax = lesson.figure(7, 6)
     heatmap(counts, xlabels=[label(c) for c in vocab.chars], ylabels=[label(c) for c in vocab.chars], ax=ax, title="Name bigram tallies")
     ax.set_xlabel("next letter")
     ax.set_ylabel("letter before it")
     lesson.show(fig)
-    lesson.look_for("the row and column for `.`. Starts of names and ends of names are different habits.")
+    lesson.look_for("the row and column for `.`. Starts of names and ends of names leave different tracks.")
 
     row_col, col_col = st.columns(2)
     start_order = np.argsort(counts[vocab.stoi[STOP]])[::-1][:8]
@@ -94,17 +94,17 @@ def _():
     with col_col:
         st.markdown("**The column for `.`:** letters that end names")
         st.dataframe(end_col, hide_index=True)
-    lesson.aha("Those two lists are different. The chart discovered a real fact about names by counting.")
+    lesson.aha("Those two lists are different! The chart discovered a real fact about names by counting footsteps.")
 
 
 @lesson.step("What follows q?", beat="play")
 def _():
-    lesson.say("Pick a row of the tally chart. That row becomes an uneven die for the next letter.")
+    lesson.say("Grab one row of the tally chart. That row becomes an uneven die for the next letter.")
     guess = lesson.predict(
         "Before you see the row: after `q`, what do you expect the busiest next letter to be?",
         ["a", "u", "the stop dot"],
         correct=1,
-        why="This is the famous q → u habit. The model was not told spelling rules. It counted them.",
+        why="This is the famous q → u habit. The model was not handed spelling rules; it bumped into them by counting.",
         key="ch21_q_next",
     )
     if guess is None:
@@ -123,17 +123,17 @@ def _():
     ax.set_ylabel("probability")
     ax.set_title(f"After {label(picked)!r}, the likely next characters")
     lesson.show(fig)
-    lesson.look_for("the tallest bar. The babbler will choose from this row, not from grammar rules.")
+    lesson.look_for("the tallest bar. The babbler grabs choices from this row, not from a grammar rulebook.")
 
 
 @lesson.step("Temperature changes the dice", beat="play")
 def _():
-    lesson.say("Temperature changes how brave the uneven die feels. Low temperature hugs the busiest boxes; high temperature gives odd boxes a chance.")
+    lesson.say("Temperature changes how daring the uneven die feels. Low temperature hugs the busiest boxes; high temperature lets odd little boxes jump into the game.")
     guess = lesson.predict(
         "What will very low temperature do to the invented names?",
         ["Make safer, more repeated choices", "Make wilder spellings", "Make every letter equally likely"],
         correct=0,
-        why="Low temperature sharpens the row, so the same likely letters win again and again.",
+        why="Low temperature sharpens the row like a spotlight, so the same likely letters win again and again.",
         key="ch21_temperature",
     )
     if guess is None:
@@ -154,7 +154,7 @@ def _():
 
 @lesson.step("Press the babble button", beat="play")
 def _():
-    lesson.say("Now let the chart roll its uneven die over and over until it hits the stop dot.")
+    lesson.say("Now let the chart roll its uneven die over and over. It keeps clattering until it hits the stop dot.")
     corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch21_gen_corpus")
     temperature = st.slider("Temperature", 0.05, 2.0, 0.9, 0.05, key="ch21_gen_temp")
     seed = st.slider("Random seed", 0, 99, 4, key="ch21_gen_seed")
@@ -162,18 +162,18 @@ def _():
     if st.button("Generate inventions", key="ch21_generate"):
         st.session_state["ch21_generated"] = True
     if not st.session_state.get("ch21_generated", False):
-        st.caption("Press the button when you are ready to hear the babbler.")
+        st.caption("Press the button when you are ready to hear the babbler. Lowkey, it is a letter carnival.")
         return
     _, vocab, _, _, _, probs = bigram_bundle(corpus)
     rng = np.random.default_rng(seed)
     samples = [sample_bigram(probs, vocab, rng=rng, temperature=temperature, max_len=18) for _ in range(n_samples)]
     st.write(" · ".join(s if s else "(blank)" for s in samples))
-    lesson.look_for("names that almost work. The tally chart is inventing pronounceable accidents.")
+    lesson.look_for("names that almost work. The tally chart is launching pronounceable little accidents.")
 
 
 @lesson.step("A score for surprise", beat="forreal")
 def _():
-    lesson.say("A model is better when hidden words surprise it less. Lower bars are better.")
+    lesson.say("A model earns a better score when hidden words surprise it less. Lower bars mean fewer tiny shocks.")
     _, vocab, _, test, _, probs = bigram_bundle("names")
     loss = bigram_nll(test, probs, vocab)
     random_loss = random_nll(vocab)
@@ -182,7 +182,7 @@ def _():
     ax.set_ylabel("average surprise (lower is better)")
     ax.set_title("Counting beats knowing nothing")
     lesson.show(fig)
-    lesson.look_for("the bigram bar sitting lower than the random bar. Counting pairs helped.")
+    lesson.look_for("the bigram bar sitting lower than the random bar. Counting pairs helped!")
     a, b = st.columns(2)
     a.metric("Bigram surprise on hidden words", f"{loss:.3f}")
     b.metric("Knows-nothing random surprise", f"{random_loss:.3f}")
@@ -190,7 +190,7 @@ def _():
 
 @lesson.step("The whole program", beat="forreal")
 def _():
-    lesson.say("The whole model is three lines: count pairs, turn counts into probabilities, score hidden words.")
+    lesson.say("The whole model snaps into three lines: count pairs, turn counts into probabilities, score hidden words.")
     st.code(
         """
 counts = bigram_counts(train_words, vocab)
@@ -199,8 +199,8 @@ loss = bigram_nll(hidden_words, probs, vocab)
 """,
         language="python",
     )
-    lesson.look_for("the middle line. The tally counts become the uneven dice used to babble.")
-    lesson.careful("The babbler sounds almost name-like, but it only looks one letter back. It has no idea what happened three letters ago. That wall is Chapter 23.")
+    lesson.look_for("the middle line. The tally counts become the uneven dice that make the babbler move.")
+    lesson.careful("The babbler sounds almost name-like, but it only looks one letter back. It has no idea what happened three letters ago. That wall is waiting in Chapter 23.")
 
 
 @lesson.step("Check yourself", beat="challenge")

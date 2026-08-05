@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Chapter 17 · Pictures Are Just Numbers
+# # Chapter 17 · Pictures Are Numbers
 #
 # ### Read a digit off a grid of numbers, then teach a net to.
 #
@@ -7,8 +7,9 @@
 #
 # ---
 #
-# A computer has never seen anything. Not one thing. When you show it a photo, it gets a
-# spreadsheet. This notebook proves it, then shows the weakness that Chapter 18 will fix.
+# A computer has never seen anything. Not a cat. Not a basketball. Not one heroic snack
+# photo. When you show it a picture, it gets a spreadsheet. This notebook proves it, then
+# shows the weakness that Chapter 18 will fix.
 
 # %%
 import matplotlib.pyplot as plt
@@ -28,7 +29,7 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Squint at this 8 by 8 grid of numbers. Can you read the digit hiding in it?
+# Squint at this 8 by 8 grid of numbers. Can you read the digit hiding inside?
 
 # %%
 X, y, images = digits()
@@ -39,7 +40,7 @@ plt.show()
 
 # %% [markdown]
 # The picture **is** those numbers. A plain model does not get the square. It gets the
-# same 64 numbers as one long row.
+# same 64 numbers zipped into one long row.
 #
 # ```mermaid
 # graph LR
@@ -50,23 +51,23 @@ plt.show()
 # ```
 #
 # Follow the arrows. The model never receives the word "loop" or "top-left corner." It
-# gets number 0, number 1, number 2, all the way to number 63, then returns ten scores.
+# gets number 0, number 1, number 2, all the way to number 63. Then ten scores come back.
 
 # %%
 vision.digit_as_flat_row(images[example_index])
 
 # %% [markdown]
 # > ⚠️ **Careful** A plain MLP does not know that pixel 10 touches pixel 11. To it,
-# > moving from pixel 10 to pixel 11 is no more special than moving from pixel 10 to
-# > pixel 47.
+# > stepping from pixel 10 to pixel 11 is no more special than teleporting from pixel 10
+# > to pixel 47.
 # >
 # > That matters because pictures are made from nearby pixels teaming up: strokes,
-# > corners, holes, and edges. Chapter 18 fixes that exact weakness.
+# > corners, holes, and edges. Chapter 18 bolts that neighbour map back on.
 
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Your eyes can read the bright numbers below as a digit. The model will only see numbers.
+# Your eyes can read the bright numbers below as a digit. The model sees only numbers.
 
 # %%
 shape = np.array(
@@ -81,14 +82,14 @@ shape = np.array(
 pd.DataFrame(shape)
 
 # %% [markdown]
-# A model with one weight per pixel has to attach a knob to every input number:
+# A model with one weight per pixel has to bolt a knob onto every input number:
 #
 # - 64 weights for an 8×8 gray image
 # - 784 weights for a 28×28 gray image
 # - 3,000,000 weights for a 1000×1000 colour photo
 #
 # The jump is fast because pictures grow in two directions at once. Double the width and
-# double the height, and you made four times as many pixels. Colour photos multiply again
+# double the height, and you made four times as many pixels! Colour photos multiply again
 # because every pixel has red, green, and blue.
 #
 # > 📖 **Grown-ups call this:** a **pixel** is one little square in a picture. A gray
@@ -97,7 +98,7 @@ pd.DataFrame(shape)
 # %% [markdown]
 # ## 👀 Take a look
 #
-# Here are ten real examples, then the average image for each digit.
+# Here are ten real examples, then the ghostly average image for each digit.
 
 # %%
 first_examples = []
@@ -110,8 +111,8 @@ fig, _ = image_strip(first_examples, titles=first_titles, width=1.1)
 plt.show()
 
 # %% [markdown]
-# Look at how different real handwriting is. The model has to learn the family
-# resemblance, not memorize one perfect 3.
+# Look at how wobbly real handwriting is. The model has to learn the family resemblance,
+# not memorize one museum-perfect 3.
 
 # %%
 averages = vision.average_digit_images(images, y)
@@ -121,13 +122,13 @@ plt.show()
 # %% [markdown]
 # > 💡 **Aha!** The average 3 still looks a bit like a 3. That means the useful signal is
 # > spread across many examples, not hidden in one magic row. The model gets patterns in
-# > numbers.
+# > numbers. That is the spark!
 
 # %% [markdown]
 # ## 🎛️ Your turn
 #
 # A notebook cannot use the drawing canvas from the app. Here you can hand-edit the
-# 8 by 8 numbers directly. Change a few values and run the cell again.
+# 8 by 8 numbers directly. Nudge a few values and run the cell again.
 
 # %%
 my_digit = np.array(
@@ -156,13 +157,13 @@ plt.show()
 
 # %% [markdown]
 # > ⚠️ **Careful** The model has only ever seen neat centred digits. Move the bright
-# > numbers to one side, or make them tiny, and watch it fall apart. That mismatch is
-# > a real machine-learning bug.
+# > numbers to one side, or make them tiny, and watch the guess wobble apart. That
+# > mismatch is a real machine-learning bug.
 
 # %% [markdown]
 # ## 💻 In real code
 #
-# Here is the whole training idea. The real helper uses the same ingredients and a fixed seed.
+# Here is the whole training idea. The real helper uses the same ingredients and a fixed seed, so the recipe stays steady.
 
 # %%
 X, y, images = digits()
@@ -181,7 +182,7 @@ plt.show()
 
 # %% [markdown]
 # In Chapter 09 you met this picture: rows are true answers, columns are guesses. Look
-# away from the diagonal. Those off-diagonal cells are the exact pairs the model mixes up.
+# away from the diagonal. Those off-diagonal bright squares are the exact pairs the model mixes up.
 
 # %%
 wrong = vision.misclassified_examples(report, limit=8)
@@ -195,7 +196,7 @@ plt.show()
 # %% [markdown]
 # Do its confusions feel familiar? A loopy 9 can look like a 4, a messy 5 can look like a
 # 3, and a skinny 7 can look like a 1. The model's mistakes often rhyme with human
-# mistakes because both are reading the same strokes.
+# mistakes because both trip on the same strokes.
 
 # %%
 weights = vision.first_layer_images(report.model, limit=12)
@@ -203,8 +204,8 @@ fig = vision.plot_small_images(weights, titles=[f"unit {i}" for i in range(len(w
 plt.show()
 
 # %% [markdown]
-# Look for blurry strokes and digit parts. They are not full digits; they are small clues
-# the network can combine.
+# Look for blurry strokes and digit parts. They are not full digits; they are little clue
+# tiles the network can snap together.
 
 # %% [markdown]
 # ## 🏆 Go further
@@ -212,8 +213,8 @@ plt.show()
 # 1. **Hardest digit.** Use the confusion matrix. Which row has the most mistakes?
 # 2. **Find an easy mistake.** Pick a wrong image where you can read the digit right away.
 # 3. **Blank a row.** Set one row of `my_digit` to 0. When does the prediction flip?
-# 4. **Break it on purpose.** Edit a digit badly until the model changes its mind.
-# 5. 🧸 **Little Kid Corner:** Make an 8 by 8 grid with coins or cereal pieces. Stand back. Can someone read the number?
+# 4. **Side quest: break it on purpose.** Edit a digit badly until the model changes its mind.
+# 5. 🧸 **Little Kid Corner:** Make an 8 by 8 grid with coins or cereal pieces. Stand back and squint. Can someone read the number?
 
 # %%
 workbook.render(17)

@@ -7,7 +7,7 @@
 #
 # ---
 #
-# Chapter 22 counted one letter back. This chapter gives the guesser three letters of memory.
+# Chapter 22 counted one letter back. This chapter hands the guesser three letters of memory.
 
 # %%
 import math
@@ -25,18 +25,18 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Chapter 22 could see **one** letter back. Let's give it **three**.
+# Chapter 22 could peek **one** letter back. Now hand it **three** letters of memory.
 #
-# That one change takes us from a tally chart to an actual neural network. The job is still
-# the same: **guess the next letter**.
+# That one extra handful moves us from tally chart to neural network. Same mission, bigger
+# backpack: **guess the next letter**.
 #
-# > 🧸 **Little Kid Corner** — Instead of asking only the kid beside you, ask the last
-# > three kids in line what letters they are holding. Then guess the next card.
+# > 🧸 **Little Kid Corner** — Instead of asking the kid beside you, ask the last three
+# > kids in line what letters they are holding. Then slap down your next-card guess.
 
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Slide a three-letter window over `cat`.
+# Slide a three-letter window over `cat`. Four training examples pop out.
 
 # %%
 windows = pd.DataFrame(
@@ -57,8 +57,8 @@ windows
 #
 # The pipeline is readable now:
 #
-# Three letters in → each becomes a small vector → glue the vectors together → hidden layer
-# with `tanh` → 27 scores → softmax probabilities.
+# Three letters go in. Each becomes a small vector. The vectors get glued together, squeezed
+# through a `tanh` hidden layer, and turned into 27 softmax probabilities.
 
 # %%
 pipeline = pd.DataFrame(
@@ -73,7 +73,7 @@ pipeline = pd.DataFrame(
 pipeline
 
 # %% [markdown]
-# Train a model with **2D embeddings** so we can draw the letters.
+# Train a model with **2D embeddings** so we can draw the letters on a tiny map.
 
 # %%
 words = load_words("names")
@@ -103,16 +103,16 @@ ax.set_title("Letters after training")
 plt.show()
 
 # %% [markdown]
-# > 💡 **Aha!** The vowels often land near each other. Nobody told the model what a vowel
+# > 💡 **Aha!** The vowels often land near each other! Nobody told the model what a vowel
 # > is. It grouped them because they behave alike when guessing the next letter.
 #
-# This is a real training run. It is usually clear with this seed, but not every random
-# start makes a perfect picture.
+# This is a real training run, not a stored picture. The vowels land together on every seed we tried, though how tidy it looks does vary. This seed, but not every
+# random start makes a perfect picture.
 
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# Train three fixed-window models. Only the memory length changes.
+# Train three fixed-window models. Only the memory wall moves.
 
 # %%
 models = {}
@@ -140,7 +140,7 @@ plt.show()
 # %% [markdown]
 # ## 💻 In real code
 #
-# Does the neural net beat the Chapter 22 bigram on the same held-out words?
+# Does the neural net beat the Chapter 22 bigram on the same hidden words?
 
 # %%
 main = models[3]
@@ -182,8 +182,8 @@ model = ContextMLP(vocab_size=len(vocab), block_size=3)
 print(X.shape, y.shape)
 
 # %% [markdown]
-# > ⚠️ **Careful** A block size of 3 is a hard wall. The fourth-back letter is invisible.
-# > Chapter 24 fixes that in a different way.
+# > ⚠️ **Careful** A block size of 3 is a hard wall. The fourth-back letter is invisible,
+# > even if it is waving a flag. Chapter 24 fixes that in a different way.
 
 # %% [markdown]
 # ## 🏆 Go further

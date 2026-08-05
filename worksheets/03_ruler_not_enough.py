@@ -41,7 +41,7 @@ WORKBOOK = Workbook(
             table=XOR_TABLE,
             hint="Opposite corners match. Try to keep both red corners together without catching a blue corner.",
             why=(
-                "No. You can get close, but one corner always ends up wrong. The next questions turn that feeling "
+                "No. You can get close, but one corner always pops onto the wrong side. The next questions turn that feeling "
                 "into a proof, so the failure does not feel like a bad drawing."
             ),
         ),
@@ -52,7 +52,7 @@ WORKBOOK = Workbook(
             answer="w1 + w2 + b",
             why=(
                 "Plug in x1 = 1 and x2 = 1: **w1(1) + w2(1) + b = w1 + w2 + b**. "
-                "Because this corner is blue, a perfect line would need that score below 0."
+                "Because this corner is blue, a perfect line would need that score below 0, safely on the blue side."
             ),
         ),
         Question(
@@ -62,7 +62,7 @@ WORKBOOK = Workbook(
             answer="w1 + b",
             why=(
                 "Plug in x1 = 1 and x2 = 0: **w1(1) + w2(0) + b = w1 + b**. This point is red, "
-                "so a perfect line would need the score above 0."
+                "so a perfect line would need the score above 0, safely on the red side."
             ),
         ),
         Question(
@@ -71,8 +71,8 @@ WORKBOOK = Workbook(
             choices=["w1 + w2 + 2b > 0", "w1 + w2 + 2b < 0", "b < 0"],
             answer="w1 + w2 + 2b > 0",
             why=(
-                "Adding the left sides gives **w1 + w2 + 2b**. Adding two numbers that are each bigger than 0 "
-                "must give another number bigger than 0, so the red corners demand **w1 + w2 + 2b > 0**."
+                "Adding the left sides gives **w1 + w2 + 2b**. Two numbers each bigger than 0 add to another number "
+                "bigger than 0, so the red corners demand **w1 + w2 + 2b > 0**."
             ),
         ),
         Question(
@@ -82,7 +82,7 @@ WORKBOOK = Workbook(
             answer="w1 + w2 + 2b < 0",
             why=(
                 "Adding those blue inequalities gives the same left side, **w1 + w2 + 2b**. But both blue scores "
-                "must be below 0, so their sum must also be below 0."
+                "sit below 0, so their sum must also sit below 0."
             ),
         ),
         Question(
@@ -91,7 +91,7 @@ WORKBOOK = Workbook(
             hint="Compare the two answers you got from the red rows and the blue rows.",
             why=(
                 "The red corners require **w1 + w2 + 2b > 0**. The blue corners require **w1 + w2 + 2b < 0**. "
-                "Those are opposite demands on the same number, so the assumed perfect line cannot exist."
+                "That is one number being pulled through two different doors. The assumed perfect line cannot exist!"
             ),
         ),
         Question(
@@ -103,7 +103,7 @@ WORKBOOK = Workbook(
             hint="Square each coordinate, then add.",
             why=(
                 "2² + 0² = **4**. The new feature measures distance from the middle, squared. Middle points stay low, "
-                "ring points rise, and a flat cut in the lifted space becomes a circle when you look back down."
+                "ring points rise, and a flat cut in the lifted space casts a circle when you look back down."
             ),
         ),
         Question(
@@ -114,7 +114,7 @@ WORKBOOK = Workbook(
             hint="Stripes come back again and again.",
             why=(
                 "Stripes are periodic: the same kind of region comes back as x1 moves. A repeating feature such as sine "
-                "or cosine gives the model a coordinate that repeats with the pattern instead of growing forever."
+                "or cosine gives the model a coordinate that marches with the pattern instead of growing forever."
             ),
         ),
     ],

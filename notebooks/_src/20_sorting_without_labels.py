@@ -10,8 +10,8 @@
 # Nobody labels anything this time. Here is a pile of dots. Find the clumps.
 #
 # The danger is that "clump" sounds like a thing everyone will agree on. Sometimes they
-# will. Sometimes one person's two piles are another person's three piles. Clustering is
-# useful, but it does not remove judgement.
+# will. Sometimes one person's two piles are another person's three piles. The dots do not
+# wear name tags. Clustering is useful, but it does not remove judgement.
 
 # %%
 import matplotlib.pyplot as plt
@@ -53,13 +53,13 @@ use_house_style()
 # k-means has two steps:
 #
 # 1. Every point joins the nearest centre.
-# 2. Every centre moves to the middle of its members.
+# 2. Every centre scoots to the middle of its members.
 #
 # Repeat until nothing changes. That stopping point is guaranteed to arrive.
 #
 # Why must it stop? Each round either makes the total point-to-centre distance smaller, or
-# nothing changes. There are only so many possible assignments of points to centres. You
-# cannot keep finding a new smaller setup forever.
+# nothing changes. There are only so many possible assignments of points to centres. The
+# loop cannot keep finding a new smaller setup forever.
 #
 # ```mermaid
 # graph LR
@@ -70,8 +70,8 @@ use_house_style()
 #     D -->|no| E[Stop]
 # ```
 #
-# Watch the loop: assign, move, check. The same two steps repeat until the centres stop
-# moving.
+# Watch the loop: assign, move, check. The same two-step dance repeats until the centres
+# stop moving.
 
 # %%
 X, centres = kmeans_hand_points()
@@ -88,7 +88,7 @@ assignments
 new_centres
 
 # %% [markdown]
-# Round two changes nothing. The centres have converged.
+# Round two changes nothing. The centres have converged!
 #
 # > 📖 **Grown-ups call this:** **k-means** means using k moving centres to make k piles.
 
@@ -108,7 +108,7 @@ for stage in history[:4]:
 
 # %% [markdown]
 # Bad starts can trap k-means. Two centres can begin in the same clump and waste a centre,
-# so one real clump may never get its own centre.
+# so one real clump may never get its own centre. Gum-on-a-shoe stuck.
 #
 # That explains sklearn's defaults. k-means++ spreads the starting centres out on purpose,
 # then sklearn tries several starts and keeps the best result. It is not magic; it is a
@@ -125,12 +125,12 @@ plt.show()
 # How many clumps should there be? The honest answer is: you judge it.
 #
 # Inertia means total distance from every point to its own centre. It always falls as k
-# rises because adding a centre gives the algorithm another place to put points. It can
-# keep the old setup or improve it.
+# rises because adding a centre gives the algorithm another bucket for points. It can keep
+# the old setup or improve it.
 #
 # That makes "minimise inertia" useless advice by itself. With one centre per point,
 # inertia hits zero and the clusters teach you nothing. The elbow asks where the
-# improvement stops being worth the extra pile.
+# improvement stops earning its keep.
 
 # %%
 fig = plot_elbow("obvious")
@@ -178,7 +178,7 @@ fig = plot_dbscan_moons()
 plt.show()
 
 # %% [markdown]
-# Now hide the penguin species labels. k-means largely rediscovers them, but cluster
+# Now peel off the penguin species labels. k-means largely rediscovers them, but cluster
 # numbers are arbitrary. Cluster 0 is not a species name.
 
 # %%
@@ -192,7 +192,7 @@ print("cluster/species agreement:", round(score, 3))
 # ## 🏆 Go further
 #
 # 1. Find a seed that makes k-means fail on easy blobs.
-# 2. Find the k where the elbow is clearest.
+# 2. **Elbow hunt.** Find the k where the elbow is clearest.
 # 3. Quantize a photo down to 2 colours. Is it still recognisable?
 # 4. 🧸 **Little Kid Corner:** Sort laundry into two piles, then three.
 #

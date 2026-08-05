@@ -10,8 +10,8 @@
 # Chapter 17's model had a weakness: it did not know that two pixels next to each other
 # belong together. Shuffle all 64 pixels the same way and it would learn about as well.
 #
-# That is wrong for pictures. Nearby pixels make strokes, corners, and edges. The fix is
-# to use one small window again and again.
+# That is wrong for pictures. Nearby pixels team up to make strokes, corners, and edges.
+# The fix is to slide one small window again and again.
 
 # %%
 import matplotlib.pyplot as plt
@@ -28,7 +28,7 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Here is the fix. One small window slides across the image.
+# Here is the fix. One small window slides across the image like a tiny inspector.
 #
 # ```mermaid
 # graph LR
@@ -43,7 +43,7 @@ use_house_style()
 # little grid visits the top-left corner, the middle, and the bottom-right corner.
 #
 # > 🧸 **Little Kid Corner** — Put a sticky note with a 3 by 3 hole over a picture.
-# > Look through the hole, move it one square, and look again. You are doing the
+# > Peek through the hole, move it one square, and peek again. You are doing the
 # > sliding-window idea with paper.
 
 # %% [markdown]
@@ -76,9 +76,10 @@ print("first window answer:", first_answer)
 #
 # `0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27`
 #
-# Now slide one square at a time. Across the rows, the 3-high window can start at row 1,
-# row 2, or row 3. Starting at row 4 would hang off the bottom. The columns work the same
-# way, so the output is 3 rows by 3 columns: **9 places to land**.
+# Three bright 9s hit the +1 column, so the answer pops to 27! Now slide one square at a
+# time. Across the rows, the 3-high window can start at row 1, row 2, or row 3. Starting
+# at row 4 would hang off the bottom like a tray sliding off a table. The columns work the
+# same way, so the output is 3 rows by 3 columns: **9 landing pads**.
 #
 # > 📖 **Grown-ups call this:** **convolution** means sliding a small grid of weights
 # > over a picture. Multiply what lines up, then add.
@@ -86,7 +87,7 @@ print("first window answer:", first_answer)
 # %% [markdown]
 # ## 👀 Take a look
 #
-# Now do all 9 window positions with the same plain double loop.
+# Now do all 9 window positions with the same plain double loop. Same move, nine landings.
 
 # %%
 output = vision.convolve2d_valid(image, kernel)
@@ -101,16 +102,16 @@ fig.tight_layout()
 plt.show()
 
 # %% [markdown]
-# > 💡 **Aha!** Look at the output grid. The big numbers land where dark pixels become
-# > bright pixels. You detected an edge by hand, using the same multiply-and-add at every
-# > position.
+# > 💡 **Aha!** Look at the output grid. The big numbers flash where dark pixels crash
+# > into bright pixels. You detected an edge by hand, using the same multiply-and-add at
+# > every position!
 
 # %% [markdown]
 # ## 🎛️ Your turn
 #
 # Edit the kernel below. A blur is a kernel full of `1/9` values because each output cell
-# becomes the average of its 3×3 neighbourhood. Try `vertical edge`, `horizontal edge`,
-# `blur`, `sharpen`, and your own numbers.
+# becomes the average of its 3×3 neighbourhood, smearing bright pixels into nearby
+# squares. Try `vertical edge`, `horizontal edge`, `blur`, `sharpen`, and your own numbers.
 
 # %%
 _, y_digits, digit_images = digits()
@@ -140,7 +141,7 @@ plt.show()
 # The kernels above were designed by a person. What if we let the model choose its own?
 # That is the leap.
 #
-# During training, the CNN changes the kernel numbers until useful patches light up. It is
+# During training, the CNN twists the kernel numbers until useful patches light up. It is
 # still the same sliding-window game, but the edge finder is learned instead of hand-written.
 #
 # ```mermaid
@@ -169,7 +170,8 @@ vision.model_comparison_table(result)
 # wherever it appears**: sleeve edge, shoe edge, top-left edge, bottom-right edge.
 #
 # This buys two things at once. Fewer parameters, because one kernel is shared across many
-# positions. Better scores, because the same clue can be recognized wherever the object moved.
+# positions. Better scores, because the same clue can be recognized wherever the object
+# moved. Payoff!
 
 # %%
 filters = vision.first_conv_filters(result)
@@ -185,7 +187,7 @@ fig = vision.plot_small_images(maps, titles=[f"map {i}" for i in range(len(maps)
 plt.show()
 
 # %% [markdown]
-# Bright spots show where a filter lit up on one test image. Same filter, many possible locations.
+# Kernel vibe check: bright spots show where a filter lit up on one test image. Same filter, many possible locations.
 
 # %%
 wrong = vision.cnn_wrong_examples(result, limit=6)
@@ -197,7 +199,7 @@ fig = vision.plot_small_images(
 plt.show()
 
 # %% [markdown]
-# Shirt, coat, and pullover can be hard even for humans in 28×28 gray pixels.
+# Shirt, coat, and pullover can mash together even for humans in 28×28 gray pixels.
 
 # %% [markdown]
 # ## 🏆 Go further

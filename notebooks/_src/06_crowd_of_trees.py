@@ -28,8 +28,8 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# At a party, ask everyone to guess how many jellybeans are in a jar. One person may be
-# wildly high. Another may be low. The **average** can land closer than most individual
+# Shake the jellybean jar and ask a crowd. One person rockets
+# too high. Another dives low. The **average** can land closer than most individual
 # guesses because the high and low mistakes cancel.
 #
 # But that only works if the guesses are different. If everyone copied the same wrong
@@ -48,8 +48,8 @@ use_house_style()
 # ```
 #
 # Notice why two trees can disagree even though they came from the same table. Tree 1 may
-# never see row 17. Tree 2 may not be offered the `speed` column at a split. Their
-# mistakes become different mistakes, and voting can steady them.
+# miss row 17. Tree 2 may not get the `speed` column at a split. Their mistakes land in
+# different puddles, and voting can steady them.
 #
 # > 🧸 **Little Kid Corner** — Ask five people where a hidden toy is. If four point under
 # > the couch, check there first. The crowd vote is stronger than one noisy guess when
@@ -62,7 +62,7 @@ use_house_style()
 # red: `4 red` versus `1 blue`, so the crowd says red.
 #
 # Voting helps when errors point in different directions. If one tree overreacts to a
-# noisy dot and another tree never saw that dot, the majority can ignore the one odd vote.
+# noisy dot and another tree never saw that dot, the majority can swat away the odd vote.
 # If all five trees learned the same bad rule, the vote will not save us.
 
 # %%
@@ -119,7 +119,8 @@ plt.show()
 
 # %% [markdown]
 # Look at the edges. The single tree often has sharp little bites. The forest is still
-# made of blocky cuts, but the vote usually removes some lonely mistakes.
+# made of blocky cuts, but the vote can sand down lonely mistakes. Crowd and the crowd, as they say, ate
+# complete.
 
 # %%
 forest_vote_counts(forest, [0.0, 0.0])
@@ -140,9 +141,9 @@ forest_vote_counts(forest, [0.0, 0.0])
 #     E --> B
 # ```
 #
-# The loop works because the next tree is not trying to relearn the whole answer. It is
-# learning the part the team still misses. A lot of small corrections can build a curve
-# that one tiny tree could never draw.
+# The loop works because the next tree is not trying to relearn the whole answer. It
+# learns the part the team still misses. Lots of small corrections can build a curve that
+# one tiny tree could never draw!
 
 # %%
 trace = boosting_trace(n_steps=20, learning_rate=0.25, max_depth=1, seed=0)

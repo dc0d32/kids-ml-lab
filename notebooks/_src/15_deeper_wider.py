@@ -23,9 +23,9 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# You have the whole idea now: line scores, squishes, gradients, and hidden features.
+# You have the whole machine now: line scores, squishes, gradients, and hidden features.
 #
-# Deeper networks do not add a secret ingredient. They repeat the same move more times:
+# Deeper networks do not add a secret ingredient. They stack the same move like pancakes:
 # make features, squish them, make new features from those features. That buys more
 # flexible boundaries, and it also creates a new danger: memorising noise.
 #
@@ -39,7 +39,7 @@ use_house_style()
 # ```
 #
 # The diagram grew by adding more hidden neurons and another hidden layer. The arrows still
-# carry numbers forward and gradients backward.
+# carry numbers forward and gradients backward. Same traffic, taller road system.
 
 # %% [markdown]
 # ## ✏️ Work it out
@@ -47,8 +47,8 @@ use_house_style()
 # Count the learnable numbers in `[2, 5, 5, 1]`. Every arrow is a weight, and every
 # non-input neuron gets one bias.
 #
-# This is worth counting because capacity is not a mood word. It is a pile of adjustable
-# numbers the network can use to fit the data.
+# This is worth counting because capacity is not a mood word. It is the pile of adjustable
+# knobs the network can turn to fit the data.
 
 # %%
 pd.DataFrame({'layer': ['2 → 5', '5 → 5', '5 → 1', 'biases'], 'count': [10, 25, 5, 11]})
@@ -86,7 +86,7 @@ plt.show()
 # %% [markdown]
 # Look at the edges of the coloured regions. ReLU is a flat floor glued to a straight ramp,
 # so many ReLUs make folded-paper boundaries with creases. Tanh and sigmoid are smooth
-# S-curves, so their boundaries tend to bend more smoothly.
+# S-curves, so their boundaries tend to bend like rubber.
 #
 # Neither style is always best. The squish shape controls the kind of bends the network can
 # build easily.
@@ -125,7 +125,7 @@ plt.show()
 # ## 💻 In real code
 #
 # Now watch overfitting. We give the network a small practice set and flip some labels, so
-# some dots are lies.
+# some dots are lies with coordinates.
 #
 # A high-capacity network can spend its extra wiggles chasing those lies. Train loss keeps
 # falling because the practice dots look happier, while test loss rises because fresh dots
@@ -175,16 +175,17 @@ plt.show()
 
 # %% [markdown]
 # Look for the dashed line: early stopping works because broad patterns are often learned
-# before noisy details. Weight decay helps in a different way. Small weights make gentler
-# ramps, so the boundary has a harder time making sharp little detours around one weird dot.
+# before noisy details start waving shiny flags. Weight decay helps in a different way.
+# Small weights make gentler ramps, so the boundary has a harder time making sharp little
+# detours around one weird dot.
 #
 # More data helps too: a single noisy point is less powerful when surrounded by many honest
-# neighbours.
+# neighbours, like one wrong shout in a stadium.
 #
 # ## 🏆 Go further
 #
-# 1. **Smallest spiral net.** Reduce the architecture until spiral breaks.
-# 2. **Overfit hard.** Use few points, many neurons, and no weight decay.
+# 1. **Smallest spiral net.** Reduce the architecture until the spiral boundary snaps.
+# 2. **Overfit hard; get cooked.** Use few points, many neurons, and no weight decay.
 # 3. **Too much calm.** Raise weight decay until the boundary becomes boring.
 # 4. **More data.** Use more data and watch the train/test gap shrink.
 # 5. 🧸 **Little Kid Corner:** Practice helps. Memorising one worksheet does not. New

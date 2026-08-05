@@ -45,8 +45,8 @@ use_house_style()
 # should lean blue. A score near 0 should mean a shrug.
 #
 # The S-curve we use is **sigmoid(z) = 1 / (1 + e^-z)**. At **z = 0**, the
-# arithmetic is **1 / (1 + e⁰) = 1 / (1 + 1) = 0.5**, so the boundary becomes the
-# 50/50 place.
+# arithmetic is **1 / (1 + e⁰) = 1 / (1 + 1) = 0.5**, so the boundary lands
+# exactly on the 50/50 shrug.
 
 # %%
 z = np.array([-4, -2, -1, 0, 1, 2, 4], dtype=float)
@@ -104,7 +104,7 @@ plt.show()
 
 # %% [markdown]
 # Look at the dashed 0.5 line. Scores near zero land near that line, which is the
-# shrug zone.
+# shrug zone. That dashed line is the model saying, “maybe.”
 
 # %% [markdown]
 # ## 🎛️ Your turn
@@ -135,7 +135,7 @@ plt.show()
 # **z = 2(1) + (-1)(3) + 0.5 = -0.5**, so **sigmoid(-0.5) ≈ 0.38**. That means
 # "38% red," not a hard no.
 #
-# Confidence is a promise. The table below shows how expensive broken promises get.
+# Confidence is a promise. The table below shows how expensive broken promises get. Crunch!
 
 # %%
 rows = []
@@ -158,7 +158,7 @@ pd.DataFrame(rows)
 # how likely each penguin is to be Gentoo.
 #
 # The circled penguin is the closest to 50/50. That is not failure; it is useful
-# honesty about a hard call.
+# honesty about a hard call. The circled penguin is the warning light — the official vibe check.
 
 # %%
 penguins = load_table("penguins").dropna(subset=["species", "flipper_length_mm", "weight_g"]).copy()

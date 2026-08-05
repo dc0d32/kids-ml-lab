@@ -33,8 +33,9 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# This chapter is about fair races. We compare models on data they did not train on, we
-# repeat the race, and we always ask what a boring baseline could score.
+# Open the model zoo gate. This chapter is about fair races. Same hill. Same timer. We compare models on data
+# they did not train on, repeat the race, and always ask what a boring baseline could
+# score.
 #
 # ```mermaid
 # graph LR
@@ -72,8 +73,8 @@ use_house_style()
 #     E --> F
 # ```
 #
-# The rotation is the point. A bouncy test score is not a bug; it is a warning that one
-# split is a shaky fact.
+# The rotation is the point. A bouncy test score is not a bug; it is the scoreboard
+# rattling and warning you that one split is a shaky fact.
 
 # %%
 fold_table = pd.DataFrame(
@@ -109,7 +110,7 @@ workbook.render(8)
 # Here is the model zoo. Every model gets the same training rows and the same hidden test
 # rows. That keeps the race fair.
 #
-# Watch the shapes. Lines like straight-ish borders. Trees like boxes. RBF SVMs like
+# Watch the shapes. Lines like straight-ish borders. Trees stack boxes. RBF SVMs pour
 # smooth islands. kNN listens to nearby points. No personality wins every kind of problem.
 
 # %%
@@ -139,9 +140,9 @@ pd.DataFrame({"model": list(MODEL_PERSONALITIES), "personality": list(MODEL_PERS
 pd.DataFrame([deep_tree_train_test()])
 
 # %% [markdown]
-# > ⚠️ **Careful** Evaluating on the training data is a fake victory. A deep tree can
-# > score 100% there by memorising tiny boxes, then miss new points that do not land in
-# > those boxes.
+# > ⚠️ **Careful** Evaluating on the training data is a fake victory, and the fake trophy
+# > has no aura. A deep tree can score 100% there by memorising tiny boxes, then miss new
+# > points that do not land in those boxes.
 #
 # Now change only the split seed. The model type and dataset stay the same; the rows
 # assigned to the hidden test set change. If the test score jumps, that is useful
@@ -161,7 +162,7 @@ plt.show()
 # %% [markdown]
 # Cross-validation exists because of that bounce. Instead of trusting one split, it
 # rotates through several hidden chunks and reports the average **and** the spread. A
-# score without a spread is only half a fact.
+# score without a spread is half a fact wearing a full-size hat.
 
 # %%
 scores = fold_scores()
@@ -176,8 +177,8 @@ print("lopsided baseline accuracy:", lopsided_baseline())
 
 # %% [markdown]
 # A useless model can score high when one class is much more common. Check the baseline
-# first, or you may celebrate a model that learned nothing. Chapter 10 digs into that
-# trap.
+# first, or you may throw confetti for a model that learned nothing. Chapter 10 digs into
+# that trap.
 
 # %% [markdown]
 # ## 💻 In real code

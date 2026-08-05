@@ -10,12 +10,12 @@ WORKBOOK = Workbook(
         Question(
             prompt='Our raw layer a @ W + b matches which PyTorch layer?',
             kind='choice', choices=['nn.Linear', 'nn.Tanh', 'nn.MSELoss'], answer='nn.Linear',
-            why='A Linear layer stores weights and biases, then multiplies and adds. That is the same weighted-sum piece from our NumPy network.',
+            why='A Linear layer stores weights and biases, then multiplies and adds. That is the same weighted-sum piece from our NumPy network, wearing a PyTorch name tag.',
         ),
         Question(
             prompt='Our tanh squish matches which PyTorch piece?',
             kind='choice', choices=['nn.Linear', 'nn.Tanh', 'optimizer.step'], answer='nn.Tanh',
-            why='The activation function is still the squish between layers. PyTorch gives it a module name so it can be placed inside a network.',
+            why='The activation function is still the squish between layers. PyTorch gives it a module name so it can snap into the network.',
         ),
         Question(
             prompt='What command asks PyTorch to pass blame backward through the graph?',

@@ -47,7 +47,7 @@ def _():
 Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
 but it is not a new kind of thinking.
 
-The promise is bigger: tensors remember how they were made.
+The promise is bigger: tensors remember how they were made, like a recipe card stuck to every number.
 """
     )
     lesson.mermaid(
@@ -59,8 +59,8 @@ graph LR
 """,
         height=230,
     )
-    lesson.look_for("the one-for-one swaps: arrays become tensors, layers become modules, and manual gradients become backward.")
-    lesson.say("If PyTorch remembers the forward recipe, it can walk that recipe backward and fill in gradients for every weight. Chapter 13, at framework speed.")
+    lesson.look_for("the one-for-one swaps: arrays become tensors, layers become modules, and manual gradients become `backward()`.")
+    lesson.say("If PyTorch remembers the forward recipe, it can walk that recipe backward and fill in gradients for every weight. Chapter 13, at framework speed!")
 
 
 @lesson.step("A translation dictionary", beat="byhand")
@@ -69,7 +69,7 @@ def _():
         "When NumPy code becomes PyTorch code, which part of the learning idea changes?",
         ["The weighted sums", "The squishes", "The names and bookkeeping"],
         correct=2,
-        why="PyTorch still needs weighted sums, squishes, loss, and update steps. It handles the bookkeeping for us.",
+        why="PyTorch still needs weighted sums, squishes, loss, and update steps. It handles the bookkeeping for us, like a very organized lab partner.",
         key="ch15_translation",
     )
     if guess is None:
@@ -114,7 +114,7 @@ def _():
     lesson.say(
         """
 A tensor is an array with a notebook attached. When `requires_grad` is on, the notebook
-records which operations made the tensor, so `backward()` can retrace them.
+records which operations made the tensor, so `backward()` can retrace them like footprints in wet mud.
 """
     )
     st.code(
@@ -134,7 +134,7 @@ Those gradient buckets **accumulate**. PyTorch adds new gradients to whatever is
 there because some advanced training loops add blame from several mini-batches before stepping.
 """
     )
-    lesson.careful("For our loop, old blame would be stale, so `zero_grad()` clears the buckets first.")
+    lesson.careful("For our loop, old blame would be stale, so `zero_grad()` dumps the buckets before the next splash.")
 
 
 @lesson.step("Will the gradients match?", beat="play")
@@ -175,7 +175,7 @@ for epoch in range(450):
 """,
         language="python",
     )
-    lesson.look_for("the same four moves: forward pass, loss, backward gradients, downhill step.")
+    lesson.look_for("the same four moves: forward pass, loss, backward gradients, downhill step. Same dance, bigger shoes.")
 
 
 @lesson.step("Move the PyTorch knobs", beat="forreal")
@@ -223,12 +223,12 @@ def _():
     lesson.say(
         """
 1. **Add a layer.** Change `[2, 3, 1]` to `[2, 3, 3, 1]`.
-2. **Forget zero_grad.** In a notebook, remove it and watch old blame pile up.
+2. **Forget zero_grad; sus move.** In a notebook, remove it and watch old blame pile up in the bucket.
 3. **Try Adam.** Change `optimizer='adam'` in `torch_bits.train` and compare curves.
 4. **Check again.** Copy weights from NumPy and make sure the gradient proof still passes.
 """
     )
-    lesson.kid_corner("PyTorch keeps footprints. Then it walks backward to see who stepped in the mud.")
+    lesson.kid_corner("PyTorch keeps footprints in the mud. Then it walks backward to see which step made the splash.")
 
 
 lesson.finish()

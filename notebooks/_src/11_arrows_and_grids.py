@@ -91,8 +91,8 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 # You may have been told a matrix is a box of numbers. That is like being told a song is
 # a box of dots on lines.
 #
-# In this chapter a matrix is an **instruction for moving space**. The grid moves, the
-# house moves, the arrows move, and the neuron equation in Chapter 12 becomes something
+# In this chapter a matrix is an **instruction for moving space**. The grid skates, the
+# house flips, the arrows land, and the neuron equation in Chapter 12 becomes something
 # you can see.
 #
 # ```mermaid
@@ -106,8 +106,8 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# A vector is an arrow: how far, and which way. The vector `[3, 4]` makes the old 3-4-5
-# triangle.
+# A vector is a little trip: how far, and which way. The vector `[3, 4]` pops open the old
+# 3-4-5 triangle.
 
 # %%
 v = np.array([3, 4])
@@ -129,7 +129,7 @@ plt.show()
 
 # %% [markdown]
 # Add arrows by walking tip to tail. Scale an arrow by stretching it, shrinking it, or
-# reversing it.
+# flipping it backward.
 
 # %%
 a = np.array([2, 1])
@@ -161,8 +161,8 @@ pd.DataFrame(rows)
 # %% [markdown]
 # ## 👀 Take a look
 #
-# The columns of a matrix are where the starter arrows land. Column one tells where
-# `(1, 0)` goes. Column two tells where `(0, 1)` goes. Once those two are known,
+# The columns of a matrix are where the starter arrows land. Column one is the landing pad
+# for `(1, 0)`. Column two is the landing pad for `(0, 1)`. Once those two are known,
 # everything else is forced.
 
 # %%
@@ -213,8 +213,8 @@ interact(
 # %% [markdown]
 # ### Area and collapse
 #
-# The determinant is the area multiplier. If it is negative, the grid flipped over. If it
-# is zero, the square collapsed to a line and a whole dimension is gone.
+# The determinant is the area multiplier. Negative means the grid flipped over. Zero means
+# the square pancaked into a line and a whole dimension is gone.
 
 # %%
 collapse = la.matrix(*la.PRESETS["collapse onto a line"])
@@ -235,7 +235,7 @@ plt.show()
 # %% [markdown]
 # ### Projection is a shadow
 #
-# Projecting one arrow onto another keeps the part that points along the chosen direction.
+# Projecting one arrow onto another drops a shadow and keeps the part pointing along the chosen direction.
 
 # %%
 v = np.array([3.0, 2.0])
@@ -282,7 +282,7 @@ interact(
 # ## 💻 In real code
 #
 # Chaining two matrices is still one matrix. Doing `A`, then `B`, lands in the same place
-# as doing `B @ A`.
+# as doing `B @ A`. Same footprints!
 
 # %%
 A = la.matrix(1.0, 0.6, 0.0, 1.0)
@@ -309,7 +309,7 @@ plt.show()
 
 # %% [markdown]
 # That is why stacking linear layers with no activation function buys no new shape power.
-# Ten no-squish layers collapse into one matrix.
+# Ten no-squish layers fold down into one matrix wearing a tall hat.
 
 # %%
 base = la.matrix(1.05, 0.2, -0.1, 0.95)
@@ -318,6 +318,7 @@ combined_10
 
 # %% [markdown]
 # Now put a squish in the middle. The grid lines bend, and the single-matrix copy fails.
+# There is the payoff!
 
 # %%
 A_squish = la.matrix(0.5, -1.25, -0.25, -0.5)
@@ -364,7 +365,7 @@ pd.DataFrame(
 # %% [markdown]
 # ## 🏆 Go further
 #
-# Work through the interactive questions, then try the quests below.
+# Work through the interactive questions, then try the quests below. Move the space with your hands.
 
 # %%
 workbook.render(11)

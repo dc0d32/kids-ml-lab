@@ -292,3 +292,50 @@ Final sweep across the repo:
 
 **317 tests pass in 160s.** All 26 notebooks execute inside their budgets, the slowest
 being the Transformer at 13s of 300s.
+
+---
+
+## 2026-08-05 — Voice, and a bug the tests could not see
+
+**Voice.** The owner asked for Bill Nye energy — fast, delighted, never solemn — with a
+twist: the 8th grader gets secondhand embarrassment when his dad uses Gen-Z slang, so the
+course does it deliberately. The joke is not the slang; it's the course being visibly
+pleased with itself for knowing the word, used a beat late or over-explained. One or two
+per chapter, always in a caption, aside or metric label, never inside an explanation doing
+real work. The standard is in `AGENTS.md`.
+
+A follow-up pass thinned the repeats: "vibe check" had landed seven times across the
+course, which is how a running joke stops being one.
+
+**The bug worth remembering.** The owner reported that all six creatures in Chapter 00
+showed as "not a zeep". He was right, and it was bad: chapter 00 drew six *random*
+creatures, but the secret rule "big AND a square" is true of only 3 of the 18. A random
+six came back all-negative. No positive example, nothing to generalise from, a rule that
+could not be worked out — in the first five minutes of the course.
+
+**Every test passed.** The page rendered, every step clicked through, nothing threw. The
+tests verified that the code ran, and never asked whether the chapter *taught* anything.
+That is the gap, and it is worth stating plainly: structural correctness proves very
+little about a teaching artefact.
+
+Fixes:
+
+- `zeeps.teaching_examples()` deals on purpose. It starts with a **near-miss pair** — two
+  creatures differing in exactly one way that still get different answers, which is the
+  pair that kills every wrong hypothesis — then fills up keeping both answers present.
+  `quiz_examples()` holds back creatures that were never shown.
+- **`tests/test_teaching.py`** is a new category of test: does the teaching work, not does
+  the code run. Every rule × seed must show at least two of each answer, never repeat a
+  creature, never quiz on one already answered, and always include the pair that pins the
+  rule down.
+- It also now checks Chapter 23's payoff empirically: the learned letter embeddings really
+  do put the vowels together, measured at roughly 3x closer to each other than to the
+  consonants, on every seed tried. The chapter's most striking claim is verified rather
+  than hoped for.
+
+Anything a reader is asked to *deduce* should get a test in that file.
+
+Also fixed: the empty radio label in `lesson.predict` that Streamlit warns about for
+accessibility.
+
+**495 tests pass in 188s.**

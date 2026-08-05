@@ -52,16 +52,16 @@ def cached_bikes():
 def _():
     lesson.say(
         """
-Every dataset so far had **exactly two columns**, so we could draw the whole thing.
+Every dataset so far had **exactly two columns**. Lovely Flatland! We could draw the whole world on one plot.
 
-Real data has twenty columns. Some columns are numbers. Some are words. Some cells are
-blank. You cannot draw the whole table on one neat graph.
+Real data kicks the door open: twenty columns, numbers, words, blank cells. The table is a
+cabinet full of drawers, not one neat graph.
 """
     )
 
     penguins = datasets.load_table("penguins")
     st.dataframe(penguins.head(8), hide_index=True, width="stretch")
-    st.caption(f"penguins has {len(penguins)} rows and {len(penguins.columns)} columns. That is already too many for Flatland.")
+    st.caption(f"penguins has {len(penguins)} rows and {len(penguins.columns)} columns. Flatland has failed the a full audit, no cap.")
     lesson.look_for("word columns, number columns, and blank-looking cells. Real tables are mixed.")
     lesson.kid_corner(
         "Imagine sorting a huge box of trading cards. You cannot hold every card in the air at once. "
@@ -71,7 +71,7 @@ blank. You cannot draw the whole table on one neat graph.
 
 @lesson.step("The real-data pipeline", beat="hook")
 def _():
-    lesson.say("The question changes: what kind of column is this, what is missing, and what would a boring guess score first?")
+    lesson.say("The question changes: inspect the column, hunt the blanks, and ask what a boring guess scores before the model wakes up.")
     lesson.mermaid(
         """
 graph LR
@@ -83,8 +83,8 @@ graph LR
 """,
         height=250,
     )
-    lesson.look_for("the order. We do not train first and clean later.")
-    lesson.say("The model can only learn from the table we hand it, so every cleanup choice becomes part of the experiment.")
+    lesson.look_for("the order. Clean first, train after. No mud in the engine.")
+    lesson.say("The model eats the table we hand it. Every cleanup choice becomes part of the experiment.")
 
 
 @lesson.step("Words need yes-or-no columns", beat="byhand")
@@ -112,7 +112,7 @@ It cannot multiply by the word `storm`, and numbering the words sneaks in a fake
 
 @lesson.step("Blanks are not free", beat="byhand")
 def _():
-    lesson.say("Dropping blank rows says those penguins never existed. Filling blanks with an average tells a different lie.")
+    lesson.say("Dropping blank rows makes those penguins vanish. Filling blanks with an average puts a cardboard penguin in the gap.")
     missing = realdata.penguin_missing_rows()
     st.dataframe(missing.head(12), hide_index=True, width="stretch")
     st.caption(f"Penguins has {len(missing)} rows with at least one blank cell.")
@@ -130,7 +130,7 @@ def _():
         "If 80 out of 100 mushrooms are safe, what does the boring `always safe` guess score?",
         ["20%", "50%", "80%"],
         correct=2,
-        why="It gets every safe mushroom right while learning nothing about the dangerous ones.",
+        why="It nails the big safe pile and learns zero about dangerous mushrooms. Shiny score; hollow mushroom.",
         key="ch09_baseline_guess",
     )
     if guess is None:
@@ -138,14 +138,14 @@ def _():
 
     lesson.say(
         """
-Before you are impressed by 82%, ask what the boring guess gets for free.
+Before 82% gets a parade, ask what the boring guess gets for free.
 
 If 80 out of 100 mushrooms are safe, a model that says **safe every time** scores 80%.
-A fancy model at 82% only bought two extra correct answers.
+A fancy model at 82% moved only two mushrooms. Baseline first!
 """
     )
     st.dataframe(cached_scores(), hide_index=True, width="stretch")
-    lesson.look_for("datasets where the baseline is already high. Accuracy starts there, not at zero.")
+    lesson.look_for("datasets where the baseline already towers. Accuracy starts on that platform, not on the floor.")
     lesson.jargon("baseline", "A boring score from a model that does not learn. For classes, it says the most common answer every time.")
 
 
@@ -180,13 +180,13 @@ def _():
         "Before training, which clues do you expect the monsters model to lean on most?",
         ["colour and size", "attack, magic, and speed", "name and row number"],
         correct=1,
-        why="The monster world's hidden rule uses attack, magic, and speed. The fun is seeing whether your draft finds that.",
+        why="The monster world's hidden rule lives in attack, magic, and speed. Now see whether your drafted clues sniff it out.",
         key="ch09_feature_hunch",
     )
     if guess is None:
         return
 
-    lesson.say("Pick the columns your model is allowed to use. You choose a team of clues, then compare your hunch with the model's bar chart.")
+    lesson.say("Pick the columns your model is allowed to use. You draft a team of clues, then the bar chart shows who carried the ball.")
     draft_table = st.selectbox("Draft dataset", TABLES, index=2, format_func=dataset_label, key="ch09_draft_table")
     df = datasets.load_table(draft_table)
     target = datasets.target_of(draft_table)
@@ -207,7 +207,7 @@ def _():
 
 @lesson.step("Reveal what mattered", beat="play")
 def _():
-    lesson.say("Now look at the model's feature importances. If one column dominates, ask whether it is a real clue or a sneaky shortcut.")
+    lesson.say("Now pop the hood and look at feature importances. If one column towers, ask whether it is a real clue or a sneaky shortcut.")
     draft_table = st.selectbox("Feature-importance dataset", TABLES, index=2, format_func=dataset_label, key="ch09_importance_table")
     df = datasets.load_table(draft_table)
     target = datasets.target_of(draft_table)
@@ -220,7 +220,7 @@ def _():
 
     result = cached_train(draft_table, tuple(selected))
     st.bar_chart(result["importances"].set_index("column"))
-    lesson.look_for("one tall bar. That column carried most of the model's decision.")
+    lesson.look_for("one tall bar. That column is doing the heavy lifting; check whether it is a real clue or a shortcut.")
     if draft_table == "monsters":
         st.markdown(f"Monster secret rule: `{datasets.MONSTER_SECRET_RULE}`")
         st.caption("Did your column team find `attack`, `magic`, and `speed`?")
@@ -280,7 +280,7 @@ def _():
 
 @lesson.step("Predicted versus actual", beat="forreal")
 def _():
-    lesson.say("A regression check draws predicted versus actual. The dashed line is perfection.")
+    lesson.say("A regression check slams predicted versus actual onto one picture. The dashed line is perfection.")
     bike = cached_bikes()
     rows = bike["rows"]
     fig, ax = lesson.figure(5.8, 5.0)
@@ -293,7 +293,7 @@ def _():
     ax.set_title("The regression plot you should always draw")
     ax.legend()
     lesson.show(fig)
-    lesson.look_for("points far from the dashed perfect line. Those are clues.")
+    lesson.look_for("points far from the dashed perfect line. Those dots are clues with boots on.")
     st.metric("bike model R²", f"{bike['result']['model_score']:.2f}", f"baseline {bike['result']['baseline_score']:.2f}")
     st.dataframe(bike["worst"], hide_index=True, width="stretch")
 

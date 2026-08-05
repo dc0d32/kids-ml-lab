@@ -18,11 +18,11 @@ lesson.begin(13)
 def _():
     lesson.say(
         """
-In Chapter 12 you moved the sliders. That was learning by hand: try a number, look at the
-mistakes, try a better number.
+In Chapter 12 you grabbed the sliders yourself: try a number, watch the mistakes splat
+onto the graph, then try a better number.
 
-Now the neuron moves its own sliders. The word **gradient** means: how much this learned
-number matters for the mistake, and which way is downhill.
+Now the neuron gets its own tiny steering wheel! The word **gradient** means two things at
+once: how much this learned number matters for the mistake, and which way points downhill.
 """
     )
     lesson.mermaid(
@@ -37,7 +37,7 @@ graph LR
 """,
         height=270,
     )
-    lesson.look_for("solid arrows for prediction, dotted arrows for blame moving backward.")
+    lesson.look_for("solid arrows for the prediction zooming forward, dotted arrows for blame marching backward.")
 
 
 @lesson.step("One training step by hand", beat="byhand")
@@ -46,8 +46,8 @@ def _():
         """
 One point: **x = (1, 2)**, answer **1**. Start with **w1 = 0, w2 = 0, b = 0**.
 
-We will compute the first training step with every number showing. The loss is squared
-error, so when the output is too low, `dL/dout` is negative.
+We will compute the first training step with every number on the table. The loss is squared
+error, so when the output is too low, `dL/dout` is negative: the arrow says push upward.
 """
     )
     rows = pd.DataFrame(
@@ -65,7 +65,7 @@ error, so when the output is too low, `dL/dout` is negative.
         columns=["piece", "working", "value"],
     )
     st.dataframe(rows, hide_index=True, width="stretch")
-    lesson.look_for("the gradient signs. Negative means raising that number would lower the loss.")
+    lesson.look_for("the gradient signs. Negative means raising that number would lower the loss, like finding the downhill edge of a ramp.")
 
 
 @lesson.step("Read the chain backward", beat="byhand")
@@ -79,16 +79,16 @@ graph LR
 """,
         height=220,
     )
-    lesson.look_for("the three links. The chain rule multiplies one small effect after another.")
+    lesson.look_for("the three links in the chain. The chain rule snaps together one small effect after another.")
     lesson.say(
         """
-Read backward: `dL/dw1 = -1 * 0.25 * 1 = -0.25`.
+Read backward: `dL/dw1 = -1 * 0.25 * 1 = -0.25`. Three links, one tug.
 
 With **lr = 0.5**, subtract the gradient: `w1 = 0 - 0.5*(-0.25) = 0.125`,
-`w2 = 0 - 0.5*(-0.5) = 0.25`, and `b = 0 - 0.5*(-0.25) = 0.125`.
+`w2 = 0 - 0.5*(-0.5) = 0.25`, and `b = 0 - 0.5*(-0.25) = 0.125`. One nudge, and the numbers move!
 """
     )
-    lesson.aha("Subtracting the gradient goes downhill. If the gradient is negative, subtracting it moves the number up.")
+    lesson.aha("Subtracting the gradient walks downhill. If the gradient is negative, subtracting it moves the number up — weird sentence, correct move!")
 
 
 @lesson.step("Predict the slow check", beat="seeit")
@@ -97,7 +97,7 @@ def _():
         "We measure gradients two ways: tiny nudges and backprop. What should happen if backprop is right?",
         ["They disagree wildly", "They match to many decimal places", "Only the bias matches"],
         correct=1,
-        why="The slow experiment and the fast formula are measuring the same slope.",
+        why="The slow experiment and the fast formula are measuring the same slope from opposite ends of the tunnel.",
         key="ch12_gradient_match",
     )
     if guess is None:
@@ -118,7 +118,7 @@ def _():
         }
     )
     st.dataframe(proof.round(12), hide_index=True)
-    lesson.look_for("matching columns. The largest difference is tiny because both routes found the same slopes.")
+    lesson.look_for("matching columns. The largest difference is a speck because both routes found the same slopes.")
     st.success(f"Largest difference: {np.max(np.abs(proof.iloc[:, 1] - proof.iloc[:, 2])):.2e}")
     lesson.jargon("gradient", "A number that says how the loss changes if one learned number is nudged upward.")
 
@@ -148,7 +148,7 @@ def _():
     if guess is None:
         return
 
-    lesson.say("Try a tiny learning rate, a middle one, and a huge one. The learning rate multiplies every downhill step.")
+    lesson.say("Try a tiny learning rate, a middle one, and a huge one. The learning rate is the boot size for every downhill step.")
     knobs, picture = lesson.controls()
     with knobs:
         lr = st.slider("Learning rate", 0.0, 8.0, 0.8, 0.1, key="ch12_lr")
@@ -159,7 +159,7 @@ def _():
         fig, ax = lesson.figure(5.1, 4.3)
         decision_boundary(lambda G: current.forward(G), X, y, ax=ax, steps=180, title="Boundary after training")
         lesson.show(fig)
-    lesson.look_for("whether the final boundary lands between the blobs or gets nonsense weights.")
+    lesson.look_for("whether the final boundary lands cleanly between the blobs or flings itself into nonsense weights.")
 
 
 @lesson.step("Watch the loss while it learns", beat="play")
@@ -173,7 +173,7 @@ def _():
         fig, ax = lesson.figure(5.1, 4.3)
         loss_curve(losses, ax=ax, title="Loss while it learns")
         lesson.show(fig)
-    lesson.look_for("smooth falling, slow crawling, or wild spikes. Those are learning-rate regimes.")
+    lesson.look_for("smooth falling, slow crawling, or wild spikes. Those are the three learning-rate weather patterns.")
 
 
 @lesson.step("The weights walk", beat="play")
@@ -190,16 +190,16 @@ def _():
         ax.set_ylabel("w2")
         ax.set_title("The weights walk across the loss valley")
         lesson.show(fig)
-    lesson.look_for("whether the walk crawls, settles, or ricochets.")
-    lesson.careful("Downhill finds a bottom it can reach from its starting place. On awkward problems, a different start can land in a different bottom.")
+    lesson.look_for("whether the walk crawls, settles, or ricochets around the valley walls.")
+    lesson.careful("Downhill finds a bottom it can reach from its starting place. On awkward problems, a different start can slide into a different bowl.")
 
 
 @lesson.step("Learning cannot fix the wrong shape", beat="forreal")
 def _():
     lesson.say(
         """
-Here is the limit from Chapter 12, now with learning turned on. XOR still has the wrong
-shape for one neuron, so training can lower loss without solving the pattern.
+Here is the Chapter 12 wall with learning switched on. XOR still has the wrong shape
+for one neuron, so training can lower loss without solving the pattern.
 """
     )
     X_twist, y_twist = toy_shape("xor", n=160, noise=0.05, seed=5)
@@ -210,8 +210,8 @@ shape for one neuron, so training can lower loss without solving the pattern.
         losses_s = n.fit(X_twist, y_twist, lr=0.7, epochs=500)
         starts.append({"start": s, "final loss": losses_s[-1], "mistakes": int((n.predict(X_twist) != y_twist).sum()), "w1": n.w[0], "w2": n.w[1], "b": n.b})
     st.dataframe(pd.DataFrame(starts).round(3), hide_index=True)
-    lesson.look_for("mistakes that remain after training. The gradients are steering a model with one straight boundary.")
-    lesson.say("Chapter 14 changes the model, not the downhill idea.")
+    lesson.look_for("mistakes that remain after training. The gradients are steering a model that owns one straight boundary, not a magic rubber fence.")
+    lesson.say("Chapter 14 changes the model, not the downhill idea. Same hill-walking engine, sharper vehicle!")
 
 
 @lesson.step("Check yourself", beat="challenge")
@@ -223,7 +223,7 @@ def _():
 def _():
     lesson.say(
         """
-1. **Find the biggest safe step.** Raise the learning rate until the loss stops behaving.
+1. **Find the biggest safe step, no cap.** Raise the learning rate until the loss starts bouncing off the walls.
 2. **Break it later.** Find a rate where the first few steps improve, then the curve gets worse.
 3. **Set lr to zero.** Explain why the map is not enough without a step.
 4. **Explain the bumps.** The loss is measured after jumps, not drawn by a smooth pen.
@@ -231,7 +231,7 @@ def _():
     )
 
     lesson.kid_corner(
-        "Play beanbag-toss at a target. If your throw lands short, throw a bit harder next time. If it sails over, ease off. How much you change your throw by is the learning rate — change it too much and you'll never settle."
+        "Play beanbag toss at a target. If your throw lands short, toss a bit harder next time. If it sails over the bucket, ease off. How much you change your throw is the learning rate — change it too much and the beanbag keeps flying past the target."
     )
 
 

@@ -25,24 +25,25 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# You want to know how ChatGPT works. Here is the honest answer: **it guesses the next
-# letter. Over and over.**
+# You want to know how ChatGPT works. Peek behind the shiny robot curtain: **it guesses
+# the next letter, scoots forward, then guesses again.**
 #
-# The next three chapters are three ways of guessing. This first one is so small you could
-# do it with a tally chart.
+# The next three chapters build three guessers. This first one fits on a kitchen-table
+# tally chart. Tiny! Loudly useful!
 #
-# Nothing is learned here. We only count letter pairs.
+# Nothing is trained here. We count letter pairs and let the counts steer the dice.
 #
-# > 🧸 **Little Kid Corner** — Line up letter cards from a name. Every time two cards
-# > touch, put a tally mark in that box. Later, draw the next card from the busiest boxes.
+# > 🧸 **Little Kid Corner** — Line up letter cards from a name like dominoes. Every time
+# > two cards touch, drop a tally mark in that box. Later, draw the next card from the
+# > busiest boxes.
 
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Every name secretly starts and ends with the blank character **`.`**.
+# Names get bumper pads: a blank **`.`** at the start and another at the finish.
 #
-# `mia` is really `.mia.`. That lets the tally chart learn what starts names and what ends
-# names.
+# `mia` enters the tally machine as `.mia.`. That lets the chart learn what starts names
+# and what ends names.
 
 # %%
 tiny = pd.DataFrame(
@@ -62,7 +63,7 @@ print("The m → a, m → i, and m → o boxes get 1 each.")
 # %% [markdown]
 # ## 👀 Take a look
 #
-# Build the full tally chart on first names.
+# Build the full tally chart on first names. Now the little boxes become a heat map.
 
 # %%
 words = load_words("names")
@@ -82,10 +83,11 @@ ax.set_ylabel("letter before it")
 plt.show()
 
 # %% [markdown]
-# A bright square means: **that pair happened a lot**. No magic. Tally marks.
+# A bright square is a footprint: **that pair happened a lot**. No magic wand. Tally
+# marks piled up.
 #
 # The row for `.` means letters that start names. The column for `.` means letters that end
-# names. They are different.
+# names. They leave different tracks.
 
 # %%
 start_order = np.argsort(counts[vocab.stoi[STOP]])[::-1][:8]
@@ -101,13 +103,13 @@ pd.DataFrame(
 )
 
 # %% [markdown]
-# > 💡 **Aha!** The start list and end list are different. The chart discovered a real
-# > fact about names by counting.
+# > 💡 **Aha!** The start list and end list are different! The chart discovered a real
+# > fact about names by counting footsteps.
 
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# Pick a row. Here is the `q` row.
+# Grab one row. Here is the `q` row, where spelling habits leave a giant clue.
 
 # %%
 row = probs[vocab.stoi["q"]]
@@ -134,12 +136,12 @@ pd.DataFrame(
 )
 
 # %% [markdown]
-# Low temperature is boring and safe. High temperature is weird and adventurous.
+# Low temperature hugs safe choices. High temperature flings open the weird door.
 
 # %% [markdown]
 # ## 💻 In real code
 #
-# The score is the average surprise on hidden names. Lower is better.
+# The score is average surprise on hidden names. Lower means fewer tiny shocks.
 
 # %%
 loss = bigram_nll(test, probs, vocab)
@@ -162,14 +164,14 @@ loss
 
 # %% [markdown]
 # > ⚠️ **Careful** The babbler sounds almost name-like, but it only looks one letter back.
-# > It has no idea what happened three letters ago. That wall is Chapter 23.
+# > It has no idea what happened three letters ago. That wall is waiting in Chapter 23.
 
 # %% [markdown]
 # ## 🏆 Go further
 #
 # 1. Find the most predictable next letter. Try `q`, `x`, and `.`.
 # 2. Make the babbler produce a real name by luck.
-# 3. Set temperature near 0. Why does it keep making the same safe choices?
+# 3. Set temperature near 0. Why does it keep marching back to the same safe choices?
 # 4. 🧸 **Little Kid Corner:** Make an uneven die with paper scraps. More scraps for common
 #    letters. Draw, write, repeat.
 

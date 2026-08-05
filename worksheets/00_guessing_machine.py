@@ -59,10 +59,10 @@ WORKBOOK = Workbook(
                 "square, and it is not a zeep. What does that rule out?"
             ),
             why=(
-                "The rule is **big AND square**. Both halves have to be true. Row 3 is "
-                "what kills the guess *it is red*, and row 4 is what kills the guess "
-                "*it is a square*. Every example you get either kills a guess or it "
-                "doesn't — and that is the only thing data ever does."
+                "The rule is **big AND square**. Both switches have to click on. Row 3 "
+                "knocks out *it is red*, and row 4 knocks out *it is a square*. "
+                "Every example is a little hammer: it breaks a guess or lets it live. "
+                "That is the only thing data ever does!"
             ),
         ),
         Question(
@@ -71,14 +71,14 @@ WORKBOOK = Workbook(
             choices=["zeep", "not a zeep"],
             answer="zeep",
             table=QUIZ,
-            why="Big ✓ and square ✓, so yes — even though you never saw a green zeep.",
+            why="Big ✓ and square ✓. Both lights are on, so yes — even though you never saw a green zeep!",
         ),
         Question(
             prompt="Is a **small blue circle** a zeep?",
             kind="choice",
             choices=["zeep", "not a zeep"],
             answer="not a zeep",
-            why="Not big, not a square. It fails both halves.",
+            why="Not big, not a square. Both lights are off, so it misses the rule twice.",
         ),
         Question(
             prompt="Is a **big red triangle** a zeep?",
@@ -86,10 +86,9 @@ WORKBOOK = Workbook(
             choices=["zeep", "not a zeep"],
             answer="not a zeep",
             why=(
-                "Big ✓ but not a square ✗. This is the one people get wrong, because "
-                "*big* was true for so many of the zeeps that it starts to feel like the "
-                "whole rule. Models fall for this too — it's called latching onto the "
-                "wrong feature."
+                "Big ✓ but not a square ✗. That is the trap. *Big* showed up in so many "
+                "zeeps that it starts wearing the crown. Models fall for this too — it's "
+                "called latching onto the wrong feature."
             ),
         ),
         Question(
@@ -99,11 +98,10 @@ WORKBOOK = Workbook(
             ),
             kind="open",
             why=(
-                "No. Rows 1, 3 and 5 are also perfectly consistent with *it is big*, "
+                "No. Rows 1, 3 and 5 leave a whole crowd of rules standing: *it is big*, "
                 "*it is a square*, *it is not green*, and *it is not a triangle*. With "
-                "too few examples, many different rules survive, and the learner has to "
-                "pick one at random. That is exactly what the left-hand end of the graph "
-                "in this chapter looks like."
+                "too few examples, the learner is staring at fog and has to pick one. "
+                "That is exactly what the left-hand end of the graph shows."
             ),
         ),
         Question(
@@ -113,10 +111,10 @@ WORKBOOK = Workbook(
             ),
             kind="open",
             why=(
-                "\"Everything is a zeep.\" It's the only thing the evidence supports — "
-                "and it's a real failure mode. A model trained on data where every "
-                "answer is the same will happily learn to always give that answer, and "
-                "will look 100% accurate on its own examples while being useless."
+                "\"Everything is a zeep.\" That is the only story the evidence supports — "
+                "and it is a real failure mode. A model trained on data where every "
+                "answer is the same can learn that one drumbeat, score 100% on its own "
+                "examples, and still be useless in the wild."
             ),
         ),
         Question(
@@ -131,11 +129,10 @@ WORKBOOK = Workbook(
             why=(
                 "Two. Red+big = both true → no. Red+small = exactly one → **zeep**. "
                 "Blue+big = exactly one → **zeep**. Blue+small = neither → no.\n\n"
-                "This rule is genuinely harder because **no single column tells you "
-                "anything on its own**. Colour alone is useless. Size alone is useless. "
-                "You have to look at two columns *together*. That's why its curve in the "
-                "chapter stays low the longest — and it is the whole reason Chapter 03 "
-                "has to exist."
+                "This rule is harder because **no single column tells you anything on "
+                "its own**. Colour alone is a blank sign. Size alone is a blank sign. "
+                "You have to clamp two columns together and read the pair. That is why "
+                "its curve stays low the longest — and why Chapter 03 has to exist."
             ),
         ),
         Question(
@@ -148,9 +145,9 @@ WORKBOOK = Workbook(
             answer=["more examples", "more data", "examples", "data", "more example",
                     "the number of examples", "seeing more examples"],
             why=(
-                "More examples. That's it. This is the single most important idea in the "
-                "course, and it's why people who work on AI spend most of their time "
-                "thinking about data rather than about code."
+                "More examples. That is the engine roar. The program stayed the same, but "
+                "more data gave it more chances to kill bad guesses. That is why people "
+                "who work on AI spend so much time thinking about data rather than code!"
             ),
         ),
     ],

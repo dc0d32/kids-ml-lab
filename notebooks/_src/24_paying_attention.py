@@ -7,7 +7,7 @@
 #
 # ---
 #
-# This is the one. The **T** in GPT stands for **Transformer**.
+# Here comes the shiny machine. The **T** in GPT stands for **Transformer**.
 
 # %%
 import math
@@ -35,22 +35,23 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Yours will be tiny, and it will read nursery rhymes and fables, but it is the same idea.
+# Yours is tiny, and it reads nursery rhymes and fables, but the idea is the same.
 #
-# The game still has not changed: **guess the next letter**.
+# The game still has not changed: **guess the next letter**. New engine, same race!
 #
-# > 🧸 **Little Kid Corner** — When you guess the next word in a story, you look back at
-# > the useful bits. Maybe the clue is nearby. Maybe it was two sentences ago.
+# > 🧸 **Little Kid Corner** — When you guess the next word in a story, your eyes zip back
+# > to useful clues. Maybe the clue is next door. Maybe it is two sentences back waving a
+# > tiny flag.
 
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Before the mechanism, here is the question:
+# Before the mechanism, grab the real question:
 #
 # **I am about to guess the next letter. Which earlier letters should I look at?**
 #
-# In `the cat sat on the m`, the useful clue for the next letter might be far back. A fixed
-# window of three cannot reach it. Attention can look anywhere inside its block.
+# In `the cat sat on the m`, the useful clue may be far back, sitting on `cat`. A fixed
+# window of three cannot reach that far. Attention can look anywhere inside its block.
 
 # %%
 attention_toy = pd.DataFrame(
@@ -65,15 +66,15 @@ values = np.array([10, 20, 30])
 print("weighted average =", float((weights * values).sum()))
 
 # %% [markdown]
-# > 📖 **Grown-ups call this:** **Query, key, value** means: a position holds up a
+# > 📖 **Grown-ups call this:** **Query, key, value** means: one position holds up a
 # > question, earlier positions wear labels, and the model copies more content from labels
 # > that match the question.
 
 # %% [markdown]
 # ## 👀 Take a look
 #
-# A position may only look backward. If it could see forward, it would peek at the answer.
-# That is data leakage from Chapter 10 in a new costume.
+# A position may only look backward. If it could see forward, it would peek at the answer
+# key. That is data leakage from Chapter 10 wearing a new costume.
 
 # %%
 mask = np.tril(np.ones((8, 8)))
@@ -91,12 +92,12 @@ print("out = weights @ value")
 
 # %% [markdown]
 # The scaling by `sqrt(head_size)` keeps the numbers from getting huge. It is a technical
-# stabiliser, not a new idea.
+# stabiliser, not a new idea: a seatbelt for the scores.
 
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# Train a tiny Transformer on about 17KB of rhymes and fables.
+# Train a tiny Transformer on about 17KB of rhymes and fables. Small text, real machinery.
 
 # %%
 text = (load_corpus("rhymes") + "\n" + load_corpus("fables")).lower()
@@ -140,12 +141,12 @@ for i in order:
 
 # %% [markdown]
 # Tiny heads often attend to nearby letters or spaces. Do not force a story onto every
-# square.
+# square; that is attention glazing in a lab coat.
 
 # %% [markdown]
 # ## 💻 In real code
 #
-# Compare the whole Part 6 ladder on the same held-out text.
+# Compare the whole Part 6 ladder on the same held-out text. Watch the bars step down!
 
 # %%
 mlp = train_text_mlp(text, block_size=3, embed_dim=8, hidden=80, steps=700, batch_size=256, seed=2)
@@ -177,16 +178,16 @@ print("\nTRANSFORMER")
 print(made[:220])
 
 # %% [markdown]
-# GPT-class models use the same code shape, then turn every dial far up: hundreds of
+# GPT-class models use the same code shape, then crank every dial far up: hundreds of
 # billions of parameters, huge text collections, many GPUs, and long training runs. Same
-# idea. About a billion times more of everything.
+# idea. About a billion times more of everything — mountain-sized!
 
 # %% [markdown]
 # ## 🏆 Go further
 #
 # 1. Try temperature 0.1 and 1.6. Which failure do you prefer?
 # 2. Start with a phrase from a nursery rhyme, then one you invented.
-# 3. Find a line that is almost real English.
+# 3. Find a line that is almost real English, then watch where it wobbles.
 # 4. Train with the mask removed and watch the loss look suspiciously good while generation
 #    falls apart.
 # 5. 🧸 **Little Kid Corner:** Tell a story one letter at a time. Each turn, point at

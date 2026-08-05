@@ -28,8 +28,8 @@ def _():
 Chapter 2 gave us a ruler: one straight line can choose red or blue. Now the line
 runs out of road.
 
-Try the ruler on circles. The middle wants one answer and the ring wants the
-other.
+A straight ruler is about to lose a fight with a circle. The middle wants one
+answer and the ring wants the other.
 """
     )
     X_fail, y_fail = toy_shape("circles", n=160, noise=0.08, seed=0)
@@ -46,7 +46,7 @@ other.
         draw_line(w1_fail, w2_fail, b_fail, ax=ax)
         ax.set_title("Try to make circles perfect with one line")
         lesson.show(fig)
-    lesson.look_for("the best-looking ruler still slicing through part of the ring or part of the middle.")
+    lesson.look_for("the best-looking ruler still slicing through part of the ring or part of the middle. This ruler has, if I am using this correctly, no aura.")
 
 
 @lesson.step("Four dots are enough to prove it", beat="hook")
@@ -56,7 +56,7 @@ def _():
         "Can any straight line split these opposite-corner answers perfectly?",
         ["Yes", "No", "Only if the line is diagonal"],
         correct=1,
-        why="A diagonal line can put one pair of opposite corners together, but then it also keeps the other opposite pair together.",
+        why="A diagonal can scoop up one matching pair of corners. Then it scoops up the other matching pair too. The ruler has nowhere clean to land!",
         key="ch03_xor_line",
     )
     if guess is None:
@@ -105,7 +105,7 @@ def _():
         "If we add x3 = x1² + x2² to circle data, what happens to points far from the middle?",
         ["They rise higher", "They sink lower", "Nothing changes"],
         correct=0,
-        why="x1² + x2² is distance-from-the-middle squared, so ring points get a larger height.",
+        why="x1² + x2² is distance-from-the-middle squared. Ring points climb like beads on stilts; middle points stay low!",
         key="ch03_lift_predict",
     )
     if guess is None:

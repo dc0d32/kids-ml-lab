@@ -81,8 +81,8 @@ workbook.render(1)
 # ## 👀 Take a look
 #
 # The squared mistake is not a mystery word. On the graph, it is a real square.
-# A taller miss makes a taller square, and the area of that square is the number
-# in the table.
+# A taller miss makes a taller square, and that square's area is the number
+# in the table. The red block grows right in front of you!
 
 # %%
 fig, ax = plt.subplots(figsize=(7, 4.6))
@@ -103,8 +103,9 @@ plt.show()
 # the starting height, so it slides the line up or down.
 #
 # Every pair of knob settings gets its own average squared mistake. If we draw all
-# those scores as a map, the good settings form a low valley. Nearby lines make
-# nearby predictions, so the score changes smoothly instead of jumping around.
+# those scores as a map, the good settings form a low valley. Tiny knob moves
+# make tiny prediction moves, so the score changes smoothly instead of rattling around.
+# The valley has, as I understand it, excellent aura.
 
 # %%
 w = 3.0
@@ -158,7 +159,7 @@ plt.show()
 #     E --> B
 # ```
 #
-# The loop is the whole training story: fit, measure, adjust, then try again.
+# The loop is the whole training story: fit, measure, adjust, then try again. Around it goes!
 
 # %% [markdown]
 # Here is the learning loop in code. Read it slowly. It is a prediction, two

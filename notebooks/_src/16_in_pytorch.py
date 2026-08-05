@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Chapter 16 · Same Thing, in PyTorch
 #
-# ### Nothing magic — we check its gradients against ours.
+# ### Nothing magic — we check its gradients against ours, bolt for bolt.
 #
 # *Part 3 · Neural networks*
 #
@@ -29,9 +29,9 @@ use_house_style()
 # Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
 # but it is not a new kind of thinking.
 #
-# The promise is bigger: tensors remember how they were made. If PyTorch remembers the
-# forward recipe, it can walk that recipe backward and fill in gradients for every weight.
-# Chapter 13, at framework speed.
+# The promise is bigger: tensors remember how they were made, like recipe cards stuck to
+# the numbers. If PyTorch remembers the forward recipe, it can walk that recipe backward
+# and fill in gradients for every weight. Chapter 13, at framework speed!
 #
 # ```mermaid
 # graph LR
@@ -50,7 +50,8 @@ use_house_style()
 # we wrote. PyTorch stores tensors and modules that do the same jobs.
 #
 # A tensor is an array with a notebook attached. When `requires_grad` is on, the notebook
-# records which operations made the tensor, so `backward()` can retrace them.
+# records which operations made the tensor, so `backward()` can retrace them like
+# footprints in wet mud.
 
 # %%
 pd.DataFrame(
@@ -88,7 +89,8 @@ workbook.render(16)
 #
 # Those buckets **accumulate**. PyTorch adds new gradients to whatever is already there
 # because some advanced training loops add blame from several mini-batches before stepping.
-# For our loop, old blame would be stale, so `zero_grad()` clears the buckets first.
+# For our loop, old blame would be stale, so `zero_grad()` dumps the buckets before the next
+# splash.
 
 # %% [markdown]
 # ## 🎛️ Your turn
@@ -121,7 +123,7 @@ assert biggest < 1e-6
 pd.DataFrame({'NumPy loss': [np_loss], 'PyTorch loss': [th_loss], 'biggest gradient difference': [biggest]})
 
 # %% [markdown]
-# Look down the difference column. The proof is not about vibes; matching gradients mean
+# Look down the difference column. The proof is not about hunches; matching gradients mean
 # the next update step is the same step.
 
 # %% [markdown]
@@ -147,16 +149,16 @@ plt.show()
 
 # %% [markdown]
 # Watch the loss curve and boundary together. This is the same Part 3 machine: forward
-# pass, loss, backward gradients, downhill step.
+# pass, loss, backward gradients, downhill step. Same dance, bigger shoes.
 #
 # ## 🏆 Go further
 #
 # 1. **Add a layer.** Change `[2, 3, 1]` to `[2, 3, 3, 1]`.
-# 2. **Forget zero_grad.** In a notebook, remove it and watch old blame pile up.
+# 2. **Forget zero_grad; sus move.** In a notebook, remove it and watch old blame pile up in the bucket.
 # 3. **Try Adam.** Change `optimizer='adam'` in `torch_bits.train` and compare curves.
 # 4. **Check again.** Copy weights from NumPy and make sure the gradient proof still passes.
-# 5. 🧸 **Little Kid Corner:** PyTorch keeps footprints. Then it walks backward to see who
-#    stepped in the mud.
+# 5. 🧸 **Little Kid Corner:** PyTorch keeps footprints in the mud. Then it walks backward
+#    to see which step made the splash.
 #
 # ---
 # **Next up:** Chapter 17 · *Pictures Become Numbers* — every image becomes a grid a network can read.

@@ -13,7 +13,16 @@ import streamlit as st
 from sklearn.tree import DecisionTreeClassifier
 
 from kidsml import lesson
-from kidsml.zeeps import RULES, all_zeeps, encode, label_with, learning_curve, pretty
+from kidsml.zeeps import (
+    RULES,
+    all_zeeps,
+    encode,
+    label_with,
+    learning_curve,
+    pretty,
+    quiz_examples,
+    teaching_examples,
+)
 
 lesson.begin(0)
 
@@ -22,10 +31,16 @@ X_ALL = encode(ZEEPS)
 
 
 def deal(rule: str, n_examples: int, shuffle: int):
-    """Pick which creatures they get to see, and which they get quizzed on."""
+    """Pick which creatures they get to see, and which they get quizzed on.
+
+    Dealt on purpose rather than at random. Some rules are true of only three creatures
+    out of eighteen, so a random handful can come back with no zeeps at all — leaving a
+    reader with nothing to spot and every reason to feel stupid about it.
+    """
     labels = label_with(ZEEPS, rule)
-    order = np.random.default_rng(shuffle).permutation(len(ZEEPS))
-    return labels, order[:n_examples], order[n_examples : n_examples + 3]
+    shown = teaching_examples(rule, n=n_examples, seed=shuffle)
+    hidden = quiz_examples(rule, shown, n=3, seed=shuffle)
+    return labels, shown, hidden
 
 
 # ---------------------------------------------------------------------------
@@ -35,7 +50,7 @@ def deal(rule: str, n_examples: int, shuffle: int):
 def _():
     lesson.say(
         """
-I have a **secret rule**. It decides whether a creature is a **zeep** or not.
+Boom: I have a **secret rule**. It decides whether a creature is a **zeep** or not.
 
 Every creature has three things about it: a **shape**, a **colour** and a **size**.
 That's all you get. I won't tell you the rule — you work it out from examples I've
@@ -44,7 +59,7 @@ already sorted.
     )
 
     st.dataframe(pretty(ZEEPS).head(6), hide_index=True, width="content")
-    st.caption("Six of the eighteen creatures that exist in this world.")
+    st.caption("Six of the eighteen creatures in this world. Tiny universe, big side quest.")
 
     lesson.say(
         """
@@ -80,8 +95,9 @@ def _():
         ["It is red", "It is a square", "It is big", "It is big AND a square"],
         correct=3,
         why=(
-            "Both halves have to be true. The big blue square is a zeep, which kills "
-            "*it is red*. The small red square is not, which kills *it is a square*."
+            "Both switches have to click on. The big blue square is a zeep, so "
+            "*it is red* crashes. The small red square is not, so *it is a square* crashes. "
+            "The rule survives when both pieces survive together!"
         ),
         key="rule",
     )
@@ -183,7 +199,7 @@ def _():
             "It gets worse with too many examples",
         ],
         correct=1,
-        why="Not one line of code changes across this whole graph. Only the data does.",
+        why="The code stays bolted to the table across this whole graph. The only thing pouring in is more data!",
         key="curve",
     )
     if guess is None:

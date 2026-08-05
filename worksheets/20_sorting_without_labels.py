@@ -22,7 +22,7 @@ WORKBOOK = Workbook(
             table=POINTS,
             why=(
                 "P1 is 2 squared-steps from (0, 0): 1² + 1². It is 162 squared-steps from (10, 10): "
-                "9² + 9². It joins the left centre because that distance is smaller."
+                "9² + 9². It joins the left centre because that ruler distance is smaller."
             ),
         ),
         Question(
@@ -40,14 +40,14 @@ WORKBOOK = Workbook(
             answer=4 / 3,
             tolerance=0.02,
             hint="Average the x values: (1 + 1 + 2) / 3.",
-            why="A centre moves to the average of its members. Here that is 4/3, about 1.33.",
+            why="A centre moves to the average of its members. Here that is 4/3, about 1.33, so the centre scoots toward its little pile.",
         ),
         Question(
             prompt="What is the new y coordinate of the left centre?",
             kind="number",
             answer=4 / 3,
             tolerance=0.02,
-            why="The y values are also 1, 2, and 1, so the y average is 4/3 too.",
+            why="The y values are also 1, 2, and 1, so the y average is 4/3 too. The centre lands at the middle of the same tiny triangle.",
         ),
         Question(
             prompt="After the centres move, what happens on round two?",

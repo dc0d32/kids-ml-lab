@@ -21,7 +21,7 @@ WORKBOOK = Workbook(
             table=POINTS,
             why=(
                 "(1 + 2 + 3 + 4) / 4 = 2.5. Spread is measured around the middle because "
-                "we want to know how much the shadow still separates the points."
+                "we want to know how much the shadow still pulls the points apart."
             ),
         ),
         Question(
@@ -29,8 +29,8 @@ WORKBOOK = Workbook(
             kind="number",
             answer=5,
             why=(
-                "That total is the x-shadow spread. A larger spread means the points stayed more different "
-                "from each other after we kept only x."
+                "That total is the x-shadow spread. A larger spread means the points stayed farther apart "
+                "after we kept only x."
             ),
         ),
         Question(
@@ -39,14 +39,14 @@ WORKBOOK = Workbook(
             answer=2.5,
             why=(
                 "The y values are 2, 2, 3, 3, so the middle is (2 + 2 + 3 + 3) / 4 = 2.5. "
-                "Now we can measure how much the y shadow spreads around that middle."
+                "Now we can measure how wide the y shadow stays around that middle."
             ),
         ),
         Question(
             prompt="Using y only, four squared distances are all 0.25. What is their total?",
             kind="number",
             answer=1,
-            why="The y-shadow is less spread out, so it kept less information about which point is which.",
+            why="The y-shadow is less spread out, so more points bunch together and it kept less information about which point is which.",
         ),
         Question(
             prompt="If you could keep only one axis, which would you keep?",

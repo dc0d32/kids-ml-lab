@@ -9,7 +9,7 @@
 #
 # This chapter is short, blunt, and important. It is about honesty, not fancy algorithms.
 # Chapter 00 warned that a model always answers; now we learn when that confident answer
-# should make you nervous.
+# should make your dashboard blink red.
 
 # %%
 import matplotlib.pyplot as plt
@@ -23,12 +23,12 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# A model that is right **99%** of the time can be useless.
+# A model that is right **99%** of the time can still be a trophy made of fog.
 #
 # A model that scores brilliantly can be cheating without anybody noticing.
 #
-# This chapter is the magic trick's secret. Once you know the trick, suspicious scores
-# start to look suspicious. Good.
+# This chapter shows the trapdoor under the magic trick. Once you know the trick,
+# suspicious scores start flashing like hazard lights. Good.
 #
 # ```mermaid
 # graph TD
@@ -40,7 +40,7 @@ use_house_style()
 # ```
 #
 # Use this flowchart like a detective card. A score is not the end of the investigation;
-# it is the first clue about where to look next.
+# it is the first muddy footprint.
 #
 # > 🧸 **Little Kid Corner** — If a smoke alarm never beeps, it is quiet almost all day.
 # > That does not make it a good smoke alarm. The important question is what happens on
@@ -73,8 +73,8 @@ print("recall:", round(metrics["recall"] * 100, 1), "%")
 # %% [markdown]
 # Accuracy looks great. Recall is awful.
 #
-# There are 48 sick people, but the model only caught 8 of them. The accuracy counts the
-# 950 healthy people it left alone, so the big healthy pile hides the medical failure.
+# There are 48 sick people, but the model only caught 8 of them. Accuracy counts the 950
+# healthy people it left alone, so the big healthy pile hides the medical failure under a rug.
 #
 # That is why rare problems need more than accuracy. If a disease appears in 1 out of 100
 # people, a model can score 99% by saying **healthy** to everyone and helping nobody sick.
@@ -110,7 +110,7 @@ report["metrics"]
 # you bother fewer healthy people, but you miss more sick ones.
 #
 # For a smoke alarm, you may accept more false alarms. For a spam filter, eating real mail
-# is painful. There is no universal right answer.
+# is painful. Same slider, different stakes.
 
 # %% [markdown]
 # ## 🎛️ Your turn
@@ -123,16 +123,16 @@ realdata.leakage_scores()
 # %% [markdown]
 # First we celebrate. Then we ask why the score is suspiciously perfect.
 #
-# Perfect can happen on tiny toy worlds, but in real messy data it often means the answer
-# leaked into the question. A column like `was_approved_last_time` or `future_total` lets
+# Perfect can happen on tiny toy worlds, but real messy data that hits 100% makes the
+# leaked-answer alarm clang. A column like `was_approved_last_time` or `future_total` lets
 # the model peek at the test.
 #
 # > 📖 **Grown-ups call this:** **leakage** means a column lets the answer sneak into the
 # > features, so the model is not learning the real pattern.
 #
 # A hospital model once looked clever because it learned which scanner machine was used.
-# The sickest patients used the portable scanner more often. The model learned the machine,
-# not pneumonia.
+# The sickest patients used the portable scanner more often. The machine was the shortcut;
+# pneumonia was the real target.
 
 # %% [markdown]
 # Failure 3: unfair copies make unfair models.
@@ -151,8 +151,8 @@ bias["examples"]
 # %% [markdown]
 # The model does not know history is unfair. It only sees examples to copy.
 #
-# The model is not being mean. It is copying. That is all it can do. If you copy from
-# something unfair, you get something unfair, at scale and with a confident voice.
+# The model is not being mean. It is copying. That is all it can do. Copy from an unfair
+# stack of cards, and the unfairness comes back at scale with a confident voice.
 #
 # Failure 4: confidently wrong, outside its world.
 
@@ -170,8 +170,8 @@ print("far-away guess:", far["far_guess"])
 print("far-away confidence:", f"{far['far_confidence']:.0%}")
 
 # %% [markdown]
-# Look at how far the star is from the training moons. The model has no built-in idea of
-# "I have never seen anything like this." Chapter 00 warned you: a model answers anyway.
+# Look at how far the star is from the training moons. The model has no built-in
+# new-planet alarm. Chapter 00 warned you: a model answers anyway.
 
 # %% [markdown]
 # ## 💻 In real code
@@ -189,8 +189,8 @@ for item in checklist:
     print("-", item)
 
 # %% [markdown]
-# If the answer to one of those questions feels awkward, stop and investigate. That is not
-# being negative. That is doing machine learning carefully.
+# If one answer feels awkward, stop and investigate. That is not negativity; that is doing
+# machine learning with the flashlight on.
 
 # %% [markdown]
 # ## 🏆 Go further

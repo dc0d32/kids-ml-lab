@@ -34,7 +34,7 @@ def cached_leaderboard():
 def _():
     lesson.say(
         """
-You now know several guessers: lines, probabilities, trees, crowds, and widest roads. Which
+Open the model zoo gate. You now know several guessers: lines, probabilities, trees, crowds, and widest roads. Which
 one should you use?
 
 The honest answer is: **try them and see**. But *see* is harder than it sounds, because a
@@ -106,7 +106,7 @@ def _():
         "On moon-shaped data, which model personality do you expect to do well?",
         ["A straight line", "A smooth curved road", "A model that always says the common answer"],
         correct=1,
-        why="Moons need a curved boundary. The zoo grid lets you check that hunch instead of trusting it.",
+        why="Moons curl like two banana slices. They need a curved boundary, and the zoo grid turns that hunch into evidence!",
         key="ch08_moons_personality",
     )
     if guess is None:
@@ -150,7 +150,7 @@ that works on new rows.
 """
     )
     st.dataframe(pd.DataFrame([deep_tree_train_test()]), hide_index=True, width="stretch")
-    lesson.look_for("the gap between train score and test score. The training score is the fake trophy.")
+    lesson.look_for("the gap between train score and test score. The training score is the fake trophy, and the fake trophy has no aura.")
     lesson.careful(
         "Evaluating on the training data is a fake victory. A deep tree can score 100% there "
         "by memorising tiny boxes, then miss new points that do not land in those boxes."
@@ -163,7 +163,7 @@ def _():
         "Change only which rows land in the hidden test set. What happens to the score?",
         ["It stays exactly the same", "It bounces", "It always improves"],
         correct=1,
-        why="Different hidden rows can be easier or harder. A single split is a shaky fact.",
+        why="Different hidden rows can be easy pebbles or slippery banana peels. One split is a shaky fact.",
         key="ch08_split_bounce",
     )
     if guess is None:

@@ -22,7 +22,7 @@ hand_y = np.round(dollars[:4])
 def _():
     lesson.say(
         """
-Chapter 0 showed the whole course in one sentence: learn a rule from examples.
+Ready? Same game, new scoreboard. Chapter 0 learned a rule from examples.
 This time the answer is not **zeep** or **not zeep**. The answer is a number.
 
 If you saved for **20 weeks**, how much money would be in your piggy bank? You
@@ -71,7 +71,7 @@ def _():
         "On the graph, what will one squared mistake look like?",
         ["A vertical line", "An actual square area", "A curved arrow"],
         correct=1,
-        why="The side length is the vertical miss, and the area is miss × miss.",
+        why="The vertical miss becomes the square's side. Side × side gives the area, so a taller miss turns into a bigger red block!",
         key="ch01_square",
     )
     if guess is None:
@@ -116,7 +116,7 @@ def _():
         "Every pair of w and b gets a score. Where do the best settings live on that map?",
         ["High on a wall", "In a low valley", "Scattered randomly"],
         correct=1,
-        why="Nearby lines make nearby predictions, so the scores make a smooth valley instead of random dots.",
+        why="Tiny knob moves make tiny prediction moves, so the scores form a smooth valley you can walk down, not a bag of random pebbles!",
         key="ch01_hill",
     )
     if guess is None:
@@ -137,7 +137,7 @@ def _():
         ax.set_ylabel("b")
         ax.set_title("You are here on the error hill")
         lesson.show(fig)
-    lesson.look_for("the dot that says where your current line lives, and the low green-blue valley it wants to reach.")
+    lesson.look_for("the dot that says where your current line lives, and the low green-blue valley it wants to reach. The valley has, as I understand it, excellent aura.")
 
 
 @lesson.step("Walking downhill", beat="play")

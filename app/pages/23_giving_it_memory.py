@@ -55,19 +55,19 @@ def plot_embeddings(bundle):
 def _():
     lesson.say(
         """
-Chapter 22 could see **one** letter back. Let's give it **three**.
+Chapter 22 could peek **one** letter back. Now hand it **three** letters of memory.
 
-That one change takes us from a tally chart to an actual neural network. The job is still the same: **guess the next letter**.
+That one extra handful moves us from tally chart to neural network. Same mission, bigger backpack: **guess the next letter**.
 """
     )
     lesson.kid_corner(
-        "Instead of asking only the kid beside you, ask the last three kids in line what letters they are holding. Then guess the next card."
+        "Instead of asking the kid beside you, ask the last three kids in line what letters they are holding. Then slap down your next-card guess."
     )
 
 
 @lesson.step("Slide a three-letter window", beat="byhand")
 def _():
-    lesson.say("The word `cat` becomes four training examples. The blank `.` still means start or stop.")
+    lesson.say("Slide a three-letter window across `cat`, and four training examples pop out. The blank `.` still marks the starting gate and the finish line.")
     windows = pd.DataFrame(
         [["...", "c"], ["..c", "a"], [".ca", "t"], ["cat", "."]],
         columns=["input memory", "answer"],
@@ -77,18 +77,18 @@ def _():
         "When the input memory is `.ca`, what answer is the model training toward?",
         ["c", "a", "t", "."],
         correct=2,
-        why="The window slides across `.cat.`. After `.ca`, the next character is `t`.",
+        why="The window slides across `.cat.` like a little scanner. After `.ca`, the next character is `t`.",
         key="ch22_window",
     )
     if guess is None:
         return
-    lesson.jargon("embedding", "A tiny list of numbers for one character. The model gets to choose those numbers while it learns.")
-    lesson.jargon("softmax", "A way to turn any list of scores into probabilities that add to 1. Bigger scores get more probability.")
+    lesson.jargon("embedding", "A tiny number address for one character. The model gets to move those addresses while it learns.")
+    lesson.jargon("softmax", "A probability machine: feed in scores, get probabilities that add to 1. Bigger scores get bigger slices.")
 
 
 @lesson.step("The pipeline in one row", beat="seeit")
 def _():
-    lesson.say("Three letters in → each becomes a small vector → glue the vectors together → hidden layer with `tanh` → 27 scores → softmax probabilities.")
+    lesson.say("Three letters go in. Each becomes a small vector. The vectors get glued together, squeezed through a `tanh` hidden layer, and turned into 27 softmax probabilities.")
     pipeline = pd.DataFrame(
         [
             ["input", "`.ca`", "three remembered letters"],
@@ -99,7 +99,7 @@ def _():
         columns=["stage", "what it holds", "why it matters"],
     )
     st.dataframe(pipeline, hide_index=True, width="stretch")
-    lesson.look_for("where the three letters become numbers. That is the new learned part.")
+    lesson.look_for("where the three letters become numbers. That is the new learned machinery clicking into place.")
 
 
 @lesson.step("The vowels find each other", beat="seeit")
@@ -108,7 +108,7 @@ def _():
         "The model has never been told what a vowel is. Look at the letter map — what do you expect?",
         ["Letters scattered randomly", "Vowels sitting near each other", "Alphabetical order"],
         correct=1,
-        why="Vowels behave alike when you are guessing the next letter, so they end up alike.",
+        why="Vowels do similar jobs when the model guesses the next letter, so training tends to park them near each other.",
         key="ch22_vowels",
     )
     if guess is None:
@@ -116,14 +116,14 @@ def _():
     bundle2 = trained_2d_model()
     fig = plot_embeddings(bundle2)
     lesson.show(fig)
-    lesson.look_for("a, e, i, o, u. Nobody labeled them as vowels; training pulled them into a similar neighbourhood.")
-    lesson.aha("The vowels often land near each other. Nobody told the model what a vowel is. It grouped them because they behave alike when guessing the next letter.")
-    st.caption("This is a real training run. It is usually clear with this seed, but not every random start makes a perfect picture.")
+    lesson.look_for("a, e, i, o, u. Nobody handed the model vowel labels; training tugged them into a similar neighbourhood.")
+    lesson.aha("The vowels often land near each other! Nobody told the model what a vowel is. It grouped them because they behave alike when guessing the next letter.")
+    st.caption("This is a real training run, not a stored picture. The vowels land together on every seed we tried, though how tidy the grouping looks does vary.")
 
 
 @lesson.step("Memory length changes the names", beat="play")
 def _():
-    lesson.say("Now make the memory wall shorter or longer and listen to what changes.")
+    lesson.say("Now slide the memory wall shorter or longer and listen to the names change shape.")
     models = trained_context_models()
     knobs, picture = lesson.controls()
     with knobs:
@@ -136,18 +136,18 @@ def _():
         samples = [sample_mlp(chosen, start=starter, temperature=temperature, seed=seed + i, max_len=18) for i in range(10)]
         st.write(" · ".join(samples))
         st.metric("Held-out surprise", f"{chosen.test_loss:.3f}")
-        lesson.look_for("whether the 1-letter model forgets starts that the 3-letter or 5-letter model can use.")
+        lesson.look_for("whether the 1-letter model drops starts that the 3-letter or 5-letter model can still hold.")
 
 
 @lesson.step("Watch training settle", beat="play")
 def _():
-    lesson.say("Training is the model slowly making hidden words less surprising. The curve is bumpy because it learns from small batches.")
+    lesson.say("Training is the model grinding hidden words down from surprising to less surprising. The curve bumps because it learns from small batches, not the whole mountain at once.")
     models = trained_context_models()
     block_size = st.select_slider("Which memory length?", options=[1, 3, 5], value=3, key="ch22_curve_block")
     fig, ax = lesson.figure(6.5, 3.2)
     loss_curve(models[block_size].losses, ax=ax, title=f"Training loss, block size {block_size}", ylabel="surprise")
     lesson.show(fig)
-    lesson.look_for("the overall downward drift, not every wiggle.")
+    lesson.look_for("the overall downhill slide, not every pebble-sized wiggle.")
     compare = pd.DataFrame({"memory": ["1 letter", "3 letters", "5 letters"], "held-out surprise": [models[1].test_loss, models[3].test_loss, models[5].test_loss]})
     st.dataframe(compare, hide_index=True, width="content")
 
@@ -158,7 +158,7 @@ def _():
         "On hidden names, which model should have the lowest surprise?",
         ["Random guessing", "The Chapter 22 bigram", "The three-letter MLP"],
         correct=2,
-        why="The MLP can use three letters of context, so it beats the one-letter tally chart here.",
+        why="The MLP can hold three letters of context in its hand, so it beats the one-letter tally chart here.",
         key="ch22_loss_compare",
     )
     if guess is None:
@@ -175,12 +175,12 @@ def _():
     ax.set_ylabel("average surprise (lower is better)")
     ax.set_title("Three-letter memory helps")
     lesson.show(fig)
-    lesson.look_for("the MLP bar. Memory beats counting one letter back.")
+    lesson.look_for("the MLP bar. Memory beats counting one letter back!")
 
 
 @lesson.step("Hear the difference", beat="forreal")
 def _():
-    lesson.say("Same seed, same temperature, two different memories.")
+    lesson.say("Same seed, same temperature, two different memories. Listen for the longer echo.")
     models = trained_context_models()
     main = models[3]
     vocab = main.vocab
@@ -193,12 +193,12 @@ def _():
     mlp_names = [sample_mlp(main, temperature=temperature, seed=seed + i, max_len=18) for i in range(8)]
     st.markdown("**Bigram:** " + " · ".join(bigram_names))
     st.markdown("**MLP:** " + " · ".join(mlp_names))
-    lesson.look_for("places where the MLP keeps a name habit for more than one letter.")
+    lesson.look_for("places where the MLP keeps a name habit alive for more than one letter.")
 
 
 @lesson.step("The whole program", beat="forreal")
 def _():
-    lesson.say("A fixed-window neural network is still the same input-output game: letters in, next letter out.")
+    lesson.say("A fixed-window neural network is still the same input-output game with extra gears: letters in, next letter out.")
     st.code(
         """
 X, y = make_context_dataset(words, vocab, block_size=3)
@@ -207,8 +207,8 @@ model = ContextMLP(vocab_size=27, block_size=3)
 """,
         language="python",
     )
-    lesson.look_for("`block_size=3`. That number is the memory wall.")
-    lesson.careful("A block size of 3 is a hard wall. The fourth-back letter is invisible. Chapter 24 fixes that in a different way.")
+    lesson.look_for("`block_size=3`. That number is the memory wall you can bump into.")
+    lesson.careful("A block size of 3 is a hard wall. The fourth-back letter is invisible, even if it is waving a flag. Chapter 24 fixes that in a different way.")
 
 
 @lesson.step("Check yourself", beat="challenge")

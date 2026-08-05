@@ -24,8 +24,9 @@ lesson.begin(7)
 def _():
     lesson.say(
         """
-Chapter 2's perceptron stops when it finds **any** line that separates the dots. That is
-    enough for yesterday's dots, but it may be a nervous choice for tomorrow's dot.
+A separator line can win and still sweat. Chapter 2's perceptron stops when it finds
+**any** line that separates the dots. That is enough for yesterday's dots, but it may
+be a nervous choice for tomorrow's dot.
 
 Your instinct says: pick the line with the biggest empty gap around it. Wider roads survive
 small surprises better.
@@ -97,7 +98,7 @@ def _():
         "Delete a point far from the boundary. What happens to the road?",
         ["It shifts a lot", "It does not move", "It gets much wider"],
         correct=1,
-        why="Only the support vectors hold the road in place. A far-away dot is not touching the margin.",
+        why="The road is pinned by support vectors. A far-away dot is back in the grass, not touching the margin.",
         key="ch07_delete_non_support",
     )
     if guess is None:
@@ -107,7 +108,7 @@ def _():
     fig, ax = lesson.figure(6, 4.8)
     plot_linear_svm_margin(model, X, y, ax=ax, title="removed: non-support point")
     lesson.show(fig)
-    lesson.look_for("the road: it is almost the same because the deleted point was not a fence post.")
+    lesson.look_for("the road: it is almost the same because the deleted point was not a fence post. It was, technically, an NPC.")
 
 
 @lesson.step("Delete a fence post", beat="seeit")
@@ -116,7 +117,7 @@ def _():
         "Now delete a ringed support vector. What happens?",
         ["The road can jump", "Nothing changes", "All points become support vectors"],
         correct=0,
-        why="The old road was resting against that point. Remove it and a different point may become the closest danger.",
+        why="The old road leaned on that fence post. Pull it out and another point can become the nearest danger.",
         key="ch07_delete_support",
     )
     if guess is None:

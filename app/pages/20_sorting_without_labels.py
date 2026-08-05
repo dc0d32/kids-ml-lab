@@ -46,11 +46,11 @@ def _():
 Nobody labels anything this time.
 
 Here is a pile of dots. Find the clumps. You already do this when you sort laundry into
-piles without anyone telling you the pile names.
+piles before anyone hands you the pile names.
 """
     )
     lesson.careful(
-        "The danger is that 'clump' sounds like a thing everyone will agree on. Sometimes one person's two piles are another person's three piles."
+        "The danger is that 'clump' sounds like a thing everyone will agree on. Sometimes one person's two piles are another person's three piles. The dots do not wear name tags."
     )
     lesson.kid_corner("Put blocks on the floor. Move them into piles by what feels near. You do not need names for the piles before you start.")
     lesson.jargon("clustering", "Sorting data into groups when the answer labels are missing.")
@@ -58,7 +58,7 @@ piles without anyone telling you the pile names.
 
 @lesson.step("Two steps you can recite", beat="byhand")
 def _():
-    lesson.say("**Step 1:** every point joins the nearest centre. **Step 2:** every centre moves to the middle of its members. Repeat until nothing changes.")
+    lesson.say("**Step 1:** every point joins the nearest centre. **Step 2:** every centre scoots to the middle of its members. Repeat until nothing changes.")
     lesson.mermaid(
         """
 graph LR
@@ -70,8 +70,8 @@ graph LR
 """,
         height=260,
     )
-    lesson.look_for("the loop: assign, move, check. The same two steps repeat until the centres stop moving.")
-    lesson.say("Why must it stop? Each round either makes total point-to-centre distance smaller, or nothing changes. There are only so many possible assignments.")
+    lesson.look_for("the loop: assign, move, check. The same two-step dance repeats until the centres stop moving.")
+    lesson.say("Why must it stop? Each round either makes total point-to-centre distance smaller, or nothing changes. There are only so many possible assignments, so the loop cannot shrink forever.")
 
 
 @lesson.step("One round by hand", beat="byhand")
@@ -89,8 +89,8 @@ def _():
         st.dataframe(assignments, hide_index=True, width="stretch")
         st.markdown("**Move centres**")
         st.dataframe(new_centres, hide_index=True, width="stretch")
-    lesson.look_for("which centre each point joins, then where the new centre lands.")
-    lesson.aha("Round two changes nothing. That means the algorithm has converged: it stopped moving.")
+    lesson.look_for("which centre each point joins, then where the new centre lands after the averages pull it.")
+    lesson.aha("Round two changes nothing. That means the algorithm has converged: it stopped moving!")
     lesson.jargon("k-means", "Pick k centres, assign points to nearest centres, move centres to group middles, and repeat.")
 
 
@@ -119,7 +119,7 @@ def _():
         "If two centres begin inside the same real clump, what can happen?",
         ["One real clump may never get a centre", "The algorithm fixes it every time", "All centres vanish"],
         correct=0,
-        why="k-means only improves from its starting guess. A bad start can settle into a bad but stable setup.",
+        why="k-means can only improve from its starting guess. A bad start can settle into a bad but stable setup.",
         key="ch19_bad_start",
     )
     if guess is None:
@@ -128,7 +128,7 @@ def _():
     step = st.slider("Bad-start stage", 0, len(history) - 1, len(history) - 1, key="ch19_bad_stage")
     fig = plot_kmeans_stage(history[step])
     lesson.show(fig)
-    lesson.look_for("the clump that shares or misses a centre. Bad starts can get stuck.")
+    lesson.look_for("the clump that shares or misses a centre. Bad starts can get stuck like gum on a shoe.")
     lesson.say("That explains sklearn's defaults. k-means++ spreads the starting centres out on purpose, then sklearn tries several starts and keeps the best result.")
 
 
@@ -140,8 +140,8 @@ def _():
     with right:
         lesson.show(plot_elbow("ambiguous"))
     lesson.look_for("where the line stops dropping fast. The sharp plot argues for k = 3; the mushy one asks for judgement.")
-    lesson.say("Inertia always falls as k rises because adding a centre gives the algorithm another place to put points.")
-    lesson.careful("With one centre per point, inertia hits zero and the clusters teach you nothing. The elbow asks where the extra pile stops being worth it.")
+    lesson.say("Inertia always falls as k rises because adding a centre gives the algorithm another bucket for points.")
+    lesson.careful("With one centre per point, inertia hits zero and the clusters teach you nothing. The elbow asks where the extra pile stops earning its keep.")
 
 
 @lesson.step("Predict five colours", beat="play")
@@ -164,7 +164,7 @@ def _():
         st.image(image, caption="original", width="stretch")
     with col_b:
         st.image(rebuilt, caption=f"{colour_k}-colour version", width="stretch")
-    lesson.look_for("which colours survived in the rebuilt photo. The image keeps shape while losing many tiny colour differences.")
+    lesson.look_for("which colours survived in the rebuilt photo. The image keeps its shape while many tiny colour differences get squeezed out.")
     lesson.show(plot_palette(palette))
     lesson.look_for("the palette swatches. k-means found these colours from sampled pixels, then repainted every pixel.")
 
@@ -194,7 +194,7 @@ def _():
 @lesson.step("Penguin species are hidden", beat="forreal")
 def _():
     table, score = cached_penguin_clusters()
-    lesson.say("Now k-means gets penguin measurements with the species labels removed.")
+    lesson.say("Now k-means gets penguin measurements with the species labels peeled off.")
     st.dataframe(table, width="stretch")
     st.metric("cluster/species agreement", f"{score:.2f}")
     lesson.look_for("cluster numbers versus real species. Cluster 0 is not 'Adelie'; it is a number the algorithm made up.")
@@ -210,7 +210,7 @@ def _():
     lesson.say(
         """
 1. Find a seed that makes k-means fail on easy blobs.
-2. Find the k where the elbow is clearest.
+2. **Elbow hunt.** Find the k where the elbow is clearest.
 3. Quantize a photo down to 2 colours. Is it still recognisable?
 """
     )

@@ -17,17 +17,17 @@ WORKBOOK = Workbook(
         Question(
             prompt='For point (0, 0), what does OR-ish h1 output?',
             kind='number', answer=0, tolerance=0.001, table=XOR_TABLE,
-            why='Neither input is on, so OR-ish stays off. This moves (0, 0) to h-space point (0, 0).',
+            why='Neither input is on, so OR-ish stays off. This parks (0, 0) at h-space point (0, 0).',
         ),
         Question(
             prompt='For point (1, 1), what does AND-ish h2 output?',
             kind='number', answer=1, tolerance=0.001,
-            why='Both inputs are on, so AND-ish turns on. This separates (1, 1) from the two red XOR points.',
+            why='Both inputs are on, so AND-ish turns on. This pulls (1, 1) away from the two red XOR points.',
         ),
         Question(
             prompt='In the new (h1, h2) space, which point is the red XOR class?',
             kind='choice', choices=['(0, 0)', '(1, 0)', '(1, 1)'], answer='(1, 0)',
-            why='The red rows are exactly the ones where OR is on but AND is off. The hidden layer moved both red corners onto the same h-space spot.',
+            why='The red rows are exactly the ones where OR is on but AND is off. The hidden layer moved both red corners onto the same h-space spot, side by side.',
         ),
         Question(
             prompt='Try output score = 1*h1 - 2*h2 - 0.5. What score does (h1, h2) = (1, 0) get?',

@@ -76,9 +76,9 @@ def draw_losses(train_losses, test_losses, title: str):
 def _():
     lesson.say(
         """
-You have the whole idea now: line scores, squishes, gradients, and hidden features.
+You have the whole machine now: line scores, squishes, gradients, and hidden features.
 
-Deeper networks do not add a secret ingredient. They repeat the same move more times:
+Deeper networks do not add a secret ingredient. They stack the same move like pancakes:
 make features, squish them, make new features from those features.
 """
     )
@@ -93,8 +93,8 @@ graph LR
 """,
         height=260,
     )
-    lesson.look_for("the repeated pattern: numbers flow forward, gradients flow backward, and hidden layers stack the same move.")
-    lesson.say("That buys more flexible boundaries, and it also creates a new danger: memorising noise.")
+    lesson.look_for("the repeated pattern: numbers zip forward, gradients run backward, and hidden layers stack the same move.")
+    lesson.say("That buys more flexible boundaries, and it also creates a new danger: memorising noise. Power tools need goggles!")
 
 
 @lesson.step("Count the learnable numbers", beat="byhand")
@@ -102,7 +102,7 @@ def _():
     lesson.say(
         """
 Count the learnable numbers in `[2, 5, 5, 1]`. Every arrow is a weight, and every non-input
-neuron gets one bias.
+neuron gets one bias. We are counting the knobs the model can turn.
 """
     )
     counts = pd.DataFrame({"layer": ["2 → 5", "5 → 5", "5 → 1", "biases"], "count": [10, 25, 5, 11]})
@@ -130,7 +130,7 @@ def _():
             fig, ax = lesson.figure(4.5, 4.0)
             decision_boundary(lambda G, model=m: model.predict_proba(G), X_zoo, y_zoo, ax=ax, steps=160, title=act)
             lesson.show(fig)
-    lesson.look_for("the edges of the coloured regions. Tanh and sigmoid bend smoothly; ReLU often creases.")
+    lesson.look_for("the edges of the coloured regions. Tanh and sigmoid bend like rubber; ReLU often creases like folded paper.")
     lesson.say("Neither style is always best. The squish shape controls the kind of bends the network can build easily.")
 
 
@@ -154,7 +154,7 @@ def _():
     lesson.say(
         """
 Now watch overfitting. We give the network a small practice set and flip some labels, so
-some dots are lies.
+some dots are lies with coordinates.
 """
     )
     guess = lesson.predict(
@@ -177,7 +177,7 @@ graph LR
 """,
         height=240,
     )
-    lesson.look_for("the split: the same tiny wiggles can help train loss and hurt test loss.")
+    lesson.look_for("the split: the same tiny wiggles can help train loss and hurt test loss. Same squiggle, opposite scoreboard.")
 
 
 @lesson.step("The loss lines split", beat="forreal")
@@ -197,8 +197,8 @@ def _():
 def _():
     _, _, _, _, _, train_losses, test_losses = overfit_story(0.0, False)
     draw_losses(train_losses, test_losses, "Early stopping watches the test line")
-    lesson.look_for("the lowest point of the red test line, before the network starts chasing weird dots.")
-    lesson.aha("Early stopping works because broad patterns are often learned before noisy details.")
+    lesson.look_for("the lowest point of the red test line, before the network starts chasing weird dots around the yard.")
+    lesson.aha("Early stopping works because broad patterns are often learned before noisy details start waving shiny flags.")
 
 
 @lesson.step("Fix 2: make wiggles expensive", beat="forreal")
@@ -236,7 +236,7 @@ def _():
         fig, ax = lesson.figure(5.2, 4.2)
         decision_boundary(lambda G: over_model.predict_proba(G), X_train, y_train, ax=ax, steps=160, title="More data after training")
         lesson.show(fig)
-    lesson.look_for("the loss gap and the boundary. More data makes single bad labels easier to ignore.")
+    lesson.look_for("the loss gap and the boundary. More data makes single bad labels easier to ignore, like one wrong shout in a stadium.")
 
 
 @lesson.step("Check yourself", beat="challenge")
@@ -248,13 +248,13 @@ def _():
 def _():
     lesson.say(
         """
-1. **Smallest spiral net.** Reduce the architecture until spiral breaks.
-2. **Overfit hard.** Use few points, many neurons, and no weight decay.
+1. **Smallest spiral net.** Reduce the architecture until the spiral boundary snaps.
+2. **Overfit hard; get cooked.** Use few points, many neurons, and no weight decay.
 3. **Too much calm.** Raise weight decay until the boundary becomes boring.
 4. **More data.** Turn on more practice questions and watch the loss gap shrink.
 """
     )
-    lesson.kid_corner("Practice helps. Memorising one worksheet does not. New questions tell the truth.")
+    lesson.kid_corner("Practice helps. Memorising one worksheet does not. New questions tell the truth, like a surprise quiz with fresh shoes.")
 
 
 lesson.finish()

@@ -34,8 +34,8 @@ def penguin_probabilities():
 def _():
     lesson.say(
         """
-Chapter 3 showed why a hard line sometimes needs help: some boundaries must
-bend. But even when a straight boundary is good enough, Chapter 2's perceptron
+Chapter 3 bent lines. Now give a straight line a shrug. Some boundaries must
+bend, but even when a straight boundary is good enough, Chapter 2's perceptron
 has another problem.
 
 It says red or blue and never wavers. A point sitting on the boundary should say:
@@ -51,7 +51,7 @@ def _():
         "The raw score z is exactly 0 on the line. What probability should that become?",
         ["0% red", "50% red", "100% red"],
         correct=1,
-        why="At z = 0, sigmoid(z) = 1 / (1 + e⁰) = 1 / (1 + 1) = 0.5.",
+        why="At z = 0, sigmoid(z) = 1 / (1 + e⁰) = 1 / (1 + 1) = 0.5. The boundary lands exactly on the shrug!",
         key="ch04_zero",
     )
     if guess is None:
@@ -93,7 +93,7 @@ def _():
         "What happens when the S-curve gets very steep?",
         ["It acts more like a hard red/blue step", "It makes every score 50/50", "It turns into a straight line"],
         correct=0,
-        why="Large values push most scores close to 0 or 1, leaving only a narrow shrug zone.",
+        why="Large values shove most scores close to 0 or 1, squeezing the shrug zone into a skinny doorway!",
         key="ch04_steep",
     )
     if guess is None:
@@ -160,7 +160,7 @@ def _():
         "If a real penguin lands closest to 50/50, is that a useful kind of honesty?",
         ["Yes", "No, uncertainty is failure", "Only if the model is perfect"],
         correct=0,
-        why="A close call should sound like a close call. That warning is useful.",
+        why="A close call should ring a tiny bell: close call! That warning is useful.",
         key="ch04_penguin_shrug",
     )
     if guess is None:
@@ -176,7 +176,7 @@ def _():
     ax.set_ylabel("weight (g)")
     ax.set_title("The circled penguin is the model's biggest shrug")
     lesson.show(fig)
-    lesson.look_for("the circled penguin sitting closest to the model's fuzzy middle.")
+    lesson.look_for("the circled penguin sitting closest to the model's fuzzy middle. That penguin is the official vibe check.")
     st.write(f"Most uncertain penguin: **{uncertain['species']}**, probability Gentoo = **{uncertain['gentoo_probability']:.1%}**.")
 
 

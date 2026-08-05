@@ -34,8 +34,8 @@ def _():
 Chapter 17's model had a weakness: it did not know that two pixels next to each other
 belong together.
 
-That is wrong for pictures. Nearby pixels make strokes, corners, and edges. Here is the
-fix: one small window slides across the image.
+That is wrong for pictures. Nearby pixels team up to make strokes, corners, and edges. Here is the
+fix: one small window slides across the image like a tiny inspector.
 """
     )
     lesson.mermaid(
@@ -50,7 +50,7 @@ graph LR
         height=260,
     )
     lesson.look_for("the word same. One little grid visits the top-left corner, the middle, and the bottom-right corner.")
-    lesson.kid_corner("Put a sticky note with a 3 by 3 hole over a picture. Look through the hole, move it one square, and look again.")
+    lesson.kid_corner("Put a sticky note with a 3 by 3 hole over a picture. Peek through the hole, move it one square, and peek again.")
 
 
 @lesson.step("One window by hand", beat="byhand")
@@ -68,7 +68,7 @@ def _():
     with right:
         st.markdown("**First window**")
         st.dataframe(pd.DataFrame(patch.astype(int)), hide_index=True)
-    lesson.say("For the first window: `0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27`.")
+    lesson.say("For the first window: `0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27`. Three bright 9s hit the +1 column, so the answer pops to 27!")
     lesson.jargon("convolution", "Slide a small grid of weights over a picture. Multiply what lines up, then add.")
 
 
@@ -77,14 +77,14 @@ def _():
     image = tiny_image()
     kernel = vision.KERNEL_PRESETS["vertical edge"]
     output = vision.convolve2d_valid(image, kernel)
-    lesson.say("Across the rows, the 3-high window can start at row 1, row 2, or row 3. Starting at row 4 would hang off the bottom.")
+    lesson.say("Across the rows, the 3-high window can start at row 1, row 2, or row 3. Starting at row 4 would hang off the bottom like a tray sliding off a table.")
     fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.4))
     show_image(image, ax=axes[0], numbers=True, title="image")
     show_image(kernel, ax=axes[1], numbers=True, title="kernel", cmap="coolwarm")
     show_image(output, ax=axes[2], numbers=True, title="3 by 3 output", cmap="magma")
     fig.tight_layout()
     lesson.show(fig)
-    lesson.look_for("the 3 by 3 output. The window has 9 legal places to land.")
+    lesson.look_for("the 3 by 3 output. The window has 9 legal landing pads.")
 
 
 @lesson.step("The edge lights up", beat="seeit")
@@ -98,8 +98,8 @@ def _():
     show_image(output, ax=axes[2], numbers=True, title="output", cmap="magma")
     fig.tight_layout()
     lesson.show(fig)
-    lesson.look_for("the big output numbers. They land where dark pixels become bright pixels.")
-    lesson.aha("You detected an edge by hand, using the same multiply-and-add at every position.")
+    lesson.look_for("the big output numbers. They flash where dark pixels crash into bright pixels.")
+    lesson.aha("You detected an edge by hand, using the same multiply-and-add at every position!")
 
 
 @lesson.step("Predict the blur kernel", beat="play")
@@ -108,7 +108,7 @@ def _():
         "What will a 3×3 kernel full of 1/9 values do to a picture?",
         ["Sharpen edges", "Blur by averaging neighbours", "Turn every pixel black"],
         correct=1,
-        why="Each output cell becomes the average of its 3×3 neighbourhood.",
+        why="Each output cell becomes the average of its 3×3 neighbourhood, so sharp little jumps get smeared into nearby squares.",
         key="ch17_blur_kernel",
     )
     if guess is None:
@@ -116,13 +116,13 @@ def _():
     live_image = vision.generated_pattern(28)
     fig, conv = vision.plot_kernel_demo(live_image, vision.KERNEL_PRESETS["blur"])
     lesson.show(fig)
-    lesson.look_for("the softened stripes and diagonal. Averaging spreads bright pixels into their neighbours.")
+    lesson.look_for("the softened stripes and diagonal. Averaging smears bright pixels into their neighbours.")
     st.caption(f"Raw output range: {conv.min():.2f} to {conv.max():.2f}")
 
 
 @lesson.step("Edit the 3×3 window live", beat="play")
 def _():
-    lesson.say("Try the preset buttons, then change one number. The output reacts to the same multiply-and-add rule you did by hand.")
+    lesson.say("Try the preset buttons, then change one number. The output jumps because it still obeys the same multiply-and-add rule you did by hand.")
     if "ch17_kernel" not in st.session_state:
         st.session_state["ch17_kernel"] = vision.KERNEL_PRESETS["vertical edge"].copy()
 
@@ -154,8 +154,8 @@ def _():
     live_image = cached_digit_image() if which_image == "a digit" else vision.generated_pattern(28)
     fig, conv = vision.plot_kernel_demo(live_image, live_kernel)
     lesson.show(fig)
-    lesson.look_for("which output spots turn bright. Those are the places your kernel matches the image patch.")
-    st.caption(f"Raw output range: {conv.min():.2f} to {conv.max():.2f}")
+    lesson.look_for("which output spots turn bright. Those are the places your kernel matches the image patch and rings the bell.")
+    st.caption(f"Kernel vibe check: raw output range {conv.min():.2f} to {conv.max():.2f}")
 
 
 @lesson.step("Let the model choose kernels", beat="forreal")
@@ -164,7 +164,7 @@ def _():
         """
 The kernels above were designed by a person. What if we let the model choose its own?
 
-During training, the CNN changes the kernel numbers until useful patches light up.
+During training, the CNN twists the kernel numbers until useful patches light up.
 """
     )
     lesson.mermaid(
@@ -197,18 +197,18 @@ def _():
         "Which model should do better on tiny clothing pictures?",
         ["The plain MLP", "The CNN with shared sliding windows", "They must tie"],
         correct=1,
-        why="The CNN reuses a kernel everywhere, so an edge can be useful in many locations.",
+        why="The CNN reuses a kernel everywhere, so one edge clue can fire in many locations.",
         key="ch17_cnn_wins",
     )
     if guess is None:
         return
     result = cached_vision_models()
     st.markdown(
-        f"Using **{result.dataset_name}**: {result.train_size} training images, {result.test_size} test images, {result.epochs} epochs. First download is about 30 MB and is cached in `data/torchvision/`."
+        f"Using **{result.dataset_name}**: {result.train_size} training images, {result.test_size} test images, {result.epochs} epochs. First download is about 30 MB and then stays cached in `data/torchvision/`."
     )
     st.dataframe(vision.model_comparison_table(result), hide_index=True, width="stretch")
-    lesson.look_for("the accuracy and parameter counts. The CNN shares small windows instead of learning a separate clue for every location.")
-    lesson.aha("The same clue can be recognized wherever the object moved: sleeve edge, shoe edge, top-left edge, bottom-right edge.")
+    lesson.look_for("the accuracy and parameter counts. The CNN shares small windows instead of buying a separate clue for every location.")
+    lesson.aha("The same clue can be recognized wherever the object moved: sleeve edge, shoe edge, top-left edge, bottom-right edge!")
 
 
 @lesson.step("The learned filters", beat="forreal")
@@ -221,7 +221,7 @@ def _():
     maps = vision.feature_maps(result, limit=8)
     fig = vision.plot_small_images(maps, titles=[f"map {i}" for i in range(len(maps))], width=1.1)
     lesson.show(fig)
-    lesson.look_for("bright spots. They show where one filter lit up on one test image.")
+    lesson.look_for("bright spots. Each one marks where a filter lit up on one test image.")
 
 
 @lesson.step("Where the CNN still struggles", beat="forreal")
@@ -236,7 +236,7 @@ def _():
         )
         lesson.show(fig)
         lesson.look_for("clothing classes that blur together in 28 by 28 gray pixels.")
-    lesson.careful("Shirt, coat, and pullover can be hard even for humans in tiny gray pictures.")
+    lesson.careful("Shirt, coat, and pullover can mash together even for humans in tiny gray pictures.")
 
 
 @lesson.step("Check yourself", beat="challenge")

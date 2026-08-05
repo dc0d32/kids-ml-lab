@@ -44,8 +44,8 @@ WORKBOOK = Workbook(
             hint="Predictions are 8, 11, 14, 17. Subtract prediction from real dollars, then square each mistake.",
             why=(
                 "The predictions are 8, 11, 14, and 17. The mistakes are 0, 0, 1, and 0, "
-                "so the squared mistakes are 0, 0, 1, and 0. Total = **1**. One score lets you "
-                "compare a whole line instead of arguing about four separate rows."
+                "so the squared mistakes are 0, 0, 1, and 0. Total = **1**. One score turns "
+                "four tiny row arguments into one scoreboard for the whole line."
             ),
         ),
         Question(
@@ -55,8 +55,8 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             hint="The signs matter when you add raw mistakes: +2 plus -2.",
             why=(
-                "+2 + -2 = **0**, even though the model was wrong twice. That is the danger of raw "
-                "errors: opposite signs can cancel and make a bad line look perfect."
+                "+2 + -2 = **0**, even though the model was wrong twice. Raw errors can hide the wreckage: "
+                "opposite signs cancel and make a bad line look perfect."
             ),
         ),
         Question(
@@ -66,8 +66,8 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             hint="Both squares are positive.",
             why=(
-                "2² = 4 and (-2)² = 4, so the total is **8**. Squaring keeps both mistakes visible, "
-                "and it also makes bigger misses grow faster than small misses."
+                "2² = 4 and (-2)² = 4, so the total is **8**. Squaring keeps both mistakes onstage, "
+                "and bigger misses swell faster than small misses."
             ),
         ),
         Question(
@@ -75,8 +75,8 @@ WORKBOOK = Workbook(
             kind="open",
             hint="Think about whether the model was actually perfect.",
             why=(
-                "The squared total is more honest here. A raw total of 0 sounds like no error, but the line "
-                "missed both points. Squaring answers the question you really care about: how much wrongness is left?"
+                "The squared total is more honest here. A raw total of 0 sounds like a clean floor, but the line "
+                "missed both points. Squaring asks the real question: how much wrongness is still sitting there?"
             ),
         ),
         Question(
@@ -91,8 +91,8 @@ WORKBOOK = Workbook(
             hint="Predictions are 5, 9, 13, 17. The mistakes are real minus prediction.",
             why=(
                 "The predictions are 5, 9, 13, and 17. The mistakes are 3, 2, 2, and 0, "
-                "so the squared mistakes are 9, 4, 4, and 0. Total = **17**. The smaller total wins, "
-                "so the first line fits these rows better."
+                "so the squared mistakes are 9, 4, 4, and 0. Total = **17**. Smaller total wins, "
+                "so the first line hugs these rows better."
             ),
         ),
         Question(
@@ -102,7 +102,7 @@ WORKBOOK = Workbook(
             answer="no",
             why=(
                 "No. The first line scored 1, and the second line scored 17. Lower squared mistake wins because "
-                "it means less total wrongness across the same data."
+                "it means less total wrongness across the same data. The scoreboard has spoken!"
             ),
         ),
         Question(
@@ -112,7 +112,7 @@ WORKBOOK = Workbook(
             hint="Change w in the app and watch whether the line rotates or slides.",
             why=(
                 "**w** controls the tilt, or slope. It says how many dollars the prediction changes when weeks "
-                "goes up by 1. The model is not a mystery box here; it is a line with two knobs."
+                "goes up by 1. The model is not a foggy mystery box here; it is a line with two knobs."
             ),
         ),
         Question(
@@ -122,7 +122,7 @@ WORKBOOK = Workbook(
             hint="Set weeks to 0 in dollars = w × weeks + b.",
             why=(
                 "**b** slides the line up or down. If weeks = 0, the formula becomes dollars = b, so b is the "
-                "starting height before the slope adds anything."
+                "starting height before the slope starts hauling the line upward."
             ),
         ),
     ],

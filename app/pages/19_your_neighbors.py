@@ -46,7 +46,7 @@ def _():
         """
 Every model so far was shown the right answers. Somebody had to label the data.
 
-Part 5 asks a new question: **what can you learn when nobody tells you the answers?**
+Part 5 opens a new door: **what can you learn when nobody tells you the answers?**
 """
     )
     lesson.mermaid(
@@ -60,7 +60,7 @@ graph LR
 """,
         height=240,
     )
-    lesson.look_for("the delayed work. kNN stores old cases, then measures distances when a new point asks for an answer.")
+    lesson.look_for("the delayed work. kNN stores old cases, then pulls out the ruler when a new point asks for an answer.")
     lesson.kid_corner("If you move to a new lunch table, you might copy the kids sitting closest to you. No studying. Nearby people vote.")
 
 
@@ -71,11 +71,11 @@ def _():
 The new point is at **(0, 0)**. The old points already have labels.
 
 Distance is the ruler. For point A at (3, 4), the distance is
-`√((3 - 0)² + (4 - 0)²) = √(9 + 16) = √25 = 5`.
+`√((3 - 0)² + (4 - 0)²) = √(9 + 16) = √25 = 5`. Nice 3-4-5 triangle, ready to vote.
 """
     )
     st.dataframe(knn_distance_table(), hide_index=True, width="stretch")
-    lesson.look_for("the distance column. kNN repeats the calculation for every old point, then sorts the list.")
+    lesson.look_for("the distance column. kNN repeats the ruler move for every old point, then sorts the list.")
 
 
 @lesson.step("Let the neighbours vote", beat="byhand")
@@ -90,7 +90,7 @@ def _():
         st.markdown("**Vote tally**")
         st.dataframe(votes, hide_index=True, width="stretch")
         st.metric("winner", winner)
-    lesson.look_for("how changing k changes who gets a vote. One close neighbour can have total power.")
+    lesson.look_for("how changing k changes who gets a vote. One close neighbour can grab the whole microphone.")
     lesson.jargon("k nearest neighbours", "Pick the **k** closest old points, then let them vote.")
 
 
@@ -100,7 +100,7 @@ def _():
         "With k = 1, what will the boundary look like?",
         ["Smooth and calm", "Jagged, with islands around odd points", "A straight line"],
         correct=1,
-        why="Every point owns the patch of space where it is the nearest old point.",
+        why="Every old point owns the patch of space where it is the nearest neighbour.",
         key="ch18_k1_boundary",
     )
     if guess is None:
@@ -113,7 +113,7 @@ def _():
     with col_b:
         fig = plot_knn_hand_boundary(1)
         lesson.show(fig)
-    lesson.look_for("the jagged borders. This is Chapter 05's overfitting, wearing a different hat.")
+    lesson.look_for("the jagged borders. This is Chapter 05's overfitting wearing a different hat.")
     lesson.aha("For k = 1, every region belongs to the nearest point. Grown-ups call this a Voronoi diagram.")
 
 
@@ -137,14 +137,14 @@ def _():
         fig, votes = plot_knn_play(k=k, qx=qx, qy=qy)
         lesson.show(fig)
         st.dataframe(votes, hide_index=True)
-    lesson.look_for("the star and its vote lines. Drag the star across the border and watch whose votes take over.")
+    lesson.look_for("the star and its vote lines. Drag the star across the border and watch whose votes storm in.")
 
 
 @lesson.step("There is a sweet spot", beat="play")
 def _():
     curve = cached_curve()
     st.line_chart(curve.set_index("k"), height=260)
-    lesson.look_for("the middle sweet spot. k = 1 memorises every noisy point; huge k smooths until the plane starts giving one answer.")
+    lesson.look_for("the middle sweet spot. k = 1 memorises every noisy point; huge k smooths until the plane starts giving one sleepy answer.")
 
 
 @lesson.step("Predict the timing cost", beat="forreal")
@@ -153,13 +153,13 @@ def _():
         "Which part of kNN gets expensive as the remembered table grows?",
         ["Training", "Prediction", "Both stay free"],
         correct=1,
-        why="Training stores the table. Prediction compares each new point with many old points.",
+        why="Training stores the table. Prediction has to compare each new point with many old points, ruler after ruler.",
         key="ch18_timing",
     )
     if guess is None:
         return
     st.dataframe(cached_timing().round(2), hide_index=True, width="stretch")
-    lesson.look_for("the predict column as rows remembered grows. Saving work during training moves the bill to prediction time.")
+    lesson.look_for("the predict column as rows remembered grows. Saving work during training slides the bill to prediction time.")
 
 
 @lesson.step("Predict the scale disaster", beat="forreal")
@@ -193,7 +193,7 @@ model.predict(new_penguins)
     )
     st.metric("8x8 digit accuracy with k = 3", f"{cached_digits(3):.1%}")
     lesson.look_for("the scaler in the pipeline. The ruler-fixing step happens before the neighbour vote.")
-    lesson.aha("The algorithm sounds tiny, but on small images it is strong because similar-looking digits often sit near each other in pixel-number space.")
+    lesson.aha("The algorithm sounds tiny, but on small images it hits hard because similar-looking digits often sit near each other in pixel-number space!")
 
 
 @lesson.step("Check yourself", beat="challenge")
@@ -206,7 +206,7 @@ def _():
     lesson.say(
         """
 1. Find the k that scores best on the moons curve.
-2. Find a dataset shape where kNN beats the early straight-line models.
+2. **No cap neighbour test.** Find a dataset shape where kNN beats the early straight-line models.
 3. Break kNN by multiplying one feature by 1000, then fix it with scaling.
 """
     )

@@ -24,7 +24,7 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# XOR is back because it is the test that tells us whether Part 3 worked.
+# XOR is back, the tiny checkerboard that keeps catching one-neuron models in the act.
 #
 # One neuron cannot solve it: Chapter 3 proved one straight line cannot put opposite
 # corners together. The escape route was “invent better features.” A hidden layer does that
@@ -42,13 +42,13 @@ use_house_style()
 # ```
 #
 # Read left to right: two original inputs feed three hidden neurons, and those three
-# reports feed one final neuron.
+# reports feed one final neuron. New reports first, final call second.
 
 # %% [markdown]
 # ## ✏️ Work it out
 #
 # We will make two hidden features by hand: **OR-ish** and **AND-ish**. This table is the
-# whole XOR story in miniature.
+# whole XOR story shrunk to four dots.
 #
 # In the original `x1, x2` square, the red points sit in opposite corners. No straight line
 # can grab both red corners without also grabbing a blue one.
@@ -85,7 +85,8 @@ plt.show()
 # rows are `(0, 0)` and `(1, 1)`. Now `score = OR - 2*AND - 0.5` is positive only for red.
 #
 # The hidden layer did not bend the output line. It **moved the points into a new space**
-# where one straight line works. That is Chapter 3 escape route 1, automated.
+# where one straight line works. Same ruler, better map! That is Chapter 3 escape route 1,
+# automated.
 
 # %% [markdown]
 # Work these out on scrap paper, then type your answers in. You'll be told not only
@@ -118,7 +119,7 @@ hidden_surfaces_figure(model, X_xor, steps=65)
 # reading to the output neuron, and the output neuron combines those readings.
 #
 # Why do they learn different lines? They start with small random differences. After that,
-# each neuron receives slightly different gradients, so their jobs separate. If every
+# each neuron receives slightly different gradients, so their jobs peel apart. If every
 # hidden neuron started identical, they would tend to march in a crowd.
 
 # %% [markdown]
@@ -159,17 +160,17 @@ decision_boundary(lambda G: big.predict_proba(G), X_over, y_over, ax=axes[1], st
 plt.show()
 
 # %% [markdown]
-# More hidden neurons give the network more ways to wiggle. That can help with real
-# patterns, and it can over-study noise. Chapter 15 is about that trade.
+# More hidden neurons give the network more ways to wiggle around the dots. That can help
+# with real patterns, and it can over-study noise. Chapter 15 is about that trade.
 #
 # ## 🏆 Go further
 #
 # 1. **Smallest XOR solver.** What is the fewest hidden neurons that can solve XOR?
-# 2. **Try spiral.** How many hidden neurons does it need before it looks decent?
+# 2. **Try spiral.** How many hidden neurons does it need before it starts curling the right way?
 # 3. **Set XOR weights by hand.** Use OR-ish and AND-ish to beat training.
-# 4. **Watch the lines.** Scrub training in the app and say what each hidden line learned.
+# 4. **Read the hidden lines.** Scrub training in the app and say what each hidden line learned.
 # 5. 🧸 **Little Kid Corner:** Three friends make a team. Two notice where you stand. The
-#    last friend listens and decides.
+#    last friend listens and decides. Little reports become one decision.
 #
 # ---
 # **Next up:** Chapter 15 · *Deeper and Wider* — more layers, squishes, and over-studying.

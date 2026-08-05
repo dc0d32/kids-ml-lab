@@ -34,7 +34,7 @@ use_house_style()
 #
 # Try the ruler on circles. The middle wants one answer and the ring wants the
 # other. A single line can cut left from right, or top from bottom, but it cannot
-# wrap around the middle.
+# wrap around the middle. The ruler is stuck being a ruler, and I believe this means it has no aura!
 
 # %%
 X_fail, y_fail = toy_shape("circles", n=160, noise=0.08, seed=0)
@@ -114,7 +114,7 @@ workbook.render(3)
 # **x3 = x1² + x2²**
 #
 # Point **(2, 0)** becomes **x3 = 2² + 0² = 4**. Point **(0.3, 0.4)** becomes
-# **0.3² + 0.4² = 0.09 + 0.16 = 0.25**. The ring rises; the middle stays low.
+# **0.3² + 0.4² = 0.09 + 0.16 = 0.25**. The ring rises; the middle stays low. Pop!
 #
 # ```mermaid
 # flowchart LR
@@ -125,7 +125,7 @@ workbook.render(3)
 #     E --> F[Circle boundary]
 # ```
 #
-# The diagram says the trick: make height from distance, cut flat, then look back down.
+# The diagram says the trick: make height from distance, cut flat, then look back down. A curve appears on the floor!
 
 # %%
 X, y = toy_shape("circles", n=220, noise=0.08, seed=1)

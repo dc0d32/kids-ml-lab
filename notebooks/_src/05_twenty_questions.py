@@ -33,12 +33,12 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Think of **Twenty Questions** or **Guess Who**. You do not need one giant rule at the
-# start. You ask one useful yes/no question, split the pile, then ask a new question
-# inside each smaller pile.
+# Think of **Twenty Questions** or **Guess Who**. The model gets a clipboard. Do not start with one giant rule.
+# Grab one useful yes/no question, split the pile, then dive into each smaller pile
+# with the next question.
 #
-# That is why a tree is a flowchart. The clever part is not the drawing; it is choosing
-# which question makes the next step easiest.
+# That is why a tree is a flowchart with sneakers on. The clever part is not the
+# drawing; it is choosing which question leaves the next step with less mess.
 #
 # ```mermaid
 # graph TD
@@ -71,8 +71,9 @@ creatures = load_table("creatures")
 creatures
 
 # %% [markdown]
-# A bucket is **mixed** when different answers are still stuck together. Six animals with
-# 3 flyers and 3 non-flyers is very mixed. Four flyers and 0 non-flyers is clean.
+# A bucket is **mixed** when different answers are stuck together like cereal in one
+# bowl. Six animals with 3 flyers and 3 non-flyers is soupy. Four flyers and 0
+# non-flyers is clean.
 #
 # The Gini mix score says: pick two random animals from the bucket. How likely are you to
 # be surprised by two different answers? For two answers, the score is:
@@ -106,8 +107,9 @@ workbook.render(5)
 # %% [markdown]
 # ## 👀 Take a look
 #
-# The computer is not guessing from vibes. It tries the same kind of split table, picks
-# the least-mixed question, and repeats that inside the new buckets.
+# The computer is not guessing from feelings. It tries the same kind of split table, picks
+# the least-mixed question, and repeats that inside the new buckets. The split table did,
+# as the adults apparently say, let him cook.
 #
 # Each split uses one column because a tree question has one job: send the row left or
 # right. Later questions can use different columns, but only after the row has reached
@@ -133,8 +135,8 @@ print("Computer's first split:", creature_feature_names()[int(model.tree_.featur
 # smooth rubber band. On a two-column picture, `x1 <= 0.4` makes a vertical cut and
 # `x2 <= -0.2` makes a horizontal cut.
 #
-# That is why the boundary becomes a staircase. More depth means more questions, and more
-# questions mean more little rectangles.
+# That is why the boundary becomes a staircase. More depth means more questions, and
+# more questions stack more little rectangles onto the picture.
 
 # %%
 SHAPE = "moons"
@@ -172,10 +174,10 @@ plt.show()
 # > chain of small cuts can wrap around moons, circles, or XOR without inventing new
 # > features.
 #
-# > ⚠️ **Careful** A deep tree can score better on its own training dots by making tiny
+# > ⚠️ **Careful** A deep tree can score better on its own training dots by fencing tiny
 # > boxes around awkward points. That is memorising: it learns *this exact dot goes red*
-# > instead of learning a rule that helps on the next dot. Chapter 8 turns this worry into
-# > a fair test.
+# > instead of a rule that helps on the next dot. Chapter 8 turns this worry into a fair
+# > test.
 
 # %% [markdown]
 # ## 💻 In real code

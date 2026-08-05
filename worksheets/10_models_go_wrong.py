@@ -26,7 +26,7 @@ WORKBOOK = Workbook(
     chapter=10,
     title="Workbook · Spot the lie in the score",
     intro=(
-        "A score is a clue, not a verdict. Use the matrix, then name the failure."
+        "A score is a clue, not a verdict. Use the matrix like a crime scene map, then name the failure."
     ),
     questions=[
         Question(
@@ -37,7 +37,7 @@ WORKBOOK = Workbook(
             table=MATRIX,
             why=(
                 "Accuracy is (8 + 950) / 1000 = 95.8%. It looks great because almost everyone is healthy. "
-                "The next questions show why that one number is hiding the pain."
+                "That one number parks the 40 missed sick people behind a giant healthy pile."
             ),
         ),
         Question(
@@ -48,7 +48,7 @@ WORKBOOK = Workbook(
             table=MATRIX,
             why=(
                 "Precision is 8 / (8 + 2) = 80%. When the model rings the alarm, it is often right. "
-                "That still does not tell us how many sick people it missed."
+                "But precision does not count the sick people who walked past the silent alarm."
             ),
         ),
         Question(
@@ -59,7 +59,7 @@ WORKBOOK = Workbook(
             table=MATRIX,
             why=(
                 "Recall is 8 / (8 + 40), about 16.7%. The model missed most sick people. "
-                "That is the important number for many medical alarms."
+                "For many medical alarms, that is the siren number."
             ),
         ),
         Question(
@@ -70,7 +70,7 @@ WORKBOOK = Workbook(
             table=SCENARIOS,
             why=(
                 "The answer is rare, so the model can look accurate while doing no useful work. "
-                "Always compare with the boring most-common-answer baseline."
+                "Compare with the boring most-common-answer baseline before the score gets applause."
             ),
         ),
         Question(
@@ -80,7 +80,7 @@ WORKBOOK = Workbook(
             answer="leakage",
             table=SCENARIOS,
             why=(
-                "A copied answer column sneaked into the features. Suspiciously perfect scores usually mean a bug, not a breakthrough."
+                "A copied answer column sneaked into the features. A perfect messy-data score usually means a bug, not a breakthrough."
             ),
         ),
         Question(
@@ -90,7 +90,7 @@ WORKBOOK = Workbook(
             answer="bias in, bias out",
             table=SCENARIOS,
             why=(
-                "The model copied unfair old labels. The overall score hid who was harmed, so we split the score by group."
+                "The model copied unfair old labels. The overall score hid who got hurt, so we split the score by group and turned on the lights."
             ),
         ),
         Question(
@@ -100,7 +100,7 @@ WORKBOOK = Workbook(
             answer="outside its world",
             table=SCENARIOS,
             why=(
-                "The model has no built-in 'I have never seen this' button. Far from training data, confidence can be theatre."
+                "The model has no built-in 'I have never seen this' button. Far from training data, confidence can be theatre with a megaphone."
             ),
         ),
         Question(
@@ -110,7 +110,7 @@ WORKBOOK = Workbook(
             answer="higher recall",
             why=(
                 "Most people want a smoke alarm to catch real smoke, even if it sometimes complains about toast. "
-                "For a spam filter, you may choose differently because losing real mail hurts."
+                "For a spam filter, you may choose differently because losing real mail hurts. Same trade-off, new room."
             ),
         ),
         Question(
@@ -118,7 +118,7 @@ WORKBOOK = Workbook(
             kind="open",
             why=(
                 "Good answers include: What is the baseline? Is it too good? Does it work for every group? "
-                "What happens on new or strange examples? Honest ML starts with those questions."
+                "What happens on new or strange examples? Honest ML starts by putting those questions on the dashboard."
             ),
         ),
     ],

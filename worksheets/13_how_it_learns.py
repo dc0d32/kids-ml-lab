@@ -10,12 +10,12 @@ WORKBOOK = Workbook(
         Question(
             prompt='What is z = w1*x1 + w2*x2 + b at the start?',
             kind='number', answer=0, tolerance=0.001,
-            why='All three learned numbers start at zero, so z = 0*1 + 0*2 + 0 = 0. This is the raw line score before the squish.',
+            why='All three learned numbers start at zero, so z = 0*1 + 0*2 + 0 = 0. This is the raw line score before the squish touches it.',
         ),
         Question(
             prompt='sigmoid(0) equals what?',
             kind='number', answer=0.5, tolerance=0.001,
-            why='Zero is the middle of the S-curve. The neuron is perfectly unsure, which is a bad answer here because the target is 1.',
+            why='Zero sits in the middle of the S-curve. The neuron is perfectly unsure, which is a bad answer here because the target is 1.',
         ),
         Question(
             prompt='For squared error, dL/dout = 2*(out - y). What is it here?',
@@ -26,7 +26,7 @@ WORKBOOK = Workbook(
         Question(
             prompt='The sigmoid slope at zero is 0.25. What is dL/dz = dL/dout * slope?',
             kind='number', answer=-0.25, tolerance=0.001,
-            why='This is blame passing through the squish: output blame times squish slope, so -1 * 0.25 = -0.25.',
+            why='This is blame squeezing through the squish: output blame times squish slope, so -1 * 0.25 = -0.25.',
         ),
         Question(
             prompt='What is dw1 = dL/dz * x1?',
@@ -46,7 +46,7 @@ WORKBOOK = Workbook(
         Question(
             prompt='If lr = 0, what changes after a step?',
             kind='choice', choices=['the weights change', 'nothing changes'], answer='nothing changes',
-            why='Learning rate is the step size. Step size zero means the gradient gives a direction, but the model stands still.',
+            why='Learning rate is the step size. Step size zero means the gradient points downhill, but the model plants its feet and stands still.',
         ),
     ],
     kid_corner='Imagine a friend says your throw was too short. That clue tells your arm to throw a little harder next time.',

@@ -65,7 +65,7 @@ WORKBOOK = Workbook(
             answer="horizontal edges",
             table=KERNEL,
             why=(
-                "The transposed kernel compares top versus bottom instead of left versus right, so it looks for horizontal changes."
+                "The transposed kernel compares top versus bottom instead of left versus right. That makes horizontal changes light up."
             ),
         ),
         Question(
@@ -90,7 +90,7 @@ WORKBOOK = Workbook(
             prompt="Why can a CNN use fewer weights than a plain MLP and still do better on pictures?",
             kind="open",
             why=(
-                "The same kernel is reused at every position. It learns one edge detector and tries it everywhere, instead of learning a new edge detector for each spot."
+                "The same kernel is reused at every position. It learns one edge detector and marches it across the whole picture instead of learning a new detector for each spot."
             ),
         ),
         Question(

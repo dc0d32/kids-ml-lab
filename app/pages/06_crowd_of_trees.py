@@ -33,8 +33,8 @@ def cached_monsters():
 def _():
     lesson.say(
         """
-At a party, ask everyone to guess how many jellybeans are in a jar. One person
-may be wildly high. Another may be low. The **average** can land closer than
+Shake the jellybean jar and ask a crowd. One person may rocket high. Another
+may dive low. The **average** can land closer than
 most individual guesses because the high and low mistakes cancel.
 """
     )
@@ -90,7 +90,7 @@ def _():
         "If many trees make different small mistakes, what should the forest vote do to lonely bites?",
         ["Often smooth them out", "Make every bite larger", "Copy the first tree exactly"],
         correct=0,
-        why="Different mistakes can cancel when the trees vote.",
+        why="When trees trip in different places, the vote can knock the wobble flat.",
         key="ch06_forest_vote",
     )
     if guess is None:
@@ -119,7 +119,7 @@ def _():
     x2 = st.slider("Click-ish point: feature 2", -2.5, 2.5, 0.0, 0.1, key="ch06_vote_x2")
     _, _, _, forest = fit_tree_and_forest(shape=shape, n_estimators=n_estimators, noise=noise, seed=seed)
     votes = forest_vote_counts(forest, [x1, x2])
-    st.info(f"For that point, **{votes['red']} of {n_estimators}** trees said red and **{votes['blue']}** said blue.")
+    st.info(f"For that point, **{votes['red']} of {n_estimators}** trees said red and **{votes['blue']}** said blue. Crowd and the crowd, as they say, ate.")
 
 
 @lesson.step("Boosting is a different crowd trick", beat="play")
@@ -151,7 +151,7 @@ def _():
         "What can many tiny step-shaped fixes build if you add them one at a time?",
         ["A smoother-looking curve", "Only a flat line", "One giant question"],
         correct=0,
-        why="Each little tree is blocky, but the running total can become a much better curve.",
+        why="Each tiny tree is a wooden stair step. Stack many small steps and the running total can trace a smoother curve!",
         key="ch06_staircase",
     )
     if guess is None:
@@ -205,7 +205,7 @@ def _():
         "Before revealing the rule, which feature group do you expect to matter most?",
         ["attack", "home", "height_cm", "element"],
         correct=0,
-        why="Attack rises to the top, with magic and speed close behind.",
+        why="Attack grabs the tallest bar, with magic and speed right behind it.",
         key="ch06_monsters",
     )
     if guess is None:

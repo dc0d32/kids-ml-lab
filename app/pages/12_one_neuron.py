@@ -22,8 +22,8 @@ def _():
         """
 Part 3 sounds like a new planet: **neural networks**. It is not.
 
-A neuron is the straight-line score from Chapter 2, followed by the probability squish from
-Chapter 4. If you can read `w1*x1 + w2*x2 + b`, you can read the inside of this circle.
+A neuron is Chapter 2's straight-line score bolted to Chapter 4's probability squish.
+If you can read `w1*x1 + w2*x2 + b`, you can read the engine inside this circle.
 """
     )
     lesson.mermaid(
@@ -48,7 +48,7 @@ def _():
 Use **w1 = 2**, **w2 = -1**, **b = 0.5**. First build the raw score `z`, then squish it.
 
 The raw score decides which side of the line the point is on. The squish turns distance
-from the line into a number between 0 and 1.
+from the line into a 0-to-1 confidence gauge.
 """
     )
     hand = pd.DataFrame(
@@ -72,7 +72,7 @@ def _():
 Why not leave the raw score alone? For a class answer, `z = 19` and `z = 1900` both mean
 red, but a training rule needs a bounded target to compare with `0` and `1`.
 
-The squish makes a soft confidence score without moving the fence.
+The squish clips the wild number into a soft confidence score without moving the fence.
 """
     )
     lesson.careful(
@@ -99,7 +99,7 @@ one side, a negative score lands on the other, and zero is the fence.
 
 @lesson.step("Move the neuron sliders", beat="play")
 def _():
-    lesson.say("Drag the learned numbers and watch the green line. That line is where `z = 0`.")
+    lesson.say("Drag the learned numbers and watch the green line. That line is where `z = 0`, the fence in the grass.")
     knobs, picture = lesson.controls()
     with knobs:
         w1 = st.slider("w1", -6.0, 6.0, 2.0, 0.2, key="ch11_w1")
@@ -123,7 +123,7 @@ def _():
         "Make the weights steeper. What happens to the output ramp?",
         ["It gets flatter", "It changes faster near the fence", "The fence disappears"],
         correct=1,
-        why="Bigger weights make raw scores grow faster as you move away from `z = 0`.",
+        why="Bigger weights make raw scores climb faster as your point walks away from `z = 0`. The ramp gets steep!",
         key="ch11_surface_steepness",
     )
     if guess is None:
@@ -148,7 +148,7 @@ def _():
         "Can one neuron solve XOR, where opposite corners need the same colour?",
         ["Yes, if the squish is chosen well", "No, one neuron has one straight boundary", "Yes, if the bias is large"],
         correct=1,
-        why="The squish softens confidence, but it does not give the neuron a second boundary.",
+        why="The squish softens confidence, but it never grows a second fence. One neuron brings one straight cut.",
         key="ch11_xor_predict",
     )
     if guess is None:
@@ -166,7 +166,7 @@ def _():
     draw_line(w1, w2, b, ax=ax)
     lesson.show(fig)
     xor_misses = int((one.predict(X_xor) != y_xor).sum())
-    st.metric("XOR mistakes with this one neuron", xor_misses)
+    st.metric("XOR mistakes (one neuron, still cooked)", xor_misses)
     lesson.look_for("opposite corners. A single straight boundary always cuts the square into two neighbouring chunks.")
 
 
@@ -184,7 +184,7 @@ def _():
     lesson.say(
         """
 Now we train the neuron instead of choosing its numbers by hand. Scikit-learn calls the same
-idea **logistic regression**: a line score, a sigmoid, and a training rule.
+idea **logistic regression**: a line score, a sigmoid, and a training rule turning the knobs.
 """
     )
     X_fit, y_fit, w_mine, b_mine, _, w_sklearn, b_sklearn, sk_score = fit_blob_models()
@@ -209,7 +209,7 @@ def _():
     fig, ax = lesson.figure(5.8, 4.6)
     decision_boundary(lambda G: learned.forward(G), X_fit, y_fit, ax=ax, steps=180, title="Our trained neuron")
     lesson.show(fig)
-    lesson.look_for("the gap between the two blob clouds. The trained neuron found a straight divider there.")
+    lesson.look_for("the gap between the two blob clouds. The trained neuron drove a straight divider through that gap.")
 
 
 @lesson.step("Check yourself", beat="challenge")

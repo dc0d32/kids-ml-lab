@@ -27,7 +27,7 @@ w_after, b_after, was_wrong = perceptron_step(w_bad, b_bad, X_tiny[5], y_tiny[5]
 def _():
     lesson.say(
         """
-Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
+Flip the line from price tag to referee. Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
 
 Same line, new question: **which side?** A point on one side becomes blue. A
 point on the other side becomes red. The model still computes a number first,
@@ -81,7 +81,7 @@ Now make the line too strict: **w = (1, 1), b = -20**. The same red point gets
         "If we add the missed red point to the weights, will this exact point move to the red side?",
         ["Yes, the score will jump positive", "No, one update cannot help", "It will stay exactly tied"],
         correct=0,
-        why="The point's own coordinates get added to the score rule, so that point pushes hard toward red.",
+        why="The missed point throws its own coordinates onto the weights. That yanks its future score hard toward red!",
         key="ch02_update",
     )
     if guess is None:
@@ -167,7 +167,7 @@ def _():
         "What happens if the correct boundary must bend, but the perceptron only owns one straight line?",
         ["It leaves mistakes behind", "It bends the line", "It refuses to answer"],
         correct=0,
-        why="The algorithm keeps fixing mistakes, but one straight line cannot become a curve.",
+        why="The algorithm can keep patching mistakes, but one straight ruler cannot curl into a moon. Some errors stay on the floor!",
         key="ch02_bendy",
     )
     if guess is None:
@@ -199,7 +199,7 @@ def _():
 def _():
     lesson.say(
         """
-1. **Beat the algorithm.** Use the sliders until the mistake counter reaches zero.
+1. **Beat the algorithm, no cap.** Use the sliders until the mistake counter reaches zero.
 2. **Set b to 0.** What can the line no longer do? Hint: it must pass through (0, 0).
 3. **Make the blobs overlap.** A perceptron only settles when perfection is possible. What does it do instead?
 """

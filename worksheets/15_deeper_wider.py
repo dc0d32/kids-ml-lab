@@ -17,7 +17,7 @@ WORKBOOK = Workbook(
         Question(
             prompt='Which checkpoint has the lowest test loss?',
             kind='number', answer=400, tolerance=0.001, table=LOSS_TABLE,
-            why='Checkpoint 400 has test loss 0.14, the lowest value in the table. We ship the model that works best on hidden test examples, not the one that memorised practice dots.',
+            why='Checkpoint 400 has test loss 0.14, the lowest value in the table. We ship the model that works best on hidden test examples, not the one that memorised the practice dots.',
         ),
         Question(
             prompt='At checkpoint 1200, train loss is tiny. Why is that not the best model?',

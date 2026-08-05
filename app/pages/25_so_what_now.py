@@ -59,17 +59,17 @@ def course_map_figure():
 def _():
     lesson.say(
         """
-You started with a secret-rule game. You ended by training a tiny Transformer.
+You opened with a secret-rule game. You ended by training a tiny Transformer.
 
-That is not a toy achievement. It is the map of modern machine learning, built piece by piece with small numbers you could touch.
+That is not a toy achievement. It is the map of modern machine learning, built brick by brick with small numbers you could touch. Nice work!
 """
     )
-    lesson.kid_corner("You did not get one magic wand. You filled a backpack with tools. Now you know which tool to pull out.")
+    lesson.kid_corner("You did not get one magic wand. You filled a backpack with tools. Now you can reach in and pick the tool for the job.")
 
 
 @lesson.step("Your inventory", beat="byhand")
 def _():
-    lesson.say("You have personally built this backpack of tools:")
+    lesson.say("You have personally built this backpack of tools. Shake it and it rattles:")
     built = [
         "a linear model",
         "a perceptron trained by hand",
@@ -94,20 +94,20 @@ def _():
         "Which road carried you from one neuron to the Transformer?",
         ["The red no-labels branch", "The green neural-network road", "The classical-model loop"],
         correct=1,
-        why="The green road runs from a line, to layers, to vision, to attention.",
+        why="The green road carries you from a line, to layers, to vision, to attention.",
         key="ch24_course_map",
     )
     if guess is None:
         return
     fig = course_map_figure()
     lesson.show(fig)
-    lesson.look_for("the green line to Chapter 24, and the red branch that led through clustering and PCA.")
-    st.caption("The green line is the neural-network road. The red branch is learning without answer labels.")
+    lesson.look_for("the green line to Chapter 24, and the red branch that detoured through clustering and PCA.")
+    st.caption("The whole map, and it is lowkey enormous: green is the neural-network road. Red is learning without answer labels.")
 
 
 @lesson.step("Where this is already in your life", beat="play")
 def _():
-    lesson.say("Pick a real-world thing and connect it back to chapters you have touched.")
+    lesson.say("Pick a real-world thing and snap it back to chapters you have touched.")
     uses = {
         "Recommendations": "Chapters 19-20: find things near things you already like, or group people/items by pattern.",
         "Photo search": "Chapters 17-17 and 20: pictures are numbers, CNNs spot patterns, PCA can shrink them.",
@@ -124,23 +124,23 @@ def _():
 @lesson.step("The honest limits", beat="forreal")
 def _():
     limits = {
-        "Hallucination": "A language model was trained to produce likely-looking text. Looking right and being right are different targets.",
-        "Bias": "A model copies its data. Chapter 10 already warned you about lopsided examples.",
-        "Confidently wrong": "Out-of-distribution inputs can still get confident answers. Chapter 00 and Chapter 10 both showed that.",
-        "No world inside": "A language model knows patterns in text. It does not know the world the way you do.",
+        "Hallucination": "A language model was trained to produce likely-looking text. Looking right and being right are different targets, so important answers need checking.",
+        "Bias": "A model copies patterns from its data. If the examples are lopsided, missing people, or unfair, that shape can come along for the ride. Chapter 10 gave you the warning lights.",
+        "Confidently wrong": "Out-of-distribution inputs can still get confident answers. Chapter 00 and Chapter 10 both showed models stepping past the edge of the map.",
+        "No world inside": "A language model knows patterns in text. It does not have a lived-in world the way you do.",
     }
     choice = st.selectbox("Pick a limit to inspect", list(limits), key="ch24_limit")
     lesson.say(f"**{choice}.** {limits[choice]}")
-    lesson.careful("Confidently wrong is still wrong. Chapter 00 and Chapter 10 both showed models answering with confidence when the input was outside what they understood.")
+    lesson.careful("Confidently wrong is still wrong. That is not a shame bell; it is a safety signal. Chapter 00 and Chapter 10 both showed models answering with confidence when the input was outside what they understood.")
 
 
 @lesson.step("Make your own hallucination", beat="forreal")
 def _():
     guess = lesson.predict(
-        "Your Chapter 24 model never learned facts. If we start a factual sentence, what should we expect?",
+        "Your Chapter 24 model never learned facts. If we start a factual-looking sentence, what should we expect?",
         ["A checked fact", "Likely-looking text", "Silence until it knows"],
         correct=1,
-        why="It practised next-character likelihood, not truth. That is why fluent text can still be false.",
+        why="It practised next-character likelihood, not truth. That is why fluent text can still be false, even when it sounds smooth.",
         key="ch24_hallucination",
     )
     if guess is None:
@@ -162,11 +162,11 @@ Being smart about AI:
 
 - Check things that matter.
 - Treat it as a tool, not an oracle.
-- Do not put private stuff into it.
-- Using it to learn is great. Using it to avoid learning is a bad trade.
+- Keep private stuff out of the machine.
+- Using it to learn is great. Using it to dodge learning is a bad trade.
 """
     )
-    lesson.aha("You now understand more about how these systems work than most people using them every day.")
+    lesson.aha("You now understand more about how these systems work than most people using them every day. That is real leverage!")
 
 
 @lesson.step("Check yourself", beat="challenge")
@@ -176,7 +176,7 @@ def _():
 
 @lesson.step("Ten weekend projects", beat="challenge")
 def _():
-    lesson.say("Pick a project that sounds fun enough to break on purpose.")
+    lesson.say("Pick a project that sounds fun enough to break on purpose. Weekend side quest accepted.")
     projects = pd.DataFrame(
         [
             ["Train the babbler on your own writing", "21-23", "It will sound weirdly like you."],
@@ -205,7 +205,7 @@ def _():
         "a GPU": "A GPU changes the scale: bigger batches, bigger models, more experiments before dinner.",
     }
     choice = st.selectbox("What sounds useful next?", list(next_steps), key="ch24_next_topic")
-    lesson.say(f"{next_steps[choice]} The secret is not missing; the dials are larger.")
+    lesson.say(f"{next_steps[choice]} The secret is not missing; the dials are larger, and now you know what they do!")
 
 
 lesson.finish()

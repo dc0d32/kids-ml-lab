@@ -35,10 +35,10 @@ def cached_far(span: float):
 def _():
     lesson.say(
         """
-A model that is right **99%** of the time can be useless.
+A model that is right **99%** of the time can still be a trophy made of fog.
 
 A model that scores brilliantly can be cheating without anybody noticing. Once you know the
-trick, suspicious scores start to look suspicious.
+trick, suspicious scores start flashing like hazard lights.
 """
     )
     lesson.mermaid(
@@ -52,7 +52,7 @@ graph TD
 """,
         height=330,
     )
-    lesson.look_for("the four exits from a shiny score. A score is the first clue, not the end.")
+    lesson.look_for("the four exits from a shiny score. A score is the first clue, not the finish line.")
     lesson.kid_corner(
         "If a smoke alarm never beeps, it is quiet almost all day. That does not make it a good smoke alarm. "
         "The important question is what happens on the one day with smoke."
@@ -89,7 +89,7 @@ def _():
         "A disease appears in 1 out of 100 people. A model always says healthy. What is its accuracy?",
         ["0%", "50%", "99%"],
         correct=2,
-        why="It gets the 99 healthy people right and misses the one person who needed help.",
+        why="It catches the 99 healthy people and lets the one sick person walk past the alarm.",
         key="ch10_useless_99",
     )
     if guess is None:
@@ -97,7 +97,7 @@ def _():
 
     always = realdata.always_healthy_accuracy()
     st.metric("Always say healthy", f"{always:.0%} accuracy")
-    lesson.aha("This model knows nothing, misses every sick person, and still gets a shiny score.")
+    lesson.aha("This model knows nothing, misses every sick person, and still gets a shiny score. That is the trap!")
 
 
 @lesson.step("Move the threshold", beat="seeit")
@@ -120,7 +120,7 @@ above here, call it sick.
     cols[0].metric("accuracy", f"{m['accuracy']:.1%}")
     cols[1].metric("precision", f"{m['precision']:.1%}")
     cols[2].metric("recall", f"{m['recall']:.1%}")
-    lesson.say("For a smoke alarm, false alarms are annoying but missed smoke is worse. For a spam filter, eating real mail is painful.")
+    lesson.say("For a smoke alarm, false alarms are annoying but missed smoke is worse. For a spam filter, eating real mail is painful. Same slider, different stakes.")
 
 
 @lesson.step("Failure 2: the model cheated", beat="play")
@@ -129,16 +129,16 @@ def _():
         "A messy real-data model scores 100%. What should you suspect first?",
         ["It became a genius", "The answer leaked into the features", "The baseline disappeared"],
         correct=1,
-        why="Perfect can happen in tiny toy worlds. In messy real data, a leaked answer column is the first suspect.",
+        why="Tiny toy worlds can be perfect. Messy real data that hits 100% makes the leaked-answer alarm clang first.",
         key="ch10_leakage_predict",
     )
     if guess is None:
         return
 
     st.dataframe(cached_leakage(), hide_index=True, width="stretch")
-    lesson.look_for("the suspicious jump when leaked columns are allowed.")
+    lesson.look_for("the suspicious jump when leaked columns are allowed. That jump is evidence, and I believe the formal term is sus.")
     lesson.jargon("leakage", "A column lets the answer sneak into the features, so the model is not learning the real pattern.")
-    lesson.say("A hospital model once learned which scanner machine was used. The model learned the machine, not pneumonia.")
+    lesson.say("A hospital model once learned which scanner machine was used. The machine was a shortcut; pneumonia was the real target.")
 
 
 @lesson.step("Failure 3: unfair copies", beat="play")
@@ -160,7 +160,7 @@ def _():
     bias = cached_bias()
     st.dataframe(bias["summary"], hide_index=True, width="stretch")
     st.dataframe(bias["examples"], hide_index=True, width="stretch")
-    lesson.look_for("people with the same useful scores but different groups. That is where the average hides harm.")
+    lesson.look_for("people with the same useful scores but different groups. That is the crack where the average hides harm.")
     lesson.careful(
         "The model is not being mean. It is copying. If you copy from something unfair, "
         "you get something unfair, at scale and with a confident voice."
@@ -169,7 +169,7 @@ def _():
 
 @lesson.step("Failure 4: outside its world", beat="play")
 def _():
-    lesson.say("A model has no built-in idea of: I have never seen anything like this. Chapter 00 warned you: a model answers anyway.")
+    lesson.say("A model has no built-in new-planet alarm. Chapter 00 warned you: a model answers anyway.")
     span = st.slider("How far outside the moon world should we look?", 3.0, 10.0, 8.0, 1.0, key="ch10_far_span")
     far = cached_far(span)
     fig, ax = lesson.figure(6, 5)
@@ -180,7 +180,7 @@ def _():
     ax.legend(fontsize=9)
     fig.colorbar(img, ax=ax, label="model confidence")
     lesson.show(fig)
-    lesson.look_for("the star. It is far from the training moons, but the model still sounds confident.")
+    lesson.look_for("the star out in the dark. It is far from the training moons, but the model still sounds confident.")
     st.markdown(f"At the star, the model says class {far['far_guess']} with **{far['far_confidence']:.0%} confidence**.")
 
 
@@ -199,8 +199,8 @@ model_score = model.score(X_test, y_test)
     )
     lesson.say(
         """
-The checklist is plain: What is the baseline? Does the score seem too good? Does it work
-for everyone, or only on average? What happens when it sees something new?
+The checklist fits on a sticky note: What is the baseline? Does the score seem too good?
+Does it work for everyone, or only on average? What happens when it sees something new?
 """
     )
 

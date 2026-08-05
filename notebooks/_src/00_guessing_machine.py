@@ -23,7 +23,7 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# I am thinking of a **secret rule**.
+# Boom: I am thinking of a **secret rule**.
 #
 # The rule decides whether a creature is a **zeep** or **not a zeep**. Every creature
 # has three things about it: a **shape**, a **colour**, and a **size**. That's all you get.
@@ -32,8 +32,8 @@ use_house_style()
 # Your job: work out the rule from the examples.
 #
 # That sentence — *work out the rule from the examples* — **is machine learning**.
-# There is nothing else. Everything in the other 24 chapters is a different way of
-# doing exactly this.
+# That is the spark. Every other chapter in the course is a new contraption
+# for doing exactly this.
 #
 # > 🧸 **Little Kid Corner** — Think of the game where someone says *hot* or *cold*
 # > while you look for a hidden toy. They never tell you where it is. You work it out
@@ -42,7 +42,7 @@ use_house_style()
 # %% [markdown]
 # ### The whole world, all 18 creatures of it
 #
-# Three shapes × three colours × two sizes. That's every creature that can exist here.
+# Three shapes × three colours × two sizes. That's every creature that can exist here. Tiny universe, big side quest.
 # You can look at the entire universe of this problem in one go — which almost never
 # happens again in this course.
 
@@ -73,7 +73,7 @@ examples
 
 # %% [markdown]
 # Now work through the questions below. Type your answer in each box and press **Check** —
-# you'll find out not just whether you were right, but why the question was worth asking.
+# you'll find out whether you were right, and why the question was worth asking.
 
 # %%
 from kidsml import workbook
@@ -179,11 +179,11 @@ plt.show()
 # >
 # > Look at the left end. With one or two examples the computer is barely better than
 # > flipping a coin — but it still answers with total confidence. A model never says
-# > *I don't know*. It just guesses. Remember that when you get to Chapter 10.
+# > *I don't know*. It guesses anyway. Remember that when you get to Chapter 10.
 #
 # Notice also that the five rules are **not equally hard**. "It is red" is learned
 # almost immediately. "Exactly one of red / big" needs far more examples for the same
-# score. Some patterns are just harder to spot — for you *and* for the machine.
+# score. Some patterns take more evidence to spot — for you *and* for the machine.
 
 # %% [markdown]
 # ## 🏆 Go further
