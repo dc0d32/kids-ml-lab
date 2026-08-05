@@ -11,66 +11,76 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.tree import DecisionTreeClassifier
 
-from kidsml import ui
+from kidsml import lesson, ui
 from kidsml.datasets import toy_shape, xor_exact
 from kidsml.linear import predict_side
 from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, scatter_2d
 
-ui.page_setup(3)
+lesson.begin(3)
 
-# ---------------------------------------------------------------------------
-ui.beat("hook")
-st.markdown(
-    """
+X_xor, y_xor = xor_exact()
+
+
+@lesson.step("Let the ruler fail", beat="hook")
+def _():
+    lesson.say(
+        """
 Chapter 2 gave us a ruler: one straight line can choose red or blue. Now the line
 runs out of road.
 
 Try the ruler on circles. The middle wants one answer and the ring wants the
-other. A single line can cut left from right, or top from bottom, but it cannot
-wrap around the middle.
+other.
 """
-)
-X_xor, y_xor = xor_exact()
-X_fail, y_fail = toy_shape("circles", n=160, noise=0.08, seed=0)
-col_a, col_b = st.columns([1, 2], gap="large")
-with col_a:
-    w1_fail = st.slider("circle w1", -5.0, 5.0, 1.0, 0.2)
-    w2_fail = st.slider("circle w2", -5.0, 5.0, 0.0, 0.2)
-    b_fail = st.slider("circle b", -3.0, 3.0, 0.0, 0.2)
-    mistakes = int((predict_side(X_fail, w1_fail, w2_fail, b_fail) != y_fail).sum())
-    st.metric("Circle mistakes", mistakes)
-with col_b:
-    fig, ax = ui.figure(6, 4.6)
-    decision_boundary(lambda G: predict_side(G, w1_fail, w2_fail, b_fail), X_fail, y_fail, ax=ax, shade_confidence=False)
-    draw_line(w1_fail, w2_fail, b_fail, ax=ax)
-    ax.set_title("Try to make circles perfect with one line")
-    ui.show(fig)
-st.markdown("Notice the best-looking ruler still slices through part of the ring or part of the middle.")
+    )
+    X_fail, y_fail = toy_shape("circles", n=160, noise=0.08, seed=0)
+    knobs, picture = lesson.controls()
+    with knobs:
+        w1_fail = st.slider("circle w1", -5.0, 5.0, 1.0, 0.2, key="ch03_circle_w1")
+        w2_fail = st.slider("circle w2", -5.0, 5.0, 0.0, 0.2, key="ch03_circle_w2")
+        b_fail = st.slider("circle b", -3.0, 3.0, 0.0, 0.2, key="ch03_circle_b")
+        mistakes = int((predict_side(X_fail, w1_fail, w2_fail, b_fail) != y_fail).sum())
+        st.metric("Circle mistakes", mistakes)
+    with picture:
+        fig, ax = lesson.figure(6, 4.6)
+        decision_boundary(lambda G: predict_side(G, w1_fail, w2_fail, b_fail), X_fail, y_fail, ax=ax, shade_confidence=False)
+        draw_line(w1_fail, w2_fail, b_fail, ax=ax)
+        ax.set_title("Try to make circles perfect with one line")
+        lesson.show(fig)
+    lesson.look_for("the best-looking ruler still slicing through part of the ring or part of the middle.")
 
-st.markdown(
-    """
-XOR makes the failure tiny enough to prove. It has four points. Opposite corners
-match. If one line cannot solve four dots, then the problem is the shape of the
-boundary, not the amount of data.
-"""
-)
-fig, ax = ui.figure(5, 4.5)
-scatter_2d(X_xor, y_xor, ax=ax, size=120)
-for i, (x1, x2) in enumerate(X_xor):
-    ax.text(x1 + 0.03, x2 + 0.03, str(int(y_xor[i])), fontsize=12)
-ax.set_title("XOR: opposite corners match")
-ui.show(fig)
-st.markdown("Look diagonally: the two red points are not neighbors, and the two blue points are not neighbors either.")
 
-# ---------------------------------------------------------------------------
-ui.beat("byhand", "A tiny proof with inequalities.")
-st.markdown(
-    """
+@lesson.step("Four dots are enough to prove it", beat="hook")
+def _():
+    lesson.say("XOR makes the failure tiny enough to prove. It has four points, and opposite corners match.")
+    guess = lesson.predict(
+        "Can any straight line split these opposite-corner answers perfectly?",
+        ["Yes", "No", "Only if the line is diagonal"],
+        correct=1,
+        why="A diagonal line can put one pair of opposite corners together, but then it also keeps the other opposite pair together.",
+        key="ch03_xor_line",
+    )
+    if guess is None:
+        return
+
+    fig, ax = lesson.figure(5, 4.5)
+    scatter_2d(X_xor, y_xor, ax=ax, size=120)
+    for i, (x1, x2) in enumerate(X_xor):
+        ax.text(x1 + 0.03, x2 + 0.03, str(int(y_xor[i])), fontsize=12)
+    ax.set_title("XOR: opposite corners match")
+    lesson.show(fig)
+    lesson.look_for("the diagonals: the two red points are not neighbors, and the two blue points are not neighbors either.")
+
+
+@lesson.step("The contradiction", beat="byhand")
+def _():
+    lesson.say(
+        """
 Assume a perfect line exists. Its score is **w1·x1 + w2·x2 + b**. Red points need
 positive scores; blue points need negative scores.
-
-Here is what each XOR corner demands:
-
+"""
+    )
+    st.markdown(
+        """
 | point | answer | what the line would need |
 |---|---|---|
 | (0, 0) | blue | b < 0 |
@@ -78,37 +88,37 @@ Here is what each XOR corner demands:
 | (1, 0) | red | w1 + b > 0 |
 | (0, 1) | red | w2 + b > 0 |
 """
-)
-st.markdown(
-    """
-Now add the two red demands. From **w1 + b > 0** and **w2 + b > 0**, the left
-sides add to **w1 + w2 + 2b**, and two positive things add to something positive:
-**w1 + w2 + 2b > 0**.
-
-Add the two blue demands. From **b < 0** and **w1 + w2 + b < 0**, the same left
-side appears, but now it must be negative: **w1 + w2 + 2b < 0**.
-
-The same number cannot be bigger than zero and smaller than zero. That is why no
-straight line can solve XOR.
+    )
+    lesson.say(
+        """
+Add the two red demands and you get **w1 + w2 + 2b > 0**. Add the two blue
+demands and you get the same left side, but now **w1 + w2 + 2b < 0**.
 """
-)
-ui.jargon("linearly separable", "A dataset is linearly separable if one straight line can split it perfectly.")
+    )
+    lesson.aha("The same number cannot be bigger than zero and smaller than zero. That is why no straight line can solve XOR.")
+    lesson.jargon("linearly separable", "A dataset is linearly separable if one straight line can split it perfectly.")
 
-# ---------------------------------------------------------------------------
-ui.beat("seeit", "Escape route 1: invent a better feature.")
-st.markdown(
-    """
+
+@lesson.step("Invent a height", beat="seeit")
+def _():
+    guess = lesson.predict(
+        "If we add x3 = x1² + x2² to circle data, what happens to points far from the middle?",
+        ["They rise higher", "They sink lower", "Nothing changes"],
+        correct=0,
+        why="x1² + x2² is distance-from-the-middle squared, so ring points get a larger height.",
+        key="ch03_lift_predict",
+    )
+    if guess is None:
+        return
+
+    lesson.say(
+        """
 A circle problem is hard in **x1, x2** because "inside or ring?" is really about
-distance from the middle. So we add a new feature:
-
-**x3 = x1² + x2²**
-
-Point **(2, 0)** becomes **x3 = 2² + 0² = 4**. Point **(0.3, 0.4)** becomes
-**0.3² + 0.4² = 0.09 + 0.16 = 0.25**. The ring rises; the middle stays low.
+distance from the middle. So we add **x3 = x1² + x2²**.
 """
-)
-ui.mermaid(
-    """
+    )
+    lesson.mermaid(
+        """
 flowchart LR
     A[Original x1 and x2] --> B[Add x3 = x1^2 + x2^2]
     B --> C[Lift into 3D]
@@ -116,97 +126,104 @@ flowchart LR
     D --> E[Drop back to 2D]
     E --> F[Circle boundary]
 """,
-    height=260,
-)
-st.markdown("The diagram says the trick: make height from distance, cut flat, then look back down.")
-X, y = toy_shape("circles", n=220, noise=0.08, seed=1)
-r2 = X[:, 0] ** 2 + X[:, 1] ** 2
-colors = np.where(y == 1, WARM, COOL)
-fig3 = go.Figure(
-    data=[go.Scatter3d(x=X[:, 0], y=X[:, 1], z=r2, mode="markers", marker=dict(size=4, color=colors))]
-)
-plane_x, plane_y = np.meshgrid(np.linspace(-1.8, 1.8, 2), np.linspace(-1.8, 1.8, 2))
-plane_z = np.full_like(plane_x, 0.55)
-fig3.add_trace(go.Surface(x=plane_x, y=plane_y, z=plane_z, opacity=0.35, showscale=False, colorscale=[[0, ACCENT], [1, ACCENT]]))
-fig3.update_layout(height=520, scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
-st.plotly_chart(fig3, use_container_width=True)
-st.markdown(
-    """
-Notice that the cut is flat in the lifted picture. The boundary back on the
-floor is curved because the height came from **x1² + x2²**. A flat slice at
-**x3 = 0.55** casts the circle **x1² + x2² = 0.55** below it.
-"""
-)
+        height=260,
+    )
+    lesson.look_for("the escape route: make height from distance, cut flat, then look back down.")
 
-X3 = np.c_[X_xor, X_xor[:, 0] * X_xor[:, 1]]
-score = X3[:, 0] + X3[:, 1] - 2 * X3[:, 2] - 0.5
-st.dataframe(
-    {"x1": X3[:, 0], "x2": X3[:, 1], "x1*x2": X3[:, 2], "new straight score": score, "answer": y_xor},
-    hide_index=True,
-)
-st.markdown(
-    """
-XOR has its own escape hatch: add **x3 = x1 × x2**. For **(1, 1)** the score is
-**1 + 1 - 2(1) - 0.5 = -0.5**, blue. For **(1, 0)** it is
-**1 + 0 - 2(0) - 0.5 = 0.5**, red.
-"""
-)
 
-# ---------------------------------------------------------------------------
-ui.beat("play", "Escape route 2: let the boundary bend.")
-st.markdown(
-    """
+@lesson.step("A flat cut becomes a circle", beat="seeit")
+def _():
+    X, y = toy_shape("circles", n=220, noise=0.08, seed=1)
+    r2 = X[:, 0] ** 2 + X[:, 1] ** 2
+    colors = np.where(y == 1, WARM, COOL)
+    fig3 = go.Figure(
+        data=[go.Scatter3d(x=X[:, 0], y=X[:, 1], z=r2, mode="markers", marker=dict(size=4, color=colors))]
+    )
+    plane_x, plane_y = np.meshgrid(np.linspace(-1.8, 1.8, 2), np.linspace(-1.8, 1.8, 2))
+    plane_z = np.full_like(plane_x, 0.55)
+    fig3.add_trace(go.Surface(x=plane_x, y=plane_y, z=plane_z, opacity=0.35, showscale=False, colorscale=[[0, ACCENT], [1, ACCENT]]))
+    fig3.update_layout(height=520, scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
+    st.plotly_chart(fig3, use_container_width=True)
+    lesson.look_for("the cut is flat in the lifted picture, but its shadow on the floor is curved.")
+    lesson.say("A flat slice at **x3 = 0.55** casts the circle **x1² + x2² = 0.55** below it.")
+
+
+@lesson.step("XOR gets its own new feature", beat="seeit")
+def _():
+    lesson.say("XOR has its own escape hatch: add **x3 = x1 × x2**.")
+    X3 = np.c_[X_xor, X_xor[:, 0] * X_xor[:, 1]]
+    score = X3[:, 0] + X3[:, 1] - 2 * X3[:, 2] - 0.5
+    st.dataframe(
+        {"x1": X3[:, 0], "x2": X3[:, 1], "x1*x2": X3[:, 2], "new straight score": score, "answer": y_xor},
+        hide_index=True,
+    )
+    lesson.look_for("the (1, 1) row. The product feature turns that corner into the special case.")
+    lesson.say("For **(1, 1)** the score is **1 + 1 - 2(1) - 0.5 = -0.5**, blue. For **(1, 0)** it is **0.5**, red.")
+
+
+@lesson.step("Models can bend for you", beat="play")
+def _():
+    lesson.say(
+        """
 Adding a feature is one way to bend the answer back in the original picture.
 Another way is to use a model that builds bends itself.
-
-A decision tree bends with boxy cuts. A tiny neural net bends smoothly. Both are
-still making regions of red and blue; they are no longer trapped with one ruler.
 """
-)
-shape = st.selectbox("Shape", ["circles", "xor", "moons"], index=0)
-Xb, yb = toy_shape(shape, n=240, noise=0.15, seed=3)
-tree = DecisionTreeClassifier(max_depth=4, random_state=0).fit(Xb, yb)
-mlp = MLPClassifier(hidden_layer_sizes=(8,), max_iter=600, solver="lbfgs", random_state=1).fit(Xb, yb)
-cols = st.columns(2)
-with cols[0]:
-    fig, ax = ui.figure(5.3, 4.6)
-    decision_boundary(lambda G: tree.predict(G), Xb, yb, ax=ax, shade_confidence=False, title="A decision tree bends by making boxes")
-    ui.show(fig)
-with cols[1]:
-    fig, ax = ui.figure(5.3, 4.6)
-    decision_boundary(lambda G: mlp.predict_proba(G)[:, 1], Xb, yb, ax=ax, shade_confidence=True, title="A tiny neural net bends smoothly")
-    ui.show(fig)
-st.markdown("Look at the two styles of bend: square corners on the left, a smoother curve on the right.")
+    )
+    shape = st.selectbox("Shape", ["circles", "xor", "moons"], index=0, key="ch03_bendy_shape")
+    Xb, yb = toy_shape(shape, n=240, noise=0.15, seed=3)
+    tree = DecisionTreeClassifier(max_depth=4, random_state=0).fit(Xb, yb)
+    mlp = MLPClassifier(hidden_layer_sizes=(8,), max_iter=600, solver="lbfgs", random_state=1).fit(Xb, yb)
+    cols = st.columns(2)
+    with cols[0]:
+        fig, ax = lesson.figure(5.3, 4.6)
+        decision_boundary(lambda G: tree.predict(G), Xb, yb, ax=ax, shade_confidence=False, title="A decision tree bends by making boxes")
+        lesson.show(fig)
+    with cols[1]:
+        fig, ax = lesson.figure(5.3, 4.6)
+        decision_boundary(lambda G: mlp.predict_proba(G)[:, 1], Xb, yb, ax=ax, shade_confidence=True, title="A tiny neural net bends smoothly")
+        lesson.show(fig)
+    lesson.look_for("the two styles of bend: square corners on the left, a smoother curve on the right.")
 
-# ---------------------------------------------------------------------------
-ui.beat("forreal")
-st.markdown(
-    """
+
+@lesson.step("Polynomial features for real", beat="forreal")
+def _():
+    lesson.say(
+        """
 scikit-learn can add polynomial features for us, then fit a straight model in
 that bigger feature space. Degree 1 means no extra bend. Higher degree adds more
 terms, which gives the boundary more ways to curve.
 """
-)
-degree = st.slider("Polynomial degree", 1, 8, 2)
-cols = st.columns(2)
-for col, real_shape in zip(cols, ["moons", "circles"]):
-    Xm, ym = toy_shape(real_shape, n=240, noise=0.18, seed=8)
-    pipe = make_pipeline(PolynomialFeatures(degree=degree), LogisticRegression(max_iter=1000)).fit(Xm, ym)
-    with col:
-        fig, ax = ui.figure(5.3, 4.6)
-        decision_boundary(lambda G, p=pipe: p.predict_proba(G)[:, 1], Xm, ym, ax=ax, shade_confidence=True, title=f"{real_shape}, degree {degree}")
-        ui.show(fig)
-ui.careful("Notice when the curve starts chasing individual dots. That is over-studying, and it becomes a major problem later.")
+    )
+    degree = st.slider("Polynomial degree", 1, 8, 2, key="ch03_degree")
+    cols = st.columns(2)
+    for col, real_shape in zip(cols, ["moons", "circles"]):
+        Xm, ym = toy_shape(real_shape, n=240, noise=0.18, seed=8)
+        pipe = make_pipeline(PolynomialFeatures(degree=degree), LogisticRegression(max_iter=1000)).fit(Xm, ym)
+        with col:
+            fig, ax = lesson.figure(5.3, 4.6)
+            decision_boundary(lambda G, p=pipe: p.predict_proba(G)[:, 1], Xm, ym, ax=ax, shade_confidence=True, title=f"{real_shape}, degree {degree}")
+            lesson.show(fig)
+    lesson.look_for("when the curve starts chasing individual dots. That is over-studying, and it becomes a major problem later.")
 
-# ---------------------------------------------------------------------------
-ui.beat("challenge")
-st.markdown(
-    """
+
+@lesson.step("Check yourself", beat="challenge")
+def _():
+    lesson.workbook()
+
+
+@lesson.step("Go break it", beat="challenge")
+def _():
+    lesson.say(
+        """
 1. **Rank the six toy shapes.** Which ones can one straight line handle?
 2. **Prove XOR again.** Explain the contradiction without using the word equation.
 3. **Invent a feature for stripes.** Hint: something that repeats as x1 moves.
-4. 🧸 **Little Kid Corner:** If a rope cannot separate a donut from its hole on the floor,
-   lift the donut pieces onto chairs. Now a flat tray can separate high from low.
 """
-)
-ui.worksheet_link(3)
+    )
+    lesson.kid_corner(
+        "If a rope cannot separate a donut from its hole on the floor, lift the donut pieces onto chairs. "
+        "Now a flat tray can separate high from low."
+    )
+
+
+lesson.finish()
