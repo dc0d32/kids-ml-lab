@@ -50,7 +50,16 @@ p = sigmoid(z)
 pd.DataFrame({"z": z, "sigmoid(z)": np.round(p, 3)})
 
 # %% [markdown]
-# Plot those seven points on graph paper and join them. You have drawn the S-curve.
+# Look at those seven points and join them in your head. You have drawn the S-curve.
+
+# %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(4)
 
 # %% [markdown]
 # ## 👀 See It

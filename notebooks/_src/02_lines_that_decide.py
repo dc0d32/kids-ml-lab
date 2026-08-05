@@ -76,6 +76,15 @@ print("new w:", w_after)
 print("new b:", b_after)
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(2)
+
+# %% [markdown]
 # You trained a model by hand.
 
 # %% [markdown]

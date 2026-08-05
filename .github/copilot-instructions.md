@@ -46,3 +46,20 @@ On NixOS, `run.sh` sets `LD_LIBRARY_PATH` automatically. Doing it by hand:
 2. `./run.sh test` — must pass.
 3. Add an entry to `docs/BUILD_LOG.md`.
 4. **Never `git push` without asking the repo owner.**
+
+## Explaining things (the most common review failure)
+
+The kids often work alone. **One-line explanations are the bug we keep hitting.**
+
+Every idea gets three moves: **setup** (the question they're already asking) → **the idea**
+(plain words, real numbers) → **so what** (what it buys them). Three short paragraphs beats
+one dense one, and beats one line by a mile.
+
+Rhythm: ~60–120 words of prose, then *something happens* — a picture, a slider, a table, a
+diagram. Never more than ~150 words unbroken. After every picture, say what to look at in it.
+
+Use `ui.mermaid(...)` for structure diagrams (how a prediction flows, what order steps
+happen in) and matplotlib for data. In notebooks use a fenced ```mermaid block — JupyterLab
+renders it natively.
+
+See the "How much to explain" section of AGENTS.md for the full standard.

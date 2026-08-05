@@ -58,6 +58,15 @@ tiny_boosting_table()
 # > 📖 **Grown-ups call this:** a **residual** is the leftover mistake.
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(6)
+
+# %% [markdown]
 # ## 👀 See It
 #
 # One tree draws a jagged staircase. A forest is still made of trees, but the vote smooths

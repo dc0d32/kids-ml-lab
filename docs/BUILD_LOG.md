@@ -137,3 +137,28 @@ Added `AGENTS.md` (the full contract: house rules, voice, layout, how to add a c
 how to test, how to work in parallel) and `.github/copilot-instructions.md` (the short
 version, pointing at it), plus this log. The goal is that a future session can resume
 without re-deriving any of the reasoning above.
+
+
+---
+
+## 2026-08-05 — Part 3 neural-network spine drafted
+
+Built Chapters 11–15 as the first neural-network arc: one neuron, hand backprop, two-layer
+feature invention, depth/width/overfitting, and the PyTorch translation. The shared helper
+modules are `kidsml/nnplots.py` for neural-net diagrams/surfaces/snapshots and
+`kidsml/torch_bits.py` for the small PyTorch API used in Chapter 15 and future chapters.
+
+The main design choice was to keep every visual tied to the from-scratch `kidsml.nn_numpy`
+objects rather than duplicate model logic in pages or notebooks. Chapter 15 copies NumPy
+weights into PyTorch and asserts gradient agreement, so the framework appears as a faster
+version of the same blame-passing idea instead of a new magic step.
+
+---
+
+## 2026-08-05 — Chapters 16 and 17 added
+
+Built Part 4's first seeing chapters.
+
+- Chapter 16 turns sklearn's 8×8 digits into visible number grids, trains a small seeded `MLPClassifier`, shows confusion-matrix mistakes, first-layer weights, and a canvas-to-8×8 digit demo.
+- Chapter 17 adds `kidsml/vision.py` for plain valid convolutions, kernel presets, drawing preprocessing, and a small CPU PyTorch CNN/MLP comparison. Fashion-MNIST downloads to `data/torchvision/` when available and falls back to sklearn digits if needed.
+- Both chapters use interactive Python workbooks rather than printable handouts.

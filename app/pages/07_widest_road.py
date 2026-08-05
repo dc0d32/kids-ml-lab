@@ -121,7 +121,7 @@ st.markdown(
 1. Add noise and find the C where the road starts chasing it.
 2. Make gamma so large that the RBF SVM memorises islands.
 3. On circles, beat the RBF SVM with a linear SVM plus your own `x1² + x2²` feature.
-4. 🧸 **Little Kid Corner:** Put two sticker colours on paper. Draw the widest road between them.
+4. 🧸 **Little Kid Corner:** Put two sticker colours on a table. Draw the widest road between them.
 """
 )
 

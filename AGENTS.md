@@ -52,6 +52,87 @@ improvement.
 
 ---
 
+## How much to explain (read this twice)
+
+**These kids will often work through a chapter alone, with nobody to ask.** That sets the
+bar: if a reader could get stuck and have no way out, the chapter is not finished.
+
+There are two ways to fail, and they are opposites:
+
+- **Too thin.** A teaching point delivered as a single asserted line. "Trees can do that
+  too." The reader nods, doesn't actually understand, and quietly falls behind. *This is
+  the failure mode we keep hitting — check for it specifically.*
+- **Too thick.** Six paragraphs before anything happens on screen. The reader's eyes
+  glaze and they close the tab.
+
+### The rule: every idea gets three moves
+
+Never state an idea and move on. Give it:
+
+1. **Setup** — the problem, or the question the reader is already asking.
+   *"Averaging helps when guesses are wrong in different directions. But why would two
+   trees ever disagree? They'd see the same data and make the same tree."*
+2. **The idea** — plainly, with a concrete example and real numbers.
+   *"So we don't give them the same data. Each tree gets a random sample of the rows and
+   is only allowed to look at some of the columns. Tree 1 might never even see the `speed`
+   column."*
+3. **So what** — what it buys you, or what it lets you do next.
+   *"Now their mistakes are different mistakes, and different mistakes cancel out when you
+   vote. That's the entire trick."*
+
+Three short paragraphs beats one dense one, and it beats one line by a mile.
+
+### Rhythm
+
+- **Roughly 60–120 words of prose, then something happens** — a picture, a slider, a
+  table, a diagram, a line of output. Never more than ~150 words unbroken.
+- Break long explanations with a diagram (`ui.mermaid`) or a small figure. A picture
+  between two paragraphs is worth more than a better paragraph.
+- Immediately after a picture, say **what to look at in it**. A figure with no pointer is
+  decoration. "Notice that the boundary between the two clumps is perfectly straight —
+  that's the part that's about to become a problem."
+
+### Answer the question they're about to ask
+
+After each explanation, ask yourself what a sharp 13-year-old would say next — *"but why
+does squaring it help?"*, *"wait, where did that 0.5 come from?"*, *"what if they're all
+wrong in the same direction?"* — and answer it right there. That question is the single
+best guide to what the next paragraph should contain.
+
+### Don't skip the arithmetic
+
+When a number appears, show where it came from. `z = 2(1) + (-1)(3) + 0.5 = -0.5` is more
+use than "compute the weighted sum". Kids trust numbers they've watched being built.
+
+---
+
+## Diagrams
+
+Use **Mermaid** for structure — how a prediction flows, what order steps happen in, how a
+thing is wired together. Use **matplotlib** for data — boundaries, curves, points, images.
+
+On a page:
+
+```python
+ui.mermaid("""
+graph LR
+    X1[x₁] --> S(( Σ ))
+    X2[x₂] --> S
+    S --> A[squish]
+    A --> Y[output]
+""")
+```
+
+In a notebook, a fenced ```mermaid block inside a markdown cell — JupyterLab renders it
+natively, and so does GitHub. Keep the page version and the notebook version in step.
+
+Keep diagrams to six or seven boxes. A diagram that needs studying has stopped helping.
+Good uses: the neuron, the layers of a network, the boosting loop, the convolution slide,
+the train/test split, the attention flow, the course map.
+
+
+---
+
 ## Repo layout
 
 ```

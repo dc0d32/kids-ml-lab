@@ -65,6 +65,15 @@ candidates
 # > 📖 **Grown-ups call this:** the **margin** is the empty road between the classes.
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(7)
+
+# %% [markdown]
 # ## 👀 See It
 #
 # The ringed points hold the road in place. Remove a far-away point and the road barely
@@ -126,7 +135,7 @@ plt.show()
 # 1. Add noise and find the C where the road starts chasing it.
 # 2. Make gamma so large that the RBF SVM memorises islands.
 # 3. On circles, beat the RBF SVM with a linear SVM plus your own `x1² + x2²` feature.
-# 4. 🧸 **Little Kid Corner:** Put two sticker colours on paper. Draw the widest road between them.
+# 4. 🧸 **Little Kid Corner:** Put two sticker colours on a table. Draw the widest road between them.
 #
 # ---
 # **Next up:** Chapter 08 · *The Model Zoo* — where we compare guessers without fooling

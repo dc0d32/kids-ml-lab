@@ -56,6 +56,15 @@ hand
 print("Total squared mistake:", hand["mistake²"].sum())
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(1)
+
+# %% [markdown]
 # Squaring does two jobs.
 #
 # - A +2 mistake and a -2 mistake both count as bad.
@@ -175,7 +184,7 @@ plt.show()
 #
 # 1. **Beat the computer.** Find `w` and `b` with a smaller error than scikit-learn.
 # 2. **Make it worse on purpose.** Pick a terrible line and explain why it is terrible.
-# 3. **Outlier test.** Move one dot far upward on paper. Which way does the best line tilt?
+# 3. **Outlier test.** Move one dot far upward. Which way does the best line tilt?
 # 4. 🧸 **Little Kid Corner:** Put a string near toy cars on the floor. Move the string
 #    until it is close to all the cars. That string is your model.
 #

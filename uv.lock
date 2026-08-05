@@ -967,6 +967,7 @@ dependencies = [
     { name = "seaborn" },
     { name = "streamlit" },
     { name = "streamlit-drawable-canvas" },
+    { name = "streamlit-mermaid" },
     { name = "torch", version = "2.13.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
     { name = "torch", version = "2.13.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
     { name = "torchvision", version = "0.28.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
@@ -994,6 +995,7 @@ requires-dist = [
     { name = "seaborn", specifier = ">=0.13" },
     { name = "streamlit", specifier = ">=1.36" },
     { name = "streamlit-drawable-canvas", specifier = ">=0.9.3" },
+    { name = "streamlit-mermaid", specifier = ">=0.2" },
     { name = "torch", specifier = ">=2.3", index = "https://download.pytorch.org/whl/cpu" },
     { name = "torchvision", specifier = ">=0.18", index = "https://download.pytorch.org/whl/cpu" },
 ]
@@ -2294,6 +2296,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/07/fe/69768e7391587b97e
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d6/87/bc94460ec77d824735da56fe8e321baf0692595c2a8a90b55f6908a5edc4/streamlit_drawable_canvas-0.9.3-py3-none-any.whl", hash = "sha256:fbb5e29017d359d5438e327ca0a64d0b337a9f2e1f999cd7593baa5bb8a27c25", size = 1169097, upload-time = "2023-06-05T17:16:18.167Z" },
 ]
+
+[[package]]
+name = "streamlit-mermaid"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "streamlit" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4b/d7/cfb2b1fdebc736cd22d31f5f87debf8550c3bf616ebd290a9c2bf7d7e0a6/streamlit-mermaid-0.2.0.tar.gz", hash = "sha256:a7883f63be991a378b2c327efae9a03ae49e830481659ae1a955bf68597f9c48", size = 3762617, upload-time = "2023-07-09T02:27:48.522Z" }
 
 [[package]]
 name = "sympy"

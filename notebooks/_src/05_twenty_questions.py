@@ -73,6 +73,15 @@ splits
 print("Best first question:", splits.iloc[0]["first question"])
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(5)
+
+# %% [markdown]
 # ## 👀 See It
 #
 # Now sklearn builds a tree from the same ten rows. It picks the same first question.

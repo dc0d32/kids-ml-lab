@@ -39,7 +39,7 @@ CHAPTERS = [
      "Which model when, and how not to fool yourself.", "Part 1 · Classical models"),
 
     (9, "real_data", "Real Data, Real Mess",
-     "Penguins, mushrooms, Pokémon and bikes.", "Part 2 · Escaping Flatland"),
+     "Penguins, mushrooms, monsters and bikes.", "Part 2 · Escaping Flatland"),
     (10, "models_go_wrong", "Where Models Go Wrong",
      "Bias, leakage, and being confidently wrong.", "Part 2 · Escaping Flatland"),
 
@@ -181,6 +181,24 @@ def show(fig, clear: bool = True) -> None:
     st.pyplot(fig, use_container_width=False)
     if clear:
         plt.close(fig)
+
+
+def mermaid(diagram: str, height: int = 320) -> None:
+    """Draw a Mermaid diagram — for flows, pipelines and "what connects to what".
+
+    Use this when the thing being explained is *structure* rather than data: how a
+    prediction flows through a model, what order the steps happen in, how one chapter
+    leads to the next. Use matplotlib when the thing being explained is *numbers*.
+
+    The notebook equivalent is a fenced ```mermaid block inside a markdown cell, which
+    JupyterLab renders natively. Keep the two in step.
+
+    Keep diagrams small — six or seven boxes. A diagram that needs studying is a diagram
+    that has stopped helping.
+    """
+    from streamlit_mermaid import st_mermaid
+
+    st_mermaid(diagram.strip(), height=f"{height}px")
 
 
 def figure(width: float = 6.0, height: float = 5.0):

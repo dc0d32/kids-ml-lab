@@ -57,7 +57,7 @@ Every chapter — all 25 of them — follows the exact same six beats:
 ### Part 2 — Escaping Flatland
 | # | Chapter | The big idea |
 |---|---------|--------------|
-| 09 | Real Data, Real Mess | 🐧 penguins, 🍄 mushrooms, 🎮 Pokémon, 🚲 bikes |
+| 09 | Real Data, Real Mess | 🐧 penguins, 🍄 mushrooms, 👾 monsters, 🚲 bikes |
 | 10 | Where Models Go Wrong | Bias, leakage, and being confidently wrong |
 
 ### Part 3 — Neural networks, from one neuron up

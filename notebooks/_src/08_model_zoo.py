@@ -59,6 +59,15 @@ print("average =", (0.80 + 0.70 + 0.90 + 0.80 + 0.60) / 5)
 # > chunks, then reporting the average and spread.
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(8)
+
+# %% [markdown]
 # ## 👀 See It
 #
 # Here is the model zoo. The same data goes to every model. No model wins on every shape.

@@ -77,6 +77,15 @@ plt.show()
 # > data perfectly.
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(3)
+
+# %% [markdown]
 # ## 👀 See It
 #
 # Escape route 1: invent a new feature. For circles, add:
