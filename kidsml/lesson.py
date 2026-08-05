@@ -183,7 +183,7 @@ def _draw_nav(steps: list[Step], index: int) -> None:
             disabled=index == 0,
             on_click=_go,
             args=(-1,),
-            use_container_width=True,
+            width="stretch",
         )
 
     with middle:
@@ -193,7 +193,7 @@ def _draw_nav(steps: list[Step], index: int) -> None:
                 key=f"restart_{_current.chapter}",
                 on_click=_jump,
                 args=(0,),
-                use_container_width=True,
+                width="stretch",
             )
         else:
             st.caption(f"Next up: {steps[index + 1].title}")
@@ -206,7 +206,7 @@ def _draw_nav(steps: list[Step], index: int) -> None:
             on_click=_go,
             args=(1,),
             type="primary",
-            use_container_width=True,
+            width="stretch",
         )
 
 
@@ -288,7 +288,7 @@ def figure(width: float = 6.4, height: float = 4.8):
 
 
 def show(fig, clear: bool = True) -> None:
-    st.pyplot(fig, use_container_width=False)
+    st.pyplot(fig, width="content")
     if clear:
         plt.close(fig)
 

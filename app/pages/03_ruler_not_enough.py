@@ -143,7 +143,7 @@ def _():
     plane_z = np.full_like(plane_x, 0.55)
     fig3.add_trace(go.Surface(x=plane_x, y=plane_y, z=plane_z, opacity=0.35, showscale=False, colorscale=[[0, ACCENT], [1, ACCENT]]))
     fig3.update_layout(height=520, scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
     lesson.look_for("the cut is flat in the lifted picture, but its shadow on the floor is curved.")
     lesson.say("A flat slice at **x3 = 0.55** casts the circle **x1² + x2² = 0.55** below it.")
 

@@ -58,7 +58,7 @@ def _():
         [[".mia.", ". → m, m → i, i → a, a → ."], [".mo.", ". → m, m → o, o → ."], [".mae.", ". → m, m → a, a → e, e → ."]],
         columns=["padded word", "pairs you tally"],
     )
-    st.dataframe(tiny, hide_index=True, use_container_width=True)
+    st.dataframe(tiny, hide_index=True, width="stretch")
     guess = lesson.predict(
         "For these three words, which tally box gets the most marks?",
         [". → m", "m → a", "a → ."],
@@ -148,7 +148,7 @@ def _():
         word, trace = sample_bigram_trace(probs, vocab, seed=seed, temperature=temperature, max_len=14)
         st.markdown(f"**One invention:** `{word or '(blank)'}`")
         trace_rows = [{"after": label(step["after"]), "picked": label(step["picked"]), "probability": round(step["probability"], 3)} for step in trace]
-        st.dataframe(pd.DataFrame(trace_rows), hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame(trace_rows), hide_index=True, width="stretch")
         lesson.look_for("probabilities near 1.0 when the temperature is low, and riskier picks when it is high.")
 
 

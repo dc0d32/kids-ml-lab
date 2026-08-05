@@ -64,7 +64,7 @@ error, so when the output is too low, `dL/dout` is negative.
         ],
         columns=["piece", "working", "value"],
     )
-    st.dataframe(rows, hide_index=True, use_container_width=True)
+    st.dataframe(rows, hide_index=True, width="stretch")
     lesson.look_for("the gradient signs. Negative means raising that number would lower the loss.")
 
 

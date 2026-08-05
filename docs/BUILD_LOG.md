@@ -178,3 +178,117 @@ The models are intentionally small and CPU-only. Measured notebook runtimes in t
 Reworked the Part 1 linear-model chapters so each teaching point has setup, concrete arithmetic, and a "why this matters" landing. The app pages, notebook sources, generated notebooks, and workbook `why=` explanations now explain squared error, gradients, perceptron geometry, XOR impossibility, feature lifting, sigmoid probabilities, and log-loss confidence in kid-readable steps.
 
 Added Mermaid structure diagrams for the gradient-descent loop, perceptron score-to-class flow, 3D feature-lift pipeline, and logistic score-to-probability flow. Measured notebook runtimes after rebuilding: Ch01 3.60s, Ch02 3.22s, Ch03 5.01s, Ch04 2.98s.
+
+---
+
+## 2026-08-05 — All 25 chapters written, then deepened
+
+Chapters 01-24 were written by parallel agents working from a shared brief, each owning
+its own files and creating a new `kidsml/<topic>.py` rather than editing shared modules.
+That kept eight agents out of each other's way.
+
+**Then the prose failed review.** The owner's verdict:
+
+> "the prose in general is weak i.e. explanations in most places are thin, one liners.
+> If kids follow this course on their own, they will get confused. At the same time,
+> they will give up if we throw a wall of text at them."
+
+The chapters were structurally correct — six beats, working code, working sliders — and
+still not good enough, because each teaching point was a single asserted line. The worst
+example was Chapter 06, where the entire bridge from the jellybean hook to the actual idea
+was *"Trees can do that too."* A reader who already knew the material would nod. A reader
+who didn't would quietly fall behind.
+
+This produced the **"How much to explain" standard** now in `AGENTS.md`, and it is the most
+important thing in that file:
+
+- Every idea gets **three moves**: setup (the question they're already asking) → the idea
+  (plain words, real numbers) → so what (what it buys them).
+- **Answer the question they're about to ask.** After each explanation, work out what a
+  sharp 13-year-old would say next and answer it there.
+- **Rhythm**: 60-120 words, then something happens. Never more than ~150 unbroken.
+- **After every figure, say what to look at in it.** A figure with no pointer is decoration.
+
+A second pass rewrote all 25 chapters against it. Chapter 06's page went from 133 lines to
+250.
+
+**Mermaid diagrams** were added at the same time, via `ui.mermaid` / `lesson.mermaid`
+backed by `streamlit-mermaid`, which bundles its JavaScript locally and so needs no
+network. Mermaid is for *structure* (how a prediction flows, what order steps happen in);
+matplotlib stays for *data*. Notebooks use fenced mermaid blocks, which JupyterLab 4
+renders natively.
+
+---
+
+## 2026-08-05 — Pages rebuilt as stepped lessons
+
+The owner compared the app to **Brilliant** and asked for that polish. The pages were long
+scrolling documents, and scrolling invites skimming.
+
+`kidsml/lesson.py` turns a chapter into a sequence of screens — one idea each — with
+Back/Next, a progress bar and a beat trail. Its most valuable piece is **`lesson.predict()`**:
+it asks what the reader thinks will happen and returns `None` until they commit, so the
+step can withhold the reveal. Being wrong and then surprised teaches far more than being
+right by default. Every chapter has at least two, in front of the moments listed in
+`docs/TEACHING_NOTES.md`.
+
+Also added: `lesson.look_for()` (a pointer at what matters in each figure), a light theme,
+and a 68-character reading width so no line of prose runs long enough to lose a reader.
+
+**Testing had to change with it.** `tests/test_pages.py` now clicks through *every* step of
+every chapter, so a broken step deep in a chapter can no longer hide behind a working first
+screen. It also fails a chapter with fewer than 5 steps, checks the beats never run
+backwards, and requires at least two predictions per chapter — the shape of a chapter is
+now enforced rather than trusted.
+
+One practical consequence worth knowing: **every Next click re-runs the page**, so anything
+that trains a model must sit behind `@st.cache_resource`. Chapters 16, 17, 18, 23 and 24
+would be unusable otherwise.
+
+---
+
+## 2026-08-05 — Chapter 11 added: linear algebra
+
+Requested as "3blue1brown, but without the long videos", and explicitly as a playground:
+
+> "I expect kids will spend hours playing with it and wrapping their head around the idea,
+> and keep coming back to it."
+
+Chapters 11-24 were renumbered to 12-25 by a one-shot migration to open the slot. It sits
+immediately before the neural networks on purpose: **the fact that two linear steps collapse
+into one linear step is the argument for why a neuron needs a squish.** A reader who has
+watched that happen never has to wonder what activation functions are for.
+
+`kidsml/linalg.py` supports it, and the two numbers that make the chapter work are measured
+rather than asserted:
+
+- applying two matrices in a row differs from applying their product by **exactly 0.0**
+- inserting a `tanh` between them pushes that difference to **4.97**, and the grid lines
+  visibly bend
+
+16 steps, three prediction gates, and a rotatable 3D shadow game where the reader hunts for
+the projection that keeps the most spread — and then finds out that is what PCA does in
+Chapter 21.
+
+The README's course tables are now **generated from `CHAPTERS`** rather than hand-written,
+since a hand-maintained copy of the course map is exactly the sort of thing that drifts.
+
+---
+
+## 2026-08-05 — Teacher's guide, and a consistency sweep
+
+`docs/TEACHING_NOTES.md` written for the parent: session shape, four alternative routes
+through the course, the specific aha moment to wait for in each chapter, a ladder for when
+a kid is stuck (do not rescue early), how to keep the 9-year-old involved, and honest
+answers to the questions kids actually ask — including why models hallucinate, explained
+mechanically rather than waved away.
+
+Final sweep across the repo:
+
+- migrated 77 uses of Streamlit's deprecated `use_container_width` to `width=`
+- fixed a beat-order jump in Chapter 11 and two uses of a banned word
+- regenerated the README course map from `CHAPTERS`
+- rewrote the Home page, which still described the old scrolling format
+
+**317 tests pass in 160s.** All 26 notebooks execute inside their budgets, the slowest
+being the Transformer at 13s of 300s.

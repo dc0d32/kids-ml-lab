@@ -72,7 +72,7 @@ def _():
         [["...", "c"], ["..c", "a"], [".ca", "t"], ["cat", "."]],
         columns=["input memory", "answer"],
     )
-    st.dataframe(windows, hide_index=True, use_container_width=False)
+    st.dataframe(windows, hide_index=True, width="content")
     guess = lesson.predict(
         "When the input memory is `.ca`, what answer is the model training toward?",
         ["c", "a", "t", "."],
@@ -98,7 +98,7 @@ def _():
         ],
         columns=["stage", "what it holds", "why it matters"],
     )
-    st.dataframe(pipeline, hide_index=True, use_container_width=True)
+    st.dataframe(pipeline, hide_index=True, width="stretch")
     lesson.look_for("where the three letters become numbers. That is the new learned part.")
 
 
@@ -149,7 +149,7 @@ def _():
     lesson.show(fig)
     lesson.look_for("the overall downward drift, not every wiggle.")
     compare = pd.DataFrame({"memory": ["1 letter", "3 letters", "5 letters"], "held-out surprise": [models[1].test_loss, models[3].test_loss, models[5].test_loss]})
-    st.dataframe(compare, hide_index=True, use_container_width=False)
+    st.dataframe(compare, hide_index=True, width="content")
 
 
 @lesson.step("Does memory beat counting?", beat="forreal")

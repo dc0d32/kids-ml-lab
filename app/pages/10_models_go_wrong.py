@@ -72,7 +72,7 @@ healthy, 40 sick people were missed, and 950 healthy people were left alone.
         index=["really sick", "really healthy"],
         columns=["model said sick", "model said healthy"],
     )
-    st.dataframe(worked, use_container_width=False)
+    st.dataframe(worked, width="content")
     lesson.look_for("the 40 missed sick people. Accuracy can hide them inside the big healthy pile.")
 
     metrics = realdata.metrics_from_counts(tp=8, fp=2, fn=40, tn=950)
@@ -135,7 +135,7 @@ def _():
     if guess is None:
         return
 
-    st.dataframe(cached_leakage(), hide_index=True, use_container_width=True)
+    st.dataframe(cached_leakage(), hide_index=True, width="stretch")
     lesson.look_for("the suspicious jump when leaked columns are allowed.")
     lesson.jargon("leakage", "A column lets the answer sneak into the features, so the model is not learning the real pattern.")
     lesson.say("A hospital model once learned which scanner machine was used. The model learned the machine, not pneumonia.")
@@ -150,7 +150,7 @@ The model does not know history is unfair. It only sees examples to copy.
 """
     )
     bias = cached_bias()
-    st.dataframe(bias["data"], hide_index=True, use_container_width=True)
+    st.dataframe(bias["data"], hide_index=True, width="stretch")
     st.metric("overall score against old labels", f"{bias['overall']:.1%}")
     lesson.look_for("the old labels. The model is copying them, not judging whether they were fair.")
 
@@ -158,8 +158,8 @@ The model does not know history is unfair. It only sees examples to copy.
 @lesson.step("Averages can hide who gets hurt", beat="play")
 def _():
     bias = cached_bias()
-    st.dataframe(bias["summary"], hide_index=True, use_container_width=True)
-    st.dataframe(bias["examples"], hide_index=True, use_container_width=True)
+    st.dataframe(bias["summary"], hide_index=True, width="stretch")
+    st.dataframe(bias["examples"], hide_index=True, width="stretch")
     lesson.look_for("people with the same useful scores but different groups. That is where the average hides harm.")
     lesson.careful(
         "The model is not being mean. It is copying. If you copy from something unfair, "

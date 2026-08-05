@@ -59,7 +59,7 @@ def _():
 
     z = np.array([-4, -2, -1, 0, 1, 2, 4], dtype=float)
     p = sigmoid(z)
-    st.dataframe({"z": z, "sigmoid(z)": np.round(p, 3)}, hide_index=True, use_container_width=True)
+    st.dataframe({"z": z, "sigmoid(z)": np.round(p, 3)}, hide_index=True, width="stretch")
     lesson.look_for("z = 0 in the middle row. That is the boundary becoming a shrug.")
 
 
@@ -149,7 +149,7 @@ For a concrete score, use **w1 = 2**, **w2 = -1**, **b = 0.5**, and point **(1, 
     penalty = []
     for pred, truth in [(0.9, 1), (0.6, 1), (0.1, 1), (0.99, 0), (0.5, 0)]:
         penalty.append({"predicted red": pred, "true answer": truth, "penalty": round(log_loss([pred], [truth]), 2)})
-    st.dataframe(penalty, hide_index=True, use_container_width=True)
+    st.dataframe(penalty, hide_index=True, width="stretch")
     lesson.look_for("the 0.99 red prediction when the truth is blue. Being certain and wrong is expensive.")
     lesson.careful("Being unsure and wrong is forgivable. Being certain and wrong gets a large penalty.")
 

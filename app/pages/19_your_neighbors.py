@@ -74,7 +74,7 @@ Distance is the ruler. For point A at (3, 4), the distance is
 `√((3 - 0)² + (4 - 0)²) = √(9 + 16) = √25 = 5`.
 """
     )
-    st.dataframe(knn_distance_table(), hide_index=True, use_container_width=True)
+    st.dataframe(knn_distance_table(), hide_index=True, width="stretch")
     lesson.look_for("the distance column. kNN repeats the calculation for every old point, then sorts the list.")
 
 
@@ -85,10 +85,10 @@ def _():
     left, right = st.columns([1, 1])
     with left:
         st.markdown("**Nearest voters**")
-        st.dataframe(nearest, hide_index=True, use_container_width=True)
+        st.dataframe(nearest, hide_index=True, width="stretch")
     with right:
         st.markdown("**Vote tally**")
-        st.dataframe(votes, hide_index=True, use_container_width=True)
+        st.dataframe(votes, hide_index=True, width="stretch")
         st.metric("winner", winner)
     lesson.look_for("how changing k changes who gets a vote. One close neighbour can have total power.")
     lesson.jargon("k nearest neighbours", "Pick the **k** closest old points, then let them vote.")
@@ -158,7 +158,7 @@ def _():
     )
     if guess is None:
         return
-    st.dataframe(cached_timing().round(2), hide_index=True, use_container_width=True)
+    st.dataframe(cached_timing().round(2), hide_index=True, width="stretch")
     lesson.look_for("the predict column as rows remembered grows. Saving work during training moves the bill to prediction time.")
 
 

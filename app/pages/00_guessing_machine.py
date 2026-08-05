@@ -43,7 +43,7 @@ already sorted.
 """
     )
 
-    st.dataframe(pretty(ZEEPS).head(6), hide_index=True, use_container_width=False)
+    st.dataframe(pretty(ZEEPS).head(6), hide_index=True, width="content")
     st.caption("Six of the eighteen creatures that exist in this world.")
 
     lesson.say(
@@ -68,7 +68,7 @@ def _():
 
     examples = pretty(ZEEPS.iloc[shown]).copy()
     examples["zeep?"] = np.where(labels[shown], "✅ zeep", "❌ no")
-    st.dataframe(examples, hide_index=True, use_container_width=False)
+    st.dataframe(examples, hide_index=True, width="content")
 
     lesson.look_for(
         "two rows that are nearly the same but got different answers. Those are the rows "
@@ -108,12 +108,12 @@ But it has never heard of shapes or colours. `circle` became 0, `square` became 
         st.markdown("**What you saw**")
         seen = pretty(ZEEPS.iloc[shown]).copy()
         seen["zeep?"] = np.where(labels[shown], "✅", "❌")
-        st.dataframe(seen, hide_index=True, use_container_width=True)
+        st.dataframe(seen, hide_index=True, width="stretch")
     with right:
         st.markdown("**What the computer saw**")
         raw = pd.DataFrame(X_ALL[shown], columns=["shape", "colour", "size"])
         raw["answer"] = labels[shown].astype(int)
-        st.dataframe(raw, hide_index=True, use_container_width=True)
+        st.dataframe(raw, hide_index=True, width="stretch")
 
     lesson.jargon(
         "features and labels",
@@ -129,7 +129,7 @@ def _():
     truth = labels[hidden]
 
     lesson.say("Three creatures neither of you has seen. You answer first, then we compare.")
-    st.dataframe(quiz, hide_index=True, use_container_width=False)
+    st.dataframe(quiz, hide_index=True, width="content")
 
     yours = []
     for i, (_, row) in enumerate(quiz.iterrows()):
@@ -153,7 +153,7 @@ def _():
     table["you said"] = yours
     table["computer said"] = np.where(machine, "zeep", "not a zeep")
     table["truth"] = np.where(truth, "zeep", "not a zeep")
-    st.dataframe(table, hide_index=True, use_container_width=False)
+    st.dataframe(table, hide_index=True, width="content")
 
     you_score = sum(1 for got, real in zip(yours, truth) if (got == "zeep") == real)
     machine_score = int((machine == truth).sum())

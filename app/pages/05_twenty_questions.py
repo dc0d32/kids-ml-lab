@@ -70,7 +70,7 @@ allowed to start with **one** column.
 """
     )
     creatures = load_table("creatures")
-    st.dataframe(creatures, hide_index=True, use_container_width=True)
+    st.dataframe(creatures, hide_index=True, width="stretch")
     lesson.look_for("columns that might split flyers away from non-flyers in one question.")
 
 
@@ -84,7 +84,7 @@ non-flyers is clean.
 """
     )
     splits = cached_creature_splits()
-    st.dataframe(splits, hide_index=True, use_container_width=True)
+    st.dataframe(splits, hide_index=True, width="stretch")
     lesson.look_for("the lowest weighted mix. That is the question leaving the least mess for later.")
     lesson.say(
         """
@@ -183,7 +183,7 @@ def _():
     cols[0].metric("train", f"{scores['train']:.1%}")
     cols[1].metric("test", f"{scores['test']:.1%}")
     cols[2].metric("top question", scores["top_question"].replace("_", " "))
-    st.dataframe(cached_mushroom_scores(), hide_index=True, use_container_width=True)
+    st.dataframe(cached_mushroom_scores(), hide_index=True, width="stretch")
     st.text(text[:2200])
     lesson.look_for("the top question before you read the text tree. Smell sits near the top, and real mushroom guides talk about smell too.")
 

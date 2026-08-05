@@ -22,7 +22,7 @@ use_house_style()
 st.title("🧪 Kids ML Lab")
 st.markdown(
     "#### Machine learning, taken apart until it stops being scary.\n"
-    "Every idea here starts with numbers small enough to work out with a pencil, "
+    "26 chapters. Every idea starts with numbers small enough to work out on scrap paper, "
     "then becomes a picture you can poke with a slider, and only *then* becomes code."
 )
 
@@ -34,11 +34,19 @@ with left:
     st.subheader("How every chapter works")
     st.markdown(
         """
+A chapter is a run of small screens. **One idea per screen**: something to read,
+something to look at, and something to move. Ten screens or so, then you're done.
+
+Along the way a chapter will stop and **ask you what you think will happen** before it
+shows you. Guessing wrong is useful — being surprised is how the idea sticks.
+
+Each chapter walks the same six beats:
+
 | | Beat | What happens |
 |---|---|---|
 | 🎣 | **The Hook** | A question or a game. Plain English. No math, no code. |
-| ✏️ | **Do It By Hand** | A few rows of tiny numbers. You solve them with a pencil. |
-| 👀 | **See It** | A picture of the exact thing you just did by hand. |
+| ✏️ | **Do It By Hand** | A few rows of tiny numbers, small enough for scrap paper. |
+| 👀 | **See It** | A picture of the exact thing you just worked out. |
 | 🎛️ | **Play With It** | Sliders. Move one knob, watch the picture change instantly. |
 | 💻 | **For Real** | 10–25 lines of actual code on actual data. |
 | 🏆 | **Challenge** | Beat the machine, or break it on purpose. |
@@ -66,7 +74,7 @@ Do a chapter here first, then open the notebook if you want to look under the ho
     )
     st.info(
         "👈 Pick a chapter from the sidebar to begin.\n\n"
-        "If you have never done any of this before, start at **Chapter 00**."
+        "If you have never done any of this before, start at **Chapter 00**. "\n        "It takes about half an hour and there is no maths in it."
     )
 
 st.divider()

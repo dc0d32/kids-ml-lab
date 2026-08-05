@@ -43,7 +43,7 @@ so the mistake is **15 - 14 = 1**.
 """
     )
     hand = squared_error_table(weeks[:4], hand_y, w=3, b=5)
-    st.dataframe(hand, hide_index=True, use_container_width=True)
+    st.dataframe(hand, hide_index=True, width="stretch")
     st.metric("Total squared mistake", f"{hand['mistake²'].sum():.2f}")
     lesson.look_for("the mistake column first, then the mistake² column. Signs vanish when we square.")
 

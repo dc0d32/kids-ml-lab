@@ -221,7 +221,7 @@ def build_monsters(n: int = 800, seed: int = 7) -> None:
     weight_kg = (height_cm * rng.uniform(0.15, 0.9, n)).round(1)
 
     is_boss = ((attack + magic) > 150) & (speed < 90)
-    flip = rng.random(n) < 0.05  # 5% of the labels are simply wrong. Real data is like that.
+    flip = rng.random(n) < 0.05  # 5% of the labels are wrong on purpose. Real data is like that.
     is_boss = np.where(flip, ~is_boss, is_boss)
 
     df = pd.DataFrame(

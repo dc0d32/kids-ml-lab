@@ -84,7 +84,7 @@ def _():
         "an embedding MLP",
         "a Transformer",
     ]
-    st.dataframe(pd.DataFrame({"tool": built}), hide_index=True, use_container_width=False)
+    st.dataframe(pd.DataFrame({"tool": built}), hide_index=True, width="content")
     lesson.look_for("how many different tools are not neural networks. Modern ML is a toolbox, not one spell.")
 
 
@@ -192,7 +192,7 @@ def _():
         ],
         columns=["project", "chapters", "why it is interesting"],
     )
-    st.dataframe(projects, hide_index=True, use_container_width=True)
+    st.dataframe(projects, hide_index=True, width="stretch")
     lesson.kid_corner("Pick one tool from the backpack and use it on something in your own room.")
 
 

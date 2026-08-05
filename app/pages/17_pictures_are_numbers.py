@@ -63,7 +63,7 @@ def _():
     _, _, images = cached_digits()
     example_index = 3
     lesson.say("The picture **is** those numbers. This chapter's model does not even get the square; it receives the same 64 numbers as one long row.")
-    st.dataframe(vision.digit_as_flat_row(images[example_index]), hide_index=True, use_container_width=True)
+    st.dataframe(vision.digit_as_flat_row(images[example_index]), hide_index=True, width="stretch")
     lesson.mermaid(
         """
 graph LR
@@ -107,7 +107,7 @@ def _():
             }
         ),
         hide_index=True,
-        use_container_width=False,
+        width="content",
     )
     lesson.look_for("how fast the weight count grows as pictures get wider, taller, and gain colour channels.")
     lesson.aha("The jump is fast because pictures grow in two directions at once. Double the width and double the height, and you made four times as many pixels.")

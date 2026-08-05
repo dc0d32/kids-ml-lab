@@ -363,7 +363,7 @@ def _():
     spread = la.spread_of(shadow)
     best = best_shadow_score()
     with picture:
-        st.plotly_chart(shadow_plot(points, shadow, spread, best), use_container_width=True)
+        st.plotly_chart(shadow_plot(points, shadow, spread, best), width="stretch")
         lesson.look_for("whether the 2D shadow stays wide or becomes a skinny smear.")
     a, b = st.columns(2)
     a.metric("your spread kept", f"{spread:.2f}")
@@ -404,7 +404,7 @@ def _():
     st.code(f"combined =\n{np.round(combined, 2)}", language="python")
 
 
-@lesson.step("Ten linear layers wear a costume", beat="forreal")
+@lesson.step("Ten linear layers wear a costume", beat="play")
 def _():
     lesson.say("Stacking linear layers with no squish does not buy new shapes. The stack collapses into one matrix, even if you stack ten.")
     layers = st.slider("number of no-squish layers", 1, 10, 10, 1, key="ch11_linear_layers")
@@ -483,10 +483,10 @@ squish_gap = max(abs(W2 @ np.tanh(W1 @ x) - (W2 @ W1) @ x))
     table = pd.DataFrame(
         {
             "quantity": ["z = W1 @ x + b", "no-squish gap", "with tanh gap"],
-            "value": [np.round(z, 3), round(linear_gap, 8), round(squish_gap, 3)],
+            "value": [str(np.round(z, 3)), f"{linear_gap:.8f}", f"{squish_gap:.3f}"],
         }
     )
-    st.dataframe(table, hide_index=True, use_container_width=False)
+    st.dataframe(table, hide_index=True, width="content")
     lesson.look_for("the two gap rows. Linear stacking matches exactly; tanh breaks the match.")
 
 

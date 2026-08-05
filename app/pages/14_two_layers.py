@@ -86,7 +86,7 @@ In the original `x1, x2` square, the red points sit in opposite corners.
     xor_table = pd.DataFrame(
         {"x1": [0, 0, 1, 1], "x2": [0, 1, 0, 1], "OR-ish": [0, 1, 1, 1], "AND-ish": [0, 0, 0, 1], "XOR": [0, 1, 1, 0]}
     )
-    st.dataframe(xor_table, hide_index=True, use_container_width=False)
+    st.dataframe(xor_table, hide_index=True, width="content")
     lesson.look_for("the two red rows. In the new columns, they can land together.")
 
 
@@ -145,7 +145,7 @@ def _():
             "XOR": y_xor,
         }
     )
-    st.dataframe(table.round(3), hide_index=True, use_container_width=True)
+    st.dataframe(table.round(3), hide_index=True, width="stretch")
     lesson.look_for("hidden rows with the same XOR answer. They are no longer trapped in opposite corners.")
 
 

@@ -80,7 +80,7 @@ In `the cat sat on the m`, the useful clue for the next letter might be far back
         [["earlier t", 1, 10], ["earlier h", 2, 20], ["earlier e", 1, 30]],
         columns=["place", "attention weight tokens", "value number"],
     )
-    st.dataframe(attention_toy, hide_index=True, use_container_width=False)
+    st.dataframe(attention_toy, hide_index=True, width="content")
     st.info("Weights 1/4, 2/4, 1/4 give a weighted average of 20. Attention mixes values using learned weights.")
     lesson.jargon("query, key, value", "A position holds up a question, earlier positions wear labels, and the model copies more content from labels that match the question.")
 

@@ -206,7 +206,7 @@ def _():
     st.markdown(
         f"Using **{result.dataset_name}**: {result.train_size} training images, {result.test_size} test images, {result.epochs} epochs. First download is about 30 MB and is cached in `data/torchvision/`."
     )
-    st.dataframe(vision.model_comparison_table(result), hide_index=True, use_container_width=True)
+    st.dataframe(vision.model_comparison_table(result), hide_index=True, width="stretch")
     lesson.look_for("the accuracy and parameter counts. The CNN shares small windows instead of learning a separate clue for every location.")
     lesson.aha("The same clue can be recognized wherever the object moved: sleeve edge, shoe edge, top-left edge, bottom-right edge.")
 

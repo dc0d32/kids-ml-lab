@@ -65,7 +65,7 @@ arithmetic is **1(6) + 1(5) - 8 = 3**, so the guess is red.
         "guess": np.where(scores > 0, "red", "blue"),
         "truth": np.where(y_tiny[:5] == 1, "red", "blue"),
     }
-    st.dataframe(hand, hide_index=True, use_container_width=True)
+    st.dataframe(hand, hide_index=True, width="stretch")
     lesson.look_for("the sign of the score. Positive and negative are the whole decision.")
 
 

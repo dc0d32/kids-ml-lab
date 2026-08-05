@@ -151,7 +151,7 @@ def _render_streamlit(book: Workbook) -> None:
         key = f"wb_{book.chapter}_{i}"
         st.markdown(f"**{i + 1}.** {q.prompt}")
         if q.table is not None:
-            st.dataframe(q.table, hide_index=True, use_container_width=False)
+            st.dataframe(q.table, hide_index=True, width="content")
 
         if q.kind == "number":
             given = st.text_input("Your answer", key=key, placeholder="a number")

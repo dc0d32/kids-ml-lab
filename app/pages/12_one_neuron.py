@@ -61,7 +61,7 @@ from the line into a number between 0 and 1.
             "prediction": ["red", "blue", "red"],
         }
     )
-    st.dataframe(hand, hide_index=True, use_container_width=True)
+    st.dataframe(hand, hide_index=True, width="stretch")
     lesson.look_for("the sign of `z`. Positive rows become red; negative rows become blue.")
 
 
@@ -138,7 +138,7 @@ def _():
     X, _ = toy_shape("blobs", n=180, noise=0.22, seed=4)
     play_neuron = Neuron(w=np.array([w1, w2]), b=b, activation=activation)
     with picture:
-        st.plotly_chart(neuron_surface_figure(play_neuron, X, steps=45, title="Rotate the ramp"), use_container_width=True)
+        st.plotly_chart(neuron_surface_figure(play_neuron, X, steps=45, title="Rotate the ramp"), width="stretch")
     lesson.look_for("the ramp steepness. Far from the fence means a louder answer.")
 
 
@@ -198,7 +198,7 @@ idea **logistic regression**: a line score, a sigmoid, and a training rule.
             "accuracy": [(learned.predict(X_fit) == y_fit).mean(), sk_score],
         }
     )
-    st.dataframe(compare.round(3), hide_index=True, use_container_width=True)
+    st.dataframe(compare.round(3), hide_index=True, width="stretch")
     lesson.look_for("matching behaviour, not matching exact learned numbers.")
 
 

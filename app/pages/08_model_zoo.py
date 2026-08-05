@@ -95,7 +95,7 @@ graph TD
             "score": [0.80, 0.70, 0.90, 0.80, 0.60],
         }
     )
-    st.dataframe(fold_table, hide_index=True, use_container_width=True)
+    st.dataframe(fold_table, hide_index=True, width="stretch")
     st.info("Average score = (0.80 + 0.70 + 0.90 + 0.80 + 0.60) / 5 = 3.80 / 5 = 0.76")
     lesson.jargon("cross-validation", "Take turns hiding different chunks, then report the average and spread.")
 
@@ -149,7 +149,7 @@ It may tell you the model stored the rows. It does not tell you whether it learn
 that works on new rows.
 """
     )
-    st.dataframe(pd.DataFrame([deep_tree_train_test()]), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame([deep_tree_train_test()]), hide_index=True, width="stretch")
     lesson.look_for("the gap between train score and test score. The training score is the fake trophy.")
     lesson.careful(
         "Evaluating on the training data is a fake victory. A deep tree can score 100% there "
@@ -218,7 +218,7 @@ mean plus spread. The baseline is included too.
     )
 
     leaderboard = cached_leaderboard()
-    st.dataframe(leaderboard, hide_index=True, use_container_width=True)
+    st.dataframe(leaderboard, hide_index=True, width="stretch")
     lesson.look_for("two means that are closer than their spreads. That is not a crushing win.")
     lesson.say("Read `0.96 ± 0.03` as a small cloud of possible scores, not one magic number.")
 

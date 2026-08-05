@@ -86,9 +86,9 @@ def _():
         st.dataframe(pd.DataFrame(centres, columns=["x", "y"]), hide_index=True)
     with right:
         st.markdown("**Assign points**")
-        st.dataframe(assignments, hide_index=True, use_container_width=True)
+        st.dataframe(assignments, hide_index=True, width="stretch")
         st.markdown("**Move centres**")
-        st.dataframe(new_centres, hide_index=True, use_container_width=True)
+        st.dataframe(new_centres, hide_index=True, width="stretch")
     lesson.look_for("which centre each point joins, then where the new centre lands.")
     lesson.aha("Round two changes nothing. That means the algorithm has converged: it stopped moving.")
     lesson.jargon("k-means", "Pick k centres, assign points to nearest centres, move centres to group middles, and repeat.")
@@ -161,9 +161,9 @@ def _():
     rebuilt, palette = cached_quantized(image, colour_k)
     col_a, col_b = st.columns(2, gap="large")
     with col_a:
-        st.image(image, caption="original", use_container_width=True)
+        st.image(image, caption="original", width="stretch")
     with col_b:
-        st.image(rebuilt, caption=f"{colour_k}-colour version", use_container_width=True)
+        st.image(rebuilt, caption=f"{colour_k}-colour version", width="stretch")
     lesson.look_for("which colours survived in the rebuilt photo. The image keeps shape while losing many tiny colour differences.")
     lesson.show(plot_palette(palette))
     lesson.look_for("the palette swatches. k-means found these colours from sampled pixels, then repainted every pixel.")
@@ -195,7 +195,7 @@ def _():
 def _():
     table, score = cached_penguin_clusters()
     lesson.say("Now k-means gets penguin measurements with the species labels removed.")
-    st.dataframe(table, use_container_width=True)
+    st.dataframe(table, width="stretch")
     st.metric("cluster/species agreement", f"{score:.2f}")
     lesson.look_for("cluster numbers versus real species. Cluster 0 is not 'Adelie'; it is a number the algorithm made up.")
 

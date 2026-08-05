@@ -65,7 +65,7 @@ The nearest red dot has `x = 4`, so the red gap is `4 - 2.5 = 1.5`.
         pd.DataFrame({"x1": X_hand[:, 0], "x2": X_hand[:, 1], "class": ["blue"] * 3 + ["red"] * 3}),
         hide_index=True,
     )
-    st.dataframe(candidates, hide_index=True, use_container_width=True)
+    st.dataframe(candidates, hide_index=True, width="stretch")
     lesson.look_for("the `smallest gap` column. The widest road is the one whose worst danger is safest.")
 
     lesson.aha("Both roads separate the dots. The one with the bigger smallest gap wins.")

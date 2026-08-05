@@ -64,7 +64,7 @@ Here five tiny trees vote red or blue. For point A, the tally is red, red, blue,
 red, red: `4 red` versus `1 blue`, so the crowd says red.
 """
     )
-    st.dataframe(tiny_vote_table(), hide_index=True, use_container_width=True)
+    st.dataframe(tiny_vote_table(), hide_index=True, width="stretch")
     lesson.look_for("a point where one tree disagrees with the crowd. Voting helps when errors point in different directions.")
 
 
@@ -78,7 +78,7 @@ tiny tree looks at what the current team still gets wrong.
 The leftover is called a residual: `actual answer - current guess`.
 """
     )
-    st.dataframe(tiny_boosting_table(), hide_index=True, use_container_width=True)
+    st.dataframe(tiny_boosting_table(), hide_index=True, width="stretch")
     lesson.look_for("point C. It starts at 5 but should be 8, so the leftover is `8 - 5 = 3`.")
     lesson.jargon("ensemble", "A model made by combining many smaller models.")
     lesson.jargon("residual", "The leftover mistake: actual answer minus current guess.")
@@ -212,7 +212,7 @@ def _():
         return
 
     scores, importances, secret = cached_monsters()
-    st.dataframe(scores, hide_index=True, use_container_width=True)
+    st.dataframe(scores, hide_index=True, width="stretch")
     st.bar_chart(importances.set_index("feature group"))
     lesson.look_for("the tallest bars before reading the rule. Attack, magic, and speed rise to the top.")
     st.code(secret)

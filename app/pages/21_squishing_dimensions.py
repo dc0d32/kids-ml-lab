@@ -81,7 +81,7 @@ If the points stay spread apart, the shadow kept more information about who is w
 """
     )
     table = pca_hand_table()
-    st.dataframe(table, hide_index=True, use_container_width=True)
+    st.dataframe(table, hide_index=True, width="stretch")
     guess = lesson.predict(
         "Which one-number shadow keeps more of the story?",
         ["The x shadow", "The y shadow", "They keep the same amount"],
@@ -126,7 +126,7 @@ A tight blob means the shadow forgot most of the differences between the points.
     _, pca_keep = pca_shadow_answer(X)
     your_keep = variance_captured(X, shadow)
     with picture:
-        st.plotly_chart(plot_shadow_3d(X), use_container_width=True)
+        st.plotly_chart(plot_shadow_3d(X), width="stretch")
         lesson.look_for("the long direction in the 3D cloud. A good shadow does not point straight along it.")
         lesson.show(plot_shadow_2d(shadow, "Your shadow"))
         lesson.look_for("whether the points stay wide apart or collapse into a small smudge.")
@@ -203,7 +203,7 @@ def _():
 def _():
     lesson.say("The same squishing idea works on ordinary tables too. Here PCA picks a first shadow through penguin measurements.")
     loadings, first_kept = cached_penguin_pca()
-    st.dataframe(loadings, hide_index=True, use_container_width=True)
+    st.dataframe(loadings, hide_index=True, width="stretch")
     st.metric("penguin first-component variance", f"{first_kept:.1%}")
     lesson.look_for("body-mass and flipper-length weights. Big weights often read like a size direction for penguins.")
 

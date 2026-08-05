@@ -26,7 +26,7 @@ CHAPTERS = [
     (2, "lines_that_decide", "Lines That Decide",
      "One line can split the whole world in two.", "Part 1 · Classical models"),
     (3, "ruler_not_enough", "When a Ruler Isn't Enough",
-     "Some things a straight line simply cannot do.", "Part 1 · Classical models"),
+     "Some things a straight line can never do, no matter how you turn it.", "Part 1 · Classical models"),
     (4, "maybe_probably", "Maybe, Probably, Definitely",
      "Squishing any number into a probability.", "Part 1 · Classical models"),
     (5, "twenty_questions", "Twenty Questions",
@@ -181,7 +181,7 @@ def worksheet_link(number: int) -> None:
 
 def show(fig, clear: bool = True) -> None:
     """Render a matplotlib figure and free it, so long pages don't eat all the memory."""
-    st.pyplot(fig, use_container_width=False)
+    st.pyplot(fig, width="content")
     if clear:
         plt.close(fig)
 

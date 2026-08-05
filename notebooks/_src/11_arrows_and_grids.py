@@ -112,7 +112,7 @@ v = np.array([3, 4])
 vector_facts = pd.DataFrame(
     {
         "thing": ["vector", "length", "angle", "direction arrow"],
-        "value": [v, la.magnitude(v), round(la.angle_degrees(v), 2), np.round(la.direction(v), 2)],
+        "value": [str(v), f"{la.magnitude(v):.2f}", f"{la.angle_degrees(v):.2f}", str(np.round(la.direction(v), 2))],
     }
 )
 vector_facts
@@ -289,7 +289,7 @@ combined, gap = la.chained_equals_single(A, B)
 pd.DataFrame(
     {
         "thing": ["combined matrix B @ A", "largest difference on 200 test points"],
-        "value": [np.round(combined, 3), gap],
+        "value": [str(np.round(combined, 3)), f"{gap:.8f}"],
     }
 )
 
@@ -355,7 +355,7 @@ squish_gap = float(np.max(np.abs(W2 @ np.tanh(W1 @ x) - (W2 @ W1) @ x)))
 pd.DataFrame(
     {
         "quantity": ["z = W1 @ x + b", "no-squish gap", "with tanh gap"],
-        "value": [np.round(z, 3), round(linear_gap, 8), round(squish_gap, 3)],
+        "value": [str(np.round(z, 3)), f"{linear_gap:.8f}", f"{squish_gap:.3f}"],
     }
 )
 

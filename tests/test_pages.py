@@ -83,3 +83,50 @@ def test_page_is_named_as_the_course_map_says(chapter):
     if not any(p.name.startswith(f"{number:02d}_") for p in existing):
         pytest.skip(f"chapter {number:02d} not built yet")
     assert expected.exists(), f"expected page file {expected.name}"
+
+
+# ---------------------------------------------------------------------------
+# Shape of a chapter, checked by reading the source rather than running it
+# ---------------------------------------------------------------------------
+
+import re  # noqa: E402
+
+BEAT_ORDER = ["hook", "byhand", "seeit", "play", "forreal", "challenge"]
+
+
+def _beats_of(page: Path) -> list[str]:
+    return re.findall(r'@lesson\.step\([^)]*beat="(\w+)"', page.read_text(), re.S)
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_steps_run_through_the_beats_in_order(page: Path):
+    """Hook, then by hand, then see it, then play, then for real, then challenge.
+
+    Several steps may share a beat, but a chapter must never go backwards — a reader
+    who has reached 'For Real' should not be dropped back into 'Play'.
+    """
+    beats = _beats_of(page)
+    assert beats, f"{page.name} declares no beats"
+
+    positions = [BEAT_ORDER.index(b) for b in beats]
+    assert positions == sorted(positions), (
+        f"{page.name} jumps back through the beats: {beats}"
+    )
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_chapter_asks_before_it_tells(page: Path):
+    """Predict-then-reveal is the pattern that stops a chapter being a slideshow.
+
+    Two per chapter is the floor, placed in front of the genuinely surprising moments.
+    """
+    count = page.read_text().count("lesson.predict(")
+    assert count >= 2, f"{page.name} has {count} prediction(s) — ask before you tell"
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_no_deprecated_streamlit_width_argument(page: Path):
+    assert "use_container_width" not in page.read_text(), (
+        f"{page.name} uses use_container_width, which Streamlit has deprecated. "
+        'Use width="stretch" or width="content".'
+    )

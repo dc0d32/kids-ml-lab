@@ -106,7 +106,7 @@ neuron gets one bias.
 """
     )
     counts = pd.DataFrame({"layer": ["2 → 5", "5 → 5", "5 → 1", "biases"], "count": [10, 25, 5, 11]})
-    st.dataframe(counts, hide_index=True, use_container_width=False)
+    st.dataframe(counts, hide_index=True, width="content")
     lesson.say("That is **40 weights + 11 biases = 51 parameters**. A bigger pile can fit more shapes, including shapes caused by bad luck.")
     lesson.jargon("parameters", "The weights and biases: every adjustable number inside the model.")
 
@@ -138,7 +138,7 @@ def _():
 def _():
     lesson.say("On tiny toy shapes, deeper is not automatically better. More capacity means more ways to curve around the points, but training still has to find useful curves.")
     X_cmp, y_cmp, table, trained = compare_shapes()
-    st.dataframe(table.round(3), hide_index=True, use_container_width=True)
+    st.dataframe(table.round(3), hide_index=True, width="stretch")
     cols = st.columns(4)
     for col, m in zip(cols, trained):
         with col:

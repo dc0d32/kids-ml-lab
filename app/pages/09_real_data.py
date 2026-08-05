@@ -60,7 +60,7 @@ blank. You cannot draw the whole table on one neat graph.
     )
 
     penguins = datasets.load_table("penguins")
-    st.dataframe(penguins.head(8), hide_index=True, use_container_width=True)
+    st.dataframe(penguins.head(8), hide_index=True, width="stretch")
     st.caption(f"penguins has {len(penguins)} rows and {len(penguins.columns)} columns. That is already too many for Flatland.")
     lesson.look_for("word columns, number columns, and blank-looking cells. Real tables are mixed.")
     lesson.kid_corner(
@@ -102,10 +102,10 @@ It cannot multiply by the word `storm`, and numbering the words sneaks in a fake
     left, right = st.columns(2, gap="large")
     with left:
         st.markdown("**Before**")
-        st.dataframe(before, hide_index=True, use_container_width=True)
+        st.dataframe(before, hide_index=True, width="stretch")
     with right:
         st.markdown("**After**")
-        st.dataframe(after, hide_index=True, use_container_width=True)
+        st.dataframe(after, hide_index=True, width="stretch")
     lesson.look_for("how `storm` becomes its own yes/no column instead of a bigger number than `clear`.")
     lesson.jargon("one-hot encoding", "Turn each possible word into its own 0-or-1 column.")
 
@@ -114,9 +114,9 @@ It cannot multiply by the word `storm`, and numbering the words sneaks in a fake
 def _():
     lesson.say("Dropping blank rows says those penguins never existed. Filling blanks with an average tells a different lie.")
     missing = realdata.penguin_missing_rows()
-    st.dataframe(missing.head(12), hide_index=True, use_container_width=True)
+    st.dataframe(missing.head(12), hide_index=True, width="stretch")
     st.caption(f"Penguins has {len(missing)} rows with at least one blank cell.")
-    st.dataframe(cached_missing_scores(), hide_index=True, use_container_width=True)
+    st.dataframe(cached_missing_scores(), hide_index=True, width="stretch")
     lesson.look_for("whether the score changes when blanks are dropped or filled. Cleanup choices are model choices.")
     lesson.careful(
         "Dropping can erase the exact kind of penguin your measuring tools had trouble with. "
@@ -144,7 +144,7 @@ If 80 out of 100 mushrooms are safe, a model that says **safe every time** score
 A fancy model at 82% only bought two extra correct answers.
 """
     )
-    st.dataframe(cached_scores(), hide_index=True, use_container_width=True)
+    st.dataframe(cached_scores(), hide_index=True, width="stretch")
     lesson.look_for("datasets where the baseline is already high. Accuracy starts there, not at zero.")
     lesson.jargon("baseline", "A boring score from a model that does not learn. For classes, it says the most common answer every time.")
 
@@ -159,18 +159,18 @@ def _():
     cols[0].metric("rows", overview["rows"])
     cols[1].metric("columns", overview["columns"])
     cols[2].metric("target", overview["target"])
-    st.dataframe(overview["head"], hide_index=True, use_container_width=True)
+    st.dataframe(overview["head"], hide_index=True, width="stretch")
     lesson.look_for("how wide the table is. The first rows are a sample, not the whole story.")
 
     left, right = st.columns(2, gap="large")
     with left:
         st.markdown("**Column kinds**")
-        st.dataframe(overview["dtypes"], hide_index=True, use_container_width=True)
+        st.dataframe(overview["dtypes"], hide_index=True, width="stretch")
     with right:
         st.markdown("**Missing cells**")
-        st.dataframe(overview["missing"], hide_index=True, use_container_width=True)
+        st.dataframe(overview["missing"], hide_index=True, width="stretch")
     st.markdown("**How lopsided is the target?**")
-    st.dataframe(overview["target_counts"], hide_index=True, use_container_width=True)
+    st.dataframe(overview["target_counts"], hide_index=True, width="stretch")
     lesson.look_for("giant target piles. A lopsided target is where accuracy starts lying.")
 
 
@@ -252,7 +252,7 @@ def _():
         )
     if st.session_state.ch09_board:
         board = pd.DataFrame(st.session_state.ch09_board).sort_values("score", ascending=False)
-        st.dataframe(board, hide_index=True, use_container_width=True)
+        st.dataframe(board, hide_index=True, width="stretch")
         lesson.look_for("attempts that beat the baseline by the most, not only the highest raw score.")
 
 
@@ -295,7 +295,7 @@ def _():
     lesson.show(fig)
     lesson.look_for("points far from the dashed perfect line. Those are clues.")
     st.metric("bike model R²", f"{bike['result']['model_score']:.2f}", f"baseline {bike['result']['baseline_score']:.2f}")
-    st.dataframe(bike["worst"], hide_index=True, use_container_width=True)
+    st.dataframe(bike["worst"], hide_index=True, width="stretch")
 
 
 @lesson.step("The code shape", beat="forreal")
