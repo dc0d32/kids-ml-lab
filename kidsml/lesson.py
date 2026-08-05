@@ -239,7 +239,10 @@ def predict(question: str, choices: list[str], correct: int | None = None,
     st.markdown(f"<div class='kml-predict'><b>{question}</b></div>", unsafe_allow_html=True)
 
     if slot not in st.session_state:
-        picked = st.radio("", choices, index=None, key=slot + "_radio", label_visibility="collapsed")
+        picked = st.radio(
+            "Your prediction", choices, index=None,
+            key=slot + "_radio", label_visibility="collapsed",
+        )
         if st.button("Lock it in", key=slot + "_go", type="primary", disabled=picked is None):
             st.session_state[slot] = picked
             st.rerun()
