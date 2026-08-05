@@ -44,9 +44,13 @@ use_house_style()
 # Start with the same raw line score **z**. Positive should lean red. Negative
 # should lean blue. A score near 0 should mean a shrug.
 #
-# The S-curve we use is **sigmoid(z) = 1 / (1 + e^-z)**. At **z = 0**, the
-# arithmetic is **1 / (1 + e⁰) = 1 / (1 + 1) = 0.5**, so the boundary lands
-# exactly on the 50/50 shrug.
+# So we need a squish machine: any score in, a probability from 0 to 1 out.
+# The S-curve we use is **sigmoid(z) = 1 / (1 + e^-z)**. The **e** is a
+# particular number, about **2.718**; you do not need to memorize it. It makes
+# the odds change by the same multiplier for each step in **z**.
+#
+# At **z = 0**, the arithmetic is **1 / (1 + e⁰) = 1 / (1 + 1) = 0.5**, so the
+# boundary lands exactly on the 50/50 shrug.
 
 # %%
 z = np.array([-4, -2, -1, 0, 1, 2, 4], dtype=float)
@@ -74,16 +78,6 @@ pd.DataFrame({"z": z, "sigmoid(z)": np.round(p, 3)})
 #
 # Notice where the threshold sits: p = 0.5 happens exactly when the raw score z is 0.
 
-# %% [markdown]
-# Now work through the interactive workbook. Type your answer in each box and press
-# **Check** — you will find out whether you were right, and why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(4)
-
-# %% [markdown]
 # ## 👀 Take a look
 #
 # The slider in the app changes `w`. Here, change `w` in code. Large `w` makes the
@@ -119,7 +113,7 @@ plt.show()
 X, y = toy_shape("blobs", n=220, noise=0.28, seed=6)
 w1, w2, b = 2.0, 2.0, 0.0
 prob = logistic_proba(X, w1, w2, b)
-print("log loss:", round(log_loss(prob, y), 3))
+pd.DataFrame({"average penalty": [round(log_loss(prob, y), 3)]})
 
 fig, ax = plt.subplots(figsize=(6, 5))
 decision_boundary(lambda G: logistic_proba(G, w1, w2, b), X, y, ax=ax, shade_confidence=True)
@@ -150,6 +144,9 @@ pd.DataFrame(rows)
 # If the truth is blue and the model says **0.99 red**, the true class only got
 # probability **0.01**, so the penalty is **-log(0.01) = 4.61**. Being unsure and
 # wrong is forgivable. Being certain and wrong is expensive.
+#
+# > 📖 **Grown-ups call this:** **log loss** — the penalty score for probability
+# > promises. Confident wrong answers cost the most.
 
 # %% [markdown]
 # ## 💻 In real code
@@ -185,6 +182,15 @@ print("score:", round(accuracy_score(penguins["is_gentoo"], probs >= 0.5), 3))
 # %%
 sample = penguins.iloc[[0, len(penguins) // 2, int(np.argmin(np.abs(probs - 0.5))), -1]][["species", "gentoo_probability"]]
 sample
+
+# %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(4)
 
 # %% [markdown]
 # ## 🏆 Go further

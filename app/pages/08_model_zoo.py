@@ -34,8 +34,9 @@ def cached_leaderboard():
 def _():
     lesson.say(
         """
-Open the model zoo gate. You now know several guessers: lines, probabilities, trees, crowds, and widest roads. Which
-one should you use?
+Open the model zoo gate. You now know logistic regression from Chapter 4, decision trees
+from Chapter 5, random forests and boosting from Chapter 6, and support vector machines
+from Chapter 7. Which one should you use?
 
 The honest answer is: **try them and see**. But *see* is harder than it sounds, because a
 model can look brilliant on the rows it studied and stumble on new rows.
@@ -112,7 +113,17 @@ def _():
     if guess is None:
         return
 
-    lesson.say("Now change the shape and see when your hunch stops being true. No personality wins every problem.")
+    lesson.say(
+        """
+Now change the shape and see when your hunch stops being true. No personality wins every problem.
+
+Decode the zoo labels first: `logistic` means logistic regression, `tree` means decision
+tree, `forest` means random forest, `boosting` is Chapter 6's line of little tree fixes,
+and `linear SVM` / `rbf SVM` are Chapter 7 roads. One guest is new: **kNN** asks nearby
+training points to vote.
+"""
+    )
+    lesson.jargon("k-nearest neighbors", "Store the training rows, then ask nearby points to vote on a new row.")
 
     knobs, picture = lesson.controls()
     with knobs:
@@ -128,7 +139,13 @@ def _():
 
 @lesson.step("The zoo has no permanent champion", beat="seeit")
 def _():
-    lesson.say("The model zoo is easier to read once you know each model's habit.")
+    lesson.say(
+        """
+The model zoo is easier to read once you know each model's habit. The short labels are
+name tags, not new chapters: `logistic` is logistic regression, `tree` is a decision tree,
+and `rbf SVM` is the smooth-road SVM.
+"""
+    )
 
     st.dataframe(
         pd.DataFrame({"model": list(MODEL_PERSONALITIES), "personality": list(MODEL_PERSONALITIES.values())}),

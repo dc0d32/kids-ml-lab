@@ -28,6 +28,10 @@ use_house_style()
 # Part 3 sounds like a new planet: **neural networks**. It is not. A neuron is Chapter 2's
 # straight-line score bolted to Chapter 4's probability squish.
 #
+# Chapter 11 also showed why the squish matters: straight steps stacked on straight steps
+# collapse back into one straight step. The squish is what keeps a neuron from being only a
+# line wearing a costume.
+#
 # That matters because there is no missing spell. If you can read `w1*x1 + w2*x2 + b`,
 # you can read the engine inside this circle. The circle wraps the score so a yes/no model
 # can say “barely yes”, “very yes”, or “I am near the fence”.
@@ -50,7 +54,8 @@ use_house_style()
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Use **w1 = 2**, **w2 = -1**, **b = 0.5**. First build the raw score `z`, then squish it.
+# Use **w1 = 2**, **w2 = -1**, **b = 0.5**. We picked small numbers so every row can be
+# checked by hand. First build the raw score `z`, then squish it.
 #
 # The raw score decides which side of the line the point is on. The squish keeps the same
 # side, but turns “how far from the line?” into a 0-to-1 confidence gauge.
@@ -78,21 +83,13 @@ hand
 # > does not move.
 
 # %% [markdown]
-# Work these out on scrap paper, then type your answers in. You'll be told not only
-# whether you were right, but why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(12)
-
-# %% [markdown]
 # ## 👀 Take a look
 #
 # `Neuron.raw(X)` shows the Chapter 2 score before the squish. A positive raw score lands
 # on one side, a negative score lands on the other, and zero is the fence.
 #
-# Look at the first few blob points below. The neuron is not hiding a secret formula; it is
+# These are toy blob coordinates from two clumps. We chose a few rows from both answers so
+# the sign flips and the fence is visible. The neuron is not hiding a secret formula; it is
 # computing `x1 + x2 - 7` and then sending that number through the squish.
 
 # %%
@@ -104,7 +101,7 @@ rows = [0, 3, 5, 7, 9]
 pd.DataFrame({'x1': X_tiny[rows, 0], 'x2': X_tiny[rows, 1], 'raw z': neuron.raw(X_tiny[rows])})
 
 # %% [markdown]
-# The raw numbers are not probabilities yet. They are signed distances from the line
+# The raw numbers are not probabilities yet. They are signed fence scores from the line
 # machine.
 
 # %% [markdown]
@@ -148,10 +145,11 @@ pd.DataFrame(
 # ## 💻 In real code
 #
 # Now we train the neuron instead of choosing its numbers by hand. Scikit-learn calls the
-# same idea **logistic regression**: a line score, a sigmoid, and a training rule turning the knobs.
+# same idea **logistic regression**: a line score, a sigmoid, and a training rule turning
+# the knobs. Chapter 13 opens that training rule and shows how the knobs move.
 #
-# The learned numbers do not have to match exactly, because the two training recipes use
-# different loss details. What should match is the divider: it should point through the
+# The learned numbers do not have to match exactly, because the two tools use different
+# knob-moving recipes. What should match is the divider: it should point through the
 # same gap in the blobs.
 
 # %%
@@ -181,6 +179,14 @@ plt.show()
 #
 # ## 🏆 Go further
 #
+# Work through the interactive questions, then try these quests.
+
+# %%
+from kidsml import workbook
+
+workbook.render(12)
+
+# %% [markdown]
 # 1. **Find perfect blob weights.** Use the app sliders until the blob mistakes hit zero.
 #    Which knob mostly rotates the line?
 # 2. **Say yes to everything.** Make almost the whole plane red. Which bias did it take?

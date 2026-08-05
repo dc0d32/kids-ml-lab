@@ -18,9 +18,19 @@ def dataset_label(name: str) -> str:
     return f"{name} — {datasets.blurb_of(name)}"
 
 
+def representative_preview(name: str) -> pd.DataFrame:
+    df = datasets.load_table(name)
+    target = datasets.target_of(name)
+    if pd.api.types.is_numeric_dtype(df[target]):
+        return df.head(5)
+    return df.groupby(target, group_keys=False).head(2).reset_index(drop=True)
+
+
 @st.cache_data(show_spinner=False)
 def cached_overview(name: str):
-    return realdata.table_overview(name)
+    overview = realdata.table_overview(name)
+    overview["head"] = representative_preview(name)
+    return overview
 
 
 @st.cache_data(show_spinner=False)
@@ -64,7 +74,7 @@ cabinet full of drawers, not one neat graph.
     # species, so head(8) is eight Adelie — a misleading first look at a three-way problem.
     sample = penguins.groupby("species", group_keys=False).head(3)
     st.dataframe(sample, hide_index=True, width="stretch")
-    st.caption(f"penguins has {len(penguins)} rows and {len(penguins.columns)} columns. Flatland has failed the a full audit, no cap.")
+    st.caption(f"penguins has {len(penguins)} rows and {len(penguins.columns)} columns. Flatland has failed a full audit, no cap.")
     lesson.look_for("word columns, number columns, and blank-looking cells — and three different species, which is what we are being asked to tell apart.")
     lesson.kid_corner(
         "Imagine sorting a huge box of trading cards. You cannot hold every card in the air at once. "
@@ -145,6 +155,12 @@ Before 82% gets a parade, ask what the boring guess gets for free.
 
 If 80 out of 100 mushrooms are safe, a model that says **safe every time** scores 80%.
 A fancy model at 82% moved only two mushrooms. Baseline first!
+
+The score table below uses four bundled datasets: **penguins** are birds with island,
+beak, flipper, weight, and sex columns, predicting species. **Mushrooms** are mushroom
+descriptions such as cap shape, smell, and gill clues, predicting edible or poisonous.
+**Monsters** are trading-card creatures with element, home, and battle stats, predicting
+whether each one is a boss. **Bikes** are daily weather rows, predicting the number of rentals.
 """
     )
     st.dataframe(cached_scores(), hide_index=True, width="stretch")
@@ -163,7 +179,7 @@ def _():
     cols[1].metric("columns", overview["columns"])
     cols[2].metric("target", overview["target"])
     st.dataframe(overview["head"], hide_index=True, width="stretch")
-    lesson.look_for("how wide the table is. The first rows are a sample, not the whole story.")
+    lesson.look_for("how wide the table is. For class targets, this preview grabs rows from each answer pile instead of trusting the file order.")
 
     left, right = st.columns(2, gap="large")
     with left:
@@ -179,6 +195,13 @@ def _():
 
 @lesson.step("Draft your feature team", beat="play")
 def _():
+    lesson.say(
+        """
+Now meet the monsters table before the model touches it. Each row is a trading-card
+creature. The columns include words like `element` and `home`, plus stats like `attack`,
+`magic`, and `speed`. The target is `is_boss`: yes or no.
+"""
+    )
     guess = lesson.predict(
         "Before training, which clues do you expect the monsters model to lean on most?",
         ["colour and size", "attack, magic, and speed", "name and row number"],
@@ -283,7 +306,13 @@ def _():
 
 @lesson.step("Predicted versus actual", beat="forreal")
 def _():
-    lesson.say("A regression check slams predicted versus actual onto one picture. The dashed line is perfection.")
+    lesson.say(
+        """
+A regression check slams predicted versus actual onto one picture. The bikes table has
+one row per day, weather columns such as temperature, humidity, wind, and season, and a
+number target: how many bikes were rented that day. The dashed line is perfection.
+"""
+    )
     bike = cached_bikes()
     rows = bike["rows"]
     fig, ax = lesson.figure(5.8, 5.0)

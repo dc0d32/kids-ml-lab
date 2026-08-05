@@ -22,27 +22,28 @@ KERNEL = pd.DataFrame(
     ]
 )
 
-FIRST_PATCH = pd.DataFrame(
+FIRST_PATCH_AND_KERNEL = pd.DataFrame(
     [
-        [0, 0, 9],
-        [0, 0, 9],
-        [0, 0, 9],
-    ]
+        [0, 0, 9, -1, 0, 1],
+        [0, 0, 9, -1, 0, 1],
+        [0, 0, 9, -1, 0, 1],
+    ],
+    columns=["patch 1", "patch 2", "patch 3", "kernel 1", "kernel 2", "kernel 3"],
 )
 
 WORKBOOK = Workbook(
     chapter=18,
     title="Workbook · Slide the window",
     intro=(
-        "A 3×3 kernel looks at one tiny patch at a time. Multiply matching cells, add them, "
-        "then slide one square."
+        "A kernel is a small grid of weights. This 3×3 kernel looks at one tiny patch at a time: "
+        "multiply matching cells, add them, then slide one square."
     ),
     questions=[
         Question(
             prompt="For this first patch and kernel, what number goes in the first output cell?",
             kind="number",
             answer=27,
-            table=FIRST_PATCH,
+            table=FIRST_PATCH_AND_KERNEL,
             hint="Only the right column of the kernel has +1 values. Add the three 9s.",
             why=(
                 "The sum is 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27. "

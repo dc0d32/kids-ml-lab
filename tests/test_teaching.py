@@ -240,3 +240,37 @@ def test_the_first_look_at_the_penguins_shows_every_species():
         "the opening sample of the penguin data misses a species — the file is sorted, "
         "so taking the first rows shows only one"
     )
+
+
+def test_plotly_defaults_to_the_dark_template():
+    """Plotly draws on white, which is a rectangle of glare in this app.
+
+    Checked at the source — the default template — rather than at each call site, because
+    most figures are built inside helper functions and a call-site check missed them.
+    """
+    import plotly.io as pio
+
+    from kidsml.plots import BACKGROUND, PANEL, use_house_style
+
+    use_house_style()
+
+    assert "kidsml" in pio.templates.default, (
+        f"plotly's default template is {pio.templates.default!r}; figures will render white"
+    )
+
+    resolved = pio.templates[pio.templates.default].layout
+    assert resolved.paper_bgcolor == BACKGROUND
+    assert resolved.plot_bgcolor == PANEL
+
+
+def test_plotly_renderer_cannot_open_a_browser():
+    """fig.show() sniffing the environment once turned a 3s notebook into a 200s hang."""
+    import plotly.io as pio
+
+    from kidsml.plots import use_house_style
+
+    use_house_style()
+    assert pio.renderers.default == "plotly_mimetype", (
+        f"renderer is {pio.renderers.default!r}; anything that can fall back to a browser "
+        "will block under headless execution"
+    )

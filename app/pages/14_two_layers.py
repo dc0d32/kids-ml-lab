@@ -62,8 +62,10 @@ together. The escape route was inventing better features.
 graph LR
     X1[x₁] --> H1[h₁]
     X1 --> H2[h₂]
-    X2[x₂] --> H2
-    X2 --> H3[h₃]
+    X1 --> H3[h₃]
+    X2[x₂] --> H1
+    X2 --> H2
+    X2 --> H3
     H1 --> O[output neuron]
     H2 --> O
     H3 --> O
@@ -87,6 +89,13 @@ In the original `x1, x2` square, the red points sit in opposite corners.
         {"x1": [0, 0, 1, 1], "x2": [0, 1, 0, 1], "OR-ish": [0, 1, 1, 1], "AND-ish": [0, 0, 0, 1], "XOR": [0, 1, 1, 0]}
     )
     st.dataframe(xor_table, hide_index=True, width="content")
+    lesson.say(
+        """
+Here is the output line in the new space: `score = OR-ish - 2*AND-ish - 0.5`.
+For a red row, `(OR-ish, AND-ish) = (1, 0)`, so `1 - 2*0 - 0.5 = 0.5`.
+For the blue `(1, 1)` row, `1 - 2*1 - 0.5 = -1.5`.
+"""
+    )
     lesson.look_for("the two red rows. In the new columns, they land together like two magnets clicking shut.")
 
 
@@ -125,7 +134,7 @@ def _():
         ["No, XOR stays impossible", "Yes, the hidden coordinates can make a straight split", "Only if there are ten hidden neurons"],
         correct=1,
         why="The hidden layer invents coordinates. The output neuron then uses one straight split in that new space.",
-        key="ch13_hidden_space",
+        key="ch14_hidden_space",
     )
     if guess is None:
         return
@@ -173,7 +182,7 @@ def _():
         ["They start with small random differences", "The output neuron orders them by name", "They all get the same gradients forever"],
         correct=0,
         why="Small random starts give slightly different gradients, so the hidden jobs peel apart.",
-        key="ch13_hidden_lines_reason",
+        key="ch14_hidden_lines_reason",
     )
     if guess is None:
         return
@@ -201,7 +210,7 @@ def _():
     X_xor, y_xor, snaps = trained_xor_snapshots()
     knobs, picture = lesson.controls()
     with knobs:
-        step_index = st.slider("Training step to inspect", 0, len(snaps) - 1, len(snaps) - 1, format="%d", key="ch13_training_step")
+        step_index = st.slider("Training step to inspect", 0, len(snaps) - 1, len(snaps) - 1, format="%d", key="ch14_training_step")
         st.caption(f"showing step {snaps[step_index]['step']} · loss {snaps[step_index]['loss']:.4f}")
     model = model_from_snapshot([2, 3, 1], snaps[step_index], activation="tanh", seed=2)
     with picture:
@@ -216,11 +225,11 @@ def _():
     lesson.say("With one hidden neuron you are mostly back to one learned line. Add a few, and the model can invent several features before the final neuron decides.")
     knobs, picture = lesson.controls()
     with knobs:
-        shape = st.selectbox("Dataset", ["xor", "moons", "circles", "spiral"], index=0, key="ch13_play_shape")
-        hidden = st.slider("Hidden neurons", 1, 8, 3, key="ch13_play_hidden")
-        activation = st.selectbox("Activation", ["tanh", "sigmoid", "relu"], index=0, key="ch13_play_activation")
-        lr = st.slider("Learning rate", 0.05, 1.5, 0.6, 0.05, key="ch13_play_lr")
-        seed = st.slider("Random seed", 0, 10, 3, 1, key="ch13_play_seed")
+        shape = st.selectbox("Dataset", ["xor", "moons", "circles", "spiral"], index=0, key="ch14_play_shape")
+        hidden = st.slider("Hidden neurons", 1, 8, 3, key="ch14_play_hidden")
+        activation = st.selectbox("Activation", ["tanh", "sigmoid", "relu"], index=0, key="ch14_play_activation")
+        lr = st.slider("Learning rate", 0.05, 1.5, 0.6, 0.05, key="ch14_play_lr")
+        seed = st.slider("Random seed", 0, 10, 3, 1, key="ch14_play_seed")
     X_play, y_play, play_model, _ = playground(shape, hidden, activation, lr, seed)
     with picture:
         fig, ax = lesson.figure(5.0, 4.3)
@@ -235,11 +244,11 @@ def _():
 def _():
     knobs, picture = lesson.controls()
     with knobs:
-        shape = st.selectbox("Loss dataset", ["xor", "moons", "circles", "spiral"], index=0, key="ch13_loss_shape")
-        hidden = st.slider("Loss hidden neurons", 1, 8, 3, key="ch13_loss_hidden")
-        activation = st.selectbox("Loss activation", ["tanh", "sigmoid", "relu"], index=0, key="ch13_loss_activation")
-        lr = st.slider("Loss learning rate", 0.05, 1.5, 0.6, 0.05, key="ch13_loss_lr")
-        seed = st.slider("Loss random seed", 0, 10, 3, 1, key="ch13_loss_seed")
+        shape = st.selectbox("Loss dataset", ["xor", "moons", "circles", "spiral"], index=0, key="ch14_loss_shape")
+        hidden = st.slider("Loss hidden neurons", 1, 8, 3, key="ch14_loss_hidden")
+        activation = st.selectbox("Loss activation", ["tanh", "sigmoid", "relu"], index=0, key="ch14_loss_activation")
+        lr = st.slider("Loss learning rate", 0.05, 1.5, 0.6, 0.05, key="ch14_loss_lr")
+        seed = st.slider("Loss random seed", 0, 10, 3, 1, key="ch14_loss_seed")
     _, _, _, play_losses = playground(shape, hidden, activation, lr, seed)
     with picture:
         fig, ax = lesson.figure(5.0, 4.3)

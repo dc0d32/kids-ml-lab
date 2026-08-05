@@ -149,8 +149,9 @@ def _():
     lesson.say(
         """
 A **gradient** is an arrow made from slopes. It says, "if you nudge **w** this
-way and **b** that way, the loss rises fastest." To learn, the computer walks the
-opposite way: downhill.
+way and **b** that way, the average squared mistake rises fastest." Grown-ups
+call that mistake score **loss**. To learn, the computer walks the opposite way:
+downhill.
 """
     )
     steps = st.slider("Let the computer take this many downhill steps", 1, 120, 60, key="ch01_steps")

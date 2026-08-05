@@ -12,7 +12,7 @@ POINTS = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=12,
     title='Workbook · One circle with a squish',
-    intro='Use w1 = 2, w2 = -1, and b = 0.5. Build the raw score first. Then send it through the squish.',
+    intro='Use w1 = 2, w2 = -1, and b = 0.5. The numbers are small enough to check by hand. Build the raw score first. Then send it through the squish.',
     questions=[
         Question(
             prompt='For point (1, 0), what is the raw score z?',

@@ -70,6 +70,8 @@ words = load_words("names")
 vocab = CharVocab.from_words(words)
 train, test = train_test_split_words(words, frac=0.9, seed=0)
 counts = bigram_counts(train, vocab)
+# Add one tiny fake tally to every box before dividing. That keeps unseen pairs rare
+# instead of impossible.
 probs = counts_to_probs(counts, smoothing=1.0)
 
 print(len(words), "names")
@@ -158,6 +160,8 @@ plt.show()
 
 # %%
 counts = bigram_counts(train, vocab)
+# `smoothing=1` adds one fake tally to every box before dividing, so an unseen pair is
+# rare instead of impossible.
 probs = counts_to_probs(counts, smoothing=1)
 loss = bigram_nll(test, probs, vocab)
 loss

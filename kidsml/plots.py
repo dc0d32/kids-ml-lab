@@ -39,7 +39,7 @@ CLASS_NAMES = ("blue", "red")
 
 def use_house_style() -> None:
     """Apply the course's matplotlib defaults. Call once at the top of a notebook."""
-    _pin_plotly_renderer()
+    _setup_plotly()
     mpl.rcParams.update(
         {
             "figure.figsize": (6.0, 5.0),
@@ -72,24 +72,52 @@ def use_house_style() -> None:
     )
 
 
-def _pin_plotly_renderer() -> None:
-    """Stop plotly guessing how to display a figure.
+def style_plotly(fig, height: int = 500):
+    """Size a plotly figure for the page.
 
-    Left to itself, ``fig.show()`` sniffs the environment, and when it can't recognise one
-    it falls back to opening a web browser — which blocks. Under headless notebook
-    execution that turns a two-second chapter into a minutes-long hang, intermittently,
-    which is the worst kind of bug to chase.
+    The colours come from the default template set in :func:`use_house_style`, so a figure
+    is dark whether or not anyone remembers to call this.
+    """
+    fig.update_layout(height=height, margin=dict(l=10, r=10, t=40, b=10))
+    return fig
 
-    ``plotly_mimetype`` hands JupyterLab a small JSON payload and lets it do the drawing,
-    which plotly 6 supports out of the box. The ``notebook`` renderer would also work, but
-    it re-embeds the whole plotly library into every single figure, which turned one
-    chapter into a three-minute notebook run.
+
+def _setup_plotly() -> None:
+    """Make plotly behave: a fixed renderer, and dark by default.
+
+    Two separate traps, both of which bit us:
+
+    * ``fig.show()`` left to itself sniffs the environment, and when it can't recognise
+      one it falls back to opening a web browser — which blocks. Under headless notebook
+      execution that turned a two-second chapter into a three-minute hang.
+    * Plotly draws on white. Dropped into this app that is a rectangle of glare. Setting a
+      default *template* fixes it everywhere at once, including figures built inside helper
+      functions that would otherwise have to remember.
     """
     try:
+        import plotly.graph_objects as go
         import plotly.io as pio
     except ImportError:
         return
+
     pio.renderers.default = "plotly_mimetype"
+
+    pio.templates["kidsml"] = go.layout.Template(
+        layout=dict(
+            paper_bgcolor=BACKGROUND,
+            plot_bgcolor=PANEL,
+            font=dict(color=INK, size=12),
+            colorway=[COOL, WARM, ACCENT, "#F59E0B", "#A78BFA"],
+            xaxis=dict(gridcolor="#2A3040", zerolinecolor="#3A4152"),
+            yaxis=dict(gridcolor="#2A3040", zerolinecolor="#3A4152"),
+            scene=dict(
+                xaxis=dict(backgroundcolor=PANEL, gridcolor="#2A3040", color=INK),
+                yaxis=dict(backgroundcolor=PANEL, gridcolor="#2A3040", color=INK),
+                zaxis=dict(backgroundcolor=PANEL, gridcolor="#2A3040", color=INK),
+            ),
+        )
+    )
+    pio.templates.default = "plotly_dark+kidsml"
 
 
 # ---------------------------------------------------------------------------

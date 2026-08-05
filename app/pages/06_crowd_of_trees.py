@@ -33,9 +33,15 @@ def cached_monsters():
 def _():
     lesson.say(
         """
+Chapter 3 proved straight lines cannot bend. Chapter 5 gave us one
+blocky-bendy tree. Now we make a whole crowd of them.
+
 Shake the jellybean jar and ask a crowd. One person may rocket high. Another
 may dive low. The **average** can land closer than
 most individual guesses because the high and low mistakes cancel.
+
+That only helps when the guesses are different. Forests create useful
+disagreement by giving trees random rows and random column choices.
 """
     )
     lesson.mermaid(
@@ -119,7 +125,7 @@ def _():
     x2 = st.slider("Click-ish point: feature 2", -2.5, 2.5, 0.0, 0.1, key="ch06_vote_x2")
     _, _, _, forest = fit_tree_and_forest(shape=shape, n_estimators=n_estimators, noise=noise, seed=seed)
     votes = forest_vote_counts(forest, [x1, x2])
-    st.info(f"For that point, **{votes['red']} of {n_estimators}** trees said red and **{votes['blue']}** said blue. Crowd and the crowd, as they say, ate.")
+    st.info(f"For that point, **{votes['red']} of {n_estimators}** trees said red and **{votes['blue']}** said blue.")
 
 
 @lesson.step("Boosting is a different crowd trick", beat="play")

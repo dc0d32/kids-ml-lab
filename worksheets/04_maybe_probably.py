@@ -4,7 +4,12 @@ import pandas as pd
 
 from kidsml.workbook import Question, Workbook
 
-Z_VALUES = pd.DataFrame({"z": [-4, -2, -1, 0, 1, 2, 4]})
+Z_VALUES = pd.DataFrame(
+    {
+        "z": [-4, -2, -1, 0, 1, 2, 4],
+        "sigmoid(z), rounded": [0.018, 0.119, 0.269, 0.500, 0.731, 0.881, 0.982],
+    }
+)
 
 PENALTIES = pd.DataFrame(
     [
@@ -22,11 +27,14 @@ WORKBOOK = Workbook(
     title="Workbook · Turn scores into confidence",
     intro=(
         "Logistic regression keeps the straight-line score, then squishes it into a probability. "
-        "Near the line, the model should shrug."
+        "Near the line, the model should shrug. The squish uses **e**, a particular number about 2.718."
     ),
     questions=[
         Question(
-            prompt="The S-curve is **sigmoid(z) = 1 / (1 + e^-z)**. Since e⁰ = 1, what is **sigmoid(0)**?",
+            prompt=(
+                "The S-curve is **sigmoid(z) = 1 / (1 + e^-z)**. Since e⁰ = 1, "
+                "what is **sigmoid(0)**?"
+            ),
             kind="number",
             answer=0.5,
             tolerance=0.01,
@@ -38,7 +46,7 @@ WORKBOOK = Workbook(
             ),
         ),
         Question(
-            prompt="Rounded to two decimals, what is **sigmoid(2)**?",
+            prompt="Using the table, rounded to two decimals, what is **sigmoid(2)**?",
             kind="number",
             answer=0.88,
             tolerance=0.01,

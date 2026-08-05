@@ -16,7 +16,16 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 
 from kidsml.plots import use_house_style
-from kidsml.zeeps import RULES, all_zeeps, encode, label_with, learning_curve, pretty
+from kidsml.zeeps import (
+    RULES,
+    all_zeeps,
+    encode,
+    label_with,
+    learning_curve,
+    pretty,
+    quiz_examples,
+    teaching_examples,
+)
 
 use_house_style()
 
@@ -63,25 +72,18 @@ SHUFFLE = 0
 
 labels = label_with(zeeps, SECRET)
 
-rng = np.random.default_rng(SHUFFLE)
-order = rng.permutation(len(zeeps))
-shown, hidden = order[:N_EXAMPLES], order[N_EXAMPLES : N_EXAMPLES + 3]
+# Deal examples on purpose. A random hand can accidentally show only "not a zeep",
+# which leaves no rule to spot. These rows always include useful yes and no evidence.
+shown = teaching_examples(SECRET, n=N_EXAMPLES, seed=SHUFFLE)
+hidden = quiz_examples(SECRET, shown, n=3, seed=SHUFFLE)
 
 examples = pretty(zeeps.iloc[shown]).copy()
 examples["zeep?"] = np.where(labels[shown], "✅ zeep", "❌ not a zeep")
 examples
 
 # %% [markdown]
-# Now work through the questions below. Type your answer in each box and press **Check** —
-# you'll find out whether you were right, and why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(0)
-
-# %% [markdown]
-# Here are the three creatures the questions asked about, and the real answers.
+# Here are three hidden creatures neither you nor the computer used for training, and the
+# real answers.
 
 # %%
 quiz = pretty(zeeps.iloc[hidden])
@@ -186,6 +188,15 @@ plt.show()
 # score. Some patterns take more evidence to spot — for you *and* for the machine.
 
 # %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(0)
+
+# %% [markdown]
 # ## 🏆 Go further
 #
 # 1. **Beat the machine.** Change `N_EXAMPLES` to `3` and re-run. Can you still get all
@@ -194,8 +205,8 @@ plt.show()
 # 2. **Change the secret rule.** Set `SECRET` to `"red_xor_big"` and run the whole thing
 #    again. Look back at the graph — why does this rule need so many more examples?
 #
-# 3. **Break it on purpose.** Try `SHUFFLE` values until all six of your examples are
-#    zeeps. Now what can the computer possibly learn? What would *you* learn?
+# 3. **Starve it on purpose.** Set `N_EXAMPLES` to `1` and change `SHUFFLE`. What can the
+#    computer possibly learn from one creature? What would *you* learn?
 #
 # 4. **Invent your own rule.** Open `kidsml/zeeps.py`, add an entry to `RULES` and
 #    `_RULE_FUNCS`, and see where your rule lands on the graph. Can you invent one the
@@ -205,7 +216,6 @@ plt.show()
 #    the things in your room — *anything blue*, or *anything you can eat*. Point at five
 #    things and say yes or no for each. See how many they need before they get it.
 
-# %% [markdown]
 # ---
 # **Next up:** Chapter 01 · *Lines That Predict* — where the guesses stop being
 # yes-or-no and start being numbers.

@@ -59,16 +59,6 @@ hand
 # %%
 print("Total squared mistake:", hand["mistake²"].sum())
 
-# %% [markdown]
-# Now work through the interactive workbook. Type your answer in each box and press
-# **Check** — you will find out whether you were right, and why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(1)
-
-# %% [markdown]
 # Why square instead of adding the raw mistakes? First, signs can hide errors:
 # **+2 + (-2) = 0**, even though the line missed twice. Squaring says
 # **2² + (-2)² = 4 + 4 = 8**, so both misses count.
@@ -131,8 +121,9 @@ plt.show()
 # and the best line sits near the low floor.
 #
 # A **gradient** is an arrow made from slopes. It says, "if you nudge **w** this
-# way and **b** that way, the loss rises fastest." To learn, the computer walks the
-# opposite way: downhill.
+# way and **b** that way, the average squared mistake rises fastest." Grown-ups
+# call that mistake score **loss**. To learn, the computer walks the opposite way:
+# downhill.
 
 # %%
 path = gradient_descent_line(weeks, dollars, w=0, b=0, lr=0.01, steps=90)
@@ -220,6 +211,15 @@ plt.show()
 # %% [markdown]
 # Look at the spread around the line. Low error does not mean perfect predictions;
 # it means better than nearby lines.
+
+# %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(1)
 
 # %% [markdown]
 # ## 🏆 Go further

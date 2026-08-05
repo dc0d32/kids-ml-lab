@@ -141,8 +141,9 @@ pd.DataFrame(
 )
 
 # %% [markdown]
-# Now make the line too strict: **w = (1, 1), b = -20**. The same red point gets
-# **1(6) + 1(5) - 20 = -9**, so the model guesses blue.
+# Now make the line too strict on purpose: **w = (1, 1), b = -20**. The same red point
+# gets **1(6) + 1(5) - 20 = -9**, so the model guesses blue. Starting with one clear
+# mistake lets us watch one correction happen.
 #
 # When a red point is missed, the perceptron adds the point's coordinates to the
 # weights and adds 1 to **b**.
@@ -162,16 +163,6 @@ print("new b:", b_after)
 # Changing **b** is different from changing **w**. It adds the same amount to every
 # point's score, so the boundary slides without turning.
 
-# %% [markdown]
-# Now work through the interactive workbook. Type your answer in each box and press
-# **Check** — you will find out whether you were right, and why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(2)
-
-# %% [markdown]
 # ## 👀 Take a look
 #
 # The circled red point caused the update. Watch how one correction changes the boundary.
@@ -262,6 +253,15 @@ plt.show()
 # %% [markdown]
 # Notice the leftover mistakes. The algorithm is not lazy; one straight line has
 # run out of road. The ruler hit the curb!
+
+# %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(2)
 
 # %% [markdown]
 # ## 🏆 Go further

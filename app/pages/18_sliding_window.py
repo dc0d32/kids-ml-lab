@@ -38,6 +38,7 @@ That is wrong for pictures. Nearby pixels team up to make strokes, corners, and 
 fix: one small window slides across the image like a tiny inspector.
 """
     )
+    lesson.say("That small grid of weights is called a **kernel**. The important trick is that the same kernel visits every spot.")
     lesson.mermaid(
         """
 graph LR
@@ -109,7 +110,7 @@ def _():
         ["Sharpen edges", "Blur by averaging neighbours", "Turn every pixel black"],
         correct=1,
         why="Each output cell becomes the average of its 3×3 neighbourhood, so sharp little jumps get smeared into nearby squares.",
-        key="ch17_blur_kernel",
+        key="ch18_blur_kernel",
     )
     if guess is None:
         return
@@ -123,16 +124,16 @@ def _():
 @lesson.step("Edit the 3×3 window live", beat="play")
 def _():
     lesson.say("Try the preset buttons, then change one number. The output jumps because it still obeys the same multiply-and-add rule you did by hand.")
-    if "ch17_kernel" not in st.session_state:
-        st.session_state["ch17_kernel"] = vision.KERNEL_PRESETS["vertical edge"].copy()
+    if "ch18_kernel" not in st.session_state:
+        st.session_state["ch18_kernel"] = vision.KERNEL_PRESETS["vertical edge"].copy()
 
     buttons = st.columns(6)
     for col, name in zip(buttons, vision.KERNEL_PRESETS):
-        if col.button(name, key=f"ch17_preset_{name}"):
-            st.session_state["ch17_kernel"] = vision.KERNEL_PRESETS[name].copy()
+        if col.button(name, key=f"ch18_preset_{name}"):
+            st.session_state["ch18_kernel"] = vision.KERNEL_PRESETS[name].copy()
             for r in range(3):
                 for c in range(3):
-                    st.session_state[f"ch17_kernel_{r}_{c}"] = float(st.session_state["ch17_kernel"][r, c])
+                    st.session_state[f"ch18_kernel_{r}_{c}"] = float(st.session_state["ch18_kernel"][r, c])
 
     values = []
     for r in range(3):
@@ -141,16 +142,16 @@ def _():
         for c in range(3):
             value = cols[c].number_input(
                 f"k{r}{c}",
-                value=float(st.session_state["ch17_kernel"][r, c]),
+                value=float(st.session_state["ch18_kernel"][r, c]),
                 step=0.25,
-                key=f"ch17_kernel_{r}_{c}",
+                key=f"ch18_kernel_{r}_{c}",
             )
             row.append(value)
         values.append(row)
     live_kernel = np.array(values, dtype=float)
-    st.session_state["ch17_kernel"] = live_kernel
+    st.session_state["ch18_kernel"] = live_kernel
 
-    which_image = st.radio("Try the kernel on:", ["a digit", "a bigger pattern"], horizontal=True, key="ch17_live_image")
+    which_image = st.radio("Try the kernel on:", ["a digit", "a bigger pattern"], horizontal=True, key="ch18_live_image")
     live_image = cached_digit_image() if which_image == "a digit" else vision.generated_pattern(28)
     fig, conv = vision.plot_kernel_demo(live_image, live_kernel)
     lesson.show(fig)
@@ -182,6 +183,7 @@ graph LR
         """
 model = TinyCNN()
 for image_batch, labels in train_loader:
+    optimizer.zero_grad()
     guesses = model(image_batch)
     loss = cross_entropy(guesses, labels)
     loss.backward()
@@ -198,7 +200,7 @@ def _():
         ["The plain MLP", "The CNN with shared sliding windows", "They must tie"],
         correct=1,
         why="The CNN reuses a kernel everywhere, so one edge clue can fire in many locations.",
-        key="ch17_cnn_wins",
+        key="ch18_cnn_wins",
     )
     if guess is None:
         return
@@ -251,7 +253,7 @@ def _():
 1. **Diagonal hunter.** Design a 3×3 kernel that lights up on diagonal edges.
 2. **Tiny champion.** In the notebook, reduce the CNN channels. What is the fewest that still beats the MLP?
 3. **Upside down.** Flip a test image upside down and ask the CNN. It never saw that world.
-4. **Compare to Chapter 15.** Is the CNN better because it has more weights, or because the weights are reused?
+4. **Compare to Chapter 17.** Is the CNN better because it has more weights, or because the weights are reused?
 """
     )
     lesson.kid_corner("Move a 3 by 3 Lego window over a drawing. Shout “edge!” whenever one side is empty and the other side is full.")

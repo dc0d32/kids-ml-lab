@@ -81,6 +81,9 @@ def _():
 A bucket is **mixed** when different answers are still stuck together. Six
 animals with 3 flyers and 3 non-flyers is very mixed. Four flyers and 0
 non-flyers is clean.
+
+To score that bucket, use Gini mix: `1 - p_fly² - p_not_fly²`. The fractions
+come from the bucket itself.
 """
     )
     splits = cached_creature_splits()
@@ -90,6 +93,8 @@ non-flyers is clean.
         """
 For `has_wings`, the yes bucket has 6 animals and mix `0.444`, while the no
 bucket has 4 animals and mix `0`. So the split score is `(6×0.444 + 4×0) / 10 = 0.267`.
+
+The yes-bucket arithmetic is `1 - (4/6)² - (2/6)² = 1 - 16/36 - 4/36 = 16/36 = 0.444`.
 """
     )
 

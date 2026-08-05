@@ -56,7 +56,7 @@ WORKBOOK = Workbook(
             why="A fixed window is a hard wall. Three letters of memory means the fourth-back letter is invisible, even if it would be useful.",
         ),
         Question(
-            prompt="The 2D embedding plot often puts vowels near each other. Who told the model what a vowel is?",
+            prompt="The 2D embedding plot puts vowels near each other. Who told the model what a vowel is?",
             kind="text",
             answer=["nobody", "no one"],
             why="Nobody. Vowels cluster because they behave alike when the model guesses the next letter. That surprising little map comes from training.",

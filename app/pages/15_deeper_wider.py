@@ -103,9 +103,18 @@ def _():
         """
 Count the learnable numbers in `[2, 5, 5, 1]`. Every arrow is a weight, and every non-input
 neuron gets one bias. We are counting the knobs the model can turn.
+
+We picked this size because it has both width (five neurons in a layer) and depth (two
+hidden layers), but the arithmetic still fits on one screen.
 """
     )
-    counts = pd.DataFrame({"layer": ["2 → 5", "5 → 5", "5 → 1", "biases"], "count": [10, 25, 5, 11]})
+    counts = pd.DataFrame(
+        {
+            "layer": ["2 → 5", "5 → 5", "5 → 1", "biases"],
+            "working": ["2*5", "5*5", "5*1", "5 + 5 + 1"],
+            "count": [10, 25, 5, 11],
+        }
+    )
     st.dataframe(counts, hide_index=True, width="content")
     lesson.say("That is **40 weights + 11 biases = 51 parameters**. A bigger pile can fit more shapes, including shapes caused by bad luck.")
     lesson.jargon("parameters", "The weights and biases: every adjustable number inside the model.")
@@ -118,7 +127,7 @@ def _():
         ["sigmoid", "tanh", "ReLU"],
         correct=2,
         why="ReLU is a flat floor glued to a straight ramp, so many ReLUs can build folded-paper boundaries with creases.",
-        key="ch14_activation_creases",
+        key="ch15_activation_creases",
     )
     if guess is None:
         return
@@ -162,7 +171,7 @@ some dots are lies with coordinates.
         ["It keeps falling with train loss", "It turns around and climbs", "It freezes perfectly flat"],
         correct=1,
         why="A high-capacity network can spend its extra wiggles chasing label noise. Practice dots look happier while fresh dots want the calmer rule underneath.",
-        key="ch14_test_loss_turn",
+        key="ch15_test_loss_turn",
     )
     if guess is None:
         return
@@ -205,7 +214,7 @@ def _():
 def _():
     knobs, picture = lesson.controls()
     with knobs:
-        decay = st.slider("Weight decay", 0.0, 0.08, 0.02, 0.01, key="ch14_weight_decay")
+        decay = st.slider("Weight decay", 0.0, 0.08, 0.02, 0.01, key="ch15_weight_decay")
     with picture:
         X_train, y_train, _, _, over_model, train_losses, test_losses = overfit_story(decay, False)
         draw_losses(train_losses, test_losses, "Weight decay calms the weights")
@@ -223,7 +232,7 @@ def _():
         ["It shouts louder", "It matters less", "It deletes the whole pattern"],
         correct=1,
         why="A single noisy point has less power when many honest neighbours surround it.",
-        key="ch14_more_data_noise",
+        key="ch15_more_data_noise",
     )
     if guess is None:
         return

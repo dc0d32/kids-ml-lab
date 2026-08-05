@@ -29,6 +29,8 @@ use_house_style()
 # ## 🎣 Start here
 #
 # Here is the fix. One small window slides across the image like a tiny inspector.
+# That small grid of weights is called a **kernel**. The key trick is that the same
+# kernel visits every spot.
 #
 # ```mermaid
 # graph LR
@@ -207,7 +209,7 @@ plt.show()
 # 1. **Diagonal hunter.** Design a 3×3 kernel that lights up on diagonal edges.
 # 2. **Tiny champion.** Change the CNN channels in `kidsml/vision.py` in a copy of the function. What is the fewest that still beats the MLP?
 # 3. **Upside down.** Flip a test image upside down and ask the CNN. It never saw that world.
-# 4. **Compare to Chapter 15.** Is the CNN better because it has more weights, or because the weights are reused?
+# 4. **Compare to Chapter 17.** Is the CNN better because it has more weights, or because the weights are reused?
 # 5. 🧸 **Little Kid Corner:** Move a 3 by 3 Lego window over a drawing. Shout “edge!” whenever one side is empty and the other side is full.
 
 # %%

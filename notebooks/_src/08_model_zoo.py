@@ -7,10 +7,10 @@
 #
 # ---
 #
-# You now know several guessers: lines, probabilities, trees, crowds, and widest roads.
-# Which one should you use? The honest answer is: **try them and see**. But *see* is
-# harder than it sounds, because a model can look brilliant on the rows it studied and
-# stumble on new rows.
+# You now know logistic regression from Chapter 4, decision trees from Chapter 5, random
+# forests and boosting from Chapter 6, and support vector machines from Chapter 7. Which
+# one should you use? The honest answer is: **try them and see**. But *see* is harder than
+# it sounds, because a model can look brilliant on the rows it studied and stumble on new rows.
 
 # %%
 import matplotlib.pyplot as plt
@@ -110,8 +110,16 @@ workbook.render(8)
 # Here is the model zoo. Every model gets the same training rows and the same hidden test
 # rows. That keeps the race fair.
 #
-# Watch the shapes. Lines like straight-ish borders. Trees stack boxes. RBF SVMs pour
-# smooth islands. kNN listens to nearby points. No personality wins every kind of problem.
+# Decode the labels before you read the mini-plots: `logistic` means logistic regression,
+# `tree` means decision tree, `forest` means random forest, `boosting` is Chapter 6's line
+# of little tree fixes, and `linear SVM` / `rbf SVM` are Chapter 7 roads.
+#
+# One guest is new: **k-nearest neighbors** (kNN). It stores the training rows and asks the
+# nearby points to vote on a new row.
+#
+# Watch the shapes. Logistic likes straight-ish borders. Trees stack boxes. Boosting stacks
+# little fixes. RBF SVMs pour smooth islands. kNN listens to nearby points. No personality
+# wins every kind of problem.
 
 # %%
 fig = plot_zoo(shape="moons", n=180, noise=0.20, seed=0)

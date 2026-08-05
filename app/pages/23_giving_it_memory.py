@@ -78,7 +78,7 @@ def _():
         ["c", "a", "t", "."],
         correct=2,
         why="The window slides across `.cat.` like a little scanner. After `.ca`, the next character is `t`.",
-        key="ch22_window",
+        key="ch23_window",
     )
     if guess is None:
         return
@@ -109,7 +109,7 @@ def _():
         ["Letters scattered randomly", "Vowels sitting near each other", "Alphabetical order"],
         correct=1,
         why="Vowels do similar jobs when the model guesses the next letter, so training tends to park them near each other.",
-        key="ch22_vowels",
+        key="ch23_vowels",
     )
     if guess is None:
         return
@@ -117,8 +117,8 @@ def _():
     fig = plot_embeddings(bundle2)
     lesson.show(fig)
     lesson.look_for("a, e, i, o, u. Nobody handed the model vowel labels; training tugged them into a similar neighbourhood.")
-    lesson.aha("The vowels often land near each other! Nobody told the model what a vowel is. It grouped them because they behave alike when guessing the next letter.")
-    st.caption("This is a real training run, not a stored picture. The vowels land together on every seed we tried, though how tidy the grouping looks does vary.")
+    lesson.aha("The vowels land near each other! Nobody told the model what a vowel is. It grouped them because they behave alike when guessing the next letter.")
+    st.caption("This is a real training run, not a stored picture. The vowels landed together on every seed we tried; the exact shape still wiggles.")
 
 
 @lesson.step("Memory length changes the names", beat="play")
@@ -127,10 +127,10 @@ def _():
     models = trained_context_models()
     knobs, picture = lesson.controls()
     with knobs:
-        block_size = st.select_slider("How many letters can it remember?", options=[1, 3, 5], value=3, key="ch22_block_size")
-        temperature = st.slider("Temperature", 0.05, 2.0, 0.85, 0.05, key="ch22_temp")
-        seed = st.slider("Random seed", 0, 99, 4, key="ch22_seed")
-        starter = st.text_input("Start a name with these letters", value="ma", key="ch22_starter")
+        block_size = st.select_slider("How many letters can it remember?", options=[1, 3, 5], value=3, key="ch23_block_size")
+        temperature = st.slider("Temperature", 0.05, 2.0, 0.85, 0.05, key="ch23_temp")
+        seed = st.slider("Random seed", 0, 99, 4, key="ch23_seed")
+        starter = st.text_input("Start a name with these letters", value="ma", key="ch23_starter")
     chosen = models[block_size]
     with picture:
         samples = [sample_mlp(chosen, start=starter, temperature=temperature, seed=seed + i, max_len=18) for i in range(10)]
@@ -143,7 +143,7 @@ def _():
 def _():
     lesson.say("Training is the model grinding hidden words down from surprising to less surprising. The curve bumps because it learns from small batches, not the whole mountain at once.")
     models = trained_context_models()
-    block_size = st.select_slider("Which memory length?", options=[1, 3, 5], value=3, key="ch22_curve_block")
+    block_size = st.select_slider("Which memory length?", options=[1, 3, 5], value=3, key="ch23_curve_block")
     fig, ax = lesson.figure(6.5, 3.2)
     loss_curve(models[block_size].losses, ax=ax, title=f"Training loss, block size {block_size}", ylabel="surprise")
     lesson.show(fig)
@@ -159,7 +159,7 @@ def _():
         ["Random guessing", "The Chapter 22 bigram", "The three-letter MLP"],
         correct=2,
         why="The MLP can hold three letters of context in its hand, so it beats the one-letter tally chart here.",
-        key="ch22_loss_compare",
+        key="ch23_loss_compare",
     )
     if guess is None:
         return
@@ -176,6 +176,16 @@ def _():
     ax.set_title("Three-letter memory helps")
     lesson.show(fig)
     lesson.look_for("the MLP bar. Memory beats counting one letter back!")
+    st.dataframe(
+        pd.DataFrame(
+            {
+                "model": ["random guessing", "Chapter 22 bigram", "three-letter MLP"],
+                "held-out surprise": [random_loss, bigram_loss, main.test_loss],
+            }
+        ),
+        hide_index=True,
+        width="content",
+    )
 
 
 @lesson.step("Hear the difference", beat="forreal")
@@ -186,8 +196,8 @@ def _():
     vocab = main.vocab
     counts = bigram_counts(main.train_words, vocab)
     probs = counts_to_probs(counts, smoothing=1.0)
-    temperature = st.slider("Temperature", 0.05, 2.0, 0.85, 0.05, key="ch22_compare_temp")
-    seed = st.slider("Random seed", 0, 99, 4, key="ch22_compare_seed")
+    temperature = st.slider("Temperature", 0.05, 2.0, 0.85, 0.05, key="ch23_compare_temp")
+    seed = st.slider("Random seed", 0, 99, 4, key="ch23_compare_seed")
     rng = np.random.default_rng(seed)
     bigram_names = [sample_bigram(probs, vocab, rng=rng, temperature=temperature, max_len=18) for _ in range(8)]
     mlp_names = [sample_mlp(main, temperature=temperature, seed=seed + i, max_len=18) for i in range(8)]

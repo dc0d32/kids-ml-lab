@@ -139,8 +139,9 @@ is where we set the bar. Score above zero means the total beat 8.
 def _():
     lesson.say(
         """
-Time to check the guess. Run **score = 1·x1 + 1·x2 − 8** on the first five dogs
-and see whether the sign matches the truth.
+Time to check the guess. Run **score = 1·x1 + 1·x2 − 8** on five selected dogs
+and see whether the sign matches the truth. We picked a mix of puppies and grown
+dogs, not the first five rows, so the table has both answers.
 
 Take the dog at **(6, 5)**: **1(6) + 1(5) − 8 = 3**. Positive, so the line calls
 it a grown dog.
@@ -165,8 +166,9 @@ it a grown dog.
 def _():
     lesson.say(
         """
-Now make the line too strict: **w = (1, 1), b = -20**. The same red point gets
-**1(6) + 1(5) - 20 = -9**, so the model guesses blue.
+Now make the line too strict on purpose: **w = (1, 1), b = -20**. The same red
+point gets **1(6) + 1(5) - 20 = -9**, so the model guesses blue. Starting with
+one clear mistake lets us watch one correction happen.
 """
     )
     guess = lesson.predict(

@@ -40,22 +40,23 @@ When you show it a picture, it gets a spreadsheet. Boom: squint at this 8 by 8 g
 of numbers and try to read the digit hiding inside.
 """
     )
+    _, _, images = cached_digits()
+    example_index = 3
+    fig, ax = lesson.figure(4.2, 4.2)
+    show_image(images[example_index], ax=ax, numbers=True, title="Which digit is this grid?")
+    lesson.show(fig)
+    lesson.look_for("the bright cells. They stack into strokes before the model sees anything.")
     guess = lesson.predict(
         "Which digit is hiding in the grid?",
         ["1", "3", "8", "9"],
         correct=1,
         why="The bright numbers stack into the top, middle, and bottom strokes of a 3.",
-        key="ch16_read_grid",
+        key="ch17_read_grid",
     )
     if guess is None:
         return
 
-    _, _, images = cached_digits()
-    example_index = 3
-    fig, ax = lesson.figure(4.2, 4.2)
-    show_image(images[example_index], ax=ax, numbers=True, title="This is a digit 3")
-    lesson.show(fig)
-    lesson.look_for("the bright cells. Your eyes snap those numbers into strokes before the model sees anything.")
+    lesson.aha("Your eyes read the numbers as a 3. The picture is not hiding behind the grid; the grid is the picture.")
 
 
 @lesson.step("The square becomes one row", beat="hook")
@@ -139,7 +140,7 @@ def _():
 
 @lesson.step("Draw a digit", beat="play")
 def _():
-    lesson.say("Draw with white on the black square. The app crops your drawing, shrinks it to 8 by 8, and squashes it onto the same 0–16 number scale as the training digits.")
+    lesson.say("Draw with white on the black square. Keep the digit large and centred, because the training digits were neat and centred too. The app crops your drawing, shrinks it to 8 by 8, and squashes it onto the same 0–16 number scale.")
     report = cached_digit_model()
     left, right = st.columns([1, 1], gap="large")
     with left:
@@ -155,7 +156,7 @@ def _():
                 height=280,
                 width=280,
                 drawing_mode="freedraw",
-                key="ch16_digit_canvas",
+                key="ch17_digit_canvas",
             )
             grid = vision.canvas_to_digit_grid(canvas.image_data)
     with right:
@@ -177,7 +178,7 @@ def _():
         ["Yes, because both read the same strokes", "No, because it sees only numbers", "No, it never makes mistakes"],
         correct=0,
         why="A loopy 9 can look like a 4, a messy 5 can look like a 3, and a skinny 7 can look like a 1. Humans and models trip on the same strokes.",
-        key="ch16_confusion_prediction",
+        key="ch17_confusion_prediction",
     )
     if guess is None:
         return

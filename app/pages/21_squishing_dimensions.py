@@ -67,7 +67,7 @@ graph LR
 """,
         height=240,
     )
-    lesson.look_for("the last box. PCA judges a shadow by how much spread survives the squish.")
+    lesson.look_for("the last box. Spread means the points stayed far apart after the squish.")
 
 
 @lesson.step("Keep one number", beat="byhand")
@@ -87,7 +87,7 @@ If the points stay spread apart, the shadow kept more information about who is w
         ["The x shadow", "The y shadow", "They keep the same amount"],
         correct=0,
         why="The x shadow keeps A and D far apart, while the y shadow squishes pairs together.",
-        key="ch20_hand_shadow",
+        key="ch21_hand_shadow",
     )
     if guess is None:
         return
@@ -95,6 +95,7 @@ If the points stay spread apart, the shadow kept more information about who is w
     a.metric("x spread", f"{spread(table['x shadow']):.1f}")
     b.metric("y spread", f"{spread(table['y shadow']):.1f}")
     lesson.aha("Spread is information because it keeps points different from each other.")
+    lesson.jargon("variance", "Spread measured from the middle. A bigger variance means the shadow kept the points pulled farther apart.")
     lesson.jargon("principal component analysis", "Search for the shadow where the points stay as spread out as possible.")
 
 
@@ -112,7 +113,7 @@ A tight blob means the shadow forgot most of the differences between the points.
         ["The angle with the widest shadow", "The angle with the neatest circle", "The angle with the smallest blob"],
         correct=0,
         why="PCA does not care about prettiness. It keeps the shadow with the most spread.",
-        key="ch20_pca_angle",
+        key="ch21_pca_angle",
     )
     if guess is None:
         return
@@ -120,8 +121,8 @@ A tight blob means the shadow forgot most of the differences between the points.
     X = cached_cloud()
     knobs, picture = lesson.controls()
     with knobs:
-        yaw = st.slider("shadow angle left-right", -90, 90, 0, 5, key="ch20_yaw")
-        pitch = st.slider("shadow tilt", -80, 80, 0, 5, key="ch20_pitch")
+        yaw = st.slider("shadow angle left-right", -90, 90, 0, 5, key="ch21_yaw")
+        pitch = st.slider("shadow tilt", -80, 80, 0, 5, key="ch21_pitch")
     shadow = shadow_projection(X, yaw, pitch)
     _, pca_keep = pca_shadow_answer(X)
     your_keep = variance_captured(X, shadow)
@@ -143,14 +144,14 @@ def _():
         ["1 or 2", "Around 8 to 12", "Nearly all 64"],
         correct=1,
         why="Most digits stay readable after PCA keeps a surprisingly small number of directions.",
-        key="ch20_digit_components",
+        key="ch21_digit_components",
     )
     if guess is None:
         return
     knobs, picture = lesson.controls()
     with knobs:
-        index = st.slider("which digit image?", 0, 50, 8, key="ch20_digit_index")
-        components = st.slider("components kept", 1, 64, 12, key="ch20_components")
+        index = st.slider("which digit image?", 0, 50, 8, key="ch21_digit_index")
+        components = st.slider("components kept", 1, 64, 12, key="ch21_components")
     fig, curve = plot_reconstruction(index=index, n_components=components)
     with picture:
         lesson.show(fig)
@@ -177,7 +178,7 @@ Clusters appear even though PCA never saw a digit label. Surprise: the shadow ke
     )
     fig, kept = cached_digits_pca_plot()
     lesson.show(fig)
-    lesson.look_for("digits that overlap. Those are often the same pairs that confused Chapter 17.")
+    lesson.look_for("digits that overlap. Chapter 17's confusion matrix warned you about the same idea: shared strokes make shared mistakes.")
     st.metric("variance kept in two PCA shadows", f"{kept:.1%}")
 
 

@@ -119,8 +119,7 @@ plt.show()
 
 # %% [markdown]
 # Look at the edges. The single tree often has sharp little bites. The forest is still
-# made of blocky cuts, but the vote can sand down lonely mistakes. Crowd and the crowd, as they say, ate
-# complete.
+# made of blocky cuts, but the vote can sand down lonely mistakes.
 
 # %%
 forest_vote_counts(forest, [0.0, 0.0])

@@ -73,13 +73,14 @@ print("weighted average =", float((weights * values).sum()))
 # %% [markdown]
 # ## 👀 Take a look
 #
-# A position may only look backward. If it could see forward, it would peek at the answer
-# key. That is data leakage from Chapter 10 wearing a new costume.
+# A mask is a cover sheet for the score table. A **causal** mask blocks every future
+# square, because future letters would hand over the answer. That is data leakage from
+# Chapter 10 wearing a new costume.
 
 # %%
 mask = np.tril(np.ones((8, 8)))
 fig, ax = plt.subplots(figsize=(4.8, 4.2))
-heatmap(mask, xlabels=list(range(1, 9)), ylabels=list(range(1, 9)), ax=ax, title="Causal mask")
+heatmap(mask, xlabels=list(range(1, 9)), ylabels=list(range(1, 9)), ax=ax, title="Causal mask: bright cells are allowed")
 ax.set_xlabel("place it wants to look")
 ax.set_ylabel("place making a guess")
 plt.show()

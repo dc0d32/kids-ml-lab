@@ -29,9 +29,9 @@ use_house_style()
 # Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
 # but it is not a new kind of thinking.
 #
-# The promise is bigger: tensors remember how they were made, like recipe cards stuck to
-# the numbers. If PyTorch remembers the forward recipe, it can walk that recipe backward
-# and fill in gradients for every weight. Chapter 13, at framework speed!
+# The promise is bigger: PyTorch calls a recipe-tracking array a tensor. When you call
+# `backward()`, PyTorch walks that recipe backward and fills in gradients for every weight.
+# Chapter 13, at framework speed!
 #
 # ```mermaid
 # graph LR
@@ -161,4 +161,4 @@ plt.show()
 #    to see which step made the splash.
 #
 # ---
-# **Next up:** Chapter 17 · *Pictures Become Numbers* — every image becomes a grid a network can read.
+# **Next up:** Chapter 17 · *Pictures Are Numbers* — every image becomes a grid a network can read.

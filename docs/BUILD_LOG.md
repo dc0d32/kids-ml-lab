@@ -412,3 +412,81 @@ squares) but opened with no framing at all, so it gained a sentence.
 has something drawn before its gate. Verified against the original broken code.
 
 **527 tests pass.**
+
+---
+
+## 2026-08-05 — Continuity repair for chapters 10-15
+
+Audited the neural-network spine against the "reader has what they need when they need it"
+standard. The fixes were continuity, not new mechanics:
+
+- Chapter 10 now introduces the confusion matrix before precision/recall formulas, defines
+  precision and recall in sentences first, and points to Chapter 11 instead of skipping to
+  Chapter 12.
+- Chapter 11 now lands after Chapter 10 and explicitly carries the linear-collapse result
+  into Chapter 12's squish and Chapter 14's hidden features.
+- Chapter 12 now picks up Chapter 11's "straight layers collapse" argument, motivates the
+  hand-picked neuron numbers, avoids using "loss" before Chapter 13, and keeps the workbook
+  in the challenge beat.
+- Chapter 13 now defines loss before gradient, gradient before chain rule, shows the
+  sigmoid-slope arithmetic in the by-hand step, and keeps the workbook in the challenge
+  beat.
+- Chapter 14's XOR hidden-space table is now backed by worked output-score arithmetic; the
+  notebook gained the same learned hidden-coordinate table and 3D hidden-space view as the
+  page.
+- Chapter 15's parameter-count table now shows the multiplication for every count, and the
+  notebook mirrors the overfitting fixes: early stopping, weight decay, and more data.
+
+Verified with `./run.sh build 10 11 12 13 14 15` and
+`timeout 900 uv run pytest tests -q -k "10_ or 11_ or 12_ or 13_ or 14_ or 15_"`:
+**60 passed, 467 deselected in 46.64s.**
+
+---
+
+## 2026-08-05 — Full continuity sweep
+
+Owner, after finding two broken chapters in ten minutes: *"do a full sweep on continuity."*
+Fair. Five agents read all 26 chapters end to end — page, notebook and workbook — against a
+ten-point checklist built from the bugs already found.
+
+**Clean chapters: none. Every single chapter had at least one break.**
+
+The recurring shapes, all of which pass any test that only asks "does the code run":
+
+- **Data used before it is introduced.** Tables of bare numbers with no story, no picture,
+  and no statement of what is being decided. Chapter 09 modelled four datasets before
+  introducing them.
+- **Numbers with no provenance.** `b = -20`, `smoothing = 1`, a parameter table with no
+  workings.
+- **Terms used before they are explained.** kernel, residual, embedding, spread, loss,
+  gradient, tensor — each named before the idea landed, somewhere.
+- **Questions about invisible things.** Chapter 17 hid a grid behind its prediction gate,
+  exactly as chapter 03 had.
+- **Ordered data sampled with `.head()`.** Chapter 19 again. Fifth occurrence.
+- **Page/notebook drift.** Chapter 00's notebook still had the broken random deal after the
+  page was fixed — the point fix that missed half the chapter.
+- **Stale artefacts from the renumber.** Widget keys naming the wrong chapter, a wrong
+  "Next up" teaser, stale chapter *ranges* in chapter 25 (single references had been
+  checked; ranges had not).
+- **A correctness bug in shown code**: chapter 18's CNN snippet omitted `zero_grad()`.
+
+### Plotly was rendering white in a dark app
+
+Found while fixing chapter 03's missing 3D plot. **Every plotly figure in the course was on
+a white background** — the exact flashbang the dark theme exists to prevent. It was missed
+because the matplotlib figures beside them looked fine.
+
+Fixed at the source rather than per call site: `use_house_style()` now registers a `kidsml`
+plotly template and sets `plotly_dark+kidsml` as the **default**, so figures are dark even
+when built inside a helper that never calls `style_plotly`. A first attempt checked call
+sites for `style_plotly(...)` and missed three chapters for exactly that reason — the test
+now checks the resolved template instead.
+
+### Chapter 03's missing 3D plot
+
+The step called *Invent a height* explained the lift, drew a flowchart, and never showed
+it. The actual 3D view lived in the following step. It now shows the lifted cloud right
+where the reader is told the ring rises, and the next step adds the cutting plane — see the
+lift, then see the cut.
+
+**529 tests pass.**

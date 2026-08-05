@@ -50,6 +50,14 @@ WORKBOOK = Workbook(
             why="The y values are also 1, 2, and 1, so the y average is 4/3 too. The centre lands at the middle of the same tiny triangle.",
         ),
         Question(
+            prompt="The right group is (7,7), (8,7), (7,8). What is its new x coordinate?",
+            kind="number",
+            answer=22 / 3,
+            tolerance=0.02,
+            hint="Average the x values: (7 + 8 + 7) / 3.",
+            why="The right centre moves to the middle of its three points. The x average is 22/3, about 7.33, matching the by-hand round.",
+        ),
+        Question(
             prompt="After the centres move, what happens on round two?",
             kind="choice",
             choices=["the groups change", "nothing changes", "all points swap sides"],
@@ -60,7 +68,7 @@ WORKBOOK = Workbook(
             ),
         ),
         Question(
-            prompt="If k equals the number of points, what happens to the total distance to each centre?",
+            prompt="If k equals the number of points, what happens to the total squared distance to each centre?",
             kind="choice",
             choices=["it becomes zero", "it becomes huge", "it cannot be measured"],
             answer="it becomes zero",

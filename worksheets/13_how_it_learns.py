@@ -5,7 +5,7 @@ from kidsml.workbook import Question, Workbook
 WORKBOOK = Workbook(
     chapter=13,
     title='Workbook · One downhill nudge',
-    intro='One data point: x1 = 1, x2 = 2, answer y = 1. Start with w1 = 0, w2 = 0, b = 0. Use lr = 0.5.',
+    intro='One data point: x1 = 1, x2 = 2, answer y = 1. Start with w1 = 0, w2 = 0, b = 0. Loss is squared error, and the gradient tells each number which way to move. Use lr = 0.5.',
     questions=[
         Question(
             prompt='What is z = w1*x1 + w2*x2 + b at the start?',

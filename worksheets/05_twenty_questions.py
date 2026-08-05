@@ -63,7 +63,7 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             table=CREATURES,
             hint="The no-wings rows are cat, elephant, dolphin, and goldfish.",
-            why="The no bucket has **0** flyers and 4 non-flyers. That bucket is clean glass: mix 0, the kind of stopping place a tree loves.",
+            why="The no bucket has **0** flyers and 4 non-flyers. That bucket is clean glass: every creature points the same way, the kind of stopping place a tree loves.",
         ),
         Question(
             prompt="A bucket has 4 yes and 0 no. Using **mix = 1 - p_yes² - p_no²**, what is the mix?",

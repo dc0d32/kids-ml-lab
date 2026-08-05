@@ -15,6 +15,7 @@
 
 # %%
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from kidsml import workbook
 from kidsml.plots import use_house_style
@@ -57,7 +58,7 @@ use_house_style()
 #
 # Repeat until nothing changes. That stopping point is guaranteed to arrive.
 #
-# Why must it stop? Each round either makes the total point-to-centre distance smaller, or
+# Why must it stop? Each round either makes the total squared point-to-centre distance smaller, or
 # nothing changes. There are only so many possible assignments of points to centres. The
 # loop cannot keep finding a new smaller setup forever.
 #
@@ -75,10 +76,12 @@ use_house_style()
 
 # %%
 X, centres = kmeans_hand_points()
-print("points")
-print(X)
-print("starting centres")
-print(centres)
+points = pd.DataFrame(X, columns=["x", "y"])
+points.insert(0, "point", [f"P{i}" for i in range(1, 7)])
+points
+
+# %%
+pd.DataFrame(centres, columns=["x", "y"], index=["left", "right"])
 
 # %%
 assignments, new_centres = kmeans_hand_round()
@@ -88,6 +91,8 @@ assignments
 new_centres
 
 # %% [markdown]
+# The left centre moves to `((1+1+2)/3, (1+2+1)/3) = (1.33, 1.33)`. The right centre
+# moves to `((7+8+7)/3, (7+7+8)/3) = (7.33, 7.33)`. Those numbers match the table.
 # Round two changes nothing. The centres have converged!
 #
 # > 📖 **Grown-ups call this:** **k-means** means using k moving centres to make k piles.
@@ -124,9 +129,9 @@ plt.show()
 #
 # How many clumps should there be? The honest answer is: you judge it.
 #
-# Inertia means total distance from every point to its own centre. It always falls as k
-# rises because adding a centre gives the algorithm another bucket for points. It can keep
-# the old setup or improve it.
+# Inertia means total squared distance from every point to its own centre. It always falls
+# as k rises because adding a centre gives the algorithm another bucket for points. It can
+# keep the old setup or improve it.
 #
 # That makes "minimise inertia" useless advice by itself. With one centre per point,
 # inertia hits zero and the clusters teach you nothing. The elbow asks where the

@@ -34,8 +34,10 @@ use_house_style()
 # graph LR
 #     X1[x₁] --> H1[h₁]
 #     X1 --> H2[h₂]
-#     X2[x₂] --> H2
-#     X2 --> H3[h₃]
+#     X1 --> H3[h₃]
+#     X2[x₂] --> H1
+#     X2 --> H2
+#     X2 --> H3
 #     H1 --> O[output neuron]
 #     H2 --> O
 #     H3 --> O
@@ -89,24 +91,47 @@ plt.show()
 # automated.
 
 # %% [markdown]
-# Work these out on scrap paper, then type your answers in. You'll be told not only
-# whether you were right, but why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(14)
-
-# %% [markdown]
 # ## 👀 Take a look
 #
-# Train `[2, 3, 1]` on XOR, then draw each hidden neuron's line and the final boundary.
+# Train `[2, 3, 1]` on XOR, then inspect the hidden coordinates before drawing the final
+# boundary.
 
 # %%
 X_xor, y_xor = xor_exact()
 snaps = mlp_snapshot_training([2, 3, 1], X_xor, y_xor, lr=0.8, epochs=3000, every=150, activation='tanh', seed=2)
 model = model_from_snapshot([2, 3, 1], snaps[-1], activation='tanh', seed=2)
 
+# %%
+hidden = model.hidden_outputs(X_xor)
+out = model.predict_proba(X_xor)
+pd.DataFrame(
+    {
+        'x1': X_xor[:, 0],
+        'x2': X_xor[:, 1],
+        'h1': hidden[:, 0],
+        'h2': hidden[:, 1],
+        'h3': hidden[:, 2],
+        'output': out,
+        'XOR': y_xor,
+    }
+).round(3)
+
+# %% [markdown]
+# Look for rows with the same XOR answer. They are no longer trapped in opposite corners;
+# the map has been folded before the output neuron makes one final cut.
+
+# %%
+fig = plt.figure(figsize=(6.2, 5.0))
+ax = fig.add_subplot(111, projection='3d')
+colors = np.where(y_xor == 1, '#EF4444', '#3B82F6')
+ax.scatter(hidden[:, 0], hidden[:, 1], hidden[:, 2], c=colors, s=90, edgecolor='white', linewidth=1.0)
+ax.set_xlabel('h1')
+ax.set_ylabel('h2')
+ax.set_zlabel('h3')
+ax.set_title('XOR points after the hidden layer')
+plt.show()
+
+# %%
 fig, ax = plt.subplots(figsize=(5.4, 4.6))
 boundary_with_hidden(model, X_xor, y_xor, ax=ax, title='Hidden lines plus final boundary', steps=180)
 plt.show()
@@ -165,6 +190,14 @@ plt.show()
 #
 # ## 🏆 Go further
 #
+# Work through the interactive questions, then try these quests.
+
+# %%
+from kidsml import workbook
+
+workbook.render(14)
+
+# %% [markdown]
 # 1. **Smallest XOR solver.** What is the fewest hidden neurons that can solve XOR?
 # 2. **Try spiral.** How many hidden neurons does it need before it starts curling the right way?
 # 3. **Set XOR weights by hand.** Use OR-ish and AND-ish to beat training.

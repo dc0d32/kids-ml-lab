@@ -24,9 +24,15 @@ lesson.begin(7)
 def _():
     lesson.say(
         """
+Chapter 3 showed shapes a straight line cannot split. This chapter adds another
+bendy escape: pick the safest road, then let that road curve when it needs to.
+
 A separator line can win and still sweat. Chapter 2's perceptron stops when it finds
 **any** line that separates the dots. That is enough for yesterday's dots, but it may
 be a nervous choice for tomorrow's dot.
+
+Imagine a new point lands a tiny bit away from where you expected. A line that hugs
+one class has no shoulder; one small wiggle can shove the new point across the road.
 
 Your instinct says: pick the line with the biggest empty gap around it. Wider roads survive
 small surprises better.
@@ -137,6 +143,9 @@ def _():
 Real data is messy, so the road sometimes has to choose: stay wide, or bend hard to fix
 every training dot.
 
+In these next pictures we use an **RBF road**: a bendy road where each point tugs on
+nearby space.
+
 `C` is the strictness knob. Low C keeps a wide road even if a few training dots are on the
 wrong side. High C makes training mistakes expensive.
 """
@@ -184,6 +193,20 @@ High gamma means each point reaches a short distance, which can create tiny isla
     lesson.careful("A kid-repeat version: **C is strictness; gamma is reach**. Strict and short-reach can memorise islands.")
 
 
+@lesson.step("Road styles are kernels", beat="play")
+def _():
+    lesson.say(
+        """
+The road style tells the SVM what shapes it is allowed to draw.
+
+**Linear** means one straight road. **Polynomial** makes smooth curvy roads.
+**RBF** uses distance from points, so it can make smooth islands.
+"""
+    )
+    lesson.jargon("kernel", "The road style: the rule for what shape the SVM can draw.")
+    lesson.aha("Kernel is not a new model here. It is the SVM choosing a different kind of road.")
+
+
 @lesson.step("Pick the road style", beat="play")
 def _():
     lesson.say("Now put both knobs together and switch the road style. Same data, different idea of what a road can be.")
@@ -193,7 +216,7 @@ def _():
         shape = ui.shape_picker(default="circles", key="ch07_style_shape", include=("blobs", "moons", "circles", "xor"))
         noise = ui.noise_slider(default=0.18, key="ch07_style_noise")
         seed = ui.seed_slider(default=2, key="ch07_style_seed")
-        kernel = st.selectbox("Road style", ["linear", "poly", "rbf"], index=2, key="ch07_style_kernel")
+        kernel = st.selectbox("Kernel: what shape is the road?", ["linear", "poly", "rbf"], index=2, key="ch07_style_kernel")
         C = st.slider("C: care about every training dot", 0.1, 30.0, 3.0, 0.1, key="ch07_style_c")
         gamma = st.slider("gamma: how far each dot reaches", 0.05, 8.0, 1.0, 0.05, key="ch07_style_gamma")
 

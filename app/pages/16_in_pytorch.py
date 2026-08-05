@@ -47,7 +47,7 @@ def _():
 Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
 but it is not a new kind of thinking.
 
-The promise is bigger: tensors remember how they were made, like a recipe card stuck to every number.
+The promise is bigger: PyTorch calls a recipe-tracking array a tensor. When you call `backward()`, PyTorch walks that recipe backward and fills in gradients for every weight.
 """
     )
     lesson.mermaid(
@@ -70,7 +70,7 @@ def _():
         ["The weighted sums", "The squishes", "The names and bookkeeping"],
         correct=2,
         why="PyTorch still needs weighted sums, squishes, loss, and update steps. It handles the bookkeeping for us, like a very organized lab partner.",
-        key="ch15_translation",
+        key="ch16_translation",
     )
     if guess is None:
         return
@@ -145,7 +145,7 @@ def _():
         ["Agree to tiny rounding error", "Point roughly the same way", "Disagree completely"],
         correct=0,
         why="Both systems run the same forward pass and the same chain rule, so only floating-point dust should remain.",
-        key="ch15_gradient_match",
+        key="ch16_gradient_match",
     )
     if guess is None:
         return
@@ -182,9 +182,9 @@ for epoch in range(450):
 def _():
     knobs, picture = lesson.controls()
     with knobs:
-        shape = st.selectbox("Dataset", ["moons", "xor", "circles"], index=0, key="ch15_shape")
-        hidden = st.slider("Hidden neurons", 2, 8, 3, key="ch15_hidden")
-        lr = st.slider("PyTorch learning rate", 0.02, 1.0, 0.25, 0.02, key="ch15_lr")
+        shape = st.selectbox("Dataset", ["moons", "xor", "circles"], index=0, key="ch16_shape")
+        hidden = st.slider("Hidden neurons", 2, 8, 3, key="ch16_hidden")
+        lr = st.slider("PyTorch learning rate", 0.02, 1.0, 0.25, 0.02, key="ch16_lr")
     with picture:
         X, y, torch_model, losses, seconds = train_torch(shape, hidden, lr, 5)
         cols = st.columns(2)
@@ -206,7 +206,7 @@ def _():
         ["It changes the math", "It scales the bookkeeping", "It removes data problems"],
         correct=1,
         why="The math is the same. PyTorch becomes valuable when the model and data are much bigger, like the image chapters coming next.",
-        key="ch15_why_torch",
+        key="ch16_why_torch",
     )
     if guess is None:
         return

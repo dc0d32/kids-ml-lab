@@ -47,11 +47,20 @@ use_house_style()
 # Count the learnable numbers in `[2, 5, 5, 1]`. Every arrow is a weight, and every
 # non-input neuron gets one bias.
 #
+# We picked this size because it has both width (five neurons in a layer) and depth (two
+# hidden layers), but the arithmetic still fits on one screen.
+#
 # This is worth counting because capacity is not a mood word. It is the pile of adjustable
 # knobs the network can turn to fit the data.
 
 # %%
-pd.DataFrame({'layer': ['2 → 5', '5 → 5', '5 → 1', 'biases'], 'count': [10, 25, 5, 11]})
+pd.DataFrame(
+    {
+        'layer': ['2 → 5', '5 → 5', '5 → 1', 'biases'],
+        'working': ['2*5', '5*5', '5*1', '5 + 5 + 1'],
+        'count': [10, 25, 5, 11],
+    }
+)
 
 # %% [markdown]
 # That is **40 weights + 11 biases = 51 parameters**. A bigger pile can fit more shapes,
@@ -59,15 +68,6 @@ pd.DataFrame({'layer': ['2 → 5', '5 → 5', '5 → 1', 'biases'], 'count': [10
 #
 # > 📖 **Grown-ups call this:** **parameters** are the weights and biases: every adjustable
 # > number inside the model.
-
-# %% [markdown]
-# Work these out on scrap paper, then type your answers in. You'll be told not only
-# whether you were right, but why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(15)
 
 # %% [markdown]
 # ## 👀 Take a look
@@ -140,22 +140,25 @@ plt.show()
 # ```
 
 # %%
-X, y_clean = toy_shape('spiral', n=70, noise=0.28, seed=1)
-rng = np.random.default_rng(4)
-y = y_clean.copy()
-flips = rng.choice(len(y), size=14, replace=False)
-y[flips] = 1 - y[flips]
-X_test, y_test = toy_shape('spiral', n=240, noise=0.28, seed=99)
+def run_overfit(weight_decay=0.0, more_data=False):
+    n_train = 240 if more_data else 70
+    X, y_clean = toy_shape('spiral', n=n_train, noise=0.28, seed=1)
+    rng = np.random.default_rng(4)
+    y = y_clean.copy()
+    flips = rng.choice(len(y), size=max(1, len(y) // 5), replace=False)
+    y[flips] = 1 - y[flips]
+    X_test, y_test = toy_shape('spiral', n=240, noise=0.28, seed=99)
+    m = MLP([2, 16, 16, 1], activation='tanh', seed=5)
+    train_losses, test_losses = [], []
+    for e in range(2000):
+        m.step(X, y, lr=0.5, weight_decay=weight_decay)
+        if e % 25 == 0:
+            train_losses.append(mse(m.forward(X), y.reshape(-1, 1)))
+            test_losses.append(mse(m.forward(X_test), y_test.reshape(-1, 1)))
+    return X, y, m, np.array(train_losses), np.array(test_losses)
 
-m = MLP([2, 16, 16, 1], activation='tanh', seed=5)
-train_losses, test_losses = [], []
-for e in range(2000):
-    m.step(X, y, lr=0.5)
-    if e % 25 == 0:
-        train_losses.append(mse(m.forward(X), y.reshape(-1, 1)))
-        test_losses.append(mse(m.forward(X_test), y_test.reshape(-1, 1)))
-train_losses = np.array(train_losses)
-test_losses = np.array(test_losses)
+
+X, y, m, train_losses, test_losses = run_overfit()
 best = int(np.argmin(test_losses))
 
 fig, ax = plt.subplots(figsize=(6.5, 4.3))
@@ -174,16 +177,51 @@ decision_boundary(lambda G: m.predict_proba(G), X, y, ax=ax, steps=160, title='B
 plt.show()
 
 # %% [markdown]
-# Look for the dashed line: early stopping works because broad patterns are often learned
-# before noisy details start waving shiny flags. Weight decay helps in a different way.
-# Small weights make gentler ramps, so the boundary has a harder time making sharp little
-# detours around one weird dot.
-#
-# More data helps too: a single noisy point is less powerful when surrounded by many honest
-# neighbours, like one wrong shout in a stadium.
+# Fix 1 is early stopping. Look for the dashed line: broad patterns are often learned
+# before noisy details start waving shiny flags.
+
+# %% [markdown]
+# Fix 2 makes sharp wiggles expensive. Small weights make gentler ramps, so the boundary has
+# a harder time making little detours around one weird dot.
+
+# %%
+X_decay, y_decay, m_decay, train_decay, test_decay = run_overfit(weight_decay=0.02)
+fig, ax = plt.subplots(figsize=(6.5, 4.3))
+ax.plot(train_decay, label='train loss', color='#10B981')
+ax.plot(test_decay, label='test loss', color='#EF4444')
+ax.set_title('Weight decay calms the weights')
+ax.legend()
+plt.show()
+
+# %% [markdown]
+# Fix 3 gives the weird dot more honest neighbours. A single noisy label matters less when
+# many practice examples vote for the broad pattern.
+
+# %%
+X_more, y_more, m_more, train_more, test_more = run_overfit(more_data=True)
+pd.DataFrame(
+    {
+        'practice set': ['small noisy set', 'more practice points'],
+        'final train loss': [train_losses[-1], train_more[-1]],
+        'final test loss': [test_losses[-1], test_more[-1]],
+    }
+).round(3)
+
+# %% [markdown]
+# Early stopping, weight decay, and more data all fight the same failure from different
+# angles: stop before the wiggles, make wiggles expensive, or surround noisy points with
+# more honest neighbours.
 #
 # ## 🏆 Go further
 #
+# Work through the interactive questions, then try these quests.
+
+# %%
+from kidsml import workbook
+
+workbook.render(15)
+
+# %% [markdown]
 # 1. **Smallest spiral net.** Reduce the architecture until the spiral boundary snaps.
 # 2. **Overfit hard; get cooked.** Use few points, many neurons, and no weight decay.
 # 3. **Too much calm.** Raise weight decay until the boundary becomes boring.

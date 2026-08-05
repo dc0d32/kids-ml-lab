@@ -87,22 +87,23 @@ In `the cat sat on the m`, the useful clue may be far back, sitting on `cat`. A 
 
 @lesson.step("The mask stops cheating", beat="seeit")
 def _():
+    lesson.say("A mask is a cover sheet for the score table. A **causal** mask blocks every future square, because future letters would hand over the answer.")
     guess = lesson.predict(
         "What happens if a position is allowed to peek at future letters while training?",
         ["It learns honestly", "It cheats and the score looks too good", "It forgets older letters"],
         correct=1,
         why="The future contains the answer. That is data leakage from Chapter 10 wearing a new costume.",
-        key="ch23_mask",
+        key="ch24_mask",
     )
     if guess is None:
         return
     mask = np.tril(np.ones((8, 8)))
     fig, ax = lesson.figure(4.8, 4.2)
-    heatmap(mask, xlabels=list(range(1, 9)), ylabels=list(range(1, 9)), ax=ax, title="Causal mask: white cells are blocked")
+    heatmap(mask, xlabels=list(range(1, 9)), ylabels=list(range(1, 9)), ax=ax, title="Causal mask: bright cells are allowed")
     ax.set_xlabel("place it wants to look")
     ax.set_ylabel("place making a guess")
     lesson.show(fig)
-    lesson.look_for("the blank upper triangle. Those are future places sealed behind glass.")
+    lesson.look_for("the dark upper triangle. Those are future places sealed behind glass.")
     lesson.careful("A position may only look backward. If it could see forward, it would peek at the answer key.")
 
 
@@ -130,8 +131,8 @@ def _():
     labels = [shown_char(c) for c in chars]
     knobs, picture = lesson.controls()
     with knobs:
-        head = st.selectbox("Attention head", list(range(heads.shape[0])), format_func=lambda h: f"head {h + 1}", key="ch23_head")
-        position = st.slider("Generated position to inspect", 0, len(chars) - 1, len(chars) - 1, key="ch23_position")
+        head = st.selectbox("Attention head", list(range(heads.shape[0])), format_func=lambda h: f"head {h + 1}", key="ch24_head")
+        position = st.slider("Generated position to inspect", 0, len(chars) - 1, len(chars) - 1, key="ch24_position")
     with picture:
         fig, ax = lesson.figure(7, 5)
         heatmap(heads[head], xlabels=labels, ylabels=labels, ax=ax, title=f"Attention map, head {head + 1}")
@@ -152,12 +153,12 @@ def _():
 def _():
     lesson.say("Now run the model as a text machine. Temperature still controls safe choices versus weird sparks.")
     bundle = trained_transformer()
-    start = st.text_input("Starting phrase", value="the ", key="ch23_start")
-    temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch23_temp")
-    seed = st.slider("Random seed", 0, 99, 5, key="ch23_seed")
-    length = st.slider("How many new characters?", 80, 260, 180, 20, key="ch23_length")
+    start = st.text_input("Starting phrase", value="the ", key="ch24_start")
+    temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch24_temp")
+    seed = st.slider("Random seed", 0, 99, 5, key="ch24_seed")
+    length = st.slider("How many new characters?", 80, 260, 180, 20, key="ch24_length")
     made = generate_transformer(bundle, start=start, temperature=temperature, length=length, seed=seed)
-    st.text_area("Tiny Transformer says", made, height=150, key="ch23_text")
+    st.text_area("Tiny Transformer says", made, height=150, key="ch24_text")
     lesson.look_for("phrases that almost sound like a rhyme or fable, then wobble off the sidewalk.")
 
 
@@ -168,7 +169,7 @@ def _():
         ["Bigram", "Fixed-window MLP", "Tiny Transformer"],
         correct=2,
         why="Attention can reach any earlier position inside the block, so it wins this tiny ladder.",
-        key="ch23_ladder",
+        key="ch24_ladder",
     )
     if guess is None:
         return
@@ -179,14 +180,24 @@ def _():
     ax.set_title("The Part 6 ladder")
     lesson.show(fig)
     lesson.look_for("the bars stepping down as the models get more ways to use context!")
+    st.dataframe(
+        pd.DataFrame(
+            {
+                "model": ["random", "bigram", "fixed-window MLP", "Tiny Transformer"],
+                "held-out surprise": [random_loss, bigram_loss, mlp_loss, transformer_loss],
+            }
+        ),
+        hide_index=True,
+        width="content",
+    )
 
 
 @lesson.step("Same prompt, three machines", beat="forreal")
 def _():
     lesson.say("Send the same prompt through the last three machines and listen to the echoes.")
     bundle, mlp, probs, _, _, _, _ = comparison_numbers()
-    temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch23_compare_temp")
-    seed = st.slider("Random seed", 0, 99, 5, key="ch23_compare_seed")
+    temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch24_compare_temp")
+    seed = st.slider("Random seed", 0, 99, 5, key="ch24_compare_seed")
     made = generate_transformer(bundle, start="the ", temperature=temperature, length=180, seed=seed)
     st.markdown("**Bigram sample**")
     st.text(sample_stream_bigram(probs, bundle.vocab, start="the ", temperature=temperature, length=150, seed=seed))
@@ -204,7 +215,7 @@ def _():
     dial = st.selectbox(
         "Which dial would a GPT-class model turn up?",
         ["parameters", "text collection", "GPUs", "training time"],
-        key="ch23_scale_dial",
+        key="ch24_scale_dial",
     )
     st.info(f"Yes: {dial}. Real systems turn all of these up at once.")
     lesson.say(

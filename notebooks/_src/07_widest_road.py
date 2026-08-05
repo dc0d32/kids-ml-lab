@@ -116,6 +116,9 @@ plt.show()
 # Real data is messy, so the road sometimes has to choose: stay wide, or bend hard to fix
 # every training dot.
 #
+# In these next pictures we use an **RBF road**: a bendy road where each point tugs on
+# nearby space.
+#
 # `C` is the strictness knob. Low C says, "keep a wide road, even if a few training dots
 # are on the wrong side." High C says, "training mistakes are expensive," so the road
 # narrows or bends to chase them.
@@ -137,6 +140,11 @@ plt.show()
 #
 # > ⚠️ **Careful** A kid-repeat version: **C is strictness; gamma is reach**. Strict and
 # > short-reach can memorise islands. Forgiving and long-reach gives a smoother road.
+#
+# One more name before the real-data picture: grown-ups call a road style a **kernel**.
+# A linear kernel draws one straight road. A polynomial kernel makes smooth curves. An
+# RBF kernel uses distance from points, so it can make smooth islands. Same SVM, different
+# idea of what a road can be.
 
 # %% [markdown]
 # ## 💻 In real code

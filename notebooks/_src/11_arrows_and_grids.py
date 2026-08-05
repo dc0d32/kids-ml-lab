@@ -24,6 +24,7 @@ from plotly.subplots import make_subplots
 from kidsml import linalg as la
 from kidsml import workbook
 from kidsml.nn_numpy import ACTIVATIONS
+from kidsml.plots import style_plotly
 from kidsml.plots import use_house_style
 
 use_house_style()
@@ -91,6 +92,9 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 # You may have been told a matrix is a box of numbers. That is like being told a song is
 # a box of dots on lines.
 #
+# Chapter 10 taught you to distrust a shiny score. Now we build the score machine more
+# carefully, so there is no hidden magic step when neural networks arrive.
+#
 # In this chapter a matrix is an **instruction for moving space**. The grid skates, the
 # house flips, the arrows land, and the neuron equation in Chapter 12 becomes something
 # you can see.
@@ -101,6 +105,7 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 #     B --> C[A matrix moves the grid]
 #     C --> D[A squish bends space]
 #     D --> E[A neural network can make new shapes]
+#     E --> F[Chapter 14 stacks bends into new features]
 # ```
 
 # %% [markdown]
@@ -269,8 +274,8 @@ def shadow_widget(angle_a, angle_b):
     fig.add_trace(go.Scatter3d(x=points3d[:, 0], y=points3d[:, 1], z=points3d[:, 2], mode="markers", marker=dict(size=3, opacity=0.75), showlegend=False), row=1, col=1)
     fig.add_trace(go.Scatter(x=shadow[:, 0], y=shadow[:, 1], mode="markers", marker=dict(size=6, opacity=0.75), showlegend=False), row=1, col=2)
     fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=2)
-    fig.update_layout(height=420, margin=dict(l=10, r=10, t=45, b=10), title=f"Your spread {spread:.2f}; best {best:.2f}")
-    fig.show()
+    fig.update_layout(title=f"Your spread {spread:.2f}; best {best:.2f}")
+    style_plotly(fig, height=420).show()
 
 interact(
     shadow_widget,
@@ -317,8 +322,12 @@ combined_10 = np.linalg.matrix_power(base, 10)
 combined_10
 
 # %% [markdown]
-# Now put a squish in the middle. The grid lines bend, and the single-matrix copy fails.
-# There is the payoff!
+# Now put a squish in the middle. The last step proved the trap: stack straight moves with
+# no squish, and they fuse into one straight move. The squish bends the grid lines, and the
+# single-matrix copy fails.
+#
+# Chapter 12 uses one squish on one neuron. Chapter 14 stacks squished neurons so a hidden
+# layer can invent new features.
 
 # %%
 A_squish = la.matrix(0.5, -1.25, -0.25, -0.5)
@@ -342,7 +351,8 @@ interact(
 );
 
 # %% [markdown]
-# Chapter 12 writes one neuron as `z = W @ x + b`. The matrix part is the same space move.
+# Chapter 12 writes one neuron as `z = w1*x1 + w2*x2 + b`. That weighted-sum part is the
+# same arrow-agreement idea.
 # Without the squish, two matrix layers fuse exactly. With `tanh` inserted, they do not.
 
 # %%

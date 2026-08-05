@@ -53,7 +53,7 @@ use_house_style()
 #     D --> E[Check what stayed spread out]
 # ```
 #
-# Look at the last box. PCA judges a shadow by how much spread survives the squish.
+# Look at the last box. Spread means the points stayed far apart after the squish.
 #
 # > 🧸 **Little Kid Corner** — Use a flashlight and your hand. Turn your hand until the
 # > shadow gives the best clue.
@@ -62,7 +62,7 @@ use_house_style()
 # ## ✏️ Work it out
 #
 # Four points lie nearly sideways. Project onto x, then onto y. Spread is the sum of
-# squared distances from the middle.
+# squared distances from the middle. Grown-ups call that measured spread **variance**.
 #
 # "Keep the points spread out" sounds visual, but it means something practical. If two
 # points land on the same shadow spot, the shadow forgot the difference between them. If
@@ -109,7 +109,7 @@ plt.show()
 # %% [markdown]
 # The best shadow is spread out because spread is information. If every point collapses
 # into one spot, the shadow forgot how the points differ. A wider shadow kept more of the
-# story.
+# story. So "variance kept" means "how much of the useful spread survived the squish."
 
 # %% [markdown]
 # ## 🎛️ Your turn
@@ -143,8 +143,8 @@ print("variance kept:", round(kept, 3))
 
 # %% [markdown]
 # Some digits still overlap. That matches the confusion-matrix idea from Chapter 17:
-# digits that tangled there often sit near or on top of each other here too. Two different
-# tools are agreeing about which digits look alike. Payoff!
+# shared strokes make shared mistakes. Two different tools are agreeing that look-alike
+# digits live near each other. Payoff!
 #
 # t-SNE is a different kind of squishing. It tries to keep neighbours together rather than
 # keeping global spread. It bends and stretches the map to make local neighbourhoods

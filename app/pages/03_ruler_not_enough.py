@@ -14,7 +14,7 @@ from sklearn.tree import DecisionTreeClassifier
 from kidsml import lesson, ui
 from kidsml.datasets import toy_shape, xor_exact
 from kidsml.linear import predict_side
-from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, scatter_2d
+from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, scatter_2d, style_plotly
 
 lesson.begin(3)
 
@@ -78,7 +78,7 @@ Here is the whole dataset. All of it.
         fig, ax = lesson.figure(4.4, 4.0)
         scatter_2d(X_xor, y_xor, ax=ax, size=200)
         for i, (x1, x2) in enumerate(X_xor):
-            ax.text(x1 + 0.04, x2 + 0.04, str(int(y_xor[i])), fontsize=13)
+            ax.text(x1 + 0.04, x2 + 0.04, "red" if y_xor[i] == 1 else "blue", fontsize=10)
         ax.set_title("XOR: opposite corners match")
         lesson.show(fig)
 
@@ -145,6 +145,10 @@ def _():
         """
 A circle problem is hard in **x1, x2** because "inside or ring?" is really about
 distance from the middle. So we add **x3 = x1² + x2²**.
+
+Point **(2, 0)** becomes **x3 = 2² + 0² = 4**. Point **(0.3, 0.4)**
+becomes **0.3² + 0.4² = 0.09 + 0.16 = 0.25**. The ring rises; the
+middle stays low.
 """
     )
     lesson.mermaid(
@@ -158,7 +162,27 @@ flowchart LR
 """,
         height=260,
     )
-    lesson.look_for("the escape route: make height from distance, cut flat, then look back down.")
+
+    lesson.say("Enough words. Here is the same circle data with that third number used as **height**. Drag it around.")
+
+    X, y = toy_shape("circles", n=220, noise=0.08, seed=1)
+    height = X[:, 0] ** 2 + X[:, 1] ** 2
+    lifted = go.Figure(
+        data=[
+            go.Scatter3d(
+                x=X[:, 0], y=X[:, 1], z=height, mode="markers",
+                marker=dict(size=4, color=np.where(y == 1, WARM, COOL)),
+            )
+        ]
+    )
+    lifted.update_layout(scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x3 = x1² + x2²"))
+    st.plotly_chart(style_plotly(lifted, height=480), width="stretch")
+
+    lesson.look_for(
+        "the shape. Flat on the floor these two groups were a ring around a dot, tangled "
+        "together. Given a height, the ring floats up into a bowl rim and the middle stays "
+        "on the ground. They are now sitting at different altitudes."
+    )
 
 
 @lesson.step("A flat cut becomes a circle", beat="seeit")
@@ -172,8 +196,8 @@ def _():
     plane_x, plane_y = np.meshgrid(np.linspace(-1.8, 1.8, 2), np.linspace(-1.8, 1.8, 2))
     plane_z = np.full_like(plane_x, 0.55)
     fig3.add_trace(go.Surface(x=plane_x, y=plane_y, z=plane_z, opacity=0.35, showscale=False, colorscale=[[0, ACCENT], [1, ACCENT]]))
-    fig3.update_layout(height=520, scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
-    st.plotly_chart(fig3, width="stretch")
+    fig3.update_layout(scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
+    st.plotly_chart(style_plotly(fig3, height=520), width="stretch")
     lesson.look_for("the cut is flat in the lifted picture, but its shadow on the floor is curved.")
     lesson.say("A flat slice at **x3 = 0.55** casts the circle **x1² + x2² = 0.55** below it.")
 
@@ -184,7 +208,13 @@ def _():
     X3 = np.c_[X_xor, X_xor[:, 0] * X_xor[:, 1]]
     score = X3[:, 0] + X3[:, 1] - 2 * X3[:, 2] - 0.5
     st.dataframe(
-        {"x1": X3[:, 0], "x2": X3[:, 1], "x1*x2": X3[:, 2], "new straight score": score, "answer": y_xor},
+        {
+            "x1": X3[:, 0],
+            "x2": X3[:, 1],
+            "x1*x2": X3[:, 2],
+            "new straight score": score,
+            "answer": np.where(y_xor == 1, "red", "blue"),
+        },
         hide_index=True,
     )
     lesson.look_for("the (1, 1) row. The product feature turns that corner into the special case.")

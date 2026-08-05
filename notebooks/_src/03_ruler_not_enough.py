@@ -22,7 +22,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 from kidsml.datasets import toy_shape, xor_exact
 from kidsml.linear import predict_side
-from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, scatter_2d, use_house_style
+from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, scatter_2d, style_plotly, use_house_style
 
 use_house_style()
 
@@ -71,7 +71,7 @@ pd.DataFrame(
 fig, ax = plt.subplots(figsize=(5, 4.5))
 scatter_2d(X_xor, y_xor, ax=ax, size=120)
 for i, (x1, x2) in enumerate(X_xor):
-    ax.text(x1 + 0.03, x2 + 0.03, str(int(y_xor[i])), fontsize=12)
+    ax.text(x1 + 0.03, x2 + 0.03, "red" if y_xor[i] == 1 else "blue", fontsize=10)
 ax.set_title("XOR: opposite corners match")
 plt.show()
 
@@ -107,16 +107,6 @@ plt.show()
 # > 📖 **Grown-ups call this:** **linearly separable** — one straight line can split the
 # > data perfectly.
 
-# %% [markdown]
-# Now work through the interactive workbook. Type your answer in each box and press
-# **Check** — you will find out whether you were right, and why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(3)
-
-# %% [markdown]
 # ## 👀 Take a look
 #
 # A circle problem is hard in **x1, x2** because "inside or ring?" is really about
@@ -138,18 +128,37 @@ workbook.render(3)
 #
 # The diagram says the trick: make height from distance, cut flat, then look back down. A curve appears on the floor!
 
+# %% [markdown]
+# Enough words. Here is the same circle data with that third number used as **height**.
+# Drag it around.
+
 # %%
 X, y = toy_shape("circles", n=220, noise=0.08, seed=1)
 r2 = X[:, 0] ** 2 + X[:, 1] ** 2
 colors = np.where(y == 1, WARM, COOL)
+
+lifted = go.Figure(
+    data=[go.Scatter3d(x=X[:, 0], y=X[:, 1], z=r2, mode="markers", marker=dict(size=4, color=colors))]
+)
+lifted.update_layout(scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x3 = x1² + x2²"))
+style_plotly(lifted, height=480).show()
+
+# %% [markdown]
+# **Look for** the shape. Flat on the floor these two groups were a ring around a dot,
+# tangled together. Given a height, the ring floats up into a bowl rim while the middle
+# stays on the ground. They are now sitting at different altitudes.
+#
+# So now put a flat sheet of glass through the gap.
+
+# %%
 fig3 = go.Figure(
     data=[go.Scatter3d(x=X[:, 0], y=X[:, 1], z=r2, mode="markers", marker=dict(size=4, color=colors))]
 )
 plane_x, plane_y = np.meshgrid(np.linspace(-1.8, 1.8, 2), np.linspace(-1.8, 1.8, 2))
 plane_z = np.full_like(plane_x, 0.55)
 fig3.add_trace(go.Surface(x=plane_x, y=plane_y, z=plane_z, opacity=0.35, showscale=False, colorscale=[[0, ACCENT], [1, ACCENT]]))
-fig3.update_layout(height=520, scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
-fig3.show()
+fig3.update_layout(scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
+style_plotly(fig3, height=520).show()
 
 # %% [markdown]
 # Notice that the cut is flat in the lifted picture. The boundary back on the
@@ -159,7 +168,15 @@ fig3.show()
 # %%
 X3 = np.c_[X_xor, X_xor[:, 0] * X_xor[:, 1]]
 score = X3[:, 0] + X3[:, 1] - 2 * X3[:, 2] - 0.5
-pd.DataFrame({"x1": X3[:, 0], "x2": X3[:, 1], "x1*x2": X3[:, 2], "new straight score": score, "answer": y_xor})
+pd.DataFrame(
+    {
+        "x1": X3[:, 0],
+        "x2": X3[:, 1],
+        "x1*x2": X3[:, 2],
+        "new straight score": score,
+        "answer": np.where(y_xor == 1, "red", "blue"),
+    }
+)
 
 # %% [markdown]
 # XOR has its own escape hatch: add **x3 = x1 × x2**. For **(1, 1)** the score is
@@ -207,6 +224,15 @@ plt.show()
 # %% [markdown]
 # Degree 1 is straight. Degree 3 bends. Degree 8 may get wild and chase individual
 # dots. That wild end is the seed of overfitting: over-studying the training dots.
+
+# %% [markdown]
+# Now work through the interactive workbook. Type your answer in each box and press
+# **Check** — you will find out whether you were right, and why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(3)
 
 # %% [markdown]
 # ## 🏆 Go further

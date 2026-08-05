@@ -24,6 +24,10 @@ Part 3 sounds like a new planet: **neural networks**. It is not.
 
 A neuron is Chapter 2's straight-line score bolted to Chapter 4's probability squish.
 If you can read `w1*x1 + w2*x2 + b`, you can read the engine inside this circle.
+
+Chapter 11 also showed why the squish matters: straight steps stacked on straight steps
+collapse back into one straight step. The squish is what keeps a neuron from being only a
+line wearing a costume.
 """
     )
     lesson.mermaid(
@@ -45,7 +49,8 @@ graph LR
 def _():
     lesson.say(
         """
-Use **w1 = 2**, **w2 = -1**, **b = 0.5**. First build the raw score `z`, then squish it.
+Use **w1 = 2**, **w2 = -1**, **b = 0.5**. We picked small numbers so every row can be
+checked by hand. First build the raw score `z`, then squish it.
 
 The raw score decides which side of the line the point is on. The squish turns distance
 from the line into a 0-to-1 confidence gauge.
@@ -81,12 +86,15 @@ The squish clips the wild number into a soft confidence score without moving the
     )
 
 
-@lesson.step("Raw scores are signed distances", beat="seeit")
+@lesson.step("Raw scores have signs", beat="seeit")
 def _():
     lesson.say(
         """
 `Neuron.raw(X)` shows the Chapter 2 score before the squish. A positive raw score lands on
 one side, a negative score lands on the other, and zero is the fence.
+
+These are toy blob coordinates from two clumps. We chose a few rows from both answers so
+the sign flips and the fence is visible.
 """
     )
     X_tiny, y_tiny = two_blobs_tiny()
@@ -115,10 +123,10 @@ def _():
     lesson.say("Drag the learned numbers and watch the green line. That line is where `z = 0`, the fence in the grass.")
     knobs, picture = lesson.controls()
     with knobs:
-        w1 = st.slider("w1", -6.0, 6.0, 2.0, 0.2, key="ch11_w1")
-        w2 = st.slider("w2", -6.0, 6.0, -1.0, 0.2, key="ch11_w2")
-        b = st.slider("b", -4.0, 4.0, 0.5, 0.1, key="ch11_b")
-        activation = st.selectbox("Squish", list(ACTIVATIONS), index=list(ACTIVATIONS).index("sigmoid"), key="ch11_activation")
+        w1 = st.slider("w1", -6.0, 6.0, 2.0, 0.2, key="ch12_w1")
+        w2 = st.slider("w2", -6.0, 6.0, -1.0, 0.2, key="ch12_w2")
+        b = st.slider("b", -4.0, 4.0, 0.5, 0.1, key="ch12_b")
+        activation = st.selectbox("Squish", list(ACTIVATIONS), index=list(ACTIVATIONS).index("sigmoid"), key="ch12_activation")
         st.caption(ACTIVATION_BLURB[activation])
     X, y = toy_shape("blobs", n=180, noise=0.22, seed=4)
     play_neuron = Neuron(w=np.array([w1, w2]), b=b, activation=activation)
@@ -137,17 +145,17 @@ def _():
         ["It gets flatter", "It changes faster near the fence", "The fence disappears"],
         correct=1,
         why="Bigger weights make raw scores climb faster as your point walks away from `z = 0`. The ramp gets steep!",
-        key="ch11_surface_steepness",
+        key="ch12_surface_steepness",
     )
     if guess is None:
         return
 
     knobs, picture = lesson.controls()
     with knobs:
-        w1 = st.slider("surface w1", -6.0, 6.0, 2.0, 0.2, key="ch11_surface_w1")
-        w2 = st.slider("surface w2", -6.0, 6.0, -1.0, 0.2, key="ch11_surface_w2")
-        b = st.slider("surface b", -4.0, 4.0, 0.5, 0.1, key="ch11_surface_b")
-        activation = st.selectbox("Surface squish", list(ACTIVATIONS), index=list(ACTIVATIONS).index("sigmoid"), key="ch11_surface_activation")
+        w1 = st.slider("surface w1", -6.0, 6.0, 2.0, 0.2, key="ch12_surface_w1")
+        w2 = st.slider("surface w2", -6.0, 6.0, -1.0, 0.2, key="ch12_surface_w2")
+        b = st.slider("surface b", -4.0, 4.0, 0.5, 0.1, key="ch12_surface_b")
+        activation = st.selectbox("Surface squish", list(ACTIVATIONS), index=list(ACTIVATIONS).index("sigmoid"), key="ch12_surface_activation")
     X, _ = toy_shape("blobs", n=180, noise=0.22, seed=4)
     play_neuron = Neuron(w=np.array([w1, w2]), b=b, activation=activation)
     with picture:
@@ -162,16 +170,16 @@ def _():
         ["Yes, if the squish is chosen well", "No, one neuron has one straight boundary", "Yes, if the bias is large"],
         correct=1,
         why="The squish softens confidence, but it never grows a second fence. One neuron brings one straight cut.",
-        key="ch11_xor_predict",
+        key="ch12_xor_predict",
     )
     if guess is None:
         return
 
     knobs, picture = lesson.controls()
     with knobs:
-        w1 = st.slider("XOR w1", -6.0, 6.0, 2.0, 0.2, key="ch11_xor_w1")
-        w2 = st.slider("XOR w2", -6.0, 6.0, -1.0, 0.2, key="ch11_xor_w2")
-        b = st.slider("XOR b", -4.0, 4.0, 0.5, 0.1, key="ch11_xor_b")
+        w1 = st.slider("XOR w1", -6.0, 6.0, 2.0, 0.2, key="ch12_xor_w1")
+        w2 = st.slider("XOR w2", -6.0, 6.0, -1.0, 0.2, key="ch12_xor_w2")
+        b = st.slider("XOR b", -4.0, 4.0, 0.5, 0.1, key="ch12_xor_b")
     X_xor, y_xor = xor_exact()
     one = Neuron(w=np.array([w1, w2]), b=b, activation="sigmoid")
     fig, ax = lesson.figure(5.0, 4.4)
@@ -198,6 +206,7 @@ def _():
         """
 Now we train the neuron instead of choosing its numbers by hand. Scikit-learn calls the same
 idea **logistic regression**: a line score, a sigmoid, and a training rule turning the knobs.
+Chapter 13 opens that training rule and shows how the knobs move.
 """
     )
     X_fit, y_fit, w_mine, b_mine, _, w_sklearn, b_sklearn, sk_score = fit_blob_models()

@@ -12,6 +12,7 @@ from plotly.subplots import make_subplots
 from kidsml import lesson
 from kidsml import linalg as la
 from kidsml.nn_numpy import ACTIVATIONS
+from kidsml.plots import style_plotly
 
 lesson.begin(11)
 
@@ -151,12 +152,10 @@ def shadow_plot(points3d, shadow, spread, best):
     )
     fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=2)
     fig.update_layout(
-        height=430,
-        margin=dict(l=10, r=10, t=45, b=10),
         title=f"Spread kept: {spread:.2f} out of best {best:.2f}",
         scene=dict(xaxis_title="x", yaxis_title="y", zaxis_title="z"),
     )
-    return fig
+    return style_plotly(fig, height=430)
 
 
 @lesson.step("A matrix is not a box", beat="hook")
@@ -165,6 +164,9 @@ def _():
         """
 You may have been told a matrix is a box of numbers. That is like being told a song is a
 box of dots on lines.
+
+Chapter 10 taught you to distrust a shiny score. Now we build the score machine more
+carefully, so there is no hidden magic step when neural networks arrive.
 
 Here is what it actually is: **an instruction for moving space**. Drag the instruction,
 and the grid skates, flips, stretches, and wakes up.
@@ -177,6 +179,7 @@ graph LR
     B --> C[A matrix moves the whole grid]
     C --> D[A neuron uses the same arrow agreement]
     D --> E[A squish bends space]
+    E --> F[Chapter 14 stacks bends into new features]
 """,
         height=260,
     )
@@ -422,7 +425,14 @@ def _():
 
 @lesson.step("A squish bends the grid", beat="play")
 def _():
-    lesson.say("Put a squish between two matrices and the grid lines bend. That bend is the new magic trick a single matrix cannot copy.")
+    lesson.say(
+        """
+The last step proved the trap: stack straight moves with no squish, and they fuse into one
+straight move. Put a squish between two matrices and the grid lines bend.
+
+That bend is the new ingredient a single matrix cannot copy.
+"""
+    )
     guess = lesson.predict(
         "What do you think the squish does to the straight grid lines?",
         ["They stay straight", "They bend", "They disappear"],
@@ -449,12 +459,12 @@ def _():
         lesson.show(fig)
         lesson.look_for("the grid lines. Toggle the squish off and they snap straight again.")
     st.metric("difference from one plain matrix", f"{gap:.2f}")
-    lesson.aha("This is why every neural network has activation functions: you watched the bend happen. Rule recited? No. Rule earned!")
+    lesson.aha("Chapter 12 uses one squish on one neuron. Chapter 14 stacks squished neurons so a hidden layer can invent new features.")
 
 
 @lesson.step("For real: the neuron equation", beat="forreal")
 def _():
-    lesson.say("Chapter 12 writes one neuron as `z = W @ x + b`. The matrix part is the same space-moving idea you have been dragging.")
+    lesson.say("Chapter 12 writes one neuron as `z = w1*x1 + w2*x2 + b`. That weighted-sum part is the same arrow-agreement idea you have been dragging.")
     knobs, picture = lesson.controls()
     with knobs:
         x1 = st.slider("input x1", -3.0, 3.0, 1.0, 0.25, key="ch11_real_x1")

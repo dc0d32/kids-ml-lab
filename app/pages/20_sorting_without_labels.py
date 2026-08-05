@@ -71,7 +71,7 @@ graph LR
         height=260,
     )
     lesson.look_for("the loop: assign, move, check. The same two-step dance repeats until the centres stop moving.")
-    lesson.say("Why must it stop? Each round either makes total point-to-centre distance smaller, or nothing changes. There are only so many possible assignments, so the loop cannot shrink forever.")
+    lesson.say("Why must it stop? Each round either makes total squared point-to-centre distance smaller, or nothing changes. There are only so many possible assignments, so the loop cannot shrink forever.")
 
 
 @lesson.step("One round by hand", beat="byhand")
@@ -90,23 +90,24 @@ def _():
         st.markdown("**Move centres**")
         st.dataframe(new_centres, hide_index=True, width="stretch")
     lesson.look_for("which centre each point joins, then where the new centre lands after the averages pull it.")
+    lesson.say("Left moves to `((1+1+2)/3, (1+2+1)/3) = (1.33, 1.33)`. Right moves to `((7+8+7)/3, (7+7+8)/3) = (7.33, 7.33)`.")
     lesson.aha("Round two changes nothing. That means the algorithm has converged: it stopped moving!")
     lesson.jargon("k-means", "Pick k centres, assign points to nearest centres, move centres to group middles, and repeat.")
 
 
 @lesson.step("Press the step button", beat="seeit")
 def _():
-    k = st.slider("How many centres?", 2, 5, 3, key="ch19_k")
-    seed = st.slider("Starting-position seed", 0, 12, 0, key="ch19_seed")
-    bad = st.checkbox("Start two centres inside the same clump", value=False, key="ch19_bad")
+    k = st.slider("How many centres?", 2, 5, 3, key="ch20_k")
+    seed = st.slider("Starting-position seed", 0, 12, 0, key="ch20_seed")
+    bad = st.checkbox("Start two centres inside the same clump", value=False, key="ch20_bad")
     settings = (k, seed, bad)
-    if st.session_state.get("ch19_settings") != settings:
-        st.session_state["ch19_settings"] = settings
-        st.session_state["ch19_step"] = 0
+    if st.session_state.get("ch20_settings") != settings:
+        st.session_state["ch20_settings"] = settings
+        st.session_state["ch20_step"] = 0
     history = kmeans_history(k=k, seed=seed, bad_start=bad)
-    if st.button("One k-means step ▶", key="ch19_step_button"):
-        st.session_state["ch19_step"] = (st.session_state.get("ch19_step", 0) + 1) % len(history)
-    step = st.session_state.get("ch19_step", 0)
+    if st.button("One k-means step ▶", key="ch20_step_button"):
+        st.session_state["ch20_step"] = (st.session_state.get("ch20_step", 0) + 1) % len(history)
+    step = st.session_state.get("ch20_step", 0)
     fig = plot_kmeans_stage(history[step])
     lesson.show(fig)
     lesson.look_for("the black X markers. Assign steps recolour dots; move steps shift the centres.")
@@ -120,12 +121,12 @@ def _():
         ["One real clump may never get a centre", "The algorithm fixes it every time", "All centres vanish"],
         correct=0,
         why="k-means can only improve from its starting guess. A bad start can settle into a bad but stable setup.",
-        key="ch19_bad_start",
+        key="ch20_bad_start",
     )
     if guess is None:
         return
     history = kmeans_history(k=3, seed=0, bad_start=True)
-    step = st.slider("Bad-start stage", 0, len(history) - 1, len(history) - 1, key="ch19_bad_stage")
+    step = st.slider("Bad-start stage", 0, len(history) - 1, len(history) - 1, key="ch20_bad_stage")
     fig = plot_kmeans_stage(history[step])
     lesson.show(fig)
     lesson.look_for("the clump that shares or misses a centre. Bad starts can get stuck like gum on a shoe.")
@@ -134,6 +135,7 @@ def _():
 
 @lesson.step("How many clumps?", beat="play")
 def _():
+    lesson.say("An elbow plot uses **inertia**: add up each point's squared distance to its own centre. Smaller means tighter piles.")
     left, right = st.columns(2, gap="large")
     with left:
         lesson.show(plot_elbow("obvious"))
@@ -151,13 +153,13 @@ def _():
         ["It stays recognisable but poster-like", "It becomes random noise", "It becomes a perfect copy"],
         correct=0,
         why="k-means chooses a small palette, then repaints every pixel with its nearest palette colour.",
-        key="ch19_five_colours",
+        key="ch20_five_colours",
     )
     if guess is None:
         return
-    uploaded = st.file_uploader("Upload a photo if you want. If not, we use sklearn's flower.", type=["png", "jpg", "jpeg"], key="ch19_upload")
+    uploaded = st.file_uploader("Upload a photo if you want. If not, we use sklearn's flower.", type=["png", "jpg", "jpeg"], key="ch20_upload")
     image = uploaded_image_to_array(uploaded) if uploaded is not None else cached_default_image()
-    colour_k = st.slider("palette size", 2, 16, 5, key="ch19_palette")
+    colour_k = st.slider("palette size", 2, 16, 5, key="ch20_palette")
     rebuilt, palette = cached_quantized(image, colour_k)
     col_a, col_b = st.columns(2, gap="large")
     with col_a:
@@ -176,7 +178,7 @@ def _():
         ["Yes, because there are two groups", "No, because centres make round-ish chunks", "Only if k is 10"],
         correct=1,
         why="Each centre owns nearby points, making straight-ish borders. Crescents need a curved border.",
-        key="ch19_moons_fail",
+        key="ch20_moons_fail",
     )
     if guess is None:
         return

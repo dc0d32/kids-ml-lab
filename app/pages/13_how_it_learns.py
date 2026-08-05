@@ -21,8 +21,12 @@ def _():
 In Chapter 12 you grabbed the sliders yourself: try a number, watch the mistakes splat
 onto the graph, then try a better number.
 
-Now the neuron gets its own tiny steering wheel! The word **gradient** means two things at
-once: how much this learned number matters for the mistake, and which way points downhill.
+Now the neuron gets its own tiny steering wheel. First it needs one mistake score to make
+smaller. Grown-ups call that score **loss**.
+
+Then it nudges each learned number upward a hair and asks, "Did loss rise or fall?" The
+answer is a **gradient**: how much that number matters for the loss, and which way points
+downhill. Passing those clues backward is called **backprop**.
 """
     )
     lesson.mermaid(
@@ -38,6 +42,8 @@ graph LR
         height=270,
     )
     lesson.look_for("solid arrows for the prediction zooming forward, dotted arrows for blame marching backward.")
+    lesson.jargon("loss", "One number for how bad the model's answer was. Smaller is better.")
+    lesson.jargon("gradient", "How the loss changes if one learned number is nudged upward.")
 
 
 @lesson.step("One training step by hand", beat="byhand")
@@ -56,7 +62,7 @@ error, so when the output is too low, `dL/dout` is negative: the arrow says push
             ["output", "sigmoid(0)", 0.5],
             ["loss", "(0.5 - 1)^2", 0.25],
             ["dL/dout", "2*(0.5 - 1)", -1.0],
-            ["sigmoid slope", "at z = 0", 0.25],
+            ["sigmoid slope", "0.5 * (1 - 0.5)", 0.25],
             ["dL/dz", "-1 * 0.25", -0.25],
             ["dw1", "-0.25 * x1 = -0.25 * 1", -0.25],
             ["dw2", "-0.25 * x2 = -0.25 * 2", -0.5],
@@ -79,12 +85,16 @@ graph LR
 """,
         height=220,
     )
-    lesson.look_for("the three links in the chain. The chain rule snaps together one small effect after another.")
+    lesson.look_for("the three links in the chain. We will snap the small effects together by reading backward.")
     lesson.say(
         """
+When one number changes another number, and that one changes a third, multiply the little
+effects to get the whole tug. Grown-ups call that the **chain rule**.
+
 Read backward: `dL/dw1 = -1 * 0.25 * 1 = -0.25`. Three links, one tug.
 
-With **lr = 0.5**, subtract the gradient: `w1 = 0 - 0.5*(-0.25) = 0.125`,
+With **lr = 0.5** — a small round step size for pencil arithmetic — subtract the gradient:
+`w1 = 0 - 0.5*(-0.25) = 0.125`,
 `w2 = 0 - 0.5*(-0.5) = 0.25`, and `b = 0 - 0.5*(-0.25) = 0.125`. One nudge, and the numbers move!
 """
     )
@@ -98,11 +108,12 @@ def _():
         ["They disagree wildly", "They match to many decimal places", "Only the bias matches"],
         correct=1,
         why="The slow experiment and the fast formula are measuring the same slope from opposite ends of the tunnel.",
-        key="ch12_gradient_match",
+        key="ch13_gradient_match",
     )
     if guess is None:
         return
 
+    lesson.say("Use three tiny points with both answers in the table, then compare the slow nudge test with the fast backward-blame calculation.")
     X_small = np.array([[1.0, 2.0], [0.0, 1.0], [2.0, 1.0]])
     y_small = np.array([1.0, 0.0, 1.0])
     model = MLP([2, 1], activation="sigmoid", seed=0)
@@ -120,7 +131,6 @@ def _():
     st.dataframe(proof.round(12), hide_index=True)
     lesson.look_for("matching columns. The largest difference is a speck because both routes found the same slopes.")
     st.success(f"Largest difference: {np.max(np.abs(proof.iloc[:, 1] - proof.iloc[:, 2])):.2e}")
-    lesson.jargon("gradient", "A number that says how the loss changes if one learned number is nudged upward.")
 
 
 @st.cache_data(show_spinner=False)
@@ -143,7 +153,7 @@ def _():
         ["It always learns faster", "It can jump past good places and explode", "It freezes the weights"],
         correct=1,
         why="Each bad jump lands on a new part of the hill, so the next gradient is measured from a worse place.",
-        key="ch12_large_lr",
+        key="ch13_large_lr",
     )
     if guess is None:
         return
@@ -151,8 +161,8 @@ def _():
     lesson.say("Try a tiny learning rate, a middle one, and a huge one. The learning rate is the boot size for every downhill step.")
     knobs, picture = lesson.controls()
     with knobs:
-        lr = st.slider("Learning rate", 0.0, 8.0, 0.8, 0.1, key="ch12_lr")
-        seed = st.slider("Random start", 0, 10, 2, 1, key="ch12_seed")
+        lr = st.slider("Learning rate", 0.0, 8.0, 0.8, 0.1, key="ch13_lr")
+        seed = st.slider("Random start", 0, 10, 2, 1, key="ch13_seed")
     X, y, ws, bs, losses = train_path(lr, seed)
     current = Neuron(w=ws[-1], b=float(bs[-1]), activation="sigmoid")
     with picture:
@@ -166,8 +176,8 @@ def _():
 def _():
     knobs, picture = lesson.controls()
     with knobs:
-        lr = st.slider("Loss learning rate", 0.0, 8.0, 0.8, 0.1, key="ch12_loss_lr")
-        seed = st.slider("Loss random start", 0, 10, 2, 1, key="ch12_loss_seed")
+        lr = st.slider("Loss learning rate", 0.0, 8.0, 0.8, 0.1, key="ch13_loss_lr")
+        seed = st.slider("Loss random start", 0, 10, 2, 1, key="ch13_loss_seed")
     _, _, _, _, losses = train_path(lr, seed)
     with picture:
         fig, ax = lesson.figure(5.1, 4.3)
@@ -180,8 +190,8 @@ def _():
 def _():
     knobs, picture = lesson.controls()
     with knobs:
-        lr = st.slider("Walk learning rate", 0.0, 8.0, 0.8, 0.1, key="ch12_walk_lr")
-        seed = st.slider("Walk random start", 0, 10, 2, 1, key="ch12_walk_seed")
+        lr = st.slider("Walk learning rate", 0.0, 8.0, 0.8, 0.1, key="ch13_walk_lr")
+        seed = st.slider("Walk random start", 0, 10, 2, 1, key="ch13_walk_seed")
     _, _, ws, _, _ = train_path(lr, seed)
     with picture:
         fig, ax = lesson.figure(5.8, 4.2)

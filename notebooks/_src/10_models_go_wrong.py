@@ -64,6 +64,13 @@ worked = pd.DataFrame(
 )
 worked
 
+# %% [markdown]
+# This 2-by-2 box is a **confusion matrix**. It counts the four things that can happen:
+# caught sick people, missed sick people, false alarms, and correctly ignored healthy people.
+#
+# Precision asks, "When the alarm rang, how often was it right?" Recall asks, "Of all the
+# sick people, how many did the alarm catch?"
+
 # %%
 metrics = realdata.metrics_from_counts(tp=8, fp=2, fn=40, tn=950)
 print("accuracy:", round(metrics["accuracy"] * 100, 1), "%")
@@ -72,6 +79,12 @@ print("recall:", round(metrics["recall"] * 100, 1), "%")
 
 # %% [markdown]
 # Accuracy looks great. Recall is awful.
+#
+# Accuracy = `(8 + 950) / 1000 = 95.8%`.
+#
+# Precision = `8 / (8 + 2) = 80%`.
+#
+# Recall = `8 / (8 + 40) = 16.7%`.
 #
 # There are 48 sick people, but the model only caught 8 of them. Accuracy counts the 950
 # healthy people it left alone, so the big healthy pile hides the medical failure under a rug.
@@ -207,4 +220,4 @@ workbook.render(10)
 
 # %% [markdown]
 # ---
-# **Next up:** Chapter 12 · *One Neuron* — the models become tiny machines made of weights, adds, and one squish.
+# **Next up:** Chapter 11 · *Arrows and Grids* — matrices become space movers before neurons use them.

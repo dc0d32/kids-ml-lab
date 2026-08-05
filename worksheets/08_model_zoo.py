@@ -20,11 +20,23 @@ MODEL_NAMES = pd.DataFrame(
         ["logistic regression"],
         ["decision tree"],
         ["random forest"],
+        ["boosting"],
+        ["linear SVM"],
         ["RBF SVM"],
         ["kNN"],
     ],
     columns=["model"],
 )
+
+MODEL_CHOICES = [
+    "asks nearby points",
+    "one straight line",
+    "smooth islands",
+    "boxes and stairs",
+    "many boxy votes",
+    "little fixes in a row",
+    "the widest straight road",
+]
 
 WORKBOOK = Workbook(
     chapter=8,
@@ -36,7 +48,7 @@ WORKBOOK = Workbook(
         Question(
             prompt="Which personality matches **logistic regression**?",
             kind="choice",
-            choices=["asks nearby points", "one straight line", "smooth islands", "boxes and stairs", "many boxy votes"],
+            choices=MODEL_CHOICES,
             answer="one straight line",
             table=MODEL_NAMES,
             why="Logistic regression draws one straight boundary, then wraps probabilities around it. It is a strong first try when one line can slice the classes apart.",
@@ -44,28 +56,44 @@ WORKBOOK = Workbook(
         Question(
             prompt="Which personality matches a **decision tree**?",
             kind="choice",
-            choices=["asks nearby points", "one straight line", "smooth islands", "boxes and stairs", "many boxy votes"],
+            choices=MODEL_CHOICES,
             answer="boxes and stairs",
             why="A tree asks yes/no questions. On a picture, one-column questions stamp blocky boxes and stair steps; they can bend around shapes, then memorize noise if the boxes get tiny.",
         ),
         Question(
             prompt="Which personality matches a **random forest**?",
             kind="choice",
-            choices=["asks nearby points", "one straight line", "smooth islands", "boxes and stairs", "many boxy votes"],
+            choices=MODEL_CHOICES,
             answer="many boxy votes",
             why="A forest is many trees voting, so it keeps the tree's boxy style but steadies it with a crowd. Voting shines when the trees stumble in different places.",
         ),
         Question(
+            prompt="Which personality matches **boosting**?",
+            kind="choice",
+            choices=MODEL_CHOICES,
+            answer="little fixes in a row",
+            table=MODEL_NAMES,
+            why="Boosting is Chapter 6's second crowd trick: train a little tree, measure what is still wrong, then train the next little tree on those leftovers.",
+        ),
+        Question(
+            prompt="Which personality matches a **linear SVM**?",
+            kind="choice",
+            choices=MODEL_CHOICES,
+            answer="the widest straight road",
+            table=MODEL_NAMES,
+            why="A linear SVM is Chapter 7's widest-road idea without curves: choose the straight separator with the biggest safe gap.",
+        ),
+        Question(
             prompt="Which personality matches an **RBF SVM**?",
             kind="choice",
-            choices=["asks nearby points", "one straight line", "smooth islands", "boxes and stairs", "many boxy votes"],
+            choices=MODEL_CHOICES,
             answer="smooth islands",
             why="An RBF SVM can pour smooth islands around groups of points. The gamma knob controls reach: low gamma spreads wide and smooth, while high gamma pinches tiny islands.",
         ),
         Question(
             prompt="Which personality matches **kNN**?",
             kind="choice",
-            choices=["asks nearby points", "one straight line", "smooth islands", "boxes and stairs", "many boxy votes"],
+            choices=MODEL_CHOICES,
             answer="asks nearby points",
             why="kNN asks the nearby training points to vote. Its personality is local: neighbours carry the megaphone, so changing nearby rows can change the answer.",
         ),

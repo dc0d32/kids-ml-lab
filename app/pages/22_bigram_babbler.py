@@ -64,7 +64,7 @@ def _():
         [". → m", "m → a", "a → ."],
         correct=0,
         why="All three padded words roll out of the start blank into `m`, so the `. → m` box gets 3 marks.",
-        key="ch21_tally_box",
+        key="ch22_tally_box",
     )
     if guess is None:
         return
@@ -105,16 +105,16 @@ def _():
         ["a", "u", "the stop dot"],
         correct=1,
         why="This is the famous q → u habit. The model was not handed spelling rules; it bumped into them by counting.",
-        key="ch21_q_next",
+        key="ch22_q_next",
     )
     if guess is None:
         return
 
-    corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch21_row_corpus")
+    corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch22_row_corpus")
     _, vocab, _, _, _, probs = bigram_bundle(corpus)
     letters = list(vocab.chars)
     default = letters.index("q") if "q" in letters else 0
-    picked = st.selectbox("After this character, what tends to come next?", letters, index=default, format_func=format_letter, key="ch21_picked_letter")
+    picked = st.selectbox("After this character, what tends to come next?", letters, index=default, format_func=format_letter, key="ch22_picked_letter")
     row = probs[vocab.stoi[picked]]
     names, values = top_letters(row, vocab, n=min(10, len(vocab)))
     fig, ax = lesson.figure(7, 3.5)
@@ -134,15 +134,15 @@ def _():
         ["Make safer, more repeated choices", "Make wilder spellings", "Make every letter equally likely"],
         correct=0,
         why="Low temperature sharpens the row like a spotlight, so the same likely letters win again and again.",
-        key="ch21_temperature",
+        key="ch22_temperature",
     )
     if guess is None:
         return
     knobs, picture = lesson.controls()
     with knobs:
-        corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch21_temp_corpus")
-        temperature = st.slider("Temperature", 0.05, 2.0, 0.9, 0.05, key="ch21_temp")
-        seed = st.slider("Random seed", 0, 99, 4, key="ch21_temp_seed")
+        corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch22_temp_corpus")
+        temperature = st.slider("Temperature", 0.05, 2.0, 0.9, 0.05, key="ch22_temp")
+        seed = st.slider("Random seed", 0, 99, 4, key="ch22_temp_seed")
     with picture:
         _, vocab, _, _, _, probs = bigram_bundle(corpus)
         word, trace = sample_bigram_trace(probs, vocab, seed=seed, temperature=temperature, max_len=14)
@@ -155,13 +155,13 @@ def _():
 @lesson.step("Press the babble button", beat="play")
 def _():
     lesson.say("Now let the chart roll its uneven die over and over. It keeps clattering until it hits the stop dot.")
-    corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch21_gen_corpus")
-    temperature = st.slider("Temperature", 0.05, 2.0, 0.9, 0.05, key="ch21_gen_temp")
-    seed = st.slider("Random seed", 0, 99, 4, key="ch21_gen_seed")
-    n_samples = st.slider("How many inventions?", 5, 15, 10, key="ch21_gen_count")
-    if st.button("Generate inventions", key="ch21_generate"):
-        st.session_state["ch21_generated"] = True
-    if not st.session_state.get("ch21_generated", False):
+    corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch22_gen_corpus")
+    temperature = st.slider("Temperature", 0.05, 2.0, 0.9, 0.05, key="ch22_gen_temp")
+    seed = st.slider("Random seed", 0, 99, 4, key="ch22_gen_seed")
+    n_samples = st.slider("How many inventions?", 5, 15, 10, key="ch22_gen_count")
+    if st.button("Generate inventions", key="ch22_generate"):
+        st.session_state["ch22_generated"] = True
+    if not st.session_state.get("ch22_generated", False):
         st.caption("Press the button when you are ready to hear the babbler. Lowkey, it is a letter carnival.")
         return
     _, vocab, _, _, _, probs = bigram_bundle(corpus)
@@ -190,7 +190,9 @@ def _():
 
 @lesson.step("The whole program", beat="forreal")
 def _():
-    lesson.say("The whole model snaps into three lines: count pairs, turn counts into probabilities, score hidden words.")
+    lesson.say(
+        "The whole model snaps into three lines: count pairs, turn counts into probabilities, score hidden words. The middle line gives every box one tiny starter tally, so surprise pairs stay rare instead of impossible."
+    )
     st.code(
         """
 counts = bigram_counts(train_words, vocab)
@@ -200,6 +202,7 @@ loss = bigram_nll(hidden_words, probs, vocab)
         language="python",
     )
     lesson.look_for("the middle line. The tally counts become the uneven dice that make the babbler move.")
+    lesson.jargon("smoothing", "`smoothing=1` adds one fake tally to every box before dividing, so an unseen pair is rare instead of impossible.")
     lesson.careful("The babbler sounds almost name-like, but it only looks one letter back. It has no idea what happened three letters ago. That wall is waiting in Chapter 23.")
 
 

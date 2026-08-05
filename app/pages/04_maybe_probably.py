@@ -47,6 +47,17 @@ It says red or blue and never wavers. A point sitting on the boundary should say
 
 @lesson.step("The boundary becomes 50/50", beat="byhand")
 def _():
+    lesson.say(
+        """
+        Keep Chapter 2's raw line score **z**. Positive should lean red. Negative should
+        lean blue. Near zero should feel like a shrug.
+
+        So we need a squish machine: any score in, a probability from 0 to 1 out. The one
+        used everywhere is **sigmoid(z) = 1 / (1 + e^-z)**. The **e** is a particular
+        number, about **2.718**; you do not need to memorize it. It makes the odds change
+        by the same multiplier for each step in z.
+        """
+    )
     guess = lesson.predict(
         "The raw score z is exactly 0 on the line. What probability should that become?",
         ["0% red", "50% red", "100% red"],
@@ -68,7 +79,8 @@ def _():
     lesson.say(
         """
 Why this S-shape and not any other? It has the habits we need: every output is
-between 0 and 1, 0 turns into exactly 0.5, and opposite scores balance out.
+between 0 and 1, 0 turns into exactly 0.5, and opposite scores balance out. For
+example, sigmoid(2) is about 0.88, while sigmoid(-2) is about 0.12.
 """
     )
     lesson.mermaid(
@@ -128,7 +140,7 @@ says red when **p ≥ 0.5**, and sigmoid reaches 0.5 exactly at **z = 0**.
         w2 = st.slider("w2", -6.0, 6.0, 2.0, 0.1, key="ch04_w2")
         b = st.slider("b", -4.0, 4.0, 0.0, 0.1, key="ch04_b")
         prob = logistic_proba(X, w1, w2, b)
-        st.metric("Log loss", f"{log_loss(prob, y):.3f}")
+        st.metric("Average penalty", f"{log_loss(prob, y):.3f}")
     with picture:
         fig, ax = lesson.figure(6, 5)
         decision_boundary(lambda G: logistic_proba(G, w1, w2, b), X, y, ax=ax, shade_confidence=True)
@@ -152,6 +164,7 @@ For a concrete score, use **w1 = 2**, **w2 = -1**, **b = 0.5**, and point **(1, 
     st.dataframe(penalty, hide_index=True, width="stretch")
     lesson.look_for("the 0.99 red prediction when the truth is blue. Being certain and wrong is expensive.")
     lesson.careful("Being unsure and wrong is forgivable. Being certain and wrong gets a large penalty.")
+    lesson.jargon("log loss", "The penalty score for probability promises. Confident wrong answers cost the most.")
 
 
 @lesson.step("Penguins near the shrug zone", beat="forreal")

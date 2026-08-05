@@ -80,7 +80,7 @@ Distance is the ruler. For point A at (3, 4), the distance is
 
 @lesson.step("Let the neighbours vote", beat="byhand")
 def _():
-    k_hand = st.select_slider("How many neighbours get to vote?", options=[1, 3, 5], value=3, key="ch18_hand_k")
+    k_hand = st.select_slider("How many neighbours get to vote?", options=[1, 3, 5], value=3, key="ch19_hand_k")
     nearest, votes, winner = knn_vote_table(k_hand)
     left, right = st.columns([1, 1])
     with left:
@@ -101,7 +101,7 @@ def _():
         ["Smooth and calm", "Jagged, with islands around odd points", "A straight line"],
         correct=1,
         why="Every old point owns the patch of space where it is the nearest neighbour.",
-        key="ch18_k1_boundary",
+        key="ch19_k1_boundary",
     )
     if guess is None:
         return
@@ -119,7 +119,7 @@ def _():
 
 @lesson.step("Morph the boundary", beat="seeit")
 def _():
-    boundary_k = st.select_slider("Boundary k", options=[1, 3, 5], value=1, key="ch18_boundary_k")
+    boundary_k = st.select_slider("Boundary k", options=[1, 3, 5], value=1, key="ch19_boundary_k")
     fig = plot_knn_hand_boundary(boundary_k)
     lesson.show(fig)
     lesson.look_for("what happens as k grows. The wider crowd smooths the tiny islands.")
@@ -130,9 +130,9 @@ def _():
 def _():
     knobs, picture = lesson.controls()
     with knobs:
-        k = st.slider("k", 1, 51, 7, 2, key="ch18_play_k")
-        qx = st.slider("new point x", -2.5, 2.5, 0.0, 0.1, key="ch18_qx")
-        qy = st.slider("new point y", -2.0, 2.0, 0.0, 0.1, key="ch18_qy")
+        k = st.slider("k", 1, 51, 7, 2, key="ch19_play_k")
+        qx = st.slider("new point x", -2.5, 2.5, 0.0, 0.1, key="ch19_qx")
+        qy = st.slider("new point y", -2.0, 2.0, 0.0, 0.1, key="ch19_qy")
     with picture:
         fig, votes = plot_knn_play(k=k, qx=qx, qy=qy)
         lesson.show(fig)
@@ -154,7 +154,7 @@ def _():
         ["Training", "Prediction", "Both stay free"],
         correct=1,
         why="Training stores the table. Prediction has to compare each new point with many old points, ruler after ruler.",
-        key="ch18_timing",
+        key="ch19_timing",
     )
     if guess is None:
         return
@@ -169,7 +169,7 @@ def _():
         ["Grams can drown out beak lengths", "All columns get equal voice", "Distances stop mattering"],
         correct=0,
         why="A 500-gram body-mass difference can bulldoze a 5-millimetre beak difference because 500 is the bigger number.",
-        key="ch18_scale",
+        key="ch19_scale",
     )
     if guess is None:
         return

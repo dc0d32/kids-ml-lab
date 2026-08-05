@@ -123,7 +123,7 @@ votes
 
 # %%
 curve = knn_accuracy_curve()
-curve.head()
+curve
 
 # %%
 fig, ax = plt.subplots(figsize=(6.4, 3.8))
@@ -151,15 +151,16 @@ timing.round(2)
 # %% [markdown]
 # ### Catch #2: scale matters
 #
-# Distance adds feature differences together. If one column is in grams and another in
-# millimetres, the big-number column can dominate distance. A 500-gram body-mass
-# difference can bulldoze a 5-millimetre beak difference because 500 is the bigger number.
-# Change kilograms to millimetres, or kilograms to grams, and you can change which clue
-# shouts loudest without changing the animal at all. Scaling puts the columns on fair
-# rulers before neighbours vote.
+# Penguins give kNN a trap: beaks are measured in millimetres, but body mass is measured
+# in grams. Run the raw measurements and the scaled version, then read the gap.
 
 # %%
 penguin_knn_scores(k=7)
+
+# %% [markdown]
+# Distance adds feature differences together. A 500-gram body-mass difference can
+# bulldoze a 5-millimetre beak difference because 500 is the bigger number. Scaling puts
+# the columns on fair rulers before neighbours vote.
 
 # %% [markdown]
 # ## 💻 In real code

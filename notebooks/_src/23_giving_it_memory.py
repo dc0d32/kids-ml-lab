@@ -103,11 +103,11 @@ ax.set_title("Letters after training")
 plt.show()
 
 # %% [markdown]
-# > 💡 **Aha!** The vowels often land near each other! Nobody told the model what a vowel
-# > is. It grouped them because they behave alike when guessing the next letter.
+# > 💡 **Aha!** The vowels land near each other! Nobody told the model what a vowel is. It
+# > grouped them because they behave alike when guessing the next letter.
 #
-# This is a real training run, not a stored picture. The vowels land together on every seed we tried, though how tidy it looks does vary. This seed, but not every
-# random start makes a perfect picture.
+# This is a real training run, not a stored picture. The vowels landed together on every
+# seed we tried; the exact shape still wiggles.
 
 # %% [markdown]
 # ## 🎛️ Your turn

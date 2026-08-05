@@ -20,6 +20,14 @@ from kidsml.plots import ACCENT, confusion_grid, use_house_style
 
 use_house_style()
 
+
+def representative_preview(name):
+    df = datasets.load_table(name)
+    target = datasets.target_of(name)
+    if pd.api.types.is_numeric_dtype(df[target]):
+        return df.head(5)
+    return df.groupby(target, group_keys=False).head(2).reset_index(drop=True)
+
 # %% [markdown]
 # ## 🎣 Start here
 #
@@ -46,7 +54,7 @@ use_house_style()
 # table we hand it, so every cleanup choice becomes part of the experiment.
 #
 # > 🧸 **Little Kid Corner** — Imagine sorting a huge box of trading cards. You cannot
-# > hold every card in the air at once. You look at one clue at a time. Flatland fails the a full audit, no cap.
+# > hold every card in the air at once. You look at one clue at a time. Flatland fails a full audit, no cap.
 
 # %%
 penguins = datasets.load_table("penguins")
@@ -110,6 +118,12 @@ realdata.penguin_missing_scores()
 # If 80 out of 100 mushrooms are safe, a model that says **safe every time** scores 80%.
 # A fancy model at 82% moved only two mushrooms. A fancy model at 96% moved sixteen.
 # Same scorecard, very different story!
+#
+# The score table below uses four bundled datasets. **Penguins** are birds with island,
+# beak, flipper, weight, and sex columns, predicting species. **Mushrooms** are mushroom
+# descriptions such as cap shape, smell, and gill clues, predicting edible or poisonous.
+# **Monsters** are trading-card creatures with element, home, and battle stats, predicting
+# whether each one is a boss. **Bikes** are daily weather rows, predicting the number of rentals.
 
 # %%
 realdata.all_dataset_scores()
@@ -130,6 +144,7 @@ realdata.all_dataset_scores()
 # %%
 DATASET = "mushrooms"  # try: penguins, mushrooms, monsters, bikes
 info = realdata.table_overview(DATASET)
+info["head"] = representative_preview(DATASET)
 print(datasets.blurb_of(DATASET))
 print("target:", info["target"])
 print("shape:", info["rows"], "rows ×", info["columns"], "columns")
@@ -149,6 +164,10 @@ info["target_counts"].head(10)
 #
 # The Feature Draft: pick the columns your model may use. This is not a guessing contest
 # where the computer is always right; it is a draft.
+#
+# The monsters table has one row per trading-card creature. The columns include words like
+# `element` and `home`, plus stats like `attack`, `magic`, and `speed`. The target is
+# `is_boss`: yes or no.
 #
 # You choose a team of clues, train, then see who carried the ball. If one column towers
 # over the bar chart, ask whether it is a real clue or a sneaky shortcut.
@@ -192,6 +211,9 @@ print(datasets.MONSTER_SECRET_RULE)
 #
 # Two plots are worth building into your reflexes: a confusion matrix for classes, and
 # predicted-versus-actual for numbers.
+#
+# The bikes table has one row per day, weather columns such as temperature, humidity,
+# wind, and season, and a number target: how many bikes were rented that day.
 
 # %%
 penguin_info = realdata.penguin_confusion()

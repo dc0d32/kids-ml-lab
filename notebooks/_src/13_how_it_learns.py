@@ -26,9 +26,12 @@ use_house_style()
 # In Chapter 12 you grabbed the sliders yourself: try a number, watch the mistakes splat
 # onto the graph, then try a better number.
 #
-# Now the neuron gets its own tiny steering wheel! The word **gradient** will show up a lot,
-# so pin it down three ways: nudge a weight and see what loss does; read the slope of the
-# loss hill; measure how much this weight matters for the mistake.
+# Now the neuron gets its own tiny steering wheel. First it needs one mistake score to make
+# smaller. Grown-ups call that score **loss**.
+#
+# Then it nudges each learned number upward a hair and asks, "Did loss rise or fall?" The
+# answer is a **gradient**: how much that number matters for the loss, and which way points
+# downhill. Passing those clues backward is called **backprop**.
 #
 # ```mermaid
 # graph LR
@@ -42,6 +45,12 @@ use_house_style()
 #
 # The solid arrows zoom forward to make a prediction. The dotted arrows carry blame
 # backward so each learned number knows which way to move.
+#
+# > 📖 **Grown-ups call this:** **loss** is one number for how bad the model's answer was.
+# > Smaller is better.
+#
+# > 📖 **Grown-ups call this:** a **gradient** says how the loss changes if one learned
+# > number is nudged upward.
 
 # %% [markdown]
 # ## ✏️ Work it out
@@ -59,7 +68,7 @@ rows = pd.DataFrame(
         ['output', 'sigmoid(0)', 0.5],
         ['loss', '(0.5 - 1)^2', 0.25],
         ['dL/dout', '2*(0.5 - 1)', -1.0],
-        ['sigmoid slope', 'at z = 0', 0.25],
+        ['sigmoid slope', '0.5 * (1 - 0.5)', 0.25],
         ['dL/dz', '-1 * 0.25', -0.25],
         ['dw1', '-0.25 * x1 = -0.25 * 1', -0.25],
         ['dw2', '-0.25 * x2 = -0.25 * 2', -0.5],
@@ -77,11 +86,14 @@ rows
 #     O -->|2(out-y) = -1| L[loss]
 # ```
 #
-# The chain rule is this diagram read backward: `dL/dw1 = -1 * 0.25 * 1 = -0.25`.
-# It is three “how much does this affect that?” numbers snapped together, one tug at a
-# time.
+# When one number changes another number, and that one changes a third, multiply the little
+# effects to get the whole tug. Grown-ups call that the **chain rule**.
 #
-# With **lr = 0.5**, subtract the gradient: `w1 = 0 - 0.5*(-0.25) = 0.125`,
+# Read the diagram backward: `dL/dw1 = -1 * 0.25 * 1 = -0.25`. It is three “how much does
+# this affect that?” numbers snapped together, one tug at a time.
+#
+# With **lr = 0.5** — a small round step size for pencil arithmetic — subtract the gradient:
+# `w1 = 0 - 0.5*(-0.25) = 0.125`,
 # `w2 = 0 - 0.5*(-0.5) = 0.25`, and `b = 0 - 0.5*(-0.25) = 0.125`.
 #
 # > 💡 **Aha!** Subtracting the gradient walks downhill: if raising a weight raises loss,
@@ -89,19 +101,7 @@ rows
 # > negative moves up. Weird sentence, correct move!
 
 # %% [markdown]
-# Work these out on scrap paper, then type your answers in. You'll be told not only
-# whether you were right, but why the question was worth asking.
-
-# %%
-from kidsml import workbook
-
-workbook.render(13)
-
-# %% [markdown]
 # ## 👀 Take a look
-#
-# > 📖 **Grown-ups call this:** a **gradient** is a number that says how the loss changes if
-# > one learned number is nudged upward.
 #
 # First we measure the gradient the slow way: nudge one weight by a tiny amount, measure
 # the loss change, and divide by the nudge size. That is the lab-bench check.
@@ -109,6 +109,9 @@ workbook.render(13)
 # Then we use the fast blame-passing formula. If the slow experiment and the fast formula
 # match to many decimal places for every learned number, the formula is not a lucky story;
 # it is computing the same slope from the other end of the tunnel.
+#
+# Use three tiny points with both answers in the table, then compare the slow nudge test
+# with the fast backward-blame calculation.
 
 # %%
 X_small = np.array([[1.0, 2.0], [0.0, 1.0], [2.0, 1.0]])
@@ -193,6 +196,14 @@ pd.DataFrame(starts).round(3)
 #
 # ## 🏆 Go further
 #
+# Work through the interactive questions, then try these quests.
+
+# %%
+from kidsml import workbook
+
+workbook.render(13)
+
+# %% [markdown]
 # 1. **Find the biggest safe step, no cap.** Raise the learning rate until the loss starts bouncing off the walls.
 # 2. **Break it later.** Find a rate where the first few steps improve, then the curve gets worse.
 # 3. **Set lr to zero.** Explain why the map is not enough without a step.

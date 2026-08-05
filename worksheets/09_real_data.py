@@ -22,6 +22,16 @@ MINI_PENGUINS = pd.DataFrame(
     }
 )
 
+BUNDLED = pd.DataFrame(
+    [
+        ["penguins", "one bird", "species"],
+        ["mushrooms", "one mushroom", "edible"],
+        ["monsters", "one trading-card creature", "is_boss"],
+        ["bikes", "one rental day", "rentals"],
+    ],
+    columns=["table", "one row means", "target"],
+)
+
 WORKBOOK = Workbook(
     chapter=9,
     title="Workbook · Escape Flatland",
@@ -92,6 +102,26 @@ WORKBOOK = Workbook(
             why=(
                 "The baseline is the free score on the scoreboard. A model that scores 82% sounds strong "
                 "until the most-common-answer baseline already scores 80%."
+            ),
+        ),
+        Question(
+            prompt="Which bundled table has **one trading-card creature** in each row?",
+            kind="text",
+            answer=["monsters", "monster"],
+            table=BUNDLED,
+            why=(
+                "The monsters table has one row per trading-card creature. Its target is `is_boss`, "
+                "so the model is trying to say boss or not-boss from the creature's clues."
+            ),
+        ),
+        Question(
+            prompt="Which bundled table predicts a **number** instead of a class label?",
+            kind="text",
+            answer=["bikes", "bike"],
+            table=BUNDLED,
+            why=(
+                "Bikes predicts `rentals`, a count for one rental day. That makes it a regression problem, "
+                "so predicted-versus-actual is the picture to draw."
             ),
         ),
         Question(

@@ -62,20 +62,20 @@ def course_map_figure():
         ("Start", 0, 4.0, [0]),
         ("Classical", 1, 3.2, [1, 2, 3, 4, 5, 6, 7, 8]),
         ("Messy data", 2, 2.4, [9, 10]),
-        ("Neural nets", 3, 3.2, [11, 12, 13, 14, 15]),
-        ("Seeing", 4, 2.4, [16, 17]),
-        ("No labels", 5, 1.6, [18, 19, 20]),
-        ("Making things up", 6, 3.2, [21, 22, 23, 24]),
+        ("Neural nets", 3, 3.55, [11, 12, 13, 14, 15, 16]),
+        ("Seeing", 4, 2.4, [17, 18]),
+        ("No labels", 5, 2.4, [19, 20, 21]),
+        ("Making things up", 6, 3.2, [22, 23, 24, 25]),
     ]
 
     for name, x, y, chapters in parts:
         ax.text(x, 4.55, name, ha="center", va="center", fontsize=10, weight="bold")
         for j, number in enumerate(chapters):
             yy = y - 0.35 * j
-            colour = ACCENT if number in {1, 2, 11, 13, 17, 23} else COOL
-            if number in {18, 19, 20}:
+            colour = ACCENT if number in {1, 2, 12, 14, 18, 24} else COOL
+            if number in {19, 20, 21}:
                 colour = WARM
-            if number in {0, 24}:
+            if number in {0, 25}:
                 colour = MUTED
             ax.scatter([x], [yy], s=420, c=colour, edgecolors="white", linewidths=1.4, zorder=3)
             ax.text(x, yy, f"{number:02d}", ha="center", va="center", color="white", weight="bold", fontsize=9)
@@ -99,11 +99,11 @@ plt.show()
 uses = pd.DataFrame(
     [
         ["Recommendations", "Chapters 19-20", "Find things near things you already like, or group people/items by pattern."],
-        ["Photo search", "Chapters 17-17 and 20", "Pictures are numbers, CNNs spot patterns, PCA can shrink them."],
-        ["Autocomplete", "Chapters 22-23", "Guess the next letter or text piece over and over."],
+        ["Photo search", "Chapters 17, 18, 21", "Pictures are numbers, CNNs spot patterns, PCA can shrink them."],
+        ["Autocomplete", "Chapters 22-24", "Guess the next letter or text piece over and over."],
         ["Spam filters", "Chapters 04, 08, 10", "Probability, model choice, and checking failure modes."],
-        ["Voice assistants", "Chapters 14, 17, 23", "Layers for sound patterns plus language models for text."],
-        ["Game AI", "Chapters 00, 05, 06, 11", "Rules from examples, trees, crowds, and small neural nets."],
+        ["Voice assistants", "Chapters 14, 18, 24", "Layers, sliding windows for sound-like patterns, and language models for text."],
+        ["Game AI", "Chapters 00, 05, 06, 14", "Rules from examples, trees, crowds, and small neural nets."],
         ["Translation", "Chapter 24", "Attention helps connect words far apart across languages."],
     ],
     columns=["thing", "chapters", "connection"],
@@ -124,10 +124,14 @@ uses
 # warning lights.
 #
 # **Confidently wrong.** Out-of-distribution inputs can still get confident answers.
-# Chapter 00 and Chapter 10 both showed models stepping past the edge of the map.
+# Chapter 00 showed confidence from too few clues; Chapter 10 showed the edge of the map.
 #
 # **No world inside.** A language model knows patterns in text. It does not have a lived-in
 # world the way you do.
+#
+# In the app, start the Chapter 24 model with a factual-looking prompt like `the moon is
+# made of`. Watch for the important split: it can keep the *shape* of an answer without
+# checking whether the answer is true.
 #
 # Being smart about AI:
 #
@@ -144,16 +148,16 @@ uses
 # %%
 projects = pd.DataFrame(
     [
-        ["Train the babbler on your own writing", "21-23", "It will sound weirdly like you."],
-        ["Photo sorter for your room", "16-20", "Use your own pictures and cluster them."],
+        ["Train the babbler on your own writing", "22-24", "It will sound weirdly like you."],
+        ["Photo sorter for your room", "17-21", "Use your own pictures and cluster them."],
         ["Predict your bus arrival", "01, 08, 10", "Collect data for two weeks and test honestly."],
         ["Tiny game bot", "00, 05, 11", "Teach it from examples of your moves."],
-        ["Music mood clusters", "18-20", "Group songs by features you choose."],
+        ["Music mood clusters", "19-21", "Group songs by features you choose."],
         ["Mushroom safety explainer", "05, 08, 10", "Accuracy is not enough when mistakes matter."],
-        ["Handwritten symbol reader", "16-17", "Make a mini alphabet of your own symbols."],
-        ["Name generator for a fantasy team", "21-22", "Tune temperature and pick the best accidents."],
+        ["Handwritten symbol reader", "17-18", "Make a mini alphabet of your own symbols."],
+        ["Name generator for a fantasy team", "22-23", "Tune temperature and pick the best accidents."],
         ["Bias detective", "10", "Build a lopsided dataset and catch the failure."],
-        ["Attention poem machine", "23", "Train on poems you are allowed to use and inspect heads."],
+        ["Attention poem machine", "24", "Train on poems you are allowed to use and inspect heads."],
     ],
     columns=["project", "chapters", "why it is interesting"],
 )

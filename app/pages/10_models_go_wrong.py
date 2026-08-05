@@ -73,6 +73,15 @@ healthy, 40 sick people were missed, and 950 healthy people were left alone.
         columns=["model said sick", "model said healthy"],
     )
     st.dataframe(worked, width="content")
+    lesson.say(
+        """
+This 2-by-2 box is a **confusion matrix**. It counts the four things that can happen:
+caught sick people, missed sick people, false alarms, and correctly ignored healthy people.
+
+Precision asks, "When the alarm rang, how often was it right?" Recall asks, "Of all the
+sick people, how many did the alarm catch?"
+"""
+    )
     lesson.look_for("the 40 missed sick people. Accuracy can hide them inside the big healthy pile.")
 
     metrics = realdata.metrics_from_counts(tp=8, fp=2, fn=40, tn=950)
