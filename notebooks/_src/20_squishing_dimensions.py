@@ -11,6 +11,10 @@
 # hand. Other shadows become a blob.
 #
 # Choosing the angle is the whole of PCA.
+#
+# The goal is not to keep every fact. Squishing always throws something away. The goal is
+# to throw away the quiet directions first and keep the directions where points still look
+# different from each other.
 
 # %%
 import matplotlib.pyplot as plt
@@ -41,6 +45,16 @@ use_house_style()
 #
 # Same hand. Same wall. Different angle. The useful shadow keeps the story.
 #
+# ```mermaid
+# graph LR
+#     A[High-dimensional cloud] --> B[Choose an angle]
+#     B --> C[Cast a shadow]
+#     C --> D[2D plot]
+#     D --> E[Check what stayed spread out]
+# ```
+#
+# Look at the last box. PCA judges a shadow by how much spread remains after the squish.
+#
 # > 🧸 **Little Kid Corner** — Use a flashlight and your hand. Turn your hand until the
 # > shadow gives the best clue.
 
@@ -49,6 +63,10 @@ use_house_style()
 #
 # Four points lie nearly sideways. Project onto x, then onto y. Spread is the sum of
 # squared distances from the middle.
+#
+# "Keep the points spread out" sounds visual, but it means something practical. If two
+# points land on the same shadow spot, the shadow forgot the difference between them. If
+# the points stay spread apart, the shadow kept more information about who is who.
 
 # %%
 table = pca_hand_table()
@@ -59,7 +77,9 @@ print("x spread:", spread(table["x shadow"]))
 print("y spread:", spread(table["y shadow"]))
 
 # %% [markdown]
-# If we can keep one axis, we keep x. It stays more spread out.
+# If we can keep one axis, we keep x. It keeps A and D far apart, while the y shadow
+# squishes pairs together. Spread is information because it keeps points different from
+# each other.
 #
 # > 📖 **Grown-ups call this:** **principal component analysis** searches for the shadow
 # > where the points stay as spread out as possible.
@@ -88,7 +108,8 @@ plt.show()
 
 # %% [markdown]
 # The best shadow is spread out because spread is information. If every point collapses
-# into one spot, the shadow forgot how the points differ.
+# into one spot, the shadow forgot how the points differ. A wider shadow kept more of the
+# story.
 
 # %% [markdown]
 # ## 🎛️ Play With It
@@ -106,7 +127,8 @@ fig = plot_eigendigits(8)
 plt.show()
 
 # %% [markdown]
-# Those ghostly pictures are principal components. PCA mixes them to rebuild digits.
+# Look at the rebuild first, then the curve. Those ghostly pictures are principal
+# components. PCA mixes them to rebuild digits.
 
 # %% [markdown]
 # ## 💻 For Real
@@ -120,26 +142,30 @@ plt.show()
 print("variance kept:", round(kept, 3))
 
 # %% [markdown]
-# Some digits still overlap. That matches the confusion-matrix idea from Chapter 16: if
-# two digits look alike, a small shadow keeps tangling them.
+# Some digits still overlap. That matches the confusion-matrix idea from Chapter 16:
+# digits that tangled there often sit near or on top of each other here too. Two different
+# tools are agreeing about which digits look alike.
 #
 # t-SNE is a different kind of squishing. It tries to keep neighbours together rather than
-# keeping global spread. It can look cleaner, but distances and cluster sizes in a t-SNE
-# plot are not facts.
+# keeping global spread. It bends and stretches the map to make local neighbourhoods
+# visible. The gap between two islands, or the size of an island, is not a measured fact.
+# People over-read these plots because they look like maps.
 
 # %%
 fig = plot_digits_tsne(n=600, seed=0)
 plt.show()
 
 # %% [markdown]
-# PCA is linear. It can pick a flat shadow, not unwrap every shape.
+# PCA is linear. It can pick a flat shadow, not unwrap every shape. If two curved arms
+# cross in every flat shadow, PCA cannot separate them no matter which angle it chooses.
 
 # %%
 fig = plot_pca_linear_failure()
 plt.show()
 
 # %% [markdown]
-# On penguins, the first component mostly acts like a size direction.
+# On penguins, the first component mostly acts like a size direction. Look for body-mass
+# and flipper-length weights when the table appears.
 
 # %%
 loadings, first_kept = penguin_pca_table()

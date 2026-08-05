@@ -41,6 +41,25 @@ Here is the fix. One small window slides across the image.
 """
 )
 
+ui.mermaid(
+    """
+graph LR
+    A[Image patch] --> B[Same 3x3 kernel]
+    B --> C[Multiply and add]
+    C --> D[One feature-map cell]
+    D --> E[Slide right]
+    E --> B
+""",
+    height=260,
+)
+
+st.markdown(
+    """
+Notice the word **same**. We do not invent a new edge detector for every spot. The same
+little grid visits the top-left corner, the middle, and the bottom-right corner.
+"""
+)
+
 ui.little_kid_corner(
     "Put a sticky note with a 3 by 3 hole over a picture. Look through the hole, move it one square, and look again. "
     "You are doing the sliding-window idea with paper."
@@ -71,7 +90,9 @@ For the first window:
 
 `0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27`
 
-Now slide one square at a time. A 5×5 image with a 3×3 window has 9 places to land.
+Now slide one square at a time. Across the rows, the 3-high window can start at row 1,
+row 2, or row 3. Starting at row 4 would hang off the bottom. The columns work the same
+way, so the output is 3 rows by 3 columns: **9 places to land**.
 """
 )
 ui.jargon("convolution", "Slide a small grid of weights over a picture. Multiply what lines up, then add.")
@@ -85,12 +106,20 @@ show_image(kernel, ax=axes[1], numbers=True, title="kernel", cmap="coolwarm")
 show_image(output, ax=axes[2], numbers=True, title="output", cmap="magma")
 fig.tight_layout()
 ui.show(fig)
-ui.aha("The big numbers land where dark pixels become bright pixels. You detected an edge by hand.")
+ui.aha(
+    "Look at the output grid. The big numbers land where dark pixels become bright pixels. "
+    "You detected an edge by hand, using the same multiply-and-add at every position."
+)
 
 # ---------------------------------------------------------------------------
 ui.beat("play", "Edit the 3×3 window live.")
 
-st.markdown("Try the preset buttons, then change one number. A blur is a kernel full of 1/9 values.")
+st.markdown(
+    """
+Try the preset buttons, then change one number. A blur is a kernel full of 1/9 values
+because each output cell becomes the average of its 3×3 neighbourhood.
+"""
+)
 if "ch17_kernel" not in st.session_state:
     st.session_state["ch17_kernel"] = vision.KERNEL_PRESETS["vertical edge"].copy()
 
@@ -132,7 +161,23 @@ st.markdown(
     """
 The kernels above were designed by a person. What if we let the model choose its
 own? That is the leap.
+
+During training, the CNN changes the kernel numbers until useful patches light up. It is
+still the same sliding-window game, but the edge finder is learned instead of hand-written.
 """
+)
+ui.mermaid(
+    """
+graph LR
+    A[Image] --> B[Convolution]
+    B --> C[Squish]
+    C --> D[Pool]
+    D --> E[Classify]
+""",
+    height=220,
+)
+st.markdown(
+    "Look at the stack: find small patterns, squish the scores, keep the strongest signals, then make the final guess."
 )
 st.code(
     """
@@ -154,19 +199,21 @@ st.markdown(
 st.dataframe(vision.model_comparison_table(result), hide_index=True, use_container_width=True)
 
 ui.aha(
-    "The CNN reuses the same little window everywhere. It learns that an edge is an edge "
-    "wherever it appears, instead of learning a separate edge detector for every spot."
+    "The CNN reuses the same little window everywhere. That teaches it **an edge is an edge "
+    "wherever it appears**: sleeve edge, shoe edge, top-left edge, bottom-right edge.\n\n"
+    "This buys two things at once. Fewer parameters, because one kernel is shared across "
+    "many positions. Better scores, because the same clue can be recognized wherever the object moved."
 )
 
 filters = vision.first_conv_filters(result)
 fig = vision.plot_small_images(filters, titles=[f"filter {i}" for i in range(len(filters))], width=1.1, vcenter=True)
 ui.show(fig)
-st.caption("Some learned filters look like tiny edge or blob detectors — the cousins of the kernels you edited.")
+st.caption("Look for tiny edge or blob detectors. These are the learned cousins of the kernels you edited.")
 
 maps = vision.feature_maps(result, limit=8)
 fig = vision.plot_small_images(maps, titles=[f"map {i}" for i in range(len(maps))], width=1.1)
 ui.show(fig)
-st.caption("Feature maps show where a filter lit up on one test image.")
+st.caption("Bright spots show where a filter lit up on one test image. Same filter, many possible locations.")
 
 wrong = vision.cnn_wrong_examples(result, limit=6)
 if wrong:

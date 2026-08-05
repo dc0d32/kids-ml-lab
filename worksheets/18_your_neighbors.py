@@ -26,28 +26,40 @@ WORKBOOK = Workbook(
             answer=5,
             table=POINTS,
             hint="3² + 4² = 25. Which number squared is 25?",
-            why="This is the 3-4-5 triangle. kNN is built from this distance calculation over and over.",
+            why=(
+                "From (0, 0) to (3, 4), the distance is √(3² + 4²) = √(9 + 16) = √25 = 5. "
+                "kNN is built from this distance calculation over and over."
+            ),
         ),
         Question(
             prompt="Which point is closest?",
             kind="choice",
             choices=["A", "B", "C", "D", "E"],
             answer="A",
-            why="A is 5 away. The others are 6, 8, 15, and 16 away.",
+            why=(
+                "A is 5 away. The others are 6, 8, 15, and 16 away. The closest old point "
+                "gets the first chance to influence the new point's label."
+            ),
         ),
         Question(
             prompt="With k = 1, what label does the new point get?",
             kind="choice",
             choices=["red", "blue"],
             answer="red",
-            why="With k = 1, the closest point gets the whole vote. A is red.",
+            why=(
+                "With k = 1, the closest point gets the whole vote. A is red. This is powerful but risky, "
+                "because one noisy neighbour can control the answer."
+            ),
         ),
         Question(
             prompt="With k = 3, the nearest labels are red, blue, blue. What wins?",
             kind="choice",
             choices=["red", "blue", "tie"],
             answer="blue",
-            why="Two blue votes beat one red vote. Changing k changed the answer.",
+            why=(
+                "Two blue votes beat one red vote. Changing k changed the answer because the model listened "
+                "to a small crowd instead of one nearest point."
+            ),
         ),
         Question(
             prompt="With k = 5, what label wins?",

@@ -46,13 +46,19 @@ WORKBOOK = Workbook(
             kind="number",
             answer=64,
             table=PHOTO_COUNTS,
-            why="8 rows times 8 columns is 64. That is small enough to show as one row for a model.",
+            why=(
+                "8 rows times 8 columns is 64. That is small enough to show as one row for a model. "
+                "Flattening changes the shape of the table, not the numbers inside it."
+            ),
         ),
         Question(
             prompt="How many numbers are in a 28×28 gray image?",
             kind="number",
             answer=784,
-            why="28 × 28 = 784. A tiny-looking image already has hundreds of inputs.",
+            why=(
+                "28 × 28 = 784. A tiny-looking image already has hundreds of inputs because width and height "
+                "multiply. Doubling both sides would make four times as many pixel numbers."
+            ),
         ),
         Question(
             prompt="How many numbers are in a 1000×1000 colour photo?",

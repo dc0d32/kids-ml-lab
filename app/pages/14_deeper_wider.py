@@ -9,7 +9,6 @@ import streamlit as st
 from kidsml import ui
 from kidsml.datasets import toy_shape
 from kidsml.nn_numpy import MLP, mse
-from kidsml.nnplots import neuron_surface_figure, network_diagram
 from kidsml.plots import decision_boundary, loss_curve
 
 ui.page_setup(14)
@@ -18,22 +17,42 @@ ui.page_setup(14)
 ui.beat('hook')
 st.markdown(
     """
-You have the whole idea now.
+You have the whole idea now: line scores, squishes, gradients, and hidden features.
 
-Everything from here is more of the same: more neurons, more layers, different squishes,
-and a new danger called over-studying.
+Deeper networks do not add a secret ingredient. They repeat the same move more times:
+make features, squish them, make new features from those features. That buys more
+flexible boundaries, and it also creates a new danger: memorising noise.
 """
 )
-ui.show(network_diagram([2, 5, 5, 1], activation='tanh'))
+ui.mermaid(
+    """
+graph LR
+    X[2 inputs] --> H1[5 neurons]
+    H1 --> H2[5 neurons]
+    H2 --> Y[1 output]
+    H1 -. wider .-> H1
+    H2 -. deeper .-> Y
+""",
+    height=260,
+)
+st.markdown('The diagram grew by adding more hidden neurons and another hidden layer. The arrows still carry numbers forward and gradients backward.')
 
 # ---------------------------------------------------------------------------
 ui.beat('byhand')
-st.markdown('Count the learnable numbers in `[2, 5, 5, 1]`.')
+st.markdown(
+    """
+Count the learnable numbers in `[2, 5, 5, 1]`. Every arrow is a weight, and every non-input
+neuron gets one bias.
+
+This is worth counting because capacity is not a mood word. It is a pile of adjustable
+numbers the network can use to fit the data.
+"""
+)
 counts = pd.DataFrame(
     {'layer': ['2 → 5', '5 → 5', '5 → 1', 'biases'], 'count': [10, 25, 5, 11]}
 )
 st.dataframe(counts, hide_index=True, use_container_width=False)
-st.markdown('That is **40 weights + 11 biases = 51 parameters**. Parameters are the numbers the network has to learn.')
+st.markdown('That is **40 weights + 11 biases = 51 parameters**. A bigger pile can fit more shapes, including shapes caused by bad luck.')
 ui.jargon('parameters', 'The weights and biases: every adjustable number inside the model.')
 
 # ---------------------------------------------------------------------------
@@ -56,7 +75,16 @@ for col, (act, m) in zip(cols, models):
         fig, ax = ui.figure(4.5, 4.0)
         decision_boundary(lambda G, model=m: model.predict_proba(G), X_zoo, y_zoo, ax=ax, steps=160, title=act)
         ui.show(fig)
-st.markdown('ReLU makes folded-paper pieces. Tanh and sigmoid make smoother bends. ReLU became popular because it is fast and its gradient stays alive more often.')
+st.markdown(
+    """
+Look at the edges of the coloured regions. ReLU is a flat floor glued to a straight ramp,
+so many ReLUs make folded-paper boundaries with creases. Tanh and sigmoid are smooth
+S-curves, so their boundaries tend to bend more smoothly.
+
+Neither style is always best. The squish shape controls the kind of bends the network can
+build easily.
+"""
+)
 
 # ---------------------------------------------------------------------------
 ui.beat('play')
@@ -82,10 +110,38 @@ for col, m in zip(cols, trained):
         fig, ax = ui.figure(3.8, 3.5)
         decision_boundary(lambda G, model=m: model.predict_proba(G), X_cmp, y_cmp, ax=ax, steps=140, title=m.describe())
         ui.show(fig)
-st.markdown('On tiny toy shapes, deeper is not automatically better. The big wins for depth show up later, when the data has many little parts, like images.')
+st.markdown(
+    """
+On tiny toy shapes, deeper is not automatically better. More capacity means more ways to
+curve around the points, but training still has to find useful curves.
+
+The big wins for depth show up later, when data has many reusable parts: edges inside
+images, sounds inside speech, or words inside sentences.
+"""
+)
 
 # ---------------------------------------------------------------------------
 ui.beat('forreal')
+st.markdown(
+    """
+Now watch overfitting. We give the network a small practice set and flip some labels, so
+some dots are lies.
+
+A high-capacity network can spend its extra wiggles chasing those lies. Train loss keeps
+falling because the practice dots look happier, while test loss rises because fresh dots
+want the calmer rule underneath.
+"""
+)
+ui.mermaid(
+    """
+graph LR
+    A[broad pattern] --> B[practice loss falls]
+    B --> C[tiny wiggles]
+    C --> D[train loss lower]
+    C --> E[test loss higher]
+""",
+    height=240,
+)
 
 @st.cache_data(show_spinner=False)
 def overfit_story(weight_decay: float = 0.0, more_data: bool = False):
@@ -125,7 +181,16 @@ with cols[1]:
     fig, ax = ui.figure(5.2, 4.2)
     decision_boundary(lambda G: over_model.predict_proba(G), X_train, y_train, ax=ax, steps=160, title='Boundary after training')
     ui.show(fig)
-st.markdown('Three fixes: stop at the dashed line, keep the weights smaller with weight decay, or give the model more practice questions.')
+st.markdown(
+    """
+Look for the dashed line: early stopping works because broad patterns are often learned
+before noisy details. Weight decay helps in a different way. Small weights make gentler
+ramps, so the boundary has a harder time making sharp little detours around one weird dot.
+
+More data helps too: a single noisy point is less powerful when surrounded by many honest
+neighbours.
+"""
+)
 
 # ---------------------------------------------------------------------------
 ui.beat('challenge')
@@ -133,9 +198,10 @@ st.markdown(
     """
 1. **Smallest spiral net.** Reduce the architecture until spiral breaks.
 2. **Overfit hard.** Use few points, many neurons, and no weight decay.
-3. **Too much simplicity.** Raise weight decay until the boundary becomes boring.
+3. **Too much calm.** Raise weight decay until the boundary becomes boring.
 4. **More data.** Turn on more practice questions and watch the loss gap shrink.
-5. 🧸 **Little Kid Corner:** Practice helps. Memorising one worksheet does not. New questions tell the truth.
+5. 🧸 **Little Kid Corner:** Practice helps. Memorising one worksheet does not. New
+   questions tell the truth.
 """
 )
 ui.worksheet_link(14)

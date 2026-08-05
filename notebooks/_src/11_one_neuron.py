@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Chapter 11 · One Neuron
 #
-# ### It's Chapter 2 plus a squish. That's all.
+# ### Chapter 2 plus Chapter 4, stacked into one circle.
 #
 # *Part 3 · Neural networks*
 #
@@ -17,7 +17,7 @@ from sklearn.linear_model import LogisticRegression
 
 from kidsml.datasets import toy_shape, two_blobs_tiny, xor_exact
 from kidsml.nn_numpy import Neuron
-from kidsml.nnplots import neuron_diagram, neuron_surface_figure
+from kidsml.nnplots import neuron_surface_figure
 from kidsml.plots import decision_boundary, draw_line, use_house_style
 
 use_house_style()
@@ -25,31 +25,43 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# People draw neural networks as terrifying webs of circles and arrows.
+# Part 3 sounds like a new planet: **neural networks**. It is not. A neuron is the
+# straight-line score from Chapter 2, followed by the probability squish from Chapter 4.
 #
-# Here is one circle. You already know what it does. The inside is Chapter 2. The squish
-# is Chapter 4.
-
-# %%
-fig = neuron_diagram(weights=(2, -1), bias=0.5, activation='sigmoid')
-plt.show()
-
-# %% [markdown]
-# `output = squish(w1*x1 + w2*x2 + b)`
+# That matters because there is no missing spell. If you can read `w1*x1 + w2*x2 + b`,
+# you can read the inside of this circle. The circle wraps the score so a yes/no model can
+# say “barely yes”, “very yes”, or “I am near the fence”.
 #
-# Point at the brackets: that is Chapter 2. Point at `squish`: that is Chapter 4.
+# ```mermaid
+# graph LR
+#     X1[x₁] --> M[weights times inputs]
+#     X2[x₂] --> M
+#     M --> S((Σ + b))
+#     S --> A[squish]
+#     A --> Y[output from 0 to 1]
+# ```
+#
+# Read the diagram from left to right. The only new part is the squish at the end; the
+# weighted sum in the middle is the line machine you already built.
+#
+# > 💡 **Aha!** One neuron is `output = squish(w1*x1 + w2*x2 + b)`: Chapter 2 inside,
+# > Chapter 4 outside.
 
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Use **w1 = 2**, **w2 = -1**, **b = 0.5**.
+# Use **w1 = 2**, **w2 = -1**, **b = 0.5**. First build the raw score `z`, then squish it.
+#
+# The raw score decides which side of the line the point is on. The squish keeps the same
+# side, but turns “how far from the line?” into a number between 0 and 1.
 
 # %%
 hand = pd.DataFrame(
     {
         'x1': [1, 0, 1],
         'x2': [0, 1, 2],
-        'z = 2*x1 - x2 + 0.5': [2.5, -0.5, 0.5],
+        'z working': ['2*1 + (-1)*0 + 0.5', '2*0 + (-1)*1 + 0.5', '2*1 + (-1)*2 + 0.5'],
+        'z': [2.5, -0.5, 0.5],
         'sigmoid(z) approx': [0.92, 0.38, 0.62],
         'prediction': ['red', 'blue', 'red'],
     }
@@ -57,13 +69,22 @@ hand = pd.DataFrame(
 hand
 
 # %% [markdown]
-# Double w1, w2 and b. Every z doubles, but the place where z equals zero stays put.
-# Confidence changes. The boundary does not.
+# Why not leave the raw score alone? For a class answer, `z = 19` and `z = 1900` both mean
+# “red”, but a training rule needs a bounded target to compare with `0` and `1`. The squish
+# makes a soft confidence score without moving the fence.
+#
+# > ⚠️ **Careful:** If you double w1, w2, and b, every raw score doubles. The zero places
+# > stay zero, so the boundary stays put. Far-away points become more confident; the line
+# > does not move.
 
 # %% [markdown]
 # ## 👀 See It
 #
-# `Neuron.raw(X)` is the old line score, before the squish.
+# `Neuron.raw(X)` shows the Chapter 2 score before the squish. A positive raw score lands
+# on one side, a negative score lands on the other, and zero is the fence.
+#
+# Look at the first few blob points below. The neuron is not hiding a secret formula; it is
+# computing `x1 + x2 - 7` and then sending that number through the squish.
 
 # %%
 X_tiny, y_tiny = two_blobs_tiny()
@@ -71,10 +92,14 @@ neuron = Neuron(w=np.array([1.0, 1.0]), b=-7.0, activation='sigmoid')
 pd.DataFrame({'x1': X_tiny[:5, 0], 'x2': X_tiny[:5, 1], 'raw z': neuron.raw(X_tiny[:5])})
 
 # %% [markdown]
+# The raw numbers are not probabilities yet. They are signed distances from the line
+# machine.
+
+# %% [markdown]
 # ## 🎛️ Play With It
 #
-# The 3D surface is the neuron's output over the whole plane. Rotate it in the app. In the
-# notebook, the same object appears below.
+# The 3D surface is the neuron's output over the whole plane. In the app you can rotate it;
+# here the same object appears below.
 
 # %%
 X, y = toy_shape('blobs', n=180, noise=0.22, seed=4)
@@ -88,17 +113,34 @@ plt.show()
 neuron_surface_figure(play_neuron, X, steps=45, title='Neuron output as a ramp')
 
 # %% [markdown]
-# XOR is still a wall for one neuron.
+# Watch the green line first. That is where `z = 0`, so it is the same straight fence from
+# Chapter 2. Now watch the colours and the 3D ramp: steeper weights make the answer change
+# faster as you walk away from the fence.
+#
+# XOR is still the Chapter 3 wall. Opposite corners need the same colour, and a single
+# straight boundary always cuts the square into two neighbouring chunks. One neuron has
+# one boundary, so it cannot win.
 
 # %%
 X_xor, y_xor = xor_exact()
-print('XOR predictions:', play_neuron.predict(X_xor).tolist())
-print('XOR mistakes:', int((play_neuron.predict(X_xor) != y_xor).sum()))
+pd.DataFrame(
+    {
+        'x1': X_xor[:, 0],
+        'x2': X_xor[:, 1],
+        'truth': y_xor,
+        'one neuron prediction': play_neuron.predict(X_xor),
+    }
+)
 
 # %% [markdown]
 # ## 💻 For Real
 #
-# Train our neuron on blobs, then compare it with scikit-learn's logistic regression.
+# Now we train the neuron instead of choosing its numbers by hand. Scikit-learn calls the
+# same idea **logistic regression**: a line score, a sigmoid, and a training rule.
+#
+# The learned numbers do not have to match exactly, because the two training recipes use
+# different loss details. What should match is the divider: it should point through the
+# same gap in the blobs.
 
 # %%
 X_fit, y_fit = toy_shape('blobs', n=180, noise=0.18, seed=8)
@@ -122,14 +164,17 @@ decision_boundary(lambda G: mine.forward(G), X_fit, y_fit, ax=ax, steps=180, tit
 plt.show()
 
 # %% [markdown]
-# You rediscovered logistic regression by stacking two chapters.
+# Look at the gap between the two blob clouds. The trained neuron found a straight divider
+# there, which is Chapter 2 plus Chapter 4 stacked together.
 #
 # ## 🏆 Challenge
 #
-# 1. Find weights by hand that classify the blobs perfectly.
-# 2. Make a neuron that says yes for almost everything.
-# 3. Make one that is maximally unsure everywhere.
-# 4. Try to solve XOR with one neuron, then explain why it fights back.
+# 1. **Find perfect blob weights.** Use the app sliders until the blob mistakes hit zero.
+#    Which knob mostly rotates the line?
+# 2. **Say yes to everything.** Make almost the whole plane red. Which bias did it take?
+# 3. **Make a shrug machine.** Set every learned number to zero. What output do you get?
+# 4. **Feel the XOR wall.** Try to get zero XOR mistakes with one neuron, then explain the
+#    Chapter 3 reason it cannot happen.
 # 5. 🧸 **Little Kid Corner:** Draw a chalk line. Far from the line means a loud answer.
 #    On the line means a shrug.
 #

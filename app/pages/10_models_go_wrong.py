@@ -41,13 +41,34 @@ A model that is right **99%** of the time can be useless.
 
 A model that scores brilliantly can be cheating without anybody noticing.
 
-This chapter is the magic trick's secret. Once you know the trick, suspicious scores start to look suspicious. Good.
+This chapter is the magic trick's secret. Once you know the trick, suspicious scores start
+to look suspicious. Good. Chapter 00 warned that a model always answers; now we learn when
+that confident answer should make you nervous.
 """
 )
 
 ui.little_kid_corner(
     "If a smoke alarm never beeps, it is quiet almost all day. That does not make it a good smoke alarm. "
     "The important question is what happens on the one day with smoke."
+)
+
+ui.mermaid(
+    """
+graph TD
+    A[Shiny score] --> B{What feels wrong?}
+    B -->|rare answer| C[Useless accuracy]
+    B -->|too perfect| D[Leakage]
+    B -->|hurts one group| E[Copied unfair history]
+    B -->|far away| F[Outside its world]
+""",
+    height=330,
+)
+
+st.markdown(
+    """
+Use this flowchart like a detective card. A score is not the end of the investigation;
+it is the first clue about where to look next.
+"""
 )
 
 # ---------------------------------------------------------------------------
@@ -80,6 +101,16 @@ st.markdown(
 st.markdown(
     f"Of the people who really were sick, it caught 8 out of 48: **{metrics['recall']:.0%}**. Ouch."
 )
+st.markdown(
+    """
+Now watch the trap. There are 48 sick people, but the model only caught 8 of them. The
+accuracy counts the 950 healthy people it left alone, so the big healthy pile hides the
+medical failure.
+
+That is why rare problems need more than accuracy. If a disease appears in 1 out of 100
+people, a model can score 99% by saying **healthy** to everyone and helping nobody sick.
+"""
+)
 ui.jargon("precision", "Of the ones it flagged, how many really were?")
 ui.jargon("recall", "Of the ones that really were, how many did it catch?")
 
@@ -88,7 +119,10 @@ ui.beat("seeit", "Failure 1: the useless 99%.")
 
 always = realdata.always_healthy_accuracy()
 st.metric("Always say healthy", f"{always:.0%} accuracy")
-st.markdown("It knows nothing. It missed every sick person. The score still looks shiny.")
+st.markdown(
+    "Here is the rare-disease trick in one number: this model knows nothing, misses every "
+    "sick person, and still gets a shiny score because healthy people are common."
+)
 
 threshold = st.slider("How worried must the model be before it says sick?", 0.00, 1.00, 0.50, 0.05)
 report = cached_threshold(threshold)
@@ -102,15 +136,32 @@ cols[0].metric("accuracy", f"{m['accuracy']:.1%}")
 cols[1].metric("precision", f"{m['precision']:.1%}")
 cols[2].metric("recall", f"{m['recall']:.1%}")
 st.markdown(
-    "Move the slider. Catching more sick people usually means scaring more healthy people. "
-    "For a smoke alarm, you may accept more false alarms. For a spam filter, eating real mail is painful. There is no universal right answer."
+    """
+Move the slider and watch the trade. The model has a hidden worry score for each person.
+The threshold is the line that says, "above here, call it sick."
+
+Lower the line and more people cross it. Recall rises because you catch more sick people,
+but precision can fall because more healthy people get swept in too. Raise the line and
+you bother fewer healthy people, but you miss more sick ones.
+
+For a smoke alarm, false alarms are annoying but missed smoke is worse. For a spam filter,
+eating real mail is painful. There is no universal right threshold.
+"""
 )
 
 # ---------------------------------------------------------------------------
 ui.beat("play", "Failures 2, 3, and 4.")
 
 st.subheader("Failure 2 — the model cheated")
-st.markdown("First we celebrate. Then we ask why the score is suspiciously perfect.")
+st.markdown(
+    """
+First we celebrate. Then we ask why the score is suspiciously perfect.
+
+Perfect can happen on tiny toy worlds, but in real messy data it often means the answer
+leaked into the question. A column like `was_approved_last_time` or `future_total` lets the
+model peek at the test.
+"""
+)
 st.dataframe(cached_leakage(), hide_index=True, use_container_width=True)
 ui.jargon("leakage", "A column lets the answer sneak into the features, so the model is not learning the real pattern.")
 st.markdown(
@@ -120,11 +171,19 @@ st.markdown(
 
 st.subheader("Failure 3 — unfair copies make unfair models")
 bias = cached_bias()
-st.markdown("Here is a tiny hiring-style table. The old labels ask more from one group than the other.")
+st.markdown(
+    """
+Here is a tiny hiring-style table. The old labels ask more from one group than the other.
+The model does not know history is unfair. It only sees examples to copy.
+"""
+)
 st.dataframe(bias["data"], hide_index=True, use_container_width=True)
 st.metric("overall score against old labels", f"{bias['overall']:.1%}")
 st.dataframe(bias["summary"], hide_index=True, use_container_width=True)
-st.markdown("Same scores, different group:")
+st.markdown(
+    "Now compare people with the same useful scores but different groups. This is where "
+    "an average score can hide who is being hurt."
+)
 st.dataframe(bias["examples"], hide_index=True, use_container_width=True)
 ui.careful(
     "The model is not being mean. It is copying. That is all it can do. If you copy from something unfair, "
@@ -144,7 +203,8 @@ fig.colorbar(img, ax=ax, label="model confidence")
 ui.show(fig)
 st.markdown(
     f"At the star, the model says class {far['far_guess']} with **{far['far_confidence']:.0%} confidence**. "
-    "It has no built-in idea of 'I have never seen anything like this.' Chapter 00 warned you: a model answers anyway."
+    "Look at how far the star is from the training moons. It has no built-in idea of 'I have never seen anything like this.' "
+    "Chapter 00 warned you: a model answers anyway."
 )
 
 # ---------------------------------------------------------------------------

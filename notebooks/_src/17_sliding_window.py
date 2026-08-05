@@ -7,9 +7,11 @@
 #
 # ---
 #
-# Chapter 16's model had a weakness: it did not know that two pixels next to each
-# other belong together. Shuffle all 64 pixels the same way and it would learn about
-# as well. That is wrong for pictures. Nearby pixels make strokes, corners, and edges.
+# Chapter 16's model had a weakness: it did not know that two pixels next to each other
+# belong together. Shuffle all 64 pixels the same way and it would learn about as well.
+#
+# That is wrong for pictures. Nearby pixels make strokes, corners, and edges. The fix is
+# to use one small window again and again.
 
 # %%
 import matplotlib.pyplot as plt
@@ -27,6 +29,18 @@ use_house_style()
 # ## 🎣 The Hook
 #
 # Here is the fix. One small window slides across the image.
+#
+# ```mermaid
+# graph LR
+#     A[Image patch] --> B[Same 3x3 kernel]
+#     B --> C[Multiply and add]
+#     C --> D[One feature-map cell]
+#     D --> E[Slide right]
+#     E --> B
+# ```
+#
+# Notice the word **same**. We do not invent a new edge detector for every spot. The same
+# little grid visits the top-left corner, the middle, and the bottom-right corner.
 #
 # > 🧸 **Little Kid Corner** — Put a sticky note with a 3 by 3 hole over a picture.
 # > Look through the hole, move it one square, and look again. You are doing the
@@ -62,6 +76,10 @@ print("first window answer:", first_answer)
 #
 # `0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27`
 #
+# Now slide one square at a time. Across the rows, the 3-high window can start at row 1,
+# row 2, or row 3. Starting at row 4 would hang off the bottom. The columns work the same
+# way, so the output is 3 rows by 3 columns: **9 places to land**.
+#
 # > 📖 **Grown-ups call this:** **convolution** means sliding a small grid of weights
 # > over a picture. Multiply what lines up, then add.
 
@@ -83,14 +101,16 @@ fig.tight_layout()
 plt.show()
 
 # %% [markdown]
-# > 💡 **Aha!** The big numbers land where dark pixels become bright pixels. You detected
-# > an edge by hand.
+# > 💡 **Aha!** Look at the output grid. The big numbers land where dark pixels become
+# > bright pixels. You detected an edge by hand, using the same multiply-and-add at every
+# > position.
 
 # %% [markdown]
 # ## 🎛️ Play With It
 #
-# Edit the kernel below. A blur is a kernel full of `1/9` values. Try `vertical edge`,
-# `horizontal edge`, `blur`, `sharpen`, and your own numbers.
+# Edit the kernel below. A blur is a kernel full of `1/9` values because each output cell
+# becomes the average of its 3×3 neighbourhood. Try `vertical edge`, `horizontal edge`,
+# `blur`, `sharpen`, and your own numbers.
 
 # %%
 _, y_digits, digit_images = digits()
@@ -119,6 +139,20 @@ plt.show()
 #
 # The kernels above were designed by a person. What if we let the model choose its own?
 # That is the leap.
+#
+# During training, the CNN changes the kernel numbers until useful patches light up. It is
+# still the same sliding-window game, but the edge finder is learned instead of hand-written.
+#
+# ```mermaid
+# graph LR
+#     A[Image] --> B[Convolution]
+#     B --> C[Squish]
+#     C --> D[Pool]
+#     D --> E[Classify]
+# ```
+#
+# Look at the stack: find small patterns, squish the scores, keep the strongest signals,
+# then make the final guess.
 
 # %%
 result = vision.train_cnn_and_mlp(seed=0, train_size=6000, test_size=1000, epochs=2, allow_download=True)
@@ -131,18 +165,27 @@ vision.model_comparison_table(result)
 # `data/torchvision/`. If that fails, the helper falls back to sklearn's 8×8 digits and
 # says so.
 #
-# The CNN reuses the same little window everywhere. It learns that an edge is an edge
-# wherever it appears, instead of learning a separate edge detector for every spot.
+# The CNN reuses the same little window everywhere. That teaches it **an edge is an edge
+# wherever it appears**: sleeve edge, shoe edge, top-left edge, bottom-right edge.
+#
+# This buys two things at once. Fewer parameters, because one kernel is shared across many
+# positions. Better scores, because the same clue can be recognized wherever the object moved.
 
 # %%
 filters = vision.first_conv_filters(result)
 fig = vision.plot_small_images(filters, titles=[f"filter {i}" for i in range(len(filters))], width=1.1, vcenter=True)
 plt.show()
 
+# %% [markdown]
+# Look for tiny edge or blob detectors. These are the learned cousins of the kernels you edited.
+
 # %%
 maps = vision.feature_maps(result, limit=8)
 fig = vision.plot_small_images(maps, titles=[f"map {i}" for i in range(len(maps))], width=1.1)
 plt.show()
+
+# %% [markdown]
+# Bright spots show where a filter lit up on one test image. Same filter, many possible locations.
 
 # %%
 wrong = vision.cnn_wrong_examples(result, limit=6)

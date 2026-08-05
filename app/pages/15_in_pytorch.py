@@ -18,15 +18,36 @@ ui.page_setup(15)
 ui.beat('hook')
 st.markdown(
     """
-Everything so far was NumPy you could read top to bottom.
+Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
+but it is not a new kind of thinking.
 
-Real practitioners often use PyTorch. Before trusting it, we check that it gives the same
-gradients as our own network.
+The promise is bigger: tensors remember how they were made. If PyTorch remembers the
+forward recipe, it can walk that recipe backward and fill in gradients for every weight.
+Chapter 12, at framework speed.
 """
 )
+ui.mermaid(
+    """
+graph LR
+    A[NumPy arrays] --> B[torch tensors]
+    C[linear layer] --> D[nn.Linear]
+    E[manual gradients] --> F[loss.backward]
+""",
+    height=230,
+)
+st.markdown('The names changed, not the pieces. The proof later checks that the gradient numbers changed by almost nothing.')
 
 # ---------------------------------------------------------------------------
 ui.beat('byhand')
+st.markdown(
+    """
+Line up the two versions piece by piece. Our NumPy code stores arrays and calls methods we
+wrote. PyTorch stores tensors and modules that do the same jobs.
+
+A tensor is an array with a notebook attached. When `requires_grad` is on, the notebook
+records which operations made the tensor, so `backward()` can retrace them.
+"""
+)
 col_a, col_b = st.columns(2)
 with col_a:
     st.code(
@@ -58,14 +79,33 @@ st.dataframe(
     ),
     hide_index=True,
 )
+st.markdown('Read the table as a translation dictionary. Nothing in PyTorch gets to skip the weighted sums, squishes, loss, or step.')
 
 # ---------------------------------------------------------------------------
 ui.beat('seeit')
-ui.jargon('tensor', 'A NumPy-like array that remembers what made it, so PyTorch can retrace the steps backward.')
-st.markdown('`requires_grad` means “keep the footprints.” `backward()` walks the footprints backward. `zero_grad()` clears old blame before the next step.')
+ui.jargon('tensor', 'A NumPy-like array that can remember the operations that created it, so gradients can be traced backward.')
+st.markdown(
+    """
+`requires_grad` means “keep the recipe.” `backward()` walks the recipe backward and puts a
+gradient into each parameter's `.grad` bucket.
+
+Those buckets **accumulate**. PyTorch adds new gradients to whatever is already there
+because some advanced training loops add blame from several mini-batches before stepping.
+For our loop, old blame would be stale, so `zero_grad()` clears the buckets first.
+"""
+)
 
 # ---------------------------------------------------------------------------
 ui.beat('play')
+st.markdown(
+    """
+Now we settle the mystery question: is PyTorch doing the same backprop as our NumPy code?
+
+We copy our exact weights into a PyTorch model, run the same XOR points, and compare every
+gradient. If the largest difference is around one millionth or smaller, both systems are
+pointing the weights in the same direction.
+"""
+)
 
 @st.cache_data(show_spinner=False)
 def gradient_proof():
@@ -86,10 +126,19 @@ def gradient_proof():
 proof, np_loss, th_loss, biggest = gradient_proof()
 st.dataframe(proof, hide_index=True)
 st.success(f'NumPy loss {np_loss:.12f} · PyTorch loss {th_loss:.12f} · biggest gradient difference {biggest:.2e}')
-st.markdown('Autograd is the nudge-and-blame idea done fast. There is no third thing hiding offstage.')
+st.markdown('Look down the difference column. The proof is not about vibes; matching gradients mean the next update step is the same step.')
 
 # ---------------------------------------------------------------------------
 ui.beat('forreal')
+st.markdown(
+    """
+Here is the PyTorch version training on a toy shape. The code is shorter because PyTorch
+handles the bookkeeping: storing parameters, tracing operations, and applying the step.
+
+At this toy size, NumPy is fine. PyTorch starts to matter when the model and data get much
+bigger, like the image chapters coming next.
+"""
+)
 
 @st.cache_resource(show_spinner=False)
 def train_torch(shape: str, hidden: int, lr: float, seed: int):
@@ -111,7 +160,7 @@ with cols[1]:
     fig, ax = ui.figure(5.2, 4.3)
     loss_curve(losses, ax=ax, title=f'PyTorch trained in {seconds:.2f}s')
     ui.show(fig)
-st.markdown('At this toy size, NumPy is fine. PyTorch starts to matter when the model and data get much bigger, like image chapters.')
+st.markdown('Watch the loss curve and boundary together. This is the same Part 3 machine: forward pass, loss, backward gradients, downhill step.')
 
 # ---------------------------------------------------------------------------
 ui.beat('challenge')
@@ -121,7 +170,8 @@ st.markdown(
 2. **Forget zero_grad.** In a notebook, remove it and watch old blame pile up.
 3. **Try Adam.** Change `optimizer='adam'` in `torch_bits.train` and compare curves.
 4. **Check again.** Copy weights from NumPy and make sure the gradient proof still passes.
-5. 🧸 **Little Kid Corner:** PyTorch keeps footprints. Then it walks backward to see who stepped in the mud.
+5. 🧸 **Little Kid Corner:** PyTorch keeps footprints. Then it walks backward to see who
+   stepped in the mud.
 """
 )
 ui.worksheet_link(15)

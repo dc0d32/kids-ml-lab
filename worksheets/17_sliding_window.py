@@ -45,7 +45,8 @@ WORKBOOK = Workbook(
             table=FIRST_PATCH,
             hint="Only the right column of the kernel has +1 values. Add the three 9s.",
             why=(
-                "The sum is 27. The window sees dark values on the left and bright values on the right, so this vertical-edge kernel fires hard."
+                "The sum is 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27. "
+                "The window sees dark values on the left and bright values on the right, so this vertical-edge kernel fires hard."
             ),
         ),
         Question(
@@ -71,13 +72,19 @@ WORKBOOK = Workbook(
             prompt="A 5×5 image with a 3×3 kernel gives how many output rows?",
             kind="number",
             answer=3,
-            why="The 3-high window can start at row 1, row 2, or row 3. After that it would hang off the bottom.",
+            why=(
+                "The 3-high window can start at row 1, row 2, or row 3. After that it would hang off the bottom. "
+                "That is why valid convolution shrinks 5 rows down to 3 output rows."
+            ),
         ),
         Question(
             prompt="A 5×5 image with a 3×3 kernel gives how many output cells total?",
             kind="number",
             answer=9,
-            why="There are 3 row positions and 3 column positions, so 3 × 3 = 9 output cells.",
+            why=(
+                "There are 3 row positions and 3 column positions, so 3 × 3 = 9 output cells. "
+                "Each cell is one place where the same kernel landed and did multiply-and-add."
+            ),
         ),
         Question(
             prompt="Why can a CNN use fewer weights than a plain MLP and still do better on pictures?",

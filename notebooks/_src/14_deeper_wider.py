@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Chapter 14 · Deeper and Wider
 #
-# ### More layers, different squishes, and over-studying.
+# ### More capacity helps patterns and can memorise noise.
 #
 # *Part 3 · Neural networks*
 #
@@ -16,7 +16,6 @@ import pandas as pd
 
 from kidsml.datasets import toy_shape
 from kidsml.nn_numpy import MLP, mse
-from kidsml.nnplots import network_diagram
 from kidsml.plots import decision_boundary, use_house_style
 
 use_house_style()
@@ -24,24 +23,42 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# You have the whole idea now. More layers are more of the same.
-
-# %%
-network_diagram([2, 5, 5, 1], activation='tanh')
-plt.show()
+# You have the whole idea now: line scores, squishes, gradients, and hidden features.
+#
+# Deeper networks do not add a secret ingredient. They repeat the same move more times:
+# make features, squish them, make new features from those features. That buys more
+# flexible boundaries, and it also creates a new danger: memorising noise.
+#
+# ```mermaid
+# graph LR
+#     X[2 inputs] --> H1[5 neurons]
+#     H1 --> H2[5 neurons]
+#     H2 --> Y[1 output]
+#     H1 -. wider .-> H1
+#     H2 -. deeper .-> Y
+# ```
+#
+# The diagram grew by adding more hidden neurons and another hidden layer. The arrows still
+# carry numbers forward and gradients backward.
 
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Count the parameters in `[2, 5, 5, 1]`.
+# Count the learnable numbers in `[2, 5, 5, 1]`. Every arrow is a weight, and every
+# non-input neuron gets one bias.
+#
+# This is worth counting because capacity is not a mood word. It is a pile of adjustable
+# numbers the network can use to fit the data.
 
 # %%
 pd.DataFrame({'layer': ['2 → 5', '5 → 5', '5 → 1', 'biases'], 'count': [10, 25, 5, 11]})
 
 # %% [markdown]
-# 40 weights plus 11 biases means **51 parameters**.
+# That is **40 weights + 11 biases = 51 parameters**. A bigger pile can fit more shapes,
+# including shapes caused by bad luck.
 #
-# > 📖 **Grown-ups call this:** **parameters** — every adjustable number inside the model.
+# > 📖 **Grown-ups call this:** **parameters** are the weights and biases: every adjustable
+# > number inside the model.
 
 # %% [markdown]
 # ## 👀 See It
@@ -58,8 +75,12 @@ for ax, act in zip(axes, ['sigmoid', 'tanh', 'relu']):
 plt.show()
 
 # %% [markdown]
-# ReLU gives folded-paper pieces. Tanh and sigmoid give smoother bends. ReLU won a lot of
-# real work because it is fast and its gradient stays alive more often.
+# Look at the edges of the coloured regions. ReLU is a flat floor glued to a straight ramp,
+# so many ReLUs make folded-paper boundaries with creases. Tanh and sigmoid are smooth
+# S-curves, so their boundaries tend to bend more smoothly.
+#
+# Neither style is always best. The squish shape controls the kind of bends the network can
+# build easily.
 
 # %% [markdown]
 # ## 🎛️ Play With It
@@ -85,13 +106,29 @@ for ax, m in zip(axes, models):
 plt.show()
 
 # %% [markdown]
-# On tiny toys, deeper is not automatically better. The real depth wins arrive when data
-# has many little parts, like images.
+# On tiny toy shapes, deeper is not automatically better. More capacity means more ways to
+# curve around the points, but training still has to find useful curves.
+#
+# The big wins for depth show up later, when data has many reusable parts: edges inside
+# images, sounds inside speech, or words inside sentences.
 
 # %% [markdown]
 # ## 💻 For Real
 #
-# Overfitting: train loss keeps falling, while test loss turns around.
+# Now watch overfitting. We give the network a small practice set and flip some labels, so
+# some dots are lies.
+#
+# A high-capacity network can spend its extra wiggles chasing those lies. Train loss keeps
+# falling because the practice dots look happier, while test loss rises because fresh dots
+# want the calmer rule underneath.
+#
+# ```mermaid
+# graph LR
+#     A[broad pattern] --> B[practice loss falls]
+#     B --> C[tiny wiggles]
+#     C --> D[train loss lower]
+#     C --> E[test loss higher]
+# ```
 
 # %%
 X, y_clean = toy_shape('spiral', n=70, noise=0.28, seed=1)
@@ -128,15 +165,19 @@ decision_boundary(lambda G: m.predict_proba(G), X, y, ax=ax, steps=160, title='B
 plt.show()
 
 # %% [markdown]
-# The fixes are not magic words: stop early, keep weights small with weight decay, or get
-# more data.
+# Look for the dashed line: early stopping works because broad patterns are often learned
+# before noisy details. Weight decay helps in a different way. Small weights make gentler
+# ramps, so the boundary has a harder time making sharp little detours around one weird dot.
+#
+# More data helps too: a single noisy point is less powerful when surrounded by many honest
+# neighbours.
 #
 # ## 🏆 Challenge
 #
-# 1. Find the smallest network that solves spiral.
-# 2. Make a network overfit as hard as possible.
-# 3. Find a weight decay value that is clearly too strong.
-# 4. Use more data and watch the train/test gap shrink.
+# 1. **Smallest spiral net.** Reduce the architecture until spiral breaks.
+# 2. **Overfit hard.** Use few points, many neurons, and no weight decay.
+# 3. **Too much calm.** Raise weight decay until the boundary becomes boring.
+# 4. **More data.** Use more data and watch the train/test gap shrink.
 # 5. 🧸 **Little Kid Corner:** Practice helps. Memorising one worksheet does not. New
 #    questions tell the truth.
 #

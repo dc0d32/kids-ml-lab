@@ -8,6 +8,10 @@
 # ---
 #
 # Nobody labels anything this time. Here is a pile of dots. Find the clumps.
+#
+# The danger is that "clump" sounds like a thing everyone will agree on. Sometimes they
+# will. Sometimes one person's two piles are another person's three piles. Clustering is
+# useful, but it does not remove judgement.
 
 # %%
 import matplotlib.pyplot as plt
@@ -52,6 +56,22 @@ use_house_style()
 # 2. Every centre moves to the middle of its members.
 #
 # Repeat until nothing changes. That stopping point is guaranteed to arrive.
+#
+# Why must it stop? Each round either makes the total point-to-centre distance smaller, or
+# nothing changes. There are only so many possible assignments of points to centres. You
+# cannot keep finding a new smaller setup forever.
+#
+# ```mermaid
+# graph LR
+#     A[Choose centres] --> B[Assign points]
+#     B --> C[Move centres]
+#     C --> D{Anything changed?}
+#     D -->|yes| B
+#     D -->|no| E[Stop]
+# ```
+#
+# Watch the loop: assign, move, check. The same two steps repeat until the centres stop
+# moving.
 
 # %%
 X, centres = kmeans_hand_points()
@@ -87,8 +107,12 @@ for stage in history[:4]:
     plt.show()
 
 # %% [markdown]
-# Bad starts can trap k-means. Two centres can begin in the same clump and waste a centre.
-# That is why libraries use k-means++ starts and several tries, keeping the best result.
+# Bad starts can trap k-means. Two centres can begin in the same clump and waste a centre,
+# so one real clump may never get its own centre.
+#
+# That explains sklearn's defaults. k-means++ spreads the starting centres out on purpose,
+# then sklearn tries several starts and keeps the best result. It is not magic; it is a
+# defence against unlucky first guesses.
 
 # %%
 bad_history = kmeans_history(k=3, seed=0, bad_start=True)
@@ -100,8 +124,13 @@ plt.show()
 #
 # How many clumps should there be? The honest answer is: you judge it.
 #
-# Inertia means total distance from every point to its own centre. It always goes down as
-# k rises. With k equal to the number of points, it becomes zero and useless.
+# Inertia means total distance from every point to its own centre. It always falls as k
+# rises because adding a centre gives the algorithm another place to put points. It can
+# keep the old setup or improve it.
+#
+# That makes "minimise inertia" useless advice by itself. With one centre per point,
+# inertia hits zero and the clusters teach you nothing. The elbow asks where the
+# improvement stops being worth the extra pile.
 
 # %%
 fig = plot_elbow("obvious")
@@ -113,7 +142,8 @@ plt.show()
 # ### Squeeze a photo to five colours
 #
 # Treat every pixel as a point in 3D colour space: red, green, blue. Fit on a sample of
-# pixels, then repaint every pixel with its centre colour.
+# pixels, then repaint every pixel with its centre colour. Look at the palette afterward:
+# those are the colours that survived the squeeze.
 
 # %%
 image = default_flower_image()
@@ -134,8 +164,10 @@ plt.show()
 # %% [markdown]
 # ## 💻 For Real
 #
-# k-means only likes round-ish, similar-sized blobs. It slices moons and circles badly.
-# DBSCAN handles the crescent shape better, and we leave it there.
+# k-means likes round-ish, similar-sized blobs because each centre owns the points closest
+# to it, making straight-ish borders. Crescents need a curved border, so k-means slices
+# through them instead of following the moon shape. DBSCAN handles the crescent shape
+# better, and we leave it there.
 
 # %%
 fig = plot_kmeans_failure("moons")

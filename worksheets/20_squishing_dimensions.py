@@ -19,19 +19,28 @@ WORKBOOK = Workbook(
             kind="number",
             answer=2.5,
             table=POINTS,
-            why="(1 + 2 + 3 + 4) / 4 = 2.5. Spread is measured around the middle.",
+            why=(
+                "(1 + 2 + 3 + 4) / 4 = 2.5. Spread is measured around the middle because "
+                "we want to know how much the shadow still separates the points."
+            ),
         ),
         Question(
             prompt="Using x only, the squared distances from 2.5 are 2.25, 0.25, 0.25, 2.25. What is their total?",
             kind="number",
             answer=5,
-            why="That total is the x-shadow spread.",
+            why=(
+                "That total is the x-shadow spread. A larger spread means the points stayed more different "
+                "from each other after we kept only x."
+            ),
         ),
         Question(
             prompt="What is the average y value?",
             kind="number",
             answer=2.5,
-            why="The y values are 2, 2, 3, 3, so the middle is 2.5.",
+            why=(
+                "The y values are 2, 2, 3, 3, so the middle is (2 + 2 + 3 + 3) / 4 = 2.5. "
+                "Now we can measure how much the y shadow spreads around that middle."
+            ),
         ),
         Question(
             prompt="Using y only, four squared distances are all 0.25. What is their total?",
@@ -44,7 +53,10 @@ WORKBOOK = Workbook(
             kind="choice",
             choices=["x", "y"],
             answer="x",
-            why="The x shadow has spread 5, while the y shadow has spread 1. PCA hunts for the spread-out shadow.",
+            why=(
+                "The x shadow has spread 5, while the y shadow has spread 1. PCA hunts for the spread-out shadow "
+                "because spread keeps more information about which point is which."
+            ),
         ),
         Question(
             prompt="If you had to describe each classmate with one number, what might you choose, and what would you lose?",

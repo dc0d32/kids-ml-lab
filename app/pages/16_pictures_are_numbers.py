@@ -58,9 +58,29 @@ the square. It receives the same 64 numbers as one long row.
 )
 st.dataframe(vision.digit_as_flat_row(images[example_index]), hide_index=True, use_container_width=True)
 
+ui.mermaid(
+    """
+graph LR
+    A[Image] --> B[Grid of pixels]
+    B --> C[Flat row of 64 numbers]
+    C --> D[Model]
+    D --> E[Ten digit scores]
+""",
+    height=240,
+)
+
+st.markdown(
+    """
+Follow the arrows. The model never receives the word "loop" or "top-left corner." It gets
+number 0, number 1, number 2, all the way to number 63, then returns ten scores.
+"""
+)
+
 ui.careful(
-    "A plain MLP does not know that pixel 10 touches pixel 11. It gets a row of 64 values. "
-    "Chapter 17 fixes that exact weakness."
+    "A plain MLP does not know that pixel 10 touches pixel 11. To it, moving from pixel 10 "
+    "to pixel 11 is no more special than moving from pixel 10 to pixel 47.\n\n"
+    "That matters because pictures are made from nearby pixels teaming up: strokes, corners, "
+    "holes, and edges. Chapter 17 fixes that exact weakness."
 )
 
 # ---------------------------------------------------------------------------
@@ -79,11 +99,15 @@ st.dataframe(pd.DataFrame(shape), hide_index=True)
 st.markdown(
     """
 Your eyes can read that as a **3** because the bright numbers make a shape.
-A model with one weight per pixel would need:
+A model with one weight per pixel has to attach a knob to every input number:
 
 - 64 weights for an 8×8 gray image
 - 784 weights for a 28×28 gray image
 - 3,000,000 weights for a 1000×1000 colour photo
+
+The jump is fast because pictures grow in two directions at once. Double the width and
+double the height, and you made four times as many pixels. Colour photos multiply again
+because every pixel has red, green, and blue.
 """
 )
 ui.jargon("pixel", "One little square in a picture. A gray pixel is one number. A colour pixel is three numbers: red, green, and blue.")
@@ -99,11 +123,15 @@ for digit in range(10):
     first_titles.append(str(digit))
 fig, _ = image_strip(first_examples, titles=first_titles, width=1.1)
 ui.show(fig)
+st.markdown("Look at how different real handwriting is. The model has to learn the family resemblance, not memorize one perfect 3.")
 
 averages = vision.average_digit_images(images, y)
 fig = vision.plot_small_images(averages, titles=[f"average {i}" for i in range(10)], width=1.35)
 ui.show(fig)
-ui.aha("The average 3 still looks a bit like a 3. The model gets no magic, only patterns in numbers.")
+ui.aha(
+    "The average 3 still looks a bit like a 3. That means the useful signal is spread across "
+    "many examples, not hidden in one magic row. The model gets patterns in numbers."
+)
 
 # ---------------------------------------------------------------------------
 ui.beat("play", "Draw a digit and turn it into 64 numbers.")
@@ -168,7 +196,10 @@ st.metric("test accuracy", f"{report.accuracy:.1%}")
 fig, ax = ui.figure(5.5, 4.6)
 confusion_grid(report.confusion, labels=list(range(10)), ax=ax)
 ui.show(fig)
-st.markdown("In Chapter 09 you met this picture: rows are true answers, columns are guesses. The off-diagonal cells are the mix-ups.")
+st.markdown(
+    "In Chapter 09 you met this picture: rows are true answers, columns are guesses. Look "
+    "away from the diagonal. Those off-diagonal cells are the exact pairs the model mixes up."
+)
 
 wrong = vision.misclassified_examples(report, limit=8)
 if wrong:
@@ -178,12 +209,15 @@ if wrong:
         width=1.3,
     )
     ui.show(fig)
-    st.markdown("Do its confusions feel familiar? 4/9, 3/5, and 7/1 are hard for people too.")
+    st.markdown(
+        "Do its confusions feel familiar? A loopy 9 can look like a 4, a messy 5 can look "
+        "like a 3, and a skinny 7 can look like a 1. The model's mistakes often rhyme with human mistakes because both are reading the same strokes."
+    )
 
 weights = vision.first_layer_images(report.model, limit=12)
 fig = vision.plot_small_images(weights, titles=[f"unit {i}" for i in range(len(weights))], width=1.15, vcenter=True)
 ui.show(fig)
-st.caption("First-layer weights are only semi-readable here, but some look like blurry strokes and digit parts.")
+st.caption("Look for blurry strokes and digit parts. They are not full digits; they are small clues the network can combine.")
 
 # ---------------------------------------------------------------------------
 ui.beat("challenge")

@@ -20,13 +20,19 @@ WORKBOOK = Workbook(
             choices=["(0, 0)", "(10, 10)"],
             answer="(0, 0)",
             table=POINTS,
-            why="P1 is 2 squared-steps from (0, 0) and 162 from (10, 10). It joins the left centre.",
+            why=(
+                "P1 is 2 squared-steps from (0, 0): 1² + 1². It is 162 squared-steps from (10, 10): "
+                "9² + 9². It joins the left centre because that distance is smaller."
+            ),
         ),
         Question(
             prompt="How many points join the left centre?",
             kind="number",
             answer=3,
-            why="P1, P2, and P3 are the small clump near (0, 0).",
+            why=(
+                "P1, P2, and P3 are the small clump near (0, 0). k-means does not know the word clump; "
+                "it gets there by asking which centre is closest."
+            ),
         ),
         Question(
             prompt="The left group is (1,1), (1,2), (2,1). What is its new x coordinate?",
@@ -48,7 +54,10 @@ WORKBOOK = Workbook(
             kind="choice",
             choices=["the groups change", "nothing changes", "all points swap sides"],
             answer="nothing changes",
-            why="The same three points are still closest to the left centre, and the same three are closest to the right. The algorithm has converged.",
+            why=(
+                "The same three points are still closest to the left centre, and the same three are closest to the right. "
+                "The centres would move to the same averages again, so the algorithm has converged."
+            ),
         ),
         Question(
             prompt="If k equals the number of points, what happens to the total distance to each centre?",

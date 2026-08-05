@@ -7,8 +7,8 @@
 #
 # ---
 #
-# A computer has never seen anything. Not one thing. When you show it a photo,
-# it gets a spreadsheet. This notebook proves it.
+# A computer has never seen anything. Not one thing. When you show it a photo, it gets a
+# spreadsheet. This notebook proves it, then shows the weakness that Chapter 17 will fix.
 
 # %%
 import matplotlib.pyplot as plt
@@ -38,15 +38,30 @@ show_image(images[example_index], ax=ax, numbers=True, title="This is a digit 3"
 plt.show()
 
 # %% [markdown]
-# The picture **is** those numbers. A plain model does not get the square. It gets
-# the same 64 numbers as one long row.
+# The picture **is** those numbers. A plain model does not get the square. It gets the
+# same 64 numbers as one long row.
+#
+# ```mermaid
+# graph LR
+#     A[Image] --> B[Grid of pixels]
+#     B --> C[Flat row of 64 numbers]
+#     C --> D[Model]
+#     D --> E[Ten digit scores]
+# ```
+#
+# Follow the arrows. The model never receives the word "loop" or "top-left corner." It
+# gets number 0, number 1, number 2, all the way to number 63, then returns ten scores.
 
 # %%
 vision.digit_as_flat_row(images[example_index])
 
 # %% [markdown]
-# > ⚠️ **Careful** A plain MLP does not know that pixel 10 touches pixel 11. It gets
-# > a row of 64 values. Chapter 17 fixes that exact weakness.
+# > ⚠️ **Careful** A plain MLP does not know that pixel 10 touches pixel 11. To it,
+# > moving from pixel 10 to pixel 11 is no more special than moving from pixel 10 to
+# > pixel 47.
+# >
+# > That matters because pictures are made from nearby pixels teaming up: strokes,
+# > corners, holes, and edges. Chapter 17 fixes that exact weakness.
 
 # %% [markdown]
 # ## ✏️ Do It By Hand
@@ -66,11 +81,15 @@ shape = np.array(
 pd.DataFrame(shape)
 
 # %% [markdown]
-# A model with one weight per pixel would need:
+# A model with one weight per pixel has to attach a knob to every input number:
 #
 # - 64 weights for an 8×8 gray image
 # - 784 weights for a 28×28 gray image
 # - 3,000,000 weights for a 1000×1000 colour photo
+#
+# The jump is fast because pictures grow in two directions at once. Double the width and
+# double the height, and you made four times as many pixels. Colour photos multiply again
+# because every pixel has red, green, and blue.
 #
 # > 📖 **Grown-ups call this:** a **pixel** is one little square in a picture. A gray
 # > pixel is one number. A colour pixel is three numbers: red, green, and blue.
@@ -90,14 +109,19 @@ for digit in range(10):
 fig, _ = image_strip(first_examples, titles=first_titles, width=1.1)
 plt.show()
 
+# %% [markdown]
+# Look at how different real handwriting is. The model has to learn the family
+# resemblance, not memorize one perfect 3.
+
 # %%
 averages = vision.average_digit_images(images, y)
 fig = vision.plot_small_images(averages, titles=[f"average {i}" for i in range(10)], width=1.35)
 plt.show()
 
 # %% [markdown]
-# > 💡 **Aha!** The average 3 still looks a bit like a 3. The model gets no magic,
-# > only patterns in numbers.
+# > 💡 **Aha!** The average 3 still looks a bit like a 3. That means the useful signal is
+# > spread across many examples, not hidden in one magic row. The model gets patterns in
+# > numbers.
 
 # %% [markdown]
 # ## 🎛️ Play With It
@@ -156,8 +180,8 @@ confusion_grid(report.confusion, labels=list(range(10)), ax=ax)
 plt.show()
 
 # %% [markdown]
-# In Chapter 09 you met this picture: rows are true answers, columns are guesses.
-# The off-diagonal cells are the mix-ups.
+# In Chapter 09 you met this picture: rows are true answers, columns are guesses. Look
+# away from the diagonal. Those off-diagonal cells are the exact pairs the model mixes up.
 
 # %%
 wrong = vision.misclassified_examples(report, limit=8)
@@ -169,7 +193,9 @@ fig = vision.plot_small_images(
 plt.show()
 
 # %% [markdown]
-# Do its confusions feel familiar? 4/9, 3/5, and 7/1 are hard for people too.
+# Do its confusions feel familiar? A loopy 9 can look like a 4, a messy 5 can look like a
+# 3, and a skinny 7 can look like a 1. The model's mistakes often rhyme with human
+# mistakes because both are reading the same strokes.
 
 # %%
 weights = vision.first_layer_images(report.model, limit=12)
@@ -177,7 +203,8 @@ fig = vision.plot_small_images(weights, titles=[f"unit {i}" for i in range(len(w
 plt.show()
 
 # %% [markdown]
-# First-layer weights are only semi-readable here, but some look like blurry strokes and digit parts.
+# Look for blurry strokes and digit parts. They are not full digits; they are small clues
+# the network can combine.
 
 # %% [markdown]
 # ## 🏆 Challenge

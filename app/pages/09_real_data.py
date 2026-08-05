@@ -59,7 +59,9 @@ Every dataset so far had **exactly two columns**, so we could draw the whole thi
 Real data has twenty columns. Some columns are numbers. Some are words. Some cells are
 blank. You cannot draw the whole table on one neat graph.
 
-So how do you know what is going on?
+So the question changes. Instead of *can I draw the whole world?*, you ask:
+what kind of column is this, what is missing, and what would a boring guess score before
+my model learns anything?
 """
 )
 
@@ -71,6 +73,25 @@ st.caption(f"penguins has {len(penguins)} rows and {len(penguins.columns)} colum
 ui.little_kid_corner(
     "Imagine sorting a huge box of trading cards. You cannot hold every card in the air at once. "
     "You look at one clue at a time: colour, power, height, team, missing sticker. Data works the same way."
+)
+
+ui.mermaid(
+    """
+graph LR
+    A[Raw table] --> B[Encode words]
+    B --> C[Fill or drop gaps]
+    C --> D[Split rows]
+    D --> E[Train model]
+    E --> F[Score against baseline]
+""",
+    height=250,
+)
+
+st.markdown(
+    """
+Notice the order. We do not train first and clean later. The model can only learn from
+the table we hand it, so every cleanup choice becomes part of the experiment.
+"""
 )
 
 # ---------------------------------------------------------------------------
@@ -87,9 +108,17 @@ with right:
     st.dataframe(after, hide_index=True, use_container_width=True)
 
 st.markdown(
-    "A model cannot multiply by `storm`. We turn one word column into little yes/no switches. "
-    "Do **not** number the weather 1, 2, 3, 4 unless that order is real. Then the model may think "
-    "storm is four times clear, and that misty lives halfway between clear and rain. Sometimes that is okay. Often it is nonsense."
+    """
+A model does arithmetic. It can compare `4 > 1`, multiply by 3, and split a tree at
+`weather < 2.5`. It cannot multiply by the word `storm`.
+
+Numbering clear=1, misty=2, rain=3, storm=4 sneaks in a fake ruler. A straight-line model
+may treat storm as four times clear. A tree may ask `weather <= 2.5`, which groups clear
+and misty against rain and storm. That only makes sense if the order is real.
+
+The yes/no columns avoid the fake ruler. `weather = storm` is either 0 or 1, and it is not
+larger, warmer, or halfway between anything.
+"""
 )
 ui.jargon("one-hot encoding", "Turn each possible word into its own 0-or-1 column.")
 
@@ -99,12 +128,22 @@ st.dataframe(missing.head(12), hide_index=True, use_container_width=True)
 st.caption(f"Penguins has {len(missing)} rows with at least one blank cell.")
 st.dataframe(cached_missing_scores(), hide_index=True, use_container_width=True)
 ui.careful(
-    "Dropping blank rows says, 'these penguins never existed.' Filling blanks says, 'I know a fake value to put here.' "
-    "Both choices are lies of a different kind. Pick one on purpose."
+    "Dropping blank rows says, 'these penguins never existed.' That can erase the exact "
+    "kind of penguin your measuring tools had trouble with.\n\n"
+    "Filling blanks with an average tells a different lie: 'this missing beak was perfectly "
+    "ordinary.' That keeps the row, but it hides the weirdness. Pick the lie you understand."
 )
 
 st.subheader("3. A boring guess comes first")
-st.markdown("Before you are allowed to be impressed by 82%, you have to know what you get for free.")
+st.markdown(
+    """
+Before you are impressed by 82%, ask what the boring guess gets for free.
+
+If 80 out of 100 mushrooms are safe, a model that says **safe every time** scores 80%.
+A fancy model at 82% only bought two extra correct answers. A fancy model at 96% bought
+sixteen. Same scorecard, very different story.
+"""
+)
 st.dataframe(cached_scores(), hide_index=True, use_container_width=True)
 ui.jargon("baseline", "A boring score from a model that does not learn. For classes, it says the most common answer every time.")
 
@@ -133,12 +172,22 @@ with right:
 
 st.markdown("**How lopsided is the target?**")
 st.dataframe(overview["target_counts"], hide_index=True, use_container_width=True)
+st.markdown(
+    "Look first for giant piles. A lopsided target is where accuracy starts lying, because "
+    "the most common answer may already score well."
+)
 
 # ---------------------------------------------------------------------------
 ui.beat("play", "The Feature Draft.")
 
 st.markdown(
-    "Pick the columns your model is allowed to use. Train it. Then compare your draft picks with what the model actually leaned on."
+    """
+Pick the columns your model is allowed to use. This is not a guessing contest where the
+computer is always right; it is a draft.
+
+You choose a team of clues, train, then compare your hunch with what the model leaned on.
+If one column dominates the bar chart, ask whether it is a real clue or a sneaky shortcut.
+"""
 )
 
 draft_table = st.selectbox("Draft dataset", TABLES, index=2, format_func=dataset_label, key="ch09_draft_table")
@@ -174,6 +223,10 @@ else:
 
     st.markdown("**What mattered most?**")
     st.bar_chart(result["importances"].set_index("column"))
+    st.markdown(
+        "Look for one tall bar. That column carried most of the model's decision, so it "
+        "deserves a human sanity check."
+    )
 
     if draft_table == "monsters":
         with st.expander("Reveal the monster world's secret rule"):
@@ -199,7 +252,10 @@ ax.set_ylabel(ycol)
 ax.set_title("The two most important measurements")
 ax.legend(fontsize=9)
 ui.show(fig)
-st.markdown("Which two species sit closest together? That is where mistakes usually live.")
+st.markdown(
+    "Look for species whose dots overlap. The confusion matrix above and this scatter plot "
+    "are telling the same story: mistakes usually live where the measurements overlap."
+)
 
 st.markdown("**Regression check: predicted versus actual.**")
 bike = cached_bikes()
@@ -215,7 +271,10 @@ ax.set_title("The regression plot you should always draw")
 ax.legend()
 ui.show(fig)
 st.metric("bike model R²", f"{bike['result']['model_score']:.2f}", f"baseline {bike['result']['baseline_score']:.2f}")
-st.markdown("Where is it badly wrong? Look at the date. Bike rentals grew during the years this table covers.")
+st.markdown(
+    "Look for points far from the dashed perfect line. Those are not random embarrassments; "
+    "they are clues. Here, the dates matter because bike rentals grew during the years this table covers."
+)
 st.dataframe(bike["worst"], hide_index=True, use_container_width=True)
 
 st.code(

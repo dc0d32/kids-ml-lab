@@ -49,6 +49,10 @@ Here is a pile of dots. Find the clumps.
 
 You already do this. You sort laundry into piles without anyone telling you the pile names.
 Shirts here. Socks there. Mystery hoodie in the middle.
+
+The danger is that "clump" sounds like a thing everyone will agree on. Sometimes they will.
+Sometimes one person's two piles are another person's three piles. Clustering is useful,
+but it does not remove judgement.
 """
 )
 
@@ -60,7 +64,28 @@ ui.jargon("clustering", "Sorting data into groups when the answer labels are mis
 # ---------------------------------------------------------------------------
 ui.beat("byhand", "Two steps you can recite.")
 
-st.markdown("**Step 1:** every point joins the nearest centre. **Step 2:** every centre moves to the middle of its members. Repeat until nothing changes.")
+st.markdown(
+    """
+**Step 1:** every point joins the nearest centre. **Step 2:** every centre moves to the
+middle of its members. Repeat until nothing changes.
+
+Why must it stop? Each round either makes the total point-to-centre distance smaller, or
+nothing changes. There are only so many possible assignments of points to centres. You
+cannot keep finding a new smaller setup forever.
+"""
+)
+ui.mermaid(
+    """
+graph LR
+    A[Choose centres] --> B[Assign points]
+    B --> C[Move centres]
+    C --> D{Anything changed?}
+    D -->|yes| B
+    D -->|no| E[Stop]
+""",
+    height=260,
+)
+st.markdown("Watch the loop: assign, move, check. The same two steps repeat until the centres stop moving.")
 X, centres = kmeans_hand_points()
 st.write("Six points:", X)
 st.write("Starting centres:", centres)
@@ -87,7 +112,16 @@ step = st.session_state.get("ch19_step", 0)
 fig = plot_kmeans_stage(history[step])
 ui.show(fig)
 st.caption(history[step]["caption"])
-st.caption("Bad starts can get stuck. That is why libraries use k-means++ starts and run several tries, keeping the best one.")
+st.caption(
+    "Bad starts can get stuck. If two centres begin inside the same real clump, one real clump may never get its own centre."
+)
+st.markdown(
+    """
+That explains sklearn's defaults. k-means++ spreads the starting centres out on purpose,
+then sklearn tries several starts and keeps the best result. It is not magic; it is a
+defence against unlucky first guesses.
+"""
+)
 
 # ---------------------------------------------------------------------------
 ui.beat("play", "How many clumps should there be?")
@@ -97,7 +131,17 @@ with left:
     ui.show(plot_elbow("obvious"))
 with right:
     ui.show(plot_elbow("ambiguous"))
-st.markdown("Inertia means total distance from every point to its own centre. It always goes down as k rises. With one centre per point, it hits zero and teaches you nothing.")
+st.markdown(
+    """
+Inertia means total distance from every point to its own centre. It always falls as k rises
+because adding a centre gives the algorithm another place to put points. It can keep the
+old setup or improve it.
+
+That makes "minimise inertia" useless advice by itself. With one centre per point, inertia
+hits zero and the clusters teach you nothing. The elbow asks where the improvement stops
+being worth the extra pile.
+"""
+)
 ui.careful("The elbow is a judgement call. Sometimes it is sharp. Sometimes it is mashed potato.")
 
 st.markdown("### Squeeze a photo to a few colours")
@@ -111,7 +155,7 @@ with col_a:
 with col_b:
     st.image(rebuilt, caption=f"{colour_k}-colour version", use_container_width=True)
 ui.show(plot_palette(palette))
-st.caption("We fit on up to 5000 sampled pixels, then repaint every pixel. That little shortcut keeps it fast.")
+st.caption("Look for which colours survived. We fit on up to 5000 sampled pixels, then repaint every pixel to keep it fast.")
 
 # ---------------------------------------------------------------------------
 ui.beat("forreal", "Penguin species, hidden from the model.")
@@ -123,7 +167,11 @@ with right:
     ui.show(plot_kmeans_failure("circles"))
 with third:
     ui.show(plot_dbscan_moons())
-ui.careful("k-means likes round-ish, similar-sized blobs. It is not a magic 'find all groups' button.")
+ui.careful(
+    "k-means likes round-ish, similar-sized blobs because each centre owns the points closest "
+    "to it, making straight-ish borders. Crescents need a curved border, so k-means slices "
+    "through them instead of following the moon shape."
+)
 
 table, score = cached_penguin_clusters()
 st.markdown("Now k-means gets penguin measurements with the species labels removed.")
