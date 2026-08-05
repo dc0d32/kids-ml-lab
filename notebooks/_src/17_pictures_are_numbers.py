@@ -8,8 +8,14 @@
 # ---
 #
 # A computer has never seen anything. Not a cat. Not a basketball. Not one heroic snack
-# photo. When you show it a picture, it gets a spreadsheet. This notebook proves it, then
-# shows the weakness that Chapter 18 will fix.
+# photo.
+#
+# This dataset is the classic scikit-learn digits set, bundled in `kidsml`: 1,797 tiny
+# handwritten digits, each an 8 by 8 gray image. Every little square is a pixel with a
+# brightness from 0 (black) to 16 (white).
+#
+# When you show the computer one picture, it gets a spreadsheet. This notebook proves it,
+# then shows the weakness that Chapter 18 will fix.
 
 # %%
 import matplotlib.pyplot as plt
@@ -39,8 +45,9 @@ show_image(images[example_index], ax=ax, numbers=True, title="This is a digit 3"
 plt.show()
 
 # %% [markdown]
-# The picture **is** those numbers. A plain model does not get the square. It gets the
-# same 64 numbers zipped into one long row.
+# The picture **is** those numbers. A plain MLP — a multilayer perceptron, or stack of
+# neuron layers — does not get the square. It gets the same 64 pixel numbers zipped into
+# one long row.
 #
 # ```mermaid
 # graph LR
@@ -94,6 +101,9 @@ pd.DataFrame(shape)
 #
 # > 📖 **Grown-ups call this:** a **pixel** is one little square in a picture. A gray
 # > pixel is one number. A colour pixel is three numbers: red, green, and blue.
+#
+# > 📖 **Grown-ups call this:** an **MLP** is a multilayer perceptron: a plain stack of
+# > neuron layers, with no built-in idea of pixel neighbours.
 
 # %% [markdown]
 # ## 👀 Take a look
@@ -127,8 +137,10 @@ plt.show()
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# A notebook cannot use the drawing canvas from the app. Here you can hand-edit the
-# 8 by 8 numbers directly. Nudge a few values and run the cell again.
+# A notebook cannot use the drawing canvas from the app. In the app, your mouse draws
+# thick white strokes on a black pad; the app crops the marks, shrinks them to 8 by 8,
+# and converts brightness to the same 0–16 scale. Here you can hand-edit the 8 by 8
+# numbers directly. Nudge a few values and run the cell again.
 
 # %%
 my_digit = np.array(
@@ -163,7 +175,9 @@ plt.show()
 # %% [markdown]
 # ## 💻 In real code
 #
-# Here is the whole training idea. The real helper uses the same ingredients and a fixed seed, so the recipe stays steady.
+# Here is the whole training idea. `X / 16` scales pixel brightness from 0..16 down to
+# 0..1, which is friendlier for the MLP. The real helper uses the same ingredients and a
+# fixed seed, so the recipe stays steady.
 
 # %%
 X, y, images = digits()

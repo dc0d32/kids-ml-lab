@@ -44,7 +44,8 @@ WORKBOOK = Workbook(
     title="Workbook · Find the rule",
     intro=(
         "I have a secret rule that decides whether a creature is a **zeep**. "
-        "Here are six creatures I have already sorted. Work out the rule."
+        "Here are six creatures I have already sorted. Work out the rule. "
+        "The computer's trained guesser is called a **model**."
     ),
     questions=[
         Question(

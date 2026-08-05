@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 from kidsml import lesson, ui
+from kidsml.datasets import load_table
 from kidsml.plots import decision_boundary
 from kidsml.trees import (
     boosting_trace,
@@ -56,6 +57,7 @@ graph LR
         height=300,
     )
     lesson.look_for("why two trees can disagree even though they came from the same table.")
+    lesson.jargon("random forest", "A crowd of decision trees trained with random row samples and random column choices, then combined by vote.")
     lesson.kid_corner(
         "Ask five people where a hidden toy is. If four point under the couch, check there first. "
         "The crowd vote is stronger than one noisy guess when people are not copying each other."
@@ -87,6 +89,7 @@ The leftover is called a residual: `actual answer - current guess`.
     st.dataframe(tiny_boosting_table(), hide_index=True, width="stretch")
     lesson.look_for("point C. It starts at 5 but should be 8, so the leftover is `8 - 5 = 3`.")
     lesson.jargon("ensemble", "A model made by combining many smaller models.")
+    lesson.jargon("boosting", "An ensemble that trains models in order, with each new model fixing the leftovers from the team so far.")
     lesson.jargon("residual", "The leftover mistake: actual answer minus current guess.")
 
 
@@ -166,6 +169,8 @@ def _():
     steps = st.slider("Boosting step", 1, 50, 12, key="ch06_boost_step")
     rate = st.slider("How much of each fix to add", 0.05, 0.60, 0.25, 0.05, key="ch06_boost_rate")
     stump_depth = st.slider("How deep is each tiny tree?", 1, 4, 1, key="ch06_boost_depth")
+    if stump_depth == 1:
+        st.caption("Depth 1 means one split. Grown-ups call that tiny tree a stump.")
     trace = cached_trace(50, rate, stump_depth, 4)
     stage = trace["stages"][steps - 1]
     fig, ax = lesson.figure(7, 4.2)
@@ -218,6 +223,26 @@ def _():
 
 @lesson.step("Monsters have a secret rule", beat="forreal")
 def _():
+    lesson.say(
+        """
+New data, and this one we made up on purpose. **800 trading-card monsters**, each with an
+element, a home, and six numbers: attack, defense, magic, speed, height_cm, and weight_kg.
+Some are ordinary. Some are **bosses**.
+
+Because we invented them, we know exactly what makes a boss — there is a rule, and it is
+written down. So this is a test with an answer key: **did the model find the real rule, or
+did it only memorise the cards?**
+"""
+    )
+
+    st.dataframe(
+        load_table("monsters").groupby("is_boss", group_keys=False).head(2)[
+            ["name", "element", "attack", "defense", "magic", "speed", "is_boss"]
+        ],
+        hide_index=True,
+        width="content",
+    )
+
     guess = lesson.predict(
         "Before revealing the rule, which feature group do you expect to matter most?",
         ["attack", "home", "height_cm", "element"],
@@ -231,6 +256,7 @@ def _():
     scores, importances, secret = cached_monsters()
     st.dataframe(scores, hide_index=True, width="stretch")
     st.bar_chart(importances.set_index("feature group"))
+    lesson.jargon("feature importance", "A score for how much a trained model leaned on each column or group of columns.")
     lesson.look_for("the tallest bars before reading the rule. Attack, magic, and speed rise to the top.")
     st.code(secret)
     st.warning("Five percent of the labels were flipped on purpose. A model scoring 100% here would be suspicious.")

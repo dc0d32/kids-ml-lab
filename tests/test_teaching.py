@@ -11,7 +11,12 @@ Anything a reader is asked to deduce gets a test here.
 
 from __future__ import annotations
 
+import re
+from pathlib import Path
+
 import pytest
+
+ROOT = Path(__file__).resolve().parent.parent
 
 from kidsml.zeeps import (
     RULES,
@@ -274,3 +279,62 @@ def test_plotly_renderer_cannot_open_a_browser():
         f"renderer is {pio.renderers.default!r}; anything that can fall back to a browser "
         "will block under headless execution"
     )
+
+
+# ---------------------------------------------------------------------------
+# No term reaches the reader before the course explains it
+# ---------------------------------------------------------------------------
+
+COURSE_TERMS = [
+    "gradient", "loss", "perceptron", "sigmoid", "probability", "impurity", "gini",
+    "stump", "residual", "ensemble", "margin", "support vector", "kernel", "gamma",
+    "baseline", "cross-validation", "fold", "one-hot", "precision", "recall",
+    "confusion matrix", "leakage", "determinant", "projection", "neuron", "activation",
+    "backpropagation", "chain rule", "learning rate", "epoch", "hidden layer",
+    "overfitting", "weight decay", "early stopping", "tensor", "autograd", "optimizer",
+    "pixel", "channel", "convolution", "feature map", "pooling", "centroid", "inertia",
+    "principal component", "t-sne", "corpus", "vocabulary", "bigram", "smoothing",
+    "context window", "embedding", "softmax", "temperature", "attention", "causal mask",
+    "transformer", "hallucination",
+]
+
+_EXPLAINS = re.compile(
+    r"(means|is when|is a |is the |called|think of|in other words|grown-ups call|"
+    r"name for|stands for|which is|that is|= )",
+    re.I,
+)
+
+
+@pytest.mark.parametrize("term", COURSE_TERMS, ids=lambda t: t.replace(" ", "_"))
+def test_term_is_explained_where_the_reader_first_meets_it(term: str):
+    """A word the reader has never seen must be explained where it first appears.
+
+    "First" means first in the whole course, not first in the chapter — the reader only
+    gets one first time. This is a rough check (it looks for explanatory phrasing near the
+    first mention), so it can miss a bad explanation. It cannot miss a *missing* one.
+    """
+    import pathlib
+
+    pages = sorted((ROOT / "app" / "pages").glob("[0-9][0-9]_*.py"))
+    for page in pages:
+        source = page.read_text(encoding="utf-8")
+        prose = " ".join(
+            re.findall(
+                r'lesson\.(?:say|look_for|jargon|aha|careful|kid_corner)\(\s*\n?\s*"{1,3}(.*?)"{1,3}',
+                source,
+                re.S,
+            )
+        )
+        named = " ".join(re.findall(r'lesson\.jargon\(\s*\n?\s*"([^"]+)"', source))
+
+        match = re.search(rf"\b{re.escape(term)}", prose, re.I)
+        if not match:
+            continue
+
+        nearby = prose.lower()[max(0, match.start() - 260) : match.start() + 260]
+        explained = bool(_EXPLAINS.search(nearby)) or term.lower() in named.lower()
+        assert explained, (
+            f"{term!r} first reaches the reader in {page.name} with nothing nearby that "
+            "explains it. The reader only gets one first time."
+        )
+        return

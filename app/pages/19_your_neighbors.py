@@ -47,6 +47,9 @@ def _():
 Every model so far was shown the right answers. Somebody had to label the data.
 
 Part 5 opens a new door: **what can you learn when nobody tells you the answers?**
+
+This chapter is the hinge. kNN still uses old labels, but it does **no training**: it waits
+until a new point arrives, then asks the nearby old points to vote.
 """
     )
     lesson.mermaid(
@@ -163,6 +166,17 @@ def _():
 
 @lesson.step("Predict the scale disaster", beat="forreal")
 def _():
+    lesson.say(
+        """
+Back to the penguins from Chapter 4 — the 344 real birds measured on three islands. This
+time we want the species, and we hand kNN four measurements instead of two: beak length,
+beak depth, flipper length and body mass.
+
+Here is the trap. kNN decides everything by **distance**, and those four numbers are not
+in the same units.
+"""
+    )
+
     guess = lesson.predict(
         "Penguins have beaks in millimetres and body mass in grams. What can go wrong?",
         ["Grams can drown out beak lengths", "All columns get equal voice", "Distances stop mattering"],
@@ -174,10 +188,16 @@ def _():
         return
     st.dataframe(cached_penguins(7).assign(accuracy=lambda d: d["accuracy"].map(lambda x: f"{x:.1%}")), hide_index=True)
     lesson.look_for("raw measurements versus scaled first. Scaling puts the columns on fair rulers before neighbours vote.")
+    lesson.jargon("scaling", "Putting columns onto comparable rulers before distance gets measured.")
 
 
 @lesson.step("The sklearn version", beat="forreal")
 def _():
+    lesson.say(
+        "In real code the fix is one extra step in front of the model. `StandardScaler` "
+        "puts every column on a fair ruler first, and the pipeline makes sure that happens "
+        "every time — including on penguins the model has never seen."
+    )
     st.code(
         """
 from sklearn.pipeline import make_pipeline
@@ -189,6 +209,11 @@ model.fit(penguin_measurements, penguin_species)
 model.predict(new_penguins)
 """,
         language="python",
+    )
+    lesson.say(
+        "And one last surprise. Point this same do-nothing algorithm at the 8×8 handwritten "
+        "digits from Chapter 17 — 64 numbers per image instead of 4 measurements — and it "
+        "does this:"
     )
     st.metric("8x8 digit accuracy with k = 3", f"{cached_digits(3):.1%}")
     lesson.look_for("the scaler in the pipeline. The ruler-fixing step happens before the neighbour vote.")

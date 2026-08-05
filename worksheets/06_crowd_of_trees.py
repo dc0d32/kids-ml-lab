@@ -24,11 +24,22 @@ BOOSTING = pd.DataFrame(
     columns=["point", "real answer", "first guess"],
 )
 
+MONSTERS = pd.DataFrame(
+    [
+        ["row", "one trading-card creature"],
+        ["clue columns", "element, home, attack, defense, magic, speed, height_cm, weight_kg"],
+        ["target", "is_boss: boss or not-boss"],
+        ["extra wrinkle", "5% of labels were flipped on purpose"],
+    ],
+    columns=["monster table part", "what it means"],
+)
+
 WORKBOOK = Workbook(
     chapter=6,
     title="Workbook · Let small trees vote and fix",
     intro=(
-        "One tree can be noisy. A crowd can vote, or a line of trees can take turns fixing what is left over."
+        "One tree can be noisy. A random forest is a crowd vote; boosting is a line of small "
+        "trees fixing leftovers. Later you will test them on trading-card monsters."
     ),
     questions=[
         Question(
@@ -103,6 +114,28 @@ WORKBOOK = Workbook(
             choices=["forest", "boosting"],
             answer="boosting",
             why="Boosting can chase noise because it keeps staring at what is still wrong. If the remaining wrong points are bad labels or random wiggles, later trees may learn those accidents.",
+        ),
+        Question(
+            prompt="In the monsters table, what does one row mean?",
+            kind="choice",
+            choices=["one trading-card creature", "one tree vote", "one weather day"],
+            answer="one trading-card creature",
+            table=MONSTERS,
+            why=(
+                "Each monster row is a creature card. The model uses clue columns like attack, magic, "
+                "speed, element, and home to predict the target `is_boss`."
+            ),
+        ),
+        Question(
+            prompt="Why would 100% training accuracy on the monsters table be suspicious?",
+            kind="choice",
+            choices=["some labels were flipped on purpose", "the table has no columns", "monsters cannot be rows"],
+            answer="some labels were flipped on purpose",
+            table=MONSTERS,
+            why=(
+                "Five percent of the labels are deliberate lies. A model that learns every training row "
+                "perfectly may have memorised the lie stickers instead of the real boss rule."
+            ),
         ),
     ],
     kid_corner=(

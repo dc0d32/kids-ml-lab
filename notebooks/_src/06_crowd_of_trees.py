@@ -13,6 +13,7 @@
 # %%
 import matplotlib.pyplot as plt
 
+from kidsml.datasets import load_table
 from kidsml.plots import decision_boundary, use_house_style
 from kidsml.trees import (
     boosting_trace,
@@ -51,6 +52,9 @@ use_house_style()
 # miss row 17. Tree 2 may not get the `speed` column at a split. Their mistakes land in
 # different puddles, and voting can steady them.
 #
+# > 📖 **Grown-ups call this:** a **random forest** is a crowd of decision
+# > trees trained with random row samples and random column choices, then combined by vote.
+#
 # > 🧸 **Little Kid Corner** — Ask five people where a hidden toy is. If four point under
 # > the couch, check there first. The crowd vote is stronger than one noisy guess when
 # > people are not copying each other.
@@ -87,6 +91,9 @@ tiny_boosting_table()
 #
 # > 📖 **Grown-ups call this:** an **ensemble** is a model made by combining many smaller
 # > models.
+#
+# > 📖 **Grown-ups call this:** **boosting** is an ensemble that trains models in order,
+# > with each new model fixing the leftovers from the team so far.
 #
 # > 📖 **Grown-ups call this:** a **residual** is the leftover mistake: actual answer
 # > minus current guess.
@@ -143,6 +150,9 @@ forest_vote_counts(forest, [0.0, 0.0])
 # The loop works because the next tree is not trying to relearn the whole answer. It
 # learns the part the team still misses. Lots of small corrections can build a curve that
 # one tiny tree could never draw!
+#
+# A depth-1 tiny tree has one split. Grown-ups call that tiny tree a **stump**: short,
+# blunt, and useful in a crowd.
 
 # %%
 trace = boosting_trace(n_steps=20, learning_rate=0.25, max_depth=1, seed=0)
@@ -190,9 +200,18 @@ plt.show()
 # %% [markdown]
 # ## 💻 In real code
 #
-# The monster table was generated from a secret rule, with 5% of labels flipped on purpose.
-# That means some training answers are lies. A perfect training score would be suspicious,
+# Meet the monster table before the model touches it. Each row is a trading-card creature.
+# The columns include words like `element` and `home`, plus battle stats such as `attack`,
+# `magic`, `speed`, `height_cm`, and `weight_kg`. The target is `is_boss`: yes or no.
+#
+# The table was generated from a secret rule, with 5% of labels flipped on purpose. That
+# means some training answers are lies. A perfect training score would be suspicious,
 # because a model would have to learn the lies too.
+
+# %%
+load_table("monsters").groupby("is_boss", group_keys=False).head(2)[
+    ["name", "element", "attack", "defense", "magic", "speed", "is_boss"]
+]
 
 # %%
 scores, importances, secret = monster_models()
@@ -207,6 +226,9 @@ print(secret)
 # %% [markdown]
 # Look for the tallest bars before revealing the rule. Attack, magic, and speed rise to
 # the top; element, home, and height matter much less. That matches the secret rule.
+#
+# > 📖 **Grown-ups call this:** **feature importance** is a score for how much a trained
+# > model leaned on each column or group of columns.
 
 # %% [markdown]
 # ## 🏆 Go further

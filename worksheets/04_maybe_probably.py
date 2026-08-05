@@ -11,6 +11,15 @@ Z_VALUES = pd.DataFrame(
     }
 )
 
+PENGUINS = pd.DataFrame(
+    [
+        ["Adelie", "Torgersen", 181, 3750],
+        ["Chinstrap", "Dream", 195, 3800],
+        ["Gentoo", "Biscoe", 217, 5000],
+    ],
+    columns=["species", "island", "flipper length (mm)", "weight (g)"],
+)
+
 PENALTIES = pd.DataFrame(
     [
         ["90%", "red"],
@@ -26,8 +35,9 @@ WORKBOOK = Workbook(
     chapter=4,
     title="Workbook · Turn scores into confidence",
     intro=(
-        "Logistic regression keeps the straight-line score, then squishes it into a probability. "
-        "Near the line, the model should shrug. The squish uses **e**, a particular number about 2.718."
+        "Logistic regression keeps the straight-line score, then squishes it into a probability — "
+        "a 0-to-1 promise. Near the line, the model should shrug. The squish uses **e**, a "
+        "particular number about 2.718, to make a smooth S-curve."
     ),
     questions=[
         Question(
@@ -104,6 +114,17 @@ WORKBOOK = Workbook(
             why=(
                 "Because the model did not merely choose the wrong class; it claimed near certainty. A 50/50 wrong answer "
                 "says, 'I was unsure.' A 99% wrong answer says, 'Trust me,' and then drops the glass."
+            ),
+        ),
+        Question(
+            prompt="The real penguin question is **is this one a Gentoo?** Which two measurements does the model use?",
+            kind="choice",
+            choices=["flipper length and weight", "island and species", "species and the row number"],
+            answer="flipper length and weight",
+            table=PENGUINS,
+            why=(
+                "The model gets flipper length and weight as features. Species is the answer we are trying to guess: "
+                "Gentoo or not Gentoo. The table shows all three species before the model starts guessing."
             ),
         ),
         Question(

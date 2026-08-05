@@ -6,7 +6,7 @@ from kidsml.workbook import Question, Workbook
 
 SCORES = pd.DataFrame(
     [["letter A", 1, 10], ["letter B", 2, 20], ["letter C", 1, 30]],
-    columns=["earlier spot", "attention tokens", "value"],
+    columns=["earlier spot", "key-match chips", "value"],
 )
 
 MASK = pd.DataFrame(
@@ -22,15 +22,22 @@ MASK = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=24,
     title="Workbook · Which earlier letter matters?",
-    intro="Attention is still next-letter guessing. Now each spot chooses what to look back at.",
+    intro="Attention is still next-letter guessing. Chapter 22 counted one letter back; Chapter 23 used a fixed context window; now each spot chooses what to look back at.",
     questions=[
         Question(
-            prompt="The attention tokens add to 4. What weight does letter B get?",
+            prompt="The key-match chips add to 4. What attention weight does letter B get?",
             kind="number",
             answer=0.5,
             tolerance=0.001,
             table=SCORES,
-            why="B has 2 of the 4 tokens, so it gets weight 2/4 = 0.5. Real attention gets the tokens from query-key matches, then softmax turns them into weights.",
+            why="B has 2 of the 4 chips, so it gets weight 2/4 = 0.5. Real attention gets scores from query-key matches, then softmax turns them into weights.",
+        ),
+        Question(
+            prompt="In query/key/value, what is the query?",
+            kind="choice",
+            choices=["the current spot's question about what clue it needs", "a future answer", "the final generated story"],
+            answer="the current spot's question about what clue it needs",
+            why="The current position makes a query. Earlier positions have keys that say what clue they offer, and values holding the content attention can mix in.",
         ),
         Question(
             prompt="Using those weights, what weighted average value do you get? (A=10, B=20, C=30.)",

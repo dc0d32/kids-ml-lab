@@ -7,7 +7,8 @@
 #
 # ---
 #
-# Chapter 22 counted one letter back. This chapter hands the guesser three letters of memory.
+# Chapter 22 counted one letter back. This chapter keeps the same next-letter game but
+# hands the guesser three letters of memory, then checks the loss against Chapter 22.
 
 # %%
 import math
@@ -36,7 +37,8 @@ use_house_style()
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Slide a three-letter window over `cat`. Four training examples pop out.
+# Slide a three-letter window over `cat`. Four training examples pop out. The blank `.`
+# is still the special start/stop character from Chapter 22, not sentence punctuation.
 
 # %%
 windows = pd.DataFrame(
@@ -48,6 +50,9 @@ windows
 # %% [markdown]
 # > 📖 **Grown-ups call this:** An **embedding** is a tiny list of numbers for one
 # > character. The model gets to choose those numbers while it learns.
+# >
+# > A **context window** is the letters the model is allowed to see when it guesses the
+# > next one.
 #
 # > 📖 **Grown-ups call this:** **Softmax** turns any list of scores into probabilities
 # > that add to 1. Bigger scores get more probability.

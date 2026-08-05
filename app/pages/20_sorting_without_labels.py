@@ -56,6 +56,7 @@ piles before anyone hands you the pile names.
     lesson.look_for("the dots before they have names. Your eyes start hunting for piles before the algorithm says a word.")
     lesson.kid_corner("Put blocks on the floor. Move them into piles by what feels near. You do not need names for the piles before you start.")
     lesson.jargon("clustering", "Sorting data into groups when the answer labels are missing.")
+    lesson.jargon("cluster", "One of those groups: points that ended up in the same pile.")
 
 
 @lesson.step("Two steps you can recite", beat="byhand")
@@ -95,6 +96,7 @@ def _():
     lesson.say("Left moves to `((1+1+2)/3, (1+2+1)/3) = (1.33, 1.33)`. Right moves to `((7+8+7)/3, (7+7+8)/3) = (7.33, 7.33)`.")
     lesson.aha("Round two changes nothing. That means the algorithm has converged: it stopped moving!")
     lesson.jargon("k-means", "Pick k centres, assign points to nearest centres, move centres to group middles, and repeat.")
+    lesson.jargon("centroid", "The middle of a cluster. k-means centres move to the centroid of their points.")
 
 
 @lesson.step("Press the step button", beat="seeit")
@@ -150,6 +152,10 @@ def _():
 
 @lesson.step("Predict five colours", beat="play")
 def _():
+    lesson.say(
+        "A photo is a grid of pixels, but k-means sees a pixel as a **point in 3D colour space**: "
+        "`(red amount, green amount, blue amount)`. Five colours means five centres in that colour space, then every pixel gets repainted by its nearest centre."
+    )
     guess = lesson.predict(
         "If a photo is repainted with only five colours, what do you expect?",
         ["It stays recognisable but poster-like", "It becomes random noise", "It becomes a perfect copy"],

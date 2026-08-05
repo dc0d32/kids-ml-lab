@@ -12,7 +12,7 @@ POINTS = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=21,
     title="Workbook · Pick the best shadow",
-    intro="Four points lie nearly along a sideways line. If you can keep one number, which shadow keeps more of the story?",
+    intro="Four points lie nearly along a sideways line. Projection means casting a smaller shadow. If you can keep one number, which shadow keeps more of the story?",
     questions=[
         Question(
             prompt="What is the average x value?",
@@ -62,6 +62,13 @@ WORKBOOK = Workbook(
             prompt="If you had to describe each classmate with one number, what might you choose, and what would you lose?",
             kind="open",
             why="Any one number throws information away. Height loses hobbies. Age loses personality. Compression is powerful, but it always has a cost.",
+        ),
+        Question(
+            prompt="Why should you be careful reading distances on a t-SNE plot?",
+            kind="choice",
+            choices=["t-SNE bends the map, so island gaps can lie", "t-SNE is the same as PCA", "t-SNE never uses neighbours"],
+            answer="t-SNE bends the map, so island gaps can lie",
+            why="t-SNE is a different method from PCA. It tries to keep nearby points near each other, then bends and stretches the picture. Local neighbours matter; island sizes and far gaps are not measured facts.",
         ),
     ],
     kid_corner="Hold your hand near a wall with a flashlight. Turn your hand. Some shadows look like a hand; some look like a blob. PCA is the game of picking the useful shadow.",

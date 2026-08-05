@@ -67,20 +67,20 @@ That is not a toy achievement. It is the map of modern machine learning, built b
     lesson.kid_corner("You did not get one magic wand. You filled a backpack with tools. Now you can reach in and pick the tool for the job.")
     lesson.say("You have personally built this backpack of tools. Shake it and it rattles:")
     built = [
-        "a linear model",
-        "a perceptron trained by hand",
-        "decision trees",
-        "ensembles",
-        "an SVM",
-        "backprop from scratch, checked by numerical gradients",
-        "a CNN",
-        "k-means",
-        "PCA",
-        "a bigram generator",
-        "an embedding MLP",
-        "a Transformer",
+        ["linear model", "a line that turns numbers into a score"],
+        ["perceptron", "a hand-trained yes/no neuron"],
+        ["decision trees", "question ladders that split the data"],
+        ["ensembles", "crowds of models voting or correcting each other"],
+        ["SVM", "the widest safe street between classes"],
+        ["backprop", "the blame-passing move checked by numerical gradients"],
+        ["CNN", "shared sliding-window filters for pictures"],
+        ["k-means", "moving centres that make unlabeled piles"],
+        ["PCA", "best-shadow squishing that keeps spread"],
+        ["bigram generator", "one-letter-back counting"],
+        ["embedding MLP", "three-letter memory with learned letter addresses"],
+        ["Transformer", "attention choosing which earlier clues to use"],
     ]
-    st.dataframe(pd.DataFrame({"tool": built}), hide_index=True, width="content")
+    st.dataframe(pd.DataFrame(built, columns=["tool", "remember it as"]), hide_index=True, width="stretch")
     lesson.look_for("how many different tools are not neural networks. Modern ML is a toolbox, not one spell.")
     fig = course_map_figure()
     lesson.show(fig)
@@ -100,7 +100,7 @@ That is not a toy achievement. It is the map of modern machine learning, built b
 
 @lesson.step("Where this is already in your life", beat="play")
 def _():
-    lesson.say("Pick a real-world thing and snap it back to chapters you have touched.")
+    lesson.say("Pick a real-world thing and snap it back to chapters you have touched. Big chat systems usually guess **tokens** — chunks of text — while ours used letters so the gears stayed visible.")
     uses = {
         "Recommendations": "Chapters 19-20: find things near things you already like, or group people/items by pattern.",
         "Photo search": "Chapters 17, 18, 21: pictures are numbers, CNNs spot patterns, PCA can shrink them.",

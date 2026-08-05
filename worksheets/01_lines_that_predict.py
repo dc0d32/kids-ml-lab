@@ -28,8 +28,9 @@ WORKBOOK = Workbook(
     chapter=1,
     title="Workbook · Measure a line's mistakes",
     intro=(
-        "A line is a tiny prediction machine. Here you test one piggy-bank line, "
-        "add up how wrong it is, then compare it with another line."
+        "A line is a tiny prediction machine: one feature goes in, one number comes out. "
+        "Here you test one piggy-bank line, add up its loss — the mistake score — then "
+        "compare it with another line."
     ),
     questions=[
         Question(
@@ -123,6 +124,16 @@ WORKBOOK = Workbook(
             why=(
                 "**b** slides the line up or down. If weeks = 0, the formula becomes dollars = b, so b is the "
                 "starting height before the slope starts hauling the line upward."
+            ),
+        ),
+        Question(
+            prompt="In the bike-rental example, temperature is the **feature**. What does that mean?",
+            kind="choice",
+            choices=["It is the input the model sees", "It is the answer the model must guess", "It is the model's loss"],
+            answer="It is the input the model sees",
+            why=(
+                "A feature is an input column. For the bike line, the model sees temperature and tries to predict "
+                "rentals. The answer column is not a feature; it is the thing being guessed."
             ),
         ),
     ],

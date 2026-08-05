@@ -5,7 +5,7 @@ from kidsml.workbook import Question, Workbook
 WORKBOOK = Workbook(
     chapter=25,
     title="Workbook · Pick the right tool",
-    intro="No new algorithm. This is the victory lap and the safety check.",
+    intro="No new algorithm. This is the victory lap and the safety check. A token is a chunk of text; our tiny models mostly used single characters as tokens.",
     questions=[
         Question(
             prompt="You want to sort your own photos into rough groups without labels. Which chapter helps most?",
@@ -20,6 +20,13 @@ WORKBOOK = Workbook(
             choices=["guess the next letter", "draw a wider road", "average five folds"],
             answer="guess the next letter",
             why="Autocomplete and chatbots both lean on next-token prediction. Bigger models often use pieces of words, but the training target is the same kind of next-piece game.",
+        ),
+        Question(
+            prompt="A CNN callback should remind you of which picture trick?",
+            kind="choice",
+            choices=["shared sliding-window filters", "one-letter bigram counting", "k-means centres"],
+            answer="shared sliding-window filters",
+            why="Chapter 18's CNN reused learned filters across a picture. That is the seeing-road callback, not the text-road or clustering-road callback.",
         ),
         Question(
             prompt="A chatbot gives a confident answer about your homework. What should you remember?",

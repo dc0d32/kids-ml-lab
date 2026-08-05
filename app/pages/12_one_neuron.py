@@ -42,6 +42,7 @@ graph LR
         height=260,
     )
     lesson.look_for("the weighted sum in the middle. That is the line machine you already built.")
+    lesson.say("Read every arrow as `this number flows into the next box`. `x₁` and `x₂` are the two input numbers. The weights multiply them, `Σ + b` adds the weighted pieces plus the bias, the squish clips the raw score to 0..1, and the output is the neuron's answer.")
     lesson.aha("One neuron is `output = squish(w1*x1 + w2*x2 + b)`: Chapter 2 inside, Chapter 4 outside.")
 
 
@@ -84,6 +85,7 @@ The squish clips the wild number into a soft confidence score without moving the
     demo_neuron = Neuron(w=np.array([2.0, -1.0]), b=0.5, activation="sigmoid")
     st.plotly_chart(neuron_surface_figure(demo_neuron, X, steps=45, title="The squish turns the raw ramp into 0..1"), width="stretch")
     lesson.look_for("the ramp flattening into a floor and ceiling. The middle fence stays in the same place.")
+    lesson.jargon("activation", "The grown-up name for the squish function at the end of a neuron.")
     lesson.careful(
         "If you double w1, w2, and b, every raw score doubles. The zero places stay zero, so "
         "the boundary stays put. Far-away points become more confident; the line does not move."
@@ -144,6 +146,7 @@ def _():
 
 @lesson.step("Rotate the output surface", beat="play")
 def _():
+    lesson.say("This 3D surface shows the neuron's answer over the whole `x1, x2` floor. Height and colour both mean confidence: low is near 0, high is near 1.")
     guess = lesson.predict(
         "Make the weights steeper. What happens to the output ramp?",
         ["It gets flatter", "It changes faster near the fence", "The fence disappears"],

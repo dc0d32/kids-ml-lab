@@ -94,7 +94,7 @@ graph LR
         height=260,
     )
     lesson.look_for("the repeated pattern: numbers zip forward, gradients run backward, and hidden layers stack the same move.")
-    lesson.say("That buys more flexible boundaries, and it also creates a new danger: memorising noise. Power tools need goggles!")
+    lesson.say("Wide means more neurons side by side in one layer. Deep means more layers in a row. That buys more flexible boundaries, and it also creates a new danger: memorising noise. Power tools need goggles!")
 
 
 @lesson.step("Count the learnable numbers", beat="byhand")
@@ -118,6 +118,7 @@ hidden layers), but the arithmetic still fits on one screen.
     st.dataframe(counts, hide_index=True, width="content")
     lesson.say("That is **40 weights + 11 biases = 51 parameters**. A bigger pile can fit more shapes, including shapes caused by bad luck.")
     lesson.jargon("parameters", "The weights and biases: every adjustable number inside the model.")
+    lesson.jargon("capacity", "How much shape-fitting room the model has. More parameters usually mean more capacity.")
 
 
 @lesson.step("Squishes make different bends", beat="seeit")
@@ -163,7 +164,8 @@ def _():
     lesson.say(
         """
 Now watch overfitting. We give the network a small practice set and flip some labels, so
-some dots are lies with coordinates.
+some dots are lies with coordinates. Overfitting means the model memorises practice quirks
+that do not help on fresh test dots.
 """
     )
     guess = lesson.predict(
@@ -207,6 +209,7 @@ def _():
     _, _, _, _, _, train_losses, test_losses = overfit_story(0.0, False)
     draw_losses(train_losses, test_losses, "Early stopping watches the test line")
     lesson.look_for("the lowest point of the red test line, before the network starts chasing weird dots around the yard.")
+    lesson.jargon("early stopping", "Save the model at the best fresh-test moment instead of training until the practice score looks prettiest.")
     lesson.aha("Early stopping works because broad patterns are often learned before noisy details start waving shiny flags.")
 
 
@@ -215,6 +218,7 @@ def _():
     knobs, picture = lesson.controls()
     with knobs:
         decay = st.slider("Weight decay", 0.0, 0.08, 0.02, 0.01, key="ch15_weight_decay")
+    lesson.say("Weight decay is a tiny fee charged on large weights. Big weights can make sharp wiggles, so this fee nudges the network toward calmer lines.")
     with picture:
         X_train, y_train, _, _, over_model, train_losses, test_losses = overfit_story(decay, False)
         draw_losses(train_losses, test_losses, "Weight decay calms the weights")

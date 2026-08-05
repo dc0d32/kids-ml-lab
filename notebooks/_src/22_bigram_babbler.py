@@ -40,7 +40,8 @@ use_house_style()
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Names get bumper pads: a blank **`.`** at the start and another at the finish.
+# Names get bumper pads: a blank **`.`** at the start and another at the finish. That dot
+# is not a sentence period; it is a special blank character that says start or stop.
 #
 # `mia` enters the tally machine as `.mia.`. That lets the chart learn what starts names
 # and what ends names.
@@ -59,11 +60,15 @@ print("The m → a, m → i, and m → o boxes get 1 each.")
 # %% [markdown]
 # > 📖 **Grown-ups call this:** A **bigram** is a pair of touching characters. `m → a` is
 # > one bigram.
+# >
+# > A **vocabulary** is the list of characters the model is allowed to use, including the
+# > blank `.`.
 
 # %% [markdown]
 # ## 👀 Take a look
 #
-# Build the full tally chart on first names. Now the little boxes become a heat map.
+# Build the full tally chart on first names. The text pile we count from is called a
+# **corpus**. Now the little boxes become a heat map.
 
 # %%
 words = load_words("names")

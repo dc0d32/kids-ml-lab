@@ -27,8 +27,7 @@ WORKBOOK = Workbook(
     chapter=17,
     title="Workbook · Read the numbers",
     intro=(
-        "Pictures in this chapter are grids of numbers. Use scrap paper for any counting, "
-        "then type your answers here."
+        "Pictures in this chapter come from the bundled scikit-learn digits dataset: 1,797 tiny 8×8 gray handwritten digits, with pixel brightness from 0 to 16. Use scrap paper for any counting, then type your answers here."
     ),
     questions=[
         Question(

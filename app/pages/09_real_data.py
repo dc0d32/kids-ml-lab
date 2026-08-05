@@ -233,7 +233,15 @@ creature. The columns include words like `element` and `home`, plus stats like `
 
 @lesson.step("Reveal what mattered", beat="play")
 def _():
-    lesson.say("Now pop the hood and look at feature importances. If one column towers, ask whether it is a real clue or a sneaky shortcut.")
+    lesson.say(
+        """
+Now pop the hood and look at feature importances. Each bar is how much the trained forest
+leaned on that column while making splits.
+
+If one column towers, ask whether it is a real clue or a sneaky shortcut.
+"""
+    )
+    lesson.jargon("feature importance", "A score for how much a trained model leaned on each column.")
     draft_table = st.selectbox("Feature-importance dataset", TABLES, index=2, format_func=dataset_label, key="ch09_importance_table")
     df = datasets.load_table(draft_table)
     target = datasets.target_of(draft_table)
@@ -284,7 +292,16 @@ def _():
 
 @lesson.step("What gets mixed up?", beat="forreal")
 def _():
-    lesson.say("A classification check asks: what gets mixed up with what?")
+    lesson.say(
+        """
+A classification check asks: what gets mixed up with what? This penguin model predicts
+species from one row per bird, using island, beak, flipper, weight, and sex columns.
+
+In the confusion matrix, rows are the real species and columns are what the model guessed.
+The diagonal is correct; off-diagonal cells are mix-ups.
+"""
+    )
+    lesson.jargon("confusion matrix", "A table where rows are real answers, columns are model guesses, and off-diagonal cells are mistakes.")
     penguin_info = cached_penguins()
     fig, ax = lesson.figure(5.5, 4.5)
     confusion_grid(penguin_info["cm"], labels=penguin_info["labels"], ax=ax, title="Penguin species confusion")
@@ -327,6 +344,7 @@ number target: how many bikes were rented that day. The dashed line is perfectio
     lesson.show(fig)
     lesson.look_for("points far from the dashed perfect line. Those dots are clues with boots on.")
     st.metric("bike model R²", f"{bike['result']['model_score']:.2f}", f"baseline {bike['result']['baseline_score']:.2f}")
+    st.caption("R² is a number-prediction score: 1.0 is perfect, and 0.0 is about as useful as guessing the average.")
     st.dataframe(bike["worst"], hide_index=True, width="stretch")
 
 

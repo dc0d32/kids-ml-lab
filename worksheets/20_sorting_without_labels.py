@@ -9,10 +9,15 @@ POINTS = pd.DataFrame(
     columns=["point", "x", "y"],
 )
 
+PIXELS = pd.DataFrame(
+    [["leaf pixel", 30, 160, 45], ["sky pixel", 80, 140, 240], ["flower pixel", 220, 60, 120]],
+    columns=["pixel", "red", "green", "blue"],
+)
+
 WORKBOOK = Workbook(
     chapter=20,
     title="Workbook · Move the centres",
-    intro="Start with one centre at **(0, 0)** and one at **(10, 10)**. Do one full k-means round.",
+    intro="Start with one centre at **(0, 0)** and one at **(10, 10)**. Do one full k-means round. A cluster is a pile; its centroid is the middle.",
     questions=[
         Question(
             prompt="P1 is at (1, 1). Which starting centre is closer?",
@@ -73,6 +78,17 @@ WORKBOOK = Workbook(
             choices=["it becomes zero", "it becomes huge", "it cannot be measured"],
             answer="it becomes zero",
             why="Each point can become its own centre. That makes the score perfect but useless, because it found no helpful piles.",
+        ),
+        Question(
+            prompt="In the photo demo, what is one pixel treated as?",
+            kind="choice",
+            choices=["a point with red, green, and blue coordinates", "a whole cluster name", "a future label"],
+            answer="a point with red, green, and blue coordinates",
+            table=PIXELS,
+            why=(
+                "Colour quantization treats each pixel as a point in 3D colour space: (red amount, green amount, blue amount). "
+                "K-means finds colour centroids, then repaints each pixel with its nearest centre colour."
+            ),
         ),
     ],
     kid_corner="Sort laundry into piles. First toss clothes near a few basket spots. Then move each basket to the middle of its pile. Keep doing those two moves until the baskets stop moving.",

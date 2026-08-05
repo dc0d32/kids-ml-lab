@@ -116,8 +116,8 @@ plt.show()
 # Real data is messy, so the road sometimes has to choose: stay wide, or bend hard to fix
 # every training dot.
 #
-# In these next pictures we use an **RBF road**: a bendy road where each point tugs on
-# nearby space.
+# In these next pictures we use a distance road: each point tugs on nearby space, and the
+# tug fades as you move away. Grown-ups call this RBF.
 #
 # `C` is the strictness knob. Low C says, "keep a wide road, even if a few training dots
 # are on the wrong side." High C says, "training mistakes are expensive," so the road
@@ -126,6 +126,9 @@ plt.show()
 # `gamma` is the reach knob for the RBF road. Low gamma means each point reaches far,
 # making broad smooth shapes. High gamma means each point reaches a short distance, which
 # can create tiny islands.
+#
+# > 📖 **Grown-ups call this:** **RBF** is short for radial basis function: an SVM road
+# > style where nearby points tug more than far-away points.
 
 # %%
 X, y, model = fit_svm_shape("circles", kernel="rbf", C=3.0, gamma=1.0, noise=0.18, seed=2)
@@ -160,8 +163,12 @@ plt.show()
 # %% [markdown]
 # ## 💻 In real code
 #
-# Penguins are real data, not toy dots. We use two beak measurements so the road can be
-# drawn. The ringed penguins are the ones close enough to hold the road in place.
+# These are the same Palmer penguins from Chapter 04, measured in a different way. Chapter
+# 04 used flipper length and weight; this road uses beak length and beak depth so the
+# picture still has two axes.
+#
+# Each row is one penguin, and the target is species. The ringed penguins are the ones
+# close enough to hold the road in place.
 
 # %%
 X_peng, y_peng, species, peng_model, support = penguin_svm()

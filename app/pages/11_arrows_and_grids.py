@@ -150,10 +150,11 @@ def shadow_plot(points3d, shadow, spread, best):
         ),
         row=1, col=2,
     )
-    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=2)
+    fig.update_xaxes(title_text="shadow width", scaleanchor="y", scaleratio=1, row=1, col=2)
+    fig.update_yaxes(title_text="shadow height", row=1, col=2)
     fig.update_layout(
         title=f"Spread kept: {spread:.2f} out of best {best:.2f}",
-        scene=dict(xaxis_title="x", yaxis_title="y", zaxis_title="z"),
+        scene=dict(xaxis_title="3D x (left-right)", yaxis_title="3D y (front-back)", zaxis_title="3D z (up-down)"),
     )
     return style_plotly(fig, height=430)
 
@@ -168,8 +169,9 @@ box of dots on lines.
 Chapter 10 taught you to distrust a shiny score. Now we build the score machine more
 carefully, so there is no hidden magic step when neural networks arrive.
 
-Here is what it actually is: **an instruction for moving space**. Drag the instruction,
-and the grid skates, flips, stretches, and wakes up.
+Here is what it actually is: **an instruction for moving space**. A grid is the graph-paper floor: straight crossing lines, with every crossing point ready to move.
+
+Drag the instruction, and the grid skates, flips, stretches, and wakes up.
 """
     )
     lesson.mermaid(
@@ -188,7 +190,9 @@ graph LR
 
 @lesson.step("The grid mover", beat="byhand")
 def _():
-    lesson.say("This is the centre of the chapter. Pick a preset, then drag the four numbers. Grey grid before; blue grid after. The whole floor moves!")
+    lesson.say(
+        "This is the centre of the chapter. The four numbers `[[a, b], [c, d]]` say where the two starter arrows land: `a,c` move the right arrow and `b,d` move the up arrow. Pick a preset, then drag one number and watch the grey graph-paper floor become the blue moved floor."
+    )
     knobs, picture = lesson.controls()
     with knobs:
         _, M = preset_matrix("ch11_grid", index=0)
@@ -356,7 +360,7 @@ def _():
 
 @lesson.step("3D to 2D: beat the shadow finder", beat="play")
 def _():
-    lesson.say("Now the object is a 3D cloud, and your shadow is a 2D picture. Spin the lamp. Keep as much spread as possible!")
+    lesson.say("Now the object is a 3D cloud: x means left-right, y means front-back, and z means up-down. Spin and tilt the lamp, then watch the 2D shadow axes: keep the shadow wide instead of crushed into a skinny smear.")
     knobs, picture = lesson.controls()
     with knobs:
         angle_a = st.slider("spin the lamp", -180, 180, 20, 5, key="ch11_shadow_a")

@@ -12,7 +12,7 @@ LOSS_TABLE = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=15,
     title='Workbook · Bigger is not always kinder',
-    intro='A big network can over-study its practice dots. Use the table to decide when to stop.',
+    intro='A big network has more capacity: more room to fit shapes. It can overfit by over-studying practice dots, so use the train/test table to decide when early stopping should save the calmer model.',
     questions=[
         Question(
             prompt='Which checkpoint has the lowest test loss?',
@@ -22,7 +22,7 @@ WORKBOOK = Workbook(
         Question(
             prompt='At checkpoint 1200, train loss is tiny. Why is that not the best model?',
             kind='open',
-            why='The test loss climbed to 0.28. The network learned tiny details that helped the practice dots but hurt fresh dots, which is overfitting.',
+            why='The test loss climbed to 0.28. The network learned tiny details that helped the practice dots but hurt fresh dots, which is overfitting: practice memorising instead of reusable learning.',
         ),
         Question(
             prompt='For [2, 5, 5, 1], how many weight numbers are in the first layer?',

@@ -30,7 +30,8 @@ WORKBOOK = Workbook(
     title="Workbook · Feel the ruler fail",
     intro=(
         "Some patterns cannot be split by one straight line. XOR is the tiny proof: four dots, "
-        "four answers, no ruler line works."
+        "four answers, no ruler line works. For circles, we invent x3 as a new height so a "
+        "flat cut can turn into a curved boundary."
     ),
     questions=[
         Question(
@@ -113,7 +114,7 @@ WORKBOOK = Workbook(
             answer="a feature that repeats",
             hint="Stripes come back again and again.",
             why=(
-                "Stripes are periodic: the same kind of region comes back as x1 moves. A repeating feature such as sine "
+                "Stripes repeat: the same kind of region comes back as x1 moves. A repeating feature such as sine "
                 "or cosine gives the model a coordinate that marches with the pattern instead of growing forever."
             ),
         ),

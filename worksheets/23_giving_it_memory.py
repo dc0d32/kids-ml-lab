@@ -17,7 +17,7 @@ SOFTMAX_TOY = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=23,
     title="Workbook · Three letters in",
-    intro="The game is still next-letter guessing. The memory is longer now.",
+    intro="The game is still next-letter guessing from Chapter 22. The context window is longer now, and `.` is still the special start/stop blank.",
     questions=[
         Question(
             prompt="For the word **cat**, what is the answer after the context `.ca`?",
@@ -54,6 +54,13 @@ WORKBOOK = Workbook(
             choices=["yes", "no"],
             answer="no",
             why="A fixed window is a hard wall. Three letters of memory means the fourth-back letter is invisible, even if it would be useful.",
+        ),
+        Question(
+            prompt="What does context window mean here?",
+            kind="choice",
+            choices=["the letters the model can see before guessing", "the whole training corpus", "the picture size"],
+            answer="the letters the model can see before guessing",
+            why="The context window is the model's visible memory. Chapter 23 uses three letters; Chapter 24 changes how the model chooses clues inside a bigger block.",
         ),
         Question(
             prompt="The 2D embedding plot puts vowels near each other. Who told the model what a vowel is?",

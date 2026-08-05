@@ -33,18 +33,18 @@ use_house_style()
 #
 # **You have personally built this backpack of tools. Shake it and it rattles:**
 #
-# - a linear model
-# - a perceptron trained by hand
-# - decision trees
-# - ensembles
-# - an SVM
-# - backprop from scratch, checked by numerical gradients
-# - a CNN
-# - k-means
-# - PCA
-# - a bigram generator
-# - an embedding MLP
-# - a Transformer
+# - a linear model: a line that turns numbers into a score
+# - a perceptron: a hand-trained yes/no neuron
+# - decision trees: question ladders that split the data
+# - ensembles: crowds of models voting or correcting each other
+# - an SVM: the widest safe street between classes
+# - backprop: blame passing, checked by numerical gradients
+# - a CNN: shared sliding-window filters for pictures
+# - k-means: moving centres that make unlabeled piles
+# - PCA: best-shadow squishing that keeps spread
+# - a bigram generator: one-letter-back counting
+# - an embedding MLP: three-letter memory with learned letter addresses
+# - a Transformer: attention choosing which earlier clues to use
 
 # %% [markdown]
 # ## 👀 Take a look
@@ -93,7 +93,9 @@ plt.show()
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# Where these ideas already are in your life. The map keeps showing up in the wild.
+# Where these ideas already are in your life. The map keeps showing up in the wild. Big
+# chat systems usually guess **tokens** — chunks of text — while ours used letters so the
+# gears stayed visible.
 
 # %%
 uses = pd.DataFrame(

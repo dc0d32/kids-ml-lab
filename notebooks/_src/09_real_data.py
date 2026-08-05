@@ -193,6 +193,9 @@ plt.show()
 # %% [markdown]
 # Look for one tall bar. That column did the heavy lifting, so it deserves a human sanity
 # check.
+#
+# > 📖 **Grown-ups call this:** **feature importance** is a score for how much a trained
+# > model leaned on each column.
 
 # %%
 print(datasets.MONSTER_SECRET_RULE)
@@ -211,6 +214,12 @@ print(datasets.MONSTER_SECRET_RULE)
 #
 # Two plots are worth building into your reflexes: a confusion matrix for classes, and
 # predicted-versus-actual for numbers.
+#
+# For the penguin confusion matrix, each row is the real species and each column is what
+# the model guessed. The diagonal is correct. Off-diagonal cells are mix-ups.
+#
+# > 📖 **Grown-ups call this:** a **confusion matrix** is a table where rows are real
+# > answers, columns are model guesses, and off-diagonal cells are mistakes.
 #
 # The bikes table has one row per day, weather columns such as temperature, humidity,
 # wind, and season, and a number target: how many bikes were rented that day.
@@ -257,6 +266,9 @@ bike["worst"]
 
 # %% [markdown]
 # Look for points far from the dashed perfect line. Those dots are clues with boots on.
+# R² is a number-prediction score: `1.0` is perfect, and `0.0` is about as useful as
+# guessing the average.
+#
 # The worst bike mistakes are not random dots. Look at the dates. Rentals grew over the
 # years this table covers, and our weather-only model did not know that story.
 

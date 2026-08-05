@@ -24,7 +24,7 @@ BIAS_POINTS = pd.DataFrame(
         [1, 1, "red"],
         [2, 2, "red"],
     ],
-    columns=["x1", "x2", "class"],
+    columns=["x1", "x2", "answer"],
 )
 
 WORKBOOK = Workbook(
@@ -32,8 +32,8 @@ WORKBOOK = Workbook(
     title="Workbook · Let a line choose sides",
     intro=(
         "Ten dogs, measured two ways: how tall in hand-spans, how heavy in bags of sugar. "
-        "The line scores each dog, then reads the sign — positive means grown dog, "
-        "negative means puppy."
+        "A perceptron is a yes/no line: it scores each dog with a weighted sum, then reads "
+        "the sign — positive means grown dog, negative means puppy."
     ),
     questions=[
         Question(

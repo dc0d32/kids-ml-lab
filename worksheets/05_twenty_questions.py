@@ -35,7 +35,8 @@ WORKBOOK = Workbook(
     title="Workbook · Pick the first question",
     intro=(
         "A decision tree plays Twenty Questions. It tries possible questions and chooses the one "
-        "that makes the cleanest buckets."
+        "that makes the cleanest buckets. A pure bucket has one answer in it; Gini impurity is the "
+        "bucket-mess score, where 0 means pure."
     ),
     questions=[
         Question(

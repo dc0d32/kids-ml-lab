@@ -43,8 +43,9 @@ use_house_style()
 #     Z -. blame .-> X
 # ```
 #
-# The solid arrows zoom forward to make a prediction. The dotted arrows carry blame
-# backward so each learned number knows which way to move.
+# The solid arrows zoom forward to make a prediction. Grown-ups call that left-to-right
+# trip the **forward pass**. The dotted arrows carry blame backward so each learned number
+# knows which way to move.
 #
 # > 📖 **Grown-ups call this:** **loss** is one number for how bad the model's answer was.
 # > Smaller is better.
@@ -64,17 +65,19 @@ use_house_style()
 # %%
 rows = pd.DataFrame(
     [
-        ['z', '0*1 + 0*2 + 0', 0.0],
-        ['output', 'sigmoid(0)', 0.5],
-        ['loss', '(0.5 - 1)^2', 0.25],
-        ['dL/dout', '2*(0.5 - 1)', -1.0],
-        ['sigmoid slope', '0.5 * (1 - 0.5)', 0.25],
-        ['dL/dz', '-1 * 0.25', -0.25],
-        ['dw1', '-0.25 * x1 = -0.25 * 1', -0.25],
-        ['dw2', '-0.25 * x2 = -0.25 * 2', -0.5],
-        ['db', '-0.25 * 1', -0.25],
+        ['x', 'the input point', '(1, 2)', 'x1 is 1 and x2 is 2'],
+        ['y', 'the correct answer', '1', 'we want the output to rise toward 1'],
+        ['z', 'raw score before squish', '0*1 + 0*2 + 0 = 0', 'w1*x1 + w2*x2 + b'],
+        ['out', 'prediction after squish', 'sigmoid(0) = 0.5', 'zero becomes the unsure answer'],
+        ['loss', 'mistake score', '(0.5 - 1)^2 = 0.25', 'squared error: prediction minus answer, squared'],
+        ['dL/dout', 'loss tug on output', '2*(0.5 - 1) = -1', 'negative means raising output lowers loss'],
+        ['sigmoid slope', 'output tug on z', '0.5*(1 - 0.5) = 0.25', 'the squish is this steep at z = 0'],
+        ['dL/dz', 'loss tug on z', '-1*0.25 = -0.25', 'chain rule: multiply the two tugs'],
+        ['dw1', 'loss tug on w1', '-0.25*x1 = -0.25*1 = -0.25', 'w1 matters through x1'],
+        ['dw2', 'loss tug on w2', '-0.25*x2 = -0.25*2 = -0.5', 'x2 is bigger, so w2 gets a bigger tug'],
+        ['db', 'loss tug on b', '-0.25*1 = -0.25', 'bias adds straight into z'],
     ],
-    columns=['piece', 'working', 'value'],
+    columns=['symbol', 'means', 'working', 'value clue'],
 )
 rows
 
@@ -89,12 +92,14 @@ rows
 # When one number changes another number, and that one changes a third, multiply the little
 # effects to get the whole tug. Grown-ups call that the **chain rule**.
 #
-# Read the diagram backward: `dL/dw1 = -1 * 0.25 * 1 = -0.25`. It is three “how much does
-# this affect that?” numbers snapped together, one tug at a time.
+# Read the diagram backward: `dL/dw1 = -1 * 0.25 * 1 = -0.25`. `dL/dw1` means “if w1 rises
+# a tiny bit, what happens to loss?” It is three “how much does this affect that?” numbers
+# snapped together, one tug at a time.
 #
-# With **lr = 0.5** — a small round step size for pencil arithmetic — subtract the gradient:
-# `w1 = 0 - 0.5*(-0.25) = 0.125`,
-# `w2 = 0 - 0.5*(-0.5) = 0.25`, and `b = 0 - 0.5*(-0.25) = 0.125`.
+# With **lr = 0.5** — the learning rate, or step size — subtract `lr * gradient`:
+# `w1 = 0 - 0.5*(-0.25) = 0 - (-0.125) = 0.125`,
+# `w2 = 0 - 0.5*(-0.5) = 0 - (-0.25) = 0.25`, and
+# `b = 0 - 0.5*(-0.25) = 0 - (-0.125) = 0.125`.
 #
 # > 💡 **Aha!** Subtracting the gradient walks downhill: if raising a weight raises loss,
 # > subtract. If raising it lowers loss, the gradient is negative, and subtracting a
@@ -111,7 +116,8 @@ rows
 # it is computing the same slope from the other end of the tunnel.
 #
 # Use three tiny points with both answers in the table, then compare the slow nudge test
-# with the fast backward-blame calculation.
+# with the fast backward-blame calculation. `MLP` means multilayer perceptron: a stack of
+# neuron layers; here `[2, 1]` is one tiny layer written in that format.
 
 # %%
 X_small = np.array([[1.0, 2.0], [0.0, 1.0], [2.0, 1.0]])
@@ -191,7 +197,8 @@ for s in [1, 8]:
 pd.DataFrame(starts).round(3)
 
 # %% [markdown]
-# Both starts use the same rule. The final numbers differ because each start slides into a
+# Both starts use the same rule. An **epoch** is one full pass through the practice data;
+# each run below used 500 epochs. The final numbers differ because each start slides into a
 # different best straight-line compromise.
 #
 # ## 🏆 Go further

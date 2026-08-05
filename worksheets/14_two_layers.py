@@ -12,7 +12,7 @@ XOR_TABLE = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=14,
     title='Workbook · Solve XOR by inventing two features',
-    intro='Hidden neuron 1 says OR-ish. Hidden neuron 2 says AND-ish. Fill the new two-column world.',
+    intro='Hidden neuron 1 says OR-ish and writes h1. Hidden neuron 2 says AND-ish and writes h2. Those h numbers are new coordinates for the same XOR dots; fill the new two-column world.',
     questions=[
         Question(
             prompt='For point (0, 0), what does OR-ish h1 output?',

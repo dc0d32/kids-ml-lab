@@ -44,13 +44,18 @@ use_house_style()
 # ```
 #
 # Read left to right: two original inputs feed three hidden neurons, and those three
-# reports feed one final neuron. New reports first, final call second.
+# reports feed one final neuron. `h₁`, `h₂`, and `h₃` mean hidden neuron 1, 2, and 3.
+# Each one outputs a new number for the final neuron to read.
+#
+# > 📖 **Grown-ups call this:** a **hidden layer** is a layer between the inputs and the
+# > final output. You can inspect its numbers, but they are not the final answer.
 
 # %% [markdown]
 # ## ✏️ Work it out
 #
 # We will make two hidden features by hand: **OR-ish** and **AND-ish**. This table is the
-# whole XOR story shrunk to four dots.
+# whole XOR story shrunk to four dots. Here OR-ish is `h1` and AND-ish is `h2`:
+# two fresh coordinates we invented from the same dot.
 #
 # In the original `x1, x2` square, the red points sit in opposite corners. No straight line
 # can grab both red corners without also grabbing a blue one.
@@ -83,7 +88,7 @@ axes[1].set_aspect('equal')
 plt.show()
 
 # %% [markdown]
-# Look at the right picture: both red rows moved onto `(h1, h2) = (1, 0)`, while the blue
+# Look at the right picture: red means XOR answer 1 and blue means answer 0. Both red rows moved onto `(h1, h2) = (1, 0)`, while the blue
 # rows are `(0, 0)` and `(1, 1)`. Now `score = OR - 2*AND - 0.5` is positive only for red.
 #
 # The hidden layer did not bend the output line. It **moved the points into a new space**
@@ -94,7 +99,8 @@ plt.show()
 # ## 👀 Take a look
 #
 # Train `[2, 3, 1]` on XOR, then inspect the hidden coordinates before drawing the final
-# boundary.
+# boundary. The table columns `h1`, `h2`, and `h3` are the three hidden-neuron outputs:
+# new coordinates for the same four XOR dots.
 
 # %%
 X_xor, y_xor = xor_exact()
@@ -126,9 +132,9 @@ fig = plt.figure(figsize=(6.2, 5.0))
 ax = fig.add_subplot(111, projection='3d')
 colors = np.where(y_xor == 1, '#EF4444', '#3B82F6')
 ax.scatter(hidden[:, 0], hidden[:, 1], hidden[:, 2], c=colors, s=90, edgecolor='white', linewidth=1.0)
-ax.set_xlabel('h1')
-ax.set_ylabel('h2')
-ax.set_zlabel('h3')
+ax.set_xlabel('h1 output')
+ax.set_ylabel('h2 output')
+ax.set_zlabel('h3 output')
 ax.set_title('XOR points after the hidden layer')
 plt.show()
 

@@ -35,8 +35,8 @@ WORKBOOK = Workbook(
     chapter=18,
     title="Workbook · Slide the window",
     intro=(
-        "A kernel is a small grid of weights. This 3×3 kernel looks at one tiny patch at a time: "
-        "multiply matching cells, add them, then slide one square."
+        "A kernel is a small grid of image weights — not the Chapter 07 SVM kind. This 3×3 kernel looks at one tiny patch at a time: "
+        "multiply matching cells, add them, then slide one square. The output grid is a feature map."
     ),
     questions=[
         Question(
@@ -91,7 +91,18 @@ WORKBOOK = Workbook(
             prompt="Why can a CNN use fewer weights than a plain MLP and still do better on pictures?",
             kind="open",
             why=(
-                "The same kernel is reused at every position. It learns one edge detector and marches it across the whole picture instead of learning a new detector for each spot."
+                "The same kernel is reused at every position. It learns one filter and marches it across the whole picture instead of learning a new detector for each spot. "
+                "Extra channels are more filters running side by side."
+            ),
+        ),
+        Question(
+            prompt="Fashion-MNIST images are what size?",
+            kind="choice",
+            choices=["28×28 gray pixels", "8×8 colour pixels", "one row of penguin numbers"],
+            answer="28×28 gray pixels",
+            why=(
+                "Fashion-MNIST is 70,000 tiny gray clothing pictures in ten classes: T-shirt/top, trouser, pullover, dress, coat, sandal, shirt, sneaker, bag, and ankle boot. "
+                "The first run downloads it once, then the cached copy gets reused."
             ),
         ),
         Question(

@@ -21,12 +21,21 @@ ROADS = pd.DataFrame(
     columns=["candidate road"],
 )
 
+PENGUIN_MEASUREMENTS = pd.DataFrame(
+    [
+        ["Chapter 04", "flipper length and weight", "same Palmer penguins"],
+        ["Chapter 07", "beak length and beak depth", "same Palmer penguins"],
+    ],
+    columns=["chapter", "measurements used", "dataset"],
+)
+
 WORKBOOK = Workbook(
     chapter=7,
     title="Workbook · Choose the widest safe road",
     intro=(
         "Several lines can separate the same dots. A support vector machine asks for the road "
-        "with the biggest empty safety gap."
+        "with the biggest empty safety gap. C is strictness, gamma is reach, and RBF is the "
+        "distance-based road style."
     ),
     questions=[
         Question(
@@ -85,6 +94,17 @@ WORKBOOK = Workbook(
             choices=["yes, it may move a lot", "no, never"],
             answer="yes, it may move a lot",
             why="A closest point can be a support vector. Remove it and the old fence post vanishes, so the widest safe road may jump to a new position.",
+        ),
+        Question(
+            prompt="Chapter 07 uses penguin beaks, while Chapter 04 used flippers and weight. Is this a brand-new penguin dataset?",
+            kind="choice",
+            choices=["yes, brand-new birds", "no, same Palmer penguins measured differently"],
+            answer="no, same Palmer penguins measured differently",
+            table=PENGUIN_MEASUREMENTS,
+            why=(
+                "Same birds, different rulers. Chapter 04 used flipper length and weight; Chapter 07 uses "
+                "beak length and beak depth so the SVM road can be drawn on two axes."
+            ),
         ),
         Question(
             prompt="Match the knob: **C** means...",

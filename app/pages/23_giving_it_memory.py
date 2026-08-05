@@ -55,15 +55,15 @@ def plot_embeddings(bundle):
 def _():
     lesson.say(
         """
-Chapter 22 could peek **one** letter back. Now hand it **three** letters of memory.
+Chapter 22 counted one letter back. Now hand the same next-letter game **three** letters of memory.
 
-That one extra handful moves us from tally chart to neural network. Same mission, bigger backpack: **guess the next letter**.
+That one extra handful moves us from tally chart to neural network. Same mission, bigger backpack: **guess the next letter**, then compare the loss to Chapter 22.
 """
     )
     lesson.kid_corner(
         "Instead of asking the kid beside you, ask the last three kids in line what letters they are holding. Then slap down your next-card guess."
     )
-    lesson.say("Slide a three-letter window across `cat`, and four training examples pop out. The blank `.` still marks the starting gate and the finish line.")
+    lesson.say("Slide a three-letter window across `cat`, and four training examples pop out. The blank `.` still marks the starting gate and the finish line; it is a special start/stop character, not sentence punctuation.")
     windows = pd.DataFrame(
         [["...", "c"], ["..c", "a"], [".ca", "t"], ["cat", "."]],
         columns=["input memory", "answer"],
@@ -78,6 +78,7 @@ That one extra handful moves us from tally chart to neural network. Same mission
     )
     if guess is None:
         return
+    lesson.jargon("context window", "The letters the model is allowed to see when it guesses the next one.")
     lesson.jargon("embedding", "A tiny number address for one character. The model gets to move those addresses while it learns.")
     lesson.jargon("softmax", "A probability machine: feed in scores, get probabilities that add to 1. Bigger scores get bigger slices.")
 

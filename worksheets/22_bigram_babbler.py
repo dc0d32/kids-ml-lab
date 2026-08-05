@@ -29,7 +29,7 @@ ROW_COUNTS = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=22,
     title="Workbook · Count, divide, roll",
-    intro="This one has no neural network. You are the tally chart.",
+    intro="This one has no neural network. You are the tally chart. A corpus is the text pile, the vocabulary is its allowed characters, and `.` is the special start/stop blank.",
     questions=[
         Question(
             prompt="In the tiny corpus **mae, mia, mo**, how many times does the pair `. → m` appear?",
@@ -71,6 +71,13 @@ WORKBOOK = Workbook(
             prompt="Why does this babbler make pronounceable nonsense instead of brilliant names every time?",
             kind="open",
             why="It only looks one letter back. If it has seen `a`, it knows nothing about whether the word started `ma`, `ka`, or `bra`. Chapter 23 gives it a longer memory window.",
+        ),
+        Question(
+            prompt="What is the vocabulary in this tiny character model?",
+            kind="choice",
+            choices=["the characters it may write, including `.`", "the list of real names", "the hidden test score"],
+            answer="the characters it may write, including `.`",
+            why="The vocabulary is the allowed character list. In this chapter it includes letters plus the blank `.` that marks start and stop.",
         ),
     ],
     kid_corner="Put letter cards in bowls. After an `m`, put lots of `a` cards, some `i` cards, and a few weird cards. Draw one card. That is sampling.",

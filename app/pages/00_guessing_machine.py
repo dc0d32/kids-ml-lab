@@ -55,6 +55,9 @@ Boom: I have a **secret rule**. It decides whether a creature is a **zeep** or n
 Every creature has three things about it: a **shape**, a **colour** and a **size**.
 That's all you get. I won't tell you the rule — you work it out from examples I've
 already sorted.
+
+By the end of this tiny game, you will race a computer and see the whole course in
+miniature. No robot fog machine required.
 """
     )
 
@@ -135,6 +138,11 @@ But it has never heard of shapes or colours. `circle` became 0, `square` became 
         "features and labels",
         "The columns it guesses <i>from</i> are the features. The column it guesses "
         "<i>at</i> is the label.",
+    )
+    lesson.jargon(
+        "model",
+        "The guesser after it has learned from examples. In code below, it is the "
+        "thing named <code>model</code>.",
     )
 
 

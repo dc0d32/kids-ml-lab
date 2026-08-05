@@ -27,9 +27,11 @@ use_house_style()
 #
 # Flip the line from price tag to referee. Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
 #
-# Same line, new question: **which side?** A point on one side becomes blue. A
-# point on the other side becomes red. The model still computes a number first,
-# but now the sign of that number makes the decision.
+# Same line, new question: **which side?** Use this when the answer has two
+# buckets: puppy or grown dog, blue or red, yes or no.
+#
+# The model still computes a number first. That number is a **weighted sum**:
+# multiply each measurement by its weight, add the bias, then check the sign.
 #
 # > 📖 **Grown-ups call this:** a **perceptron** — an old-school model that decides which
 # > side of a line a point is on.

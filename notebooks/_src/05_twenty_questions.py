@@ -73,15 +73,18 @@ creatures
 # %% [markdown]
 # A bucket is **mixed** when different answers are stuck together like cereal in one
 # bowl. Six animals with 3 flyers and 3 non-flyers is soupy. Four flyers and 0
-# non-flyers is clean.
+# non-flyers is clean. Grown-ups also call a one-answer bucket **pure**.
 #
-# The Gini mix score says: pick two random animals from the bucket. How likely are you to
+# The Gini impurity score says: pick two random animals from the bucket. How likely are you to
 # be surprised by two different answers? For two answers, the score is:
 #
 # `1 - p_yes² - p_no²`
 #
 # Half-and-half gives `1 - (3/6)² - (3/6)² = 1 - 9/36 - 9/36 = 0.5`. A clean bucket gives
 # `1 - 1² - 0² = 0`. Lower means less mess left for the next question.
+#
+# > 📖 **Grown-ups call this:** **Gini impurity** is a bucket-mess score. `0`
+# > means pure: every row in the bucket has the same answer.
 
 # %%
 splits = creature_split_table()
@@ -182,9 +185,12 @@ plt.show()
 # %% [markdown]
 # ## 💻 In real code
 #
-# Real tables often contain words. A column that says `smell = almond` cannot go straight
-# into a tree as a sentence, so we turn it into yes/no columns like `smell_almond`,
-# `smell_fishy`, and `smell_none`.
+# Real tables often contain words. Here the table is real-ish mushrooms: one row per
+# mushroom, field-guide clues such as smell and cap shape, and a target column `edible`
+# that says safe or poisonous.
+#
+# A column that says `smell = almond` cannot go straight into a tree as a sentence, so we
+# turn it into yes/no columns like `smell_almond`, `smell_fishy`, and `smell_none`.
 #
 # This is called one-hot encoding. It gives the tree the same kind of question it already
 # knows how to ask: is this column 0 or 1?

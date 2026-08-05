@@ -122,13 +122,17 @@ plt.show()
 
 # ## 👀 Take a look
 #
+# Before the 3D picture appears, name the third axis. **x3** is not a new measurement
+# someone collected. It is a new number we invent from the old two.
+#
 # A circle problem is hard in **x1, x2** because "inside or ring?" is really about
 # distance from the middle. So we add a new feature:
 #
 # **x3 = x1² + x2²**
 #
 # Point **(2, 0)** becomes **x3 = 2² + 0² = 4**. Point **(0.3, 0.4)** becomes
-# **0.3² + 0.4² = 0.09 + 0.16 = 0.25**. The ring rises; the middle stays low. Pop!
+# **0.3² + 0.4² = 0.09 + 0.16 = 0.25**. We use x3 as **height**: the ring rises;
+# the middle stays low. Pop!
 #
 # ```mermaid
 # flowchart LR
@@ -192,8 +196,11 @@ pd.DataFrame(
 )
 
 # %% [markdown]
-# XOR has its own escape hatch: add **x3 = x1 × x2**. For **(1, 1)** the score is
-# **1 + 1 - 2(1) - 0.5 = -0.5**, blue. For **(1, 0)** it is
+# XOR has its own escape hatch: add **x3 = x1 × x2**. That product is 1 only at
+# the corner **(1, 1)**, so it gives the model a handle on the one corner that kept
+# ruining the straight line.
+#
+# For **(1, 1)** the score is **1 + 1 - 2(1) - 0.5 = -0.5**, blue. For **(1, 0)** it is
 # **1 + 0 - 2(0) - 0.5 = 0.5**, red.
 
 # %% [markdown]
@@ -202,7 +209,8 @@ pd.DataFrame(
 # Adding a feature is one way to bend the answer back in the original picture.
 # Another way is to use a model that builds bends itself.
 #
-# A decision tree bends with boxy cuts. A tiny neural net bends smoothly. Both are
+# A decision tree bends with boxy cuts. A tiny neural net bends smoothly. These are
+# previews; the only thing to notice today is the shape of their bends. Both are
 # still making regions of red and blue; they are no longer trapped with one ruler.
 
 # %%
@@ -221,9 +229,12 @@ plt.show()
 # %% [markdown]
 # ## 💻 In real code
 #
-# scikit-learn can add polynomial features for us, then fit a straight model in
-# that bigger feature space. Degree 1 means no extra bend. Higher degree adds more
-# terms, which gives the boundary more ways to curve.
+# scikit-learn can add **polynomial features** for us: extra columns made from
+# powers and products like x1² or x1×x2. Then it fits a straight model using those
+# extra columns.
+#
+# Degree 1 means no extra bend. Higher degree adds more terms, which gives the
+# boundary more ways to curve.
 
 # %%
 fig, axes = plt.subplots(2, 3, figsize=(15, 8.5))

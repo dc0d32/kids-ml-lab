@@ -81,10 +81,10 @@ def _():
         """
 A bucket is **mixed** when different answers are still stuck together. Six
 animals with 3 flyers and 3 non-flyers is very mixed. Four flyers and 0
-non-flyers is clean.
+non-flyers is clean; grown-ups also call that bucket **pure**.
 
-To score that bucket, use Gini mix: `1 - p_fly² - p_not_fly²`. The fractions
-come from the bucket itself.
+To score bucket mess, use Gini impurity: `1 - p_fly² - p_not_fly²`. The
+fractions come from the bucket itself, so a pure bucket scores `0`.
 """
     )
     splits = cached_creature_splits()
@@ -98,6 +98,7 @@ bucket has 4 animals and mix `0`. So the split score is `(6×0.444 + 4×0) / 10 
 The yes-bucket arithmetic is `1 - (4/6)² - (2/6)² = 1 - 16/36 - 4/36 = 16/36 = 0.444`.
 """
     )
+    lesson.jargon("Gini impurity", "A bucket-mess score. `0` means pure: every row in the bucket has the same answer.")
 
 
 @lesson.step("Will sklearn pick your question?", beat="seeit")
@@ -189,6 +190,13 @@ straight into a tree as a sentence, so we turn it into yes/no columns like
 
 @lesson.step("Mushroom questions", beat="forreal")
 def _():
+    lesson.say(
+        """
+Now the table is real-ish mushrooms. Each row is one mushroom. The columns are
+field-guide clues such as smell, cap shape, and gill colour. The target is
+`edible`: safe or poisonous.
+"""
+    )
     mush_depth = st.slider("Mushroom tree depth", 1, 8, 4, key="ch05_mush_depth")
     _, _, _, _, _, scores, text = mushroom_tree(max_depth=mush_depth)
     cols = st.columns(3)

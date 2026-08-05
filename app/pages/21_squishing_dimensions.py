@@ -96,7 +96,9 @@ If the points stay spread apart, the shadow kept more information about who is w
     b.metric("y spread", f"{spread(table['y shadow']):.1f}")
     lesson.aha("Spread is information because it keeps points different from each other.")
     lesson.jargon("variance", "Spread measured from the middle. A bigger variance means the shadow kept the points pulled farther apart.")
-    lesson.jargon("principal component analysis", "Search for the shadow where the points stay as spread out as possible.")
+    lesson.jargon("projection", "Casting data onto a smaller shadow, like keeping x but dropping y.")
+    lesson.jargon("principal component", "One best-shadow direction. PCA keeps the first few of these directions.")
+    lesson.jargon("principal component analysis", "PCA: search for the shadow where the points stay as spread out as possible.")
 
 
 @lesson.step("Rotate the cloud", beat="seeit")
@@ -179,11 +181,11 @@ Clusters appear even though PCA never saw a digit label. Surprise: the shadow ke
         st.caption(f"PCA kept {kept:.1%} of the pixel spread in two shadows.")
     with right:
         lesson.show(cached_tsne_plot())
-        st.caption("t-SNE keeps nearby digits near each other, then bends the map to show neighbourhoods.")
+        st.caption("t-SNE is not PCA. It keeps nearby digits near each other, then bends the map to show neighbourhoods.")
     lesson.look_for("digits that overlap in PCA, then islands in t-SNE. Shared strokes make shared mistakes.")
     st.metric("variance kept in two PCA shadows", f"{kept:.1%}")
     lesson.careful(
-        "t-SNE bends and stretches the map to make local neighbourhoods visible. The gap between two islands, or the size of an island, is not a measured fact."
+        "t-SNE is a different method from PCA. It bends and stretches the map to make local neighbourhoods visible, so the distances can lie: the gap between islands, or the island size, is not a measured fact."
     )
 
 

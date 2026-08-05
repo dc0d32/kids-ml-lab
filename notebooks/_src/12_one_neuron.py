@@ -45,8 +45,9 @@ use_house_style()
 #     A --> Y[output from 0 to 1]
 # ```
 #
-# Read the diagram from left to right. The only new part is the squish at the end; the
-# weighted sum in the middle is the line machine you already built.
+# Read every arrow as “this number flows into the next box.” `x₁` and `x₂` are the two
+# input numbers. The weights multiply them, `Σ + b` adds the weighted pieces plus the
+# bias, the squish clips the raw score to 0..1, and the output is the neuron's answer.
 #
 # > 💡 **Aha!** One neuron is `output = squish(w1*x1 + w2*x2 + b)`: Chapter 2 inside,
 # > Chapter 4 outside.
@@ -77,6 +78,9 @@ hand
 # Why not leave the raw score alone? For a class answer, `z = 19` and `z = 1900` both mean
 # “red”, but a training rule needs a bounded target to compare with `0` and `1`. The squish
 # clips the wild number into a soft confidence score without moving the fence.
+#
+# > 📖 **Grown-ups call this:** the **activation** is the squish function at the end of a
+# > neuron.
 #
 # > ⚠️ **Careful:** If you double w1, w2, and b, every raw score doubles. The zero places
 # > stay zero, so the boundary stays put. Far-away points become more confident; the line
@@ -116,8 +120,9 @@ pd.DataFrame({'x1': X_tiny[rows, 0], 'x2': X_tiny[rows, 1], 'raw z': neuron.raw(
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# The 3D surface is the neuron's output over the whole plane. In the app you can rotate it;
-# here the same object appears below.
+# The 3D surface is the neuron's output over the whole `x1, x2` plane. Height and colour
+# both mean confidence: low is near 0, high is near 1. In the app you can rotate it; here
+# the same object appears below.
 
 # %%
 X, y = toy_shape('blobs', n=180, noise=0.22, seed=4)

@@ -29,8 +29,9 @@ use_house_style()
 # ## 🎣 Start here
 #
 # Here is the fix. One small window slides across the image like a tiny inspector.
-# That small grid of weights is called a **kernel**. The key trick is that the same
-# kernel visits every spot.
+# That small grid of weights is called a **kernel**. Chapter 07 used the same word for an
+# SVM shape trick; here it means an image-window grid. Same word, different gadget. The
+# key trick is that the same kernel visits every spot.
 #
 # ```mermaid
 # graph LR
@@ -43,6 +44,7 @@ use_house_style()
 #
 # Notice the word **same**. We do not invent a new edge detector for every spot. The same
 # little grid visits the top-left corner, the middle, and the bottom-right corner.
+# A **feature map** is the output grid from a kernel: bright cells show where that clue lit up.
 #
 # > 🧸 **Little Kid Corner** — Put a sticky note with a 3 by 3 hole over a picture.
 # > Peek through the hole, move it one square, and peek again. You are doing the
@@ -85,6 +87,9 @@ print("first window answer:", first_answer)
 #
 # > 📖 **Grown-ups call this:** **convolution** means sliding a small grid of weights
 # > over a picture. Multiply what lines up, then add.
+# >
+# > **Stride** is how far the window jumps. **Padding** is extra border pixels. This
+# > by-hand version uses stride 1 and no padding.
 
 # %% [markdown]
 # ## 👀 Take a look
@@ -143,8 +148,13 @@ plt.show()
 # The kernels above were designed by a person. What if we let the model choose its own?
 # That is the leap.
 #
-# During training, the CNN twists the kernel numbers until useful patches light up. It is
-# still the same sliding-window game, but the edge finder is learned instead of hand-written.
+# During training, the CNN twists the kernel numbers until useful patches light up. A
+# **CNN** is a neural network for pictures that learns kernels and slides them across the
+# image. A **channel** is one stack of picture signals; more channels mean more learned
+# detectors running side by side.
+#
+# It is still the same sliding-window game, but the edge finder is learned instead of
+# hand-written.
 #
 # ```mermaid
 # graph LR
@@ -155,7 +165,16 @@ plt.show()
 # ```
 #
 # Look at the stack: find small patterns, squish the scores, keep the strongest signals,
-# then make the final guess.
+# then make the final guess. **Pooling** shrinks a feature map by keeping the strongest
+# nearby signal, like saying "something useful was around here."
+
+# %% [markdown]
+# Fashion-MNIST is a starter clothing dataset: 70,000 gray pictures, each **28×28 pixels**,
+# split across ten classes — T-shirt/top, trouser, pullover, dress, coat, sandal, shirt,
+# sneaker, bag, and ankle boot. This notebook trains on a small slice of it. The first run
+# downloads about 30 MB once into `data/torchvision/`; after that it stays cached.
+#
+# If the download fails, the helper falls back to sklearn's 8×8 digits and says so.
 
 # %%
 result = vision.train_cnn_and_mlp(seed=0, train_size=6000, test_size=1000, epochs=2, allow_download=True)
@@ -164,10 +183,6 @@ print("training seconds:", round(result.elapsed, 2))
 vision.model_comparison_table(result)
 
 # %% [markdown]
-# If Fashion-MNIST is not cached, the first run downloads about 30 MB into
-# `data/torchvision/`. If that fails, the helper falls back to sklearn's 8×8 digits and
-# says so.
-#
 # The CNN reuses the same little window everywhere. That teaches it **an edge is an edge
 # wherever it appears**: sleeve edge, shoe edge, top-left edge, bottom-right edge.
 #
@@ -181,7 +196,8 @@ fig = vision.plot_small_images(filters, titles=[f"filter {i}" for i in range(len
 plt.show()
 
 # %% [markdown]
-# Look for tiny edge or blob detectors. These are the learned cousins of the kernels you edited.
+# Look for tiny edge or blob detectors. A **filter** is a kernel after training has learned
+# its numbers. These are the learned cousins of the kernels you edited.
 
 # %%
 maps = vision.feature_maps(result, limit=8)
@@ -207,7 +223,7 @@ plt.show()
 # ## 🏆 Go further
 #
 # 1. **Diagonal hunter.** Design a 3×3 kernel that lights up on diagonal edges.
-# 2. **Tiny champion.** Change the CNN channels in `kidsml/vision.py` in a copy of the function. What is the fewest that still beats the MLP?
+# 2. **Tiny champion.** Change the CNN channels — filters running side by side — in a copy of the function. What is the fewest that still beats the MLP?
 # 3. **Upside down.** Flip a test image upside down and ask the CNN. It never saw that world.
 # 4. **Compare to Chapter 17.** Is the CNN better because it has more weights, or because the weights are reused?
 # 5. 🧸 **Little Kid Corner:** Move a 3 by 3 Lego window over a drawing. Shout “edge!” whenever one side is empty and the other side is full.

@@ -5,7 +5,7 @@ from kidsml.workbook import Question, Workbook
 WORKBOOK = Workbook(
     chapter=13,
     title='Workbook · One downhill nudge',
-    intro='One data point: x1 = 1, x2 = 2, answer y = 1. Start with w1 = 0, w2 = 0, b = 0. Loss is squared error, and the gradient tells each number which way to move. Use lr = 0.5.',
+    intro='One data point: x1 = 1, x2 = 2, answer y = 1. Start with w1 = 0, w2 = 0, b = 0. Loss is squared error. A gradient is the loss tug on one learned number. Use lr = 0.5, the learning-rate step size.',
     questions=[
         Question(
             prompt='What is z = w1*x1 + w2*x2 + b at the start?',
@@ -39,9 +39,19 @@ WORKBOOK = Workbook(
             why='Weight 2 gets -0.25 * 2 = -0.5. Because x2 is twice as large as x1, this weight matters twice as much for this point.',
         ),
         Question(
+            prompt='After one step, new w1 = old w1 - lr*dw1. What is new w1?',
+            kind='number', answer=0.125, tolerance=0.001,
+            why='0 - 0.5*(-0.25) = 0 - (-0.125) = 0.125. Subtracting a negative gradient moves w1 upward.',
+        ),
+        Question(
             prompt='After one step, new w2 = old w2 - lr*dw2. What is new w2?',
             kind='number', answer=0.25, tolerance=0.001,
-            why='0 - 0.5*(-0.5) = 0.25. Subtracting a negative gradient moves w2 upward, which pushes the too-low output upward.',
+            why='0 - 0.5*(-0.5) = 0 - (-0.25) = 0.25. Subtracting a negative gradient moves w2 upward, which pushes the too-low output upward.',
+        ),
+        Question(
+            prompt='After one step, new b = old b - lr*db. What is new b?',
+            kind='number', answer=0.125, tolerance=0.001,
+            why='0 - 0.5*(-0.25) = 0 - (-0.125) = 0.125. The bias adds straight into z, so it gets the same gradient as z for this one point.',
         ),
         Question(
             prompt='If lr = 0, what changes after a step?',

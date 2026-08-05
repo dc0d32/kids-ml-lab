@@ -38,7 +38,10 @@ That is wrong for pictures. Nearby pixels team up to make strokes, corners, and 
 fix: one small window slides across the image like a tiny inspector.
 """
     )
-    lesson.say("That small grid of weights is called a **kernel**. The important trick is that the same kernel visits every spot.")
+    lesson.say(
+        "That small grid of weights is called a **kernel**. Chapter 07 used the same word for an SVM shape trick; "
+        "here it means an image-window grid. Same word, different gadget. The output grid is a **feature map**: a little map of where that clue lit up."
+    )
     lesson.mermaid(
         """
 graph LR
@@ -71,6 +74,7 @@ def _():
         st.dataframe(pd.DataFrame(patch.astype(int)), hide_index=True)
     lesson.say("For the first window: `0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 + 0·(-1) + 0·0 + 9·1 = 27`. Three bright 9s hit the +1 column, so the answer pops to 27!")
     lesson.jargon("convolution", "Slide a small grid of weights over a picture. Multiply what lines up, then add.")
+    lesson.jargon("feature map", "The output grid from a kernel. Bright cells show where that kernel found its clue.")
 
 
 @lesson.step("Now slide it everywhere", beat="byhand")
@@ -87,6 +91,7 @@ def _():
     lesson.show(fig)
     lesson.look_for("the 3 by 3 output. The window has 9 legal landing pads, and the big numbers flash where dark pixels crash into bright pixels.")
     lesson.aha("You detected an edge by hand, using the same multiply-and-add at every position!")
+    lesson.jargon("stride and padding", "Stride is how far the window jumps. Padding is extra border pixels; this by-hand version uses stride 1 and no padding.")
 
 
 @lesson.step("Predict the blur kernel", beat="play")
@@ -154,6 +159,8 @@ The kernels above were designed by a person. What if we let the model choose its
 During training, the CNN twists the kernel numbers until useful patches light up.
 """
     )
+    lesson.jargon("CNN", "A neural network for pictures that learns kernels and slides them across the image.")
+    lesson.jargon("channel", "One stack of picture signals. More channels mean more learned detectors running side by side.")
     lesson.mermaid(
         """
 graph LR
@@ -165,6 +172,7 @@ graph LR
         height=220,
     )
     lesson.look_for("the stack: find small patterns, squish the scores, keep the strongest signals, then guess.")
+    lesson.jargon("pooling", "Shrink a feature map by keeping the strongest nearby signal, like saying 'something useful was around here.'")
     st.code(
         """
 model = TinyCNN()
@@ -181,6 +189,10 @@ for image_batch, labels in train_loader:
 
 @lesson.step("Predict which image model wins", beat="forreal")
 def _():
+    lesson.say(
+        "Fashion-MNIST is a starter clothing dataset: 70,000 gray pictures, each **28×28 pixels**, split across ten classes — "
+        "T-shirt/top, trouser, pullover, dress, coat, sandal, shirt, sneaker, bag, and ankle boot. This chapter trains on a small slice of it; the first run downloads it once, then keeps it cached."
+    )
     guess = lesson.predict(
         "Which model should do better on tiny clothing pictures?",
         ["The plain MLP", "The CNN with shared sliding windows", "They must tie"],
@@ -202,6 +214,7 @@ def _():
 @lesson.step("The learned filters", beat="forreal")
 def _():
     result = cached_vision_models()
+    lesson.say("A **filter** is a kernel after training has learned its numbers. Each filter makes one feature map.")
     filters = vision.first_conv_filters(result)
     fig = vision.plot_small_images(filters, titles=[f"filter {i}" for i in range(len(filters))], width=1.1, vcenter=True)
     lesson.show(fig)
@@ -237,7 +250,7 @@ def _():
     lesson.say(
         """
 1. **Diagonal hunter.** Design a 3×3 kernel that lights up on diagonal edges.
-2. **Tiny champion.** In the notebook, reduce the CNN channels. What is the fewest that still beats the MLP?
+2. **Tiny champion.** In the notebook, reduce the CNN channels — filters running side by side. What is the fewest that still beats the MLP?
 3. **Upside down.** Flip a test image upside down and ask the CNN. It never saw that world.
 4. **Compare to Chapter 17.** Is the CNN better because it has more weights, or because the weights are reused?
 """

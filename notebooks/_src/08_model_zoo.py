@@ -92,6 +92,9 @@ print("average =", (0.80 + 0.70 + 0.90 + 0.80 + 0.60) / 5)
 # %% [markdown]
 # Average arithmetic: `(0.80 + 0.70 + 0.90 + 0.80 + 0.60) / 5 = 3.80 / 5 = 0.76`.
 #
+# > 📖 **Grown-ups call this:** a **fold** is one chunk of rows held out for testing
+# > during one round of cross-validation.
+#
 # > 📖 **Grown-ups call this:** **cross-validation** means taking turns hiding different
 # > chunks, then reporting the average and spread.
 
@@ -194,13 +197,22 @@ pd.DataFrame(
 # A useless model can score high when one class is much more common. Check the baseline
 # first, or you may throw confetti for a model that learned nothing. Chapter 10 digs into
 # that trap.
+#
+# > 📖 **Grown-ups call this:** a **baseline** is a boring score from a model that does
+# > not learn, such as always predicting the most common class.
+#
+# > 📖 **Grown-ups call this:** **class imbalance** means one answer pile is much bigger
+# > than another, so accuracy can look high without useful learning.
 
 # %% [markdown]
 # ## 💻 In real code
 #
-# Here is the penguin race with fair rules: five folds, the same rows for every model,
-# and mean plus spread. The baseline is included because a fancy model has to beat the
-# boring answer before it earns applause.
+# Here is the penguin race with fair rules. Each row is one Palmer penguin, the columns are
+# measurements such as beak, flipper, island, and weight, and the target is species.
+#
+# Every model gets the same five folds. The table reports mean plus spread, and the
+# baseline is included because a fancy model has to beat the boring answer before it earns
+# applause.
 
 # %%
 penguin_leaderboard()

@@ -98,6 +98,7 @@ graph TD
     )
     st.dataframe(fold_table, hide_index=True, width="stretch")
     st.info("Average score = (0.80 + 0.70 + 0.90 + 0.80 + 0.60) / 5 = 3.80 / 5 = 0.76")
+    lesson.jargon("fold", "One chunk of rows held out for testing during one round of cross-validation.")
     lesson.jargon("cross-validation", "Take turns hiding different chunks, then report the average and spread.")
 
 
@@ -232,6 +233,8 @@ def _():
         width="stretch",
     )
     lesson.look_for("how close the fancy score is to the boring floor. The applause starts after the baseline.")
+    lesson.jargon("baseline", "A boring score from a model that does not learn, such as always predicting the most common class.")
+    lesson.jargon("class imbalance", "When one answer pile is much bigger than another, so accuracy can look high without useful learning.")
     lesson.careful(
         "Check the baseline first, or you may celebrate a model that learned nothing. "
         "A fancy model has to beat the boring answer before it earns applause."
@@ -242,8 +245,11 @@ def _():
 def _():
     lesson.say(
         """
-Here is the penguin race with fair rules: five folds, the same rows for every model, and
-mean plus spread. The baseline is included too.
+Here is the penguin race with fair rules. Each row is one Palmer penguin, the columns are
+measurements such as beak, flipper, island, and weight, and the target is species.
+
+Every model gets the same five folds. The table reports mean plus spread, and the baseline
+is included too.
 """
     )
 

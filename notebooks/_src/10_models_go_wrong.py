@@ -67,6 +67,7 @@ worked
 # %% [markdown]
 # This 2-by-2 box is a **confusion matrix**. It counts the four things that can happen:
 # caught sick people, missed sick people, false alarms, and correctly ignored healthy people.
+# Rows are what was really true. Columns are what the model said.
 #
 # Precision asks, "When the alarm rang, how often was it right?" Recall asks, "Of all the
 # sick people, how many did the alarm catch?"
@@ -92,11 +93,17 @@ print("recall:", round(metrics["recall"] * 100, 1), "%")
 # That is why rare problems need more than accuracy. If a disease appears in 1 out of 100
 # people, a model can score 99% by saying **healthy** to everyone and helping nobody sick.
 #
+# > 📖 **Grown-ups call this:** a **confusion matrix** is a table where rows are real
+# > answers, columns are model guesses, and off-diagonal cells are mistakes.
+#
 # > 📖 **Grown-ups call this:** **precision** means: of the ones it flagged, how many
 # > really were?
 #
 # > 📖 **Grown-ups call this:** **recall** means: of the ones that really were, how many
 # > did it catch?
+#
+# > 📖 **Grown-ups call this:** **class imbalance** means one answer pile is much bigger
+# > than another, so accuracy can look high without useful learning.
 
 # %% [markdown]
 # ## 👀 Take a look
@@ -118,6 +125,9 @@ report["metrics"]
 # The model has a hidden worry score for each person. The threshold is the line that says,
 # "above here, call it sick."
 #
+# In the matrix above, rows are the truth and columns are the model's call. Watch missed
+# sick people trade places with false alarms as the threshold moves.
+#
 # Lower the line and more people cross it. Recall rises because you catch more sick people,
 # but precision can fall because more healthy people get swept in too. Raise the line and
 # you bother fewer healthy people, but you miss more sick ones.
@@ -134,7 +144,8 @@ report["metrics"]
 realdata.leakage_scores()
 
 # %% [markdown]
-# First we celebrate. Then we ask why the score is suspiciously perfect.
+# First we celebrate. Then we ask why the score is suspiciously perfect. The table compares
+# honest feature columns with columns that copy the answer in disguise.
 #
 # Perfect can happen on tiny toy worlds, but real messy data that hits 100% makes the
 # leaked-answer alarm clang. A column like `was_approved_last_time` or `future_total` lets
@@ -162,6 +173,9 @@ bias["summary"]
 bias["examples"]
 
 # %% [markdown]
+# Each row is one pretend applicant. `qualified?` is the fairer check; `historical_hired?`
+# is the old decision the model is trained to imitate.
+#
 # The model does not know history is unfair. It only sees examples to copy.
 #
 # The model is not being mean. It is copying. That is all it can do. Copy from an unfair
@@ -183,8 +197,10 @@ print("far-away guess:", far["far_guess"])
 print("far-away confidence:", f"{far['far_confidence']:.0%}")
 
 # %% [markdown]
-# Look at how far the star is from the training moons. The model has no built-in
-# new-planet alarm. Chapter 00 warned you: a model answers anyway.
+# The training data is the moon-shaped cloud near the middle. The star is far outside that
+# world, in a place the model never studied.
+#
+# The model has no built-in new-planet alarm. Chapter 00 warned you: a model answers anyway.
 
 # %% [markdown]
 # ## 💻 In real code

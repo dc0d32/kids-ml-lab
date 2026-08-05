@@ -17,7 +17,7 @@ WORKBOOK = Workbook(
     chapter=11,
     title="Workbook · Arrows and grids",
     intro=(
-        "Use small numbers and scrap paper. Each question matches one thing you dragged in the chapter: length, agreement, grid moves, area, and chained matrices."
+        "Use small numbers and scrap paper. A grid means the graph-paper floor on screen. A matrix `[[a, b], [c, d]]` tells where the right and up starter arrows land, and each question matches one thing you dragged: length, agreement, grid moves, area, and chained matrices."
     ),
     questions=[
         Question(

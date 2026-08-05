@@ -77,6 +77,7 @@ healthy, 40 sick people were missed, and 950 healthy people were left alone.
         """
 This 2-by-2 box is a **confusion matrix**. It counts the four things that can happen:
 caught sick people, missed sick people, false alarms, and correctly ignored healthy people.
+Rows are what was really true. Columns are what the model said.
 
 Precision asks, "When the alarm rang, how often was it right?" Recall asks, "Of all the
 sick people, how many did the alarm catch?"
@@ -88,6 +89,7 @@ sick people, how many did the alarm catch?"
     st.markdown(f"Accuracy = (8 + 950) / 1000 = **{metrics['accuracy']:.1%}**. Looks great.")
     st.markdown(f"Precision = 8 / 10 = **{metrics['precision']:.0%}**.")
     st.markdown(f"Recall = 8 / 48 = **{metrics['recall']:.0%}**. Ouch.")
+    lesson.jargon("confusion matrix", "A table where rows are real answers, columns are model guesses, and off-diagonal cells are mistakes.")
     lesson.jargon("precision", "Of the ones it flagged, how many really were?")
     lesson.jargon("recall", "Of the ones that really were, how many did it catch?")
 
@@ -106,6 +108,7 @@ def _():
 
     always = realdata.always_healthy_accuracy()
     st.metric("Always say healthy", f"{always:.0%} accuracy")
+    lesson.jargon("class imbalance", "When one answer pile is much bigger than another, so accuracy can look high without useful learning.")
     lesson.aha("This model knows nothing, misses every sick person, and still gets a shiny score. That is the trap!")
 
 
@@ -119,6 +122,7 @@ above here, call it sick.
     )
     threshold = st.slider("How worried must the model be before it says sick?", 0.00, 1.00, 0.50, 0.05, key="ch10_threshold")
     report = cached_threshold(threshold)
+    st.caption("Rows are the truth; columns are the model's call. Watch missed sick people trade places with false alarms.")
     fig, ax = lesson.figure(5.5, 4.5)
     confusion_grid(report["cm"], labels=["sick", "healthy"], ax=ax, title="Threshold trade-off")
     lesson.show(fig)
@@ -144,6 +148,7 @@ def _():
     if guess is None:
         return
 
+    lesson.say("The table compares honest feature columns with columns that copy the answer in disguise.")
     st.dataframe(cached_leakage(), hide_index=True, width="stretch")
     lesson.look_for("the suspicious jump when leaked columns are allowed. That jump is evidence, and I believe the formal term is sus.")
     lesson.jargon("leakage", "A column lets the answer sneak into the features, so the model is not learning the real pattern.")
@@ -156,6 +161,9 @@ def _():
         """
 Here is a tiny hiring-style table. The old labels ask more from one group than the other.
 The model does not know history is unfair. It only sees examples to copy.
+
+Each row is one pretend applicant. `qualified?` is the fairer check; `historical_hired?`
+is the old decision the model is trained to imitate.
 """
     )
     bias = cached_bias()
@@ -178,7 +186,14 @@ def _():
 
 @lesson.step("Failure 4: outside its world", beat="play")
 def _():
-    lesson.say("A model has no built-in new-planet alarm. Chapter 00 warned you: a model answers anyway.")
+    lesson.say(
+        """
+The training data is the moon-shaped cloud near the middle. The star is far outside that
+world, in a place the model never studied.
+
+A model has no built-in new-planet alarm. Chapter 00 warned you: a model answers anyway.
+"""
+    )
     span = st.slider("How far outside the moon world should we look?", 3.0, 10.0, 8.0, 1.0, key="ch10_far_span")
     far = cached_far(span)
     fig, ax = lesson.figure(6, 5)

@@ -26,8 +26,11 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 Start here
 #
-# Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
-# but it is not a new kind of thinking.
+# Everything so far was NumPy you could read top to bottom. PyTorch is a **library**: a
+# toolbox of code other people maintain so we do not have to rebuild every wrench.
+#
+# We are switching because bigger image and text models have too many parameters for
+# hand-written bookkeeping. The thinking stays the same; PyTorch keeps the receipts.
 #
 # The promise is bigger: PyTorch calls a recipe-tracking array a tensor. When you call
 # `backward()`, PyTorch walks that recipe backward and fills in gradients for every weight.
@@ -47,7 +50,8 @@ use_house_style()
 # ## ✏️ Work it out
 #
 # Line up the two versions piece by piece. Our NumPy code stores arrays and calls methods
-# we wrote. PyTorch stores tensors and modules that do the same jobs.
+# we wrote. PyTorch stores tensors and modules that do the same jobs. Read the comparison
+# as the same forward pass, loss, backward pass, and step wearing library names.
 #
 # A tensor is an array with a notebook attached. When `requires_grad` is on, the notebook
 # records which operations made the tensor, so `backward()` can retrace them like
@@ -84,8 +88,9 @@ workbook.render(16)
 # > 📖 **Grown-ups call this:** a **tensor** is a NumPy-like array that can remember the
 # > operations that created it, so gradients can be traced backward.
 #
-# `requires_grad` means “keep the recipe.” `backward()` walks the recipe backward and puts
-# a gradient into each parameter's `.grad` bucket.
+# `requires_grad` means “keep the recipe because we will need gradients later.” PyTorch's
+# **autograd** system records the recipe during the forward pass. `backward()` walks that
+# recipe backward and puts a gradient into each parameter's `.grad` bucket.
 #
 # Those buckets **accumulate**. PyTorch adds new gradients to whatever is already there
 # because some advanced training loops add blame from several mini-batches before stepping.
@@ -131,6 +136,8 @@ pd.DataFrame({'NumPy loss': [np_loss], 'PyTorch loss': [th_loss], 'biggest gradi
 #
 # Here is the PyTorch version training on a toy shape. The code is shorter because PyTorch
 # handles the bookkeeping: storing parameters, tracing operations, and applying the step.
+# The **optimizer** is the object that uses gradients to update parameters; SGD is the plain
+# downhill-step optimizer. An **epoch** is one full pass through the practice data.
 #
 # At this toy size, NumPy is fine. PyTorch starts to matter when the model and data get
 # much bigger, like the image chapters coming next.

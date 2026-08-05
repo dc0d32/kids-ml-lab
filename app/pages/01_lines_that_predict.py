@@ -28,6 +28,9 @@ This time the answer is not **zeep** or **not zeep**. The answer is a number.
 If you saved for **20 weeks**, how much money would be in your piggy bank? You
 already have a plan: put a line near the dots, then read the line's height at
 week 20.
+
+That line is a **model**: a tiny guess machine. Feed in one number, weeks saved,
+and it spits out one number, dollars.
 """
     )
     fig, ax = lesson.figure(6.6, 4.4)
@@ -99,8 +102,8 @@ def _():
 def _():
     lesson.say(
         """
-A line has two knobs. **w** is dollars per week, so it tilts the line. **b** is
-the starting height, so it slides the line up or down.
+A line has two knobs. **w** is the **weight**: dollars per week, so it tilts the
+line. **b** is the **bias**: the starting height, so it slides the line up or down.
 """
     )
     knobs, picture = lesson.controls()
@@ -154,8 +157,10 @@ def _():
         """
 A **gradient** is an arrow made from slopes. It says, "if you nudge **w** this
 way and **b** that way, the average squared mistake rises fastest." Grown-ups
-call that mistake score **loss**. To learn, the computer walks the opposite way:
-downhill.
+call that mistake score **loss**.
+
+To learn, the computer walks the opposite way: downhill. Grown-ups call that
+whole downhill-walking trick **gradient descent**.
 """
     )
     steps = st.slider("Let the computer take this many downhill steps", 1, 120, 60, key="ch01_steps")
@@ -214,14 +219,19 @@ returns the same two things: a slope **w** and a starting height **b**.
 
 @lesson.step("A real feature is messier", beat="forreal")
 def _():
+    bikes = load_table("bikes").dropna()
     lesson.say(
         """
-Now use one real feature: temperature. A warmer day often means more bike
-rentals, so a line can help. But real life also has rain, holidays, seasons, and
-luck, so the dots will not sit neatly on the line.
+Now use a real table: daily rentals from a city bike-share system. Each row is
+one day. **temp_c** is the air temperature, and **rentals** is how many bikes
+people checked out that day.
+
+Temperature is the **feature** here: the input number the model gets to see. A
+warmer day often means more rentals, but real life also has rain, holidays,
+seasons and luck, so the dots will not sit neatly on the line.
 """
     )
-    bikes = load_table("bikes").dropna()
+    st.dataframe(bikes[["temp_c", "rentals"]].iloc[[0, len(bikes) // 3, 2 * len(bikes) // 3, -1]], hide_index=True, width="content")
     X_bike = bikes[["temp_c"]]
     y_bike = bikes["rentals"]
     bike_model = LinearRegression().fit(X_bike, y_bike)

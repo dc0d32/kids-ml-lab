@@ -40,6 +40,9 @@ use_house_style()
 # I won't tell you the rule. Instead I'll show you some creatures I've already sorted.
 # Your job: work out the rule from the examples.
 #
+# By the end of this tiny game, you will race a computer and see the whole course in
+# miniature. No robot fog machine required.
+#
 # That sentence — *work out the rule from the examples* — **is machine learning**.
 # That is the spark. Every other chapter in the course is a new contraption
 # for doing exactly this.
@@ -112,7 +115,8 @@ what_the_computer_sees
 
 # %% [markdown]
 # > 📖 **Grown-ups call this:** the columns it uses to guess are the **features**, and
-# > the column it's trying to guess is the **label**.
+# > the column it's trying to guess is the **label**. The trained guesser is the
+# > **model** — in the code below, the thing named `model`.
 
 # %% [markdown]
 # ## 💻 In real code

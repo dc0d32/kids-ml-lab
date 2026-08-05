@@ -606,3 +606,95 @@ has lied** — once about plotly styling, once here. Tests that pattern-match so
 to follow the indirection the source actually uses.
 
 **581 tests pass.** 271 screens across 26 chapters, none of them a dead click.
+
+
+---
+
+## 2026-08-05 — Kid-read continuity pass for chapters 00-04
+
+Read the first five chapters as first-contact material rather than as a checklist. The fixes define the first uses of model, feature, weight, bias, loss, gradient, gradient descent, perceptron, probability, sigmoid, e, log loss, polynomial features, and the chapter 03/04 real-data axes before the reader has to use them.
+
+The bike and penguin datasets now get a plain-language setup and sample rows before modeling in the page and notebook flows, and the workbooks now reinforce the same setup instead of assuming the app did the introduction.
+
+---
+
+## 2026-08-05 — Kid-read continuity pass for chapters 18-25
+
+- Re-read chapters 18-25 as a standalone student and filled first-use gaps in pages, notebook sources, and workbooks: Fashion-MNIST details, image-kernel vocabulary, kNN scaling, photo pixels as 3D colour points, PCA/t-SNE cautions, Part 6 text-model continuity, attention query/key/value, and finale callbacks.
+- Kept the fixes in the chapter files instead of shared helpers so parallel chapter work stays isolated. Generated notebooks must be rebuilt from `_src` after this entry.
+
+---
+
+## 2026-08-05 — Kid-read continuity pass for chapters 05-10
+
+Read chapters 05-10 as first-contact student material and fixed the places where a reader would hit “wait, what?” instead of auditing against a checklist. The pass adds first-use explanations for Gini impurity/pure buckets, boosting/residuals, random forests, stumps, RBF/gamma/C/kernel language, folds/cross-validation, baselines/class imbalance, feature importance, confusion matrices, precision/recall, and leakage.
+
+The real-data tables now get row/column/target setup before modeling: mushrooms in Chapter 05, monsters in Chapter 06 and 09, penguins across Chapters 07-09, bikes in Chapter 09, and failure scenarios in Chapter 10. Rebuilt notebooks 05-10 and ran the targeted chapter tests: **72 passed**.
+
+---
+
+## 2026-08-05 — Kid-read continuity pass for chapters 11-17
+
+Read the neural-network spine as a first-contact student and fixed the “wait, what?” gaps in the pages, notebook sources, and workbooks: grid/matrix sliders and 3D axes, neuron diagram labels, by-hand gradient arithmetic, hidden-space h-coordinates, capacity/overfitting controls, PyTorch library/autograd vocabulary, and the digits dataset/canvas setup.
+
+Rebuilt notebooks 11-17 and ran the targeted tests: `timeout 900 uv run pytest tests -q -k "11_ or 12_ or 13_ or 14_ or 15_ or 16_ or 17_"` → **84 passed**.
+
+---
+
+## 2026-08-05 — "Pretend that you're the kid taking the lesson"
+
+The owner found that Chapter 04's entire introduction to the penguins — the **first real
+dataset in the course** — was: *"Now compare a few probability promises before they get
+turned into a hard Gentoo/not-Gentoo score."* No mention that penguins are real birds, that
+there are three kinds, what a Gentoo is, what a flipper length is, or why we care.
+
+Three audits had already run over that chapter and passed it.
+
+Then, when the first response was to check dataset introductions specifically:
+
+> "not just limited the defined dataset. Be more thorough. Pretend that you're the kid
+> taking the lesson"
+
+That is the correction that mattered, and it is now the method of record.
+
+### Why the earlier audits kept missing this
+
+They audited **against checklists**. A checklist finds the things on the checklist. The
+reader does not experience a checklist — they experience a sequence, and they fall out of it
+at the first sentence that assumes something they do not have.
+
+The brief for this pass says instead: *you are 13, you did the previous chapters once a few
+days ago, you remember the pictures but not the words, and there is nobody to ask. **You
+will not admit you are lost. You will keep clicking Next, understand less and less, and then
+quietly go and do something else.*** Then: log every "wait, what?", however small, and fix it.
+
+It also said that reporting a chapter as clean is evidence of not reading properly, because
+three previous audits had reported exactly that and been wrong. **No chapter came back
+clean.**
+
+### What was actually missing
+
+Not just datasets. Terms reaching the reader with no explanation anywhere in the course
+before them: *model*, *feature*, *weight*, *bias*, *loss*, *gradient*, *impurity*, *stump*,
+*fold*, *R²*, *class imbalance*, *capacity*, *requires_grad*, *optimizer*, *channel*,
+*pooling*, *centroid*, *inertia*, *corpus*, *token*, *head*. Confusion matrices shown
+without saying what the rows and columns are. A slider with no stated purpose. Chapter 18's
+image *kernel* colliding with chapter 07's SVM *kernel*, with nothing to tell the reader
+they are different things. Chapter 20 treating a pixel as a point in 3D colour space, which
+is a real leap, without saying so.
+
+And in almost every case the page had been fixed at some point while **the notebook and the
+workbook still had the original gap** — including chapter 04, where the page fix had been
+made by hand an hour earlier.
+
+### The guard
+
+`tests/test_teaching.py` now checks, for 58 technical terms, that the first place a term
+reaches the reader *anywhere in the course* has an explanation near it. First means first in
+the course, not first in the chapter — the reader only gets one first time.
+
+It is a rough check: it can miss a bad explanation, but it cannot miss a missing one. It
+found exactly one survivor after the sweep (colour *channels* in chapter 17, used a chapter
+before they are defined), which is a good enough signal-to-noise ratio to keep.
+
+**639 tests pass.**

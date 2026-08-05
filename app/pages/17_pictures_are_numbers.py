@@ -36,8 +36,9 @@ def _():
         """
 A computer has never seen anything. Not a cat. Not a basketball. Not one heroic snack photo.
 
-When you show it a picture, it gets a spreadsheet. Boom: squint at this 8 by 8 grid
-of numbers and try to read the digit hiding inside.
+This dataset is the classic scikit-learn digits set, bundled in `kidsml`: 1,797 tiny handwritten digits, each an 8 by 8 gray image. Every little square is a pixel with a brightness from 0 (black) to 16 (white).
+
+When you show the computer one picture, it gets a spreadsheet. Boom: squint at this 8 by 8 grid of numbers and try to read the digit hiding inside.
 """
     )
     _, _, images = cached_digits()
@@ -63,7 +64,9 @@ of numbers and try to read the digit hiding inside.
 def _():
     _, _, images = cached_digits()
     example_index = 3
-    lesson.say("The picture **is** those numbers. This chapter's model does not even get the square; it receives the same 64 numbers zipped into one long row.")
+    lesson.say("The picture **is** those numbers. This chapter's model is a plain MLP — a stack of neuron layers — and it does not even get the square; it receives the same 64 pixel numbers zipped into one long row.")
+    lesson.jargon("pixel", "One little square in a picture. A gray pixel is one number. A colour pixel is three numbers: red, green, and blue.")
+    lesson.jargon("MLP", "Multilayer perceptron: a plain stack of neuron layers, with no built-in idea of pixel neighbours.")
     st.dataframe(vision.digit_as_flat_row(images[example_index]), hide_index=True, width="stretch")
     lesson.mermaid(
         """
@@ -94,8 +97,7 @@ def _():
     )
     st.dataframe(pd.DataFrame(shape), hide_index=True)
     lesson.look_for("the 8s. They stack into the same top, middle, and bottom strokes your eyes read as a 3.")
-    lesson.say("Your eyes can read that as a **3** because the bright numbers build a shape. A model with one weight per pixel has to bolt a knob onto every input number.")
-    lesson.jargon("pixel", "One little square in a picture. A gray pixel is one number. A colour pixel is three numbers: red, green, and blue.")
+    lesson.say("Your eyes can read that as a **3** because the bright pixel numbers build a shape. A model with one weight per pixel has to bolt a knob onto every input number.")
 
 
 @lesson.step("Pixels grow fast", beat="byhand")
@@ -110,7 +112,9 @@ def _():
         hide_index=True,
         width="content",
     )
-    lesson.look_for("how fast the weight count rockets as pictures get wider, taller, and gain colour channels.")
+    lesson.look_for(
+        "how fast the weight count rockets as pictures get wider and taller — and then again when colour arrives. A colour photo stores three numbers per pixel instead of one: how red, how green, how blue. Three times the numbers before you have made the picture any bigger."
+    )
     lesson.aha("The jump is fast because pictures grow in two directions at once. Double the width and double the height, and you made four times as many pixels!")
 
 
@@ -135,7 +139,7 @@ def _():
 
 @lesson.step("Draw a digit", beat="play")
 def _():
-    lesson.say("Draw with white on the black square. Keep the digit large and centred, because the training digits were neat and centred too. The app crops your drawing, shrinks it to 8 by 8, and squashes it onto the same 0–16 number scale.")
+    lesson.say("The canvas is a black drawing pad. Your mouse draws thick white strokes; the app crops the marks, shrinks them to 8 by 8, and converts brightness onto the same 0–16 number scale as the dataset. Keep the digit large and centred, because the training digits were neat and centred too.")
     report = cached_digit_model()
     left, right = st.columns([1, 1], gap="large")
     with left:
@@ -164,6 +168,7 @@ def _():
     lesson.look_for("which cells light up after the crop and shrink. Off-centre drawings can shove the shape right off the tiny stage.")
     st.markdown(f"### The model guesses: **{prediction}**")
     st.bar_chart(vision.confidence_table(probabilities).set_index("digit"), height=260)
+    lesson.look_for("the tallest bar. It is the model's strongest digit guess after your drawing became 64 numbers.")
 
 
 @lesson.step("Predict the mistakes", beat="forreal")

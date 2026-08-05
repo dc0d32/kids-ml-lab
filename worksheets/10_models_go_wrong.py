@@ -26,9 +26,21 @@ WORKBOOK = Workbook(
     chapter=10,
     title="Workbook · Spot the lie in the score",
     intro=(
-        "A score is a clue, not a verdict. Use the matrix like a crime scene map, then name the failure."
+        "A score is a clue, not a verdict. In the matrix, rows are the truth and columns are the "
+        "model's call. Class imbalance means one answer pile is much bigger than another."
     ),
     questions=[
+        Question(
+            prompt="In this confusion matrix, what do the **rows** mean?",
+            kind="choice",
+            choices=["what was really true", "what the model said", "which chapter we are in"],
+            answer="what was really true",
+            table=MATRIX,
+            why=(
+                "Rows are the real situation: really sick or really healthy. Columns are the model's call. "
+                "That map keeps the four numbers from becoming mystery box soup."
+            ),
+        ),
         Question(
             prompt="Using the matrix, what is the accuracy as a percent?",
             kind="number",

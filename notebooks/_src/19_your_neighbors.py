@@ -152,6 +152,10 @@ timing.round(2)
 # %% [markdown]
 # ### Catch #2: scale matters
 #
+# Back to the penguins from Chapter 4: 344 real birds measured on three islands. This time
+# we want the species, and we hand kNN four measurements: beak length, beak depth, flipper
+# length, and body mass.
+#
 # Penguins give kNN a trap: beaks are measured in millimetres, but body mass is measured
 # in grams. Run the raw measurements and the scaled version, then read the gap.
 
@@ -160,8 +164,8 @@ penguin_knn_scores(k=7)
 
 # %% [markdown]
 # Distance adds feature differences together. A 500-gram body-mass difference can
-# bulldoze a 5-millimetre beak difference because 500 is the bigger number. Scaling puts
-# the columns on fair rulers before neighbours vote.
+# bulldoze a 5-millimetre beak difference because 500 is the bigger number. **Scaling**
+# puts the columns on fair rulers before neighbours vote.
 
 # %% [markdown]
 # ## 💻 In real code

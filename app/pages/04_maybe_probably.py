@@ -12,7 +12,7 @@ from kidsml import lesson
 from kidsml.datasets import load_table, toy_shape
 from kidsml.linear import logistic_proba, sigmoid
 from kidsml.nn_numpy import log_loss
-from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line
+from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, PANEL
 
 lesson.begin(4)
 
@@ -64,9 +64,13 @@ It says red or blue and never wavers. A point sitting on the boundary should say
         Keep Chapter 2's raw line score **z**. Positive should lean red. Negative should
         lean blue. Near zero should feel like a shrug.
 
-        So we need a squish machine: any score in, a probability from 0 to 1 out. The one
-        used everywhere is **sigmoid(z) = 1 / (1 + e^-z)**. The **e** is a particular
-        number, about **2.718**; you do not need to memorize it.
+        So we need a squish machine: any score in, a **probability** out. A probability
+        is a promise from **0 to 1**: 0 means 0% red, 1 means 100% red, and 0.5 means the
+        model is split right down the middle.
+
+        The one used everywhere is **sigmoid(z) = 1 / (1 + e^-z)**. The **e** is a
+        particular number, about **2.718**; it makes a smooth, balanced S-curve, and you
+        do not need to memorize it.
         """
     )
     guess = lesson.predict(
@@ -89,9 +93,12 @@ It says red or blue and never wavers. A point sitting on the boundary should say
 def _():
     lesson.say(
         """
-Why this S-shape and not any other? It has the habits we need: every output is
-between 0 and 1, 0 turns into exactly 0.5, and opposite scores balance out. For
-example, sigmoid(2) is about 0.88, while sigmoid(-2) is about 0.12.
+We wanted three habits before we picked a formula: low scores near 0, high scores
+near 1, and score 0 exactly at 0.5. We also want no sudden cliff, because training
+needs smooth slopes to walk on.
+
+The sigmoid S-curve has those habits. For example, sigmoid(2) is about 0.88,
+while sigmoid(-2) is about 0.12.
 """
     )
     lesson.mermaid(
@@ -167,6 +174,9 @@ def _():
         """
 For a concrete score, use **w1 = 2**, **w2 = -1**, **b = 0.5**, and point **(1, 3)**:
 **z = 2(1) + (-1)(3) + 0.5 = -0.5**, so **sigmoid(-0.5) ≈ 0.38**.
+
+That means the model is promising **38% red**. A probability is not a decoration;
+training treats it like a promise and charges a penalty when the promise breaks.
 """
     )
     penalty = []
@@ -178,8 +188,57 @@ For a concrete score, use **w1 = 2**, **w2 = -1**, **b = 0.5**, and point **(1, 
     lesson.jargon("log loss", "The penalty score for probability promises. Confident wrong answers cost the most.")
 
 
+@lesson.step("Meet some real penguins", beat="forreal")
+def _():
+    lesson.say(
+        """
+Toy dots are over. These are **real penguins** — 344 of them, waddling around three
+islands near Antarctica, each one caught, measured and released by actual researchers
+standing in actual wind.
+
+There are three kinds here: **Adelie**, **Chinstrap** and **Gentoo**. Our question is
+the yes-or-no kind this chapter is built for: **is this one a Gentoo?**
+"""
+    )
+
+    penguins, _ = penguin_probabilities()
+    sample = penguins.groupby("species", group_keys=False).head(2)
+    st.dataframe(
+        sample[["species", "island", "flipper_length_mm", "weight_g"]],
+        hide_index=True,
+        width="content",
+    )
+    st.caption("Two of each kind. Flipper length is in millimetres, weight in grams.")
+
+    lesson.say(
+        """
+We only hand the model **two** of those numbers: how long the flipper is, and how heavy
+the bird is. Gentoos are the big ones — around 217 mm of flipper and 5 kg, against about
+190 mm and 3.7 kg for the other two.
+"""
+    )
+
+    fig, ax = lesson.figure(6.4, 4.6)
+    colors = np.where(penguins["is_gentoo"] == 1, WARM, COOL)
+    ax.scatter(penguins["flipper_length_mm"], penguins["weight_g"], c=colors, s=30, alpha=0.8, edgecolors=PANEL)
+    ax.set_xlabel("flipper length (mm)")
+    ax.set_ylabel("weight (g)")
+    ax.set_title("Red = Gentoo, blue = the other two kinds")
+    lesson.show(fig)
+
+    lesson.look_for(
+        "how well the two groups separate — and then the handful of birds in the middle "
+        "where red and blue overlap. Those are the ones this chapter is about."
+    )
+
+
 @lesson.step("Penguins near the shrug zone", beat="forreal")
 def _():
+    lesson.say(
+        "A straight line splits those two clumps well. But what should the model say about "
+        "a penguin sitting right in the overlap?"
+    )
+
     guess = lesson.predict(
         "If a real penguin lands closest to 50/50, is that a useful kind of honesty?",
         ["Yes", "No, uncertainty is failure", "Only if the model is perfect"],

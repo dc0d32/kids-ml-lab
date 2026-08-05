@@ -37,7 +37,9 @@ use_house_style()
 #
 # Yours is tiny, and it reads nursery rhymes and fables, but the idea is the same.
 #
-# The game still has not changed: **guess the next letter**. New engine, same race!
+# The game still has not changed: **guess the next letter**. Chapter 22 counted one letter
+# back. Chapter 23 used a fixed memory window. Chapter 24 lets each spot choose which
+# earlier spots matter. New engine, same race!
 #
 # > 🧸 **Little Kid Corner** — When you guess the next word in a story, your eyes zip back
 # > to useful clues. Maybe the clue is next door. Maybe it is two sentences back waving a
@@ -52,11 +54,16 @@ use_house_style()
 #
 # In `the cat sat on the m`, the useful clue may be far back, sitting on `cat`. A fixed
 # window of three cannot reach that far. Attention can look anywhere inside its block.
+#
+# Think of query/key/value like sticky notes:
+# - the current spot writes a **query**: what clue do I need?
+# - earlier spots wear **keys**: what clue am I?
+# - their **values** are the content the model can mix in.
 
 # %%
 attention_toy = pd.DataFrame(
     [["earlier t", 1, 10], ["earlier h", 2, 20], ["earlier e", 1, 30]],
-    columns=["place", "attention weight tokens", "value number"],
+    columns=["place", "key-match chips", "value number"],
 )
 attention_toy
 
@@ -68,7 +75,8 @@ print("weighted average =", float((weights * values).sum()))
 # %% [markdown]
 # > 📖 **Grown-ups call this:** **Query, key, value** means: one position holds up a
 # > question, earlier positions wear labels, and the model copies more content from labels
-# > that match the question.
+# > that match the question. Softmax turns key-match scores into the weights that do the
+# > copying.
 
 # %% [markdown]
 # ## 👀 Take a look
@@ -99,6 +107,8 @@ print("out = weights @ value")
 # ## 🎛️ Your turn
 #
 # Train a tiny Transformer on about 17KB of rhymes and fables. Small text, real machinery.
+# An **attention head** is one separate clue-lookback machine; several heads can look for
+# different habits at the same time.
 
 # %%
 text = (load_corpus("rhymes") + "\n" + load_corpus("fables")).lower()

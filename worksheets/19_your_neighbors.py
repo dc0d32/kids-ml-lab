@@ -18,7 +18,10 @@ POINTS = pd.DataFrame(
 WORKBOOK = Workbook(
     chapter=19,
     title="Workbook · Ask the neighbours",
-    intro="The new point is at **(0, 0)**. Work out who it copies.",
+    intro=(
+        "kNN does no training. The new point is at **(0, 0)**, so it asks the nearest old labelled points to vote. "
+        "Distance is the ruler; scaling makes different columns use fair rulers."
+    ),
     questions=[
         Question(
             prompt="What is the distance from the new point to A at (3, 4)?",
@@ -77,6 +80,13 @@ WORKBOOK = Workbook(
             prompt="Why is an even k risky in a two-team vote?",
             kind="open",
             why="Even k can split the votes exactly in half. Then the model needs an extra tie-break rule, and that rule may feel arbitrary.",
+        ),
+        Question(
+            prompt="Penguin body mass is measured in grams, while beaks are measured in millimetres. Why scale before kNN?",
+            kind="choice",
+            choices=["so grams do not drown out beak lengths", "so penguins become pictures", "so k becomes even"],
+            answer="so grams do not drown out beak lengths",
+            why="kNN adds feature differences into one distance. A 500-gram body-mass difference can swamp a 5-millimetre beak difference unless scaling puts the columns on fair rulers.",
         ),
     ],
     kid_corner="Put five toys on the floor and give each toy a team colour. Drop a sock somewhere. The sock joins the team of the closest toy, or the closest three toys vote.",

@@ -73,6 +73,8 @@ graph LR
         height=290,
     )
     lesson.look_for("the middle layer. It invents new reports before the final neuron makes the call.")
+    lesson.jargon("hidden layer", "A layer between the inputs and the final output. You see its numbers, but they are not the final answer.")
+    lesson.say("The names `h₁`, `h₂`, and `h₃` mean hidden neuron 1, 2, and 3. Each one outputs a new number for the final neuron to read.")
 
 
 @lesson.step("Make better features by hand", beat="byhand")
@@ -82,7 +84,7 @@ def _():
 We will make two hidden features by hand: **OR-ish** and **AND-ish**. This table is the
 whole XOR story shrunk to four dots.
 
-In the original `x1, x2` square, the red points sit in opposite corners.
+In the original `x1, x2` square, the red points sit in opposite corners. In the new columns, OR-ish is `h1` and AND-ish is `h2`: two fresh coordinates we invented from the same dot.
 """
     )
     xor_table = pd.DataFrame(
@@ -123,7 +125,7 @@ def _():
     axes[1].set_ylim(-0.3, 1.3)
     axes[1].set_aspect("equal")
     lesson.show(fig)
-    lesson.look_for("the right picture: the red rows are together, and one straight line can slice them away from blue.")
+    lesson.look_for("the right picture: red means XOR answer 1 and blue means answer 0. The red rows are together, and one straight line can slice them away from blue.")
     lesson.aha("The hidden layer did not bend the output line. It moved the points into a new space where one straight line works. Same ruler, better map!")
 
 
@@ -155,14 +157,14 @@ def _():
         }
     )
     st.dataframe(table.round(3), hide_index=True, width="stretch")
-    lesson.look_for("hidden rows with the same XOR answer. They are no longer trapped in opposite corners; the map has been folded.")
+    lesson.look_for("the h1, h2, h3 columns. They are the three hidden-neuron outputs: new coordinates for the same four XOR dots.")
     fig = plt.figure(figsize=(6.2, 5.0))
     ax = fig.add_subplot(111, projection="3d")
     colors = np.where(y_xor == 1, "#EF4444", "#3B82F6")
     ax.scatter(hidden[:, 0], hidden[:, 1], hidden[:, 2], c=colors, s=90, edgecolor="white", linewidth=1.0)
-    ax.set_xlabel("h1")
-    ax.set_ylabel("h2")
-    ax.set_zlabel("h3")
+    ax.set_xlabel("h1 output")
+    ax.set_ylabel("h2 output")
+    ax.set_zlabel("h3 output")
     ax.set_title("XOR points after the hidden layer")
     lesson.show(fig)
     lesson.look_for("the hidden-space picture. The table numbers became a new map where the final neuron can make one clean cut.")

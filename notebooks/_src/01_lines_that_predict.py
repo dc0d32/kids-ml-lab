@@ -32,8 +32,10 @@ use_house_style()
 # already have a plan: put a line near the dots, then read the line's height at
 # week 20.
 #
-# That line is a model. It is a tiny machine: feed in a week number, get out a
+# That line is a **model**. It is a tiny machine: feed in a week number, get out a
 # dollar prediction.
+#
+# The week number is the **feature** here: the input number the model gets to see.
 #
 # > 📖 **Grown-ups call this:** **linear regression** — a line used to predict a number.
 
@@ -106,8 +108,8 @@ plt.show()
 # %% [markdown]
 # ## 🎛️ Your turn
 #
-# A line has two knobs. **w** is dollars per week, so it tilts the line. **b** is
-# the starting height, so it slides the line up or down.
+# A line has two knobs. **w** is the **weight**: dollars per week, so it tilts the
+# line. **b** is the **bias**: the starting height, so it slides the line up or down.
 #
 # Every pair of knob settings gets its own average squared mistake. If we draw all
 # those scores as a map, the good settings form a low valley. Tiny knob moves
@@ -139,8 +141,10 @@ plt.show()
 #
 # A **gradient** is an arrow made from slopes. It says, "if you nudge **w** this
 # way and **b** that way, the average squared mistake rises fastest." Grown-ups
-# call that mistake score **loss**. To learn, the computer walks the opposite way:
-# downhill.
+# call that mistake score **loss**.
+#
+# To learn, the computer walks the opposite way: downhill. Grown-ups call that
+# whole downhill-walking trick **gradient descent**.
 
 # %%
 path = gradient_descent_line(weeks, dollars, w=0, b=0, lr=0.01, steps=90)
@@ -206,12 +210,19 @@ print("w =", round(model.coef_[0], 2))
 print("b =", round(model.intercept_, 2))
 
 # %% [markdown]
-# Now use one real feature: temperature. A warmer day often means more bike
-# rentals, so a line can help. But real life also has rain, holidays, seasons, and
-# luck, so the dots will not sit neatly on the line.
+# Now use a real table: daily rentals from a city bike-share system. Each row is
+# one day. **temp_c** is the air temperature, and **rentals** is how many bikes
+# people checked out that day.
+#
+# Temperature is the **feature** here: the input number the model gets to see. A
+# warmer day often means more rentals, but real life also has rain, holidays,
+# seasons and luck, so the dots will not sit neatly on the line.
 
 # %%
 bikes = load_table("bikes").dropna()
+bikes[["temp_c", "rentals"]].iloc[[0, len(bikes) // 3, 2 * len(bikes) // 3, -1]]
+
+# %%
 X_bike = bikes[["temp_c"]]
 y_bike = bikes["rentals"]
 bike_model = LinearRegression().fit(X_bike, y_bike)

@@ -65,10 +65,13 @@ plt.show()
 # Start with the same raw line score **z**. Positive should lean red. Negative
 # should lean blue. A score near 0 should mean a shrug.
 #
-# So we need a squish machine: any score in, a probability from 0 to 1 out.
+# So we need a squish machine: any score in, a **probability** out. A probability
+# is a promise from **0 to 1**: 0 means 0% red, 1 means 100% red, and 0.5 means
+# the model is split right down the middle.
+#
 # The S-curve we use is **sigmoid(z) = 1 / (1 + e^-z)**. The **e** is a
-# particular number, about **2.718**; you do not need to memorize it. It makes
-# the odds change by the same multiplier for each step in **z**.
+# particular number, about **2.718**; it makes a smooth, balanced S-curve, and you
+# do not need to memorize it.
 #
 # At **z = 0**, the arithmetic is **1 / (1 + e⁰) = 1 / (1 + 1) = 0.5**, so the
 # boundary lands exactly on the 50/50 shrug.
@@ -79,9 +82,12 @@ p = sigmoid(z)
 pd.DataFrame({"z": z, "sigmoid(z)": np.round(p, 3)})
 
 # %% [markdown]
-# Why this S-shape and not any other? It has the habits we need: every output is
-# between 0 and 1, 0 turns into exactly 0.5, and opposite scores balance out. For
-# example, **sigmoid(2) ≈ 0.88** and **sigmoid(-2) ≈ 0.12**.
+# We wanted three habits before we picked a formula: low scores near 0, high scores
+# near 1, and score 0 exactly at 0.5. We also want no sudden cliff, because training
+# needs smooth slopes to walk on.
+#
+# The sigmoid S-curve has those habits. For example, **sigmoid(2) ≈ 0.88** and
+# **sigmoid(-2) ≈ 0.12**.
 #
 # It also has a training-friendly meaning: adding 1 to the score multiplies the
 # red-vs-blue odds by the same amount each time. That steady rule is why this
@@ -150,7 +156,8 @@ plt.show()
 # **z = 2(1) + (-1)(3) + 0.5 = -0.5**, so **sigmoid(-0.5) ≈ 0.38**. That means
 # "38% red," not a hard no.
 #
-# Confidence is a promise. The table below shows how expensive broken promises get. Crunch!
+# A probability is not a decoration; training treats it like a promise and charges a
+# penalty when the promise breaks. The table below shows how expensive broken promises get. Crunch!
 
 # %%
 rows = []
@@ -172,14 +179,26 @@ pd.DataFrame(rows)
 # %% [markdown]
 # ## 💻 In real code
 #
-# Now use real penguins. The model sees flipper length and weight, then estimates
-# how likely each penguin is to be Gentoo.
+# Meet some real penguins. These are **real penguins** — 344 of them, waddling around
+# three islands near Antarctica, each one caught, measured, and released by researchers.
 #
-# The circled penguin is the closest to 50/50. That is not failure; it is useful
-# honesty about a hard call. The circled penguin is the warning light — the official vibe check.
+# There are three kinds here: **Adelie**, **Chinstrap**, and **Gentoo**. Our yes-or-no
+# question is: **is this one a Gentoo?** The model sees two measurements: flipper length
+# and weight.
 
 # %%
 penguins = load_table("penguins").dropna(subset=["species", "flipper_length_mm", "weight_g"]).copy()
+penguins.groupby("species", group_keys=False).head(2)[["species", "island", "flipper_length_mm", "weight_g"]]
+
+# %% [markdown]
+# Gentoos are the big ones — around 217 mm of flipper and 5 kg, against about 190 mm and
+# 3.7 kg for the other two. Now fit a model that estimates how likely each penguin is to
+# be Gentoo.
+#
+# The circled penguin is the closest to 50/50. That is not failure; it is useful honesty
+# about a hard call. The circled penguin is the warning light — the official vibe check.
+
+# %%
 penguins["is_gentoo"] = (penguins["species"] == "Gentoo").astype(int)
 features = ["flipper_length_mm", "weight_g"]
 model = LogisticRegression().fit(penguins[features], penguins["is_gentoo"])

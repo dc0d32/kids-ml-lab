@@ -38,7 +38,8 @@ use_house_style()
 #     H2 -. deeper .-> Y
 # ```
 #
-# The diagram grew by adding more hidden neurons and another hidden layer. The arrows still
+# The diagram grew by adding more hidden neurons and another hidden layer. Wide means more
+# neurons side by side in one layer. Deep means more layers in a row. The arrows still
 # carry numbers forward and gradients backward. Same traffic, taller road system.
 
 # %% [markdown]
@@ -68,6 +69,9 @@ pd.DataFrame(
 #
 # > 📖 **Grown-ups call this:** **parameters** are the weights and biases: every adjustable
 # > number inside the model.
+#
+# > 📖 **Grown-ups call this:** **capacity** is how much shape-fitting room the model has.
+# > More parameters usually mean more capacity.
 
 # %% [markdown]
 # ## 👀 Take a look
@@ -125,7 +129,8 @@ plt.show()
 # ## 💻 In real code
 #
 # Now watch overfitting. We give the network a small practice set and flip some labels, so
-# some dots are lies with coordinates.
+# some dots are lies with coordinates. Overfitting means the model memorises practice
+# quirks that do not help on fresh test dots.
 #
 # A high-capacity network can spend its extra wiggles chasing those lies. Train loss keeps
 # falling because the practice dots look happier, while test loss rises because fresh dots
@@ -177,12 +182,14 @@ decision_boundary(lambda G: m.predict_proba(G), X, y, ax=ax, steps=160, title='B
 plt.show()
 
 # %% [markdown]
-# Fix 1 is early stopping. Look for the dashed line: broad patterns are often learned
-# before noisy details start waving shiny flags.
+# Fix 1 is early stopping: save the model at the best fresh-test moment instead of
+# training until the practice score looks prettiest. Look for the dashed line: broad
+# patterns are often learned before noisy details start waving shiny flags.
 
 # %% [markdown]
-# Fix 2 makes sharp wiggles expensive. Small weights make gentler ramps, so the boundary has
-# a harder time making little detours around one weird dot.
+# Fix 2 is weight decay: a tiny fee charged on large weights. Big weights can make sharp
+# wiggles. Small weights make gentler ramps, so the boundary has a harder time making little
+# detours around one weird dot.
 
 # %%
 X_decay, y_decay, m_decay, train_decay, test_decay = run_overfit(weight_decay=0.02)

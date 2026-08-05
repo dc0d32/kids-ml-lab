@@ -95,9 +95,10 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 # Chapter 10 taught you to distrust a shiny score. Now we build the score machine more
 # carefully, so there is no hidden magic step when neural networks arrive.
 #
-# In this chapter a matrix is an **instruction for moving space**. The grid skates, the
-# house flips, the arrows land, and the neuron equation in Chapter 12 becomes something
-# you can see.
+# In this chapter a matrix is an **instruction for moving space**. The grid is a
+# graph-paper floor: straight crossing lines, with every crossing point ready to move.
+# The floor skates, the house flips, the arrows land, and the neuron equation in Chapter
+# 12 becomes something you can see.
 #
 # ```mermaid
 # graph LR
@@ -194,8 +195,10 @@ plt.show()
 #
 # ### The grid mover
 #
-# Pick a preset, or choose `custom sliders`. The unit square becomes the orange
-# parallelogram. The little house makes flips and rotations easy to spot.
+# Pick a preset, or choose `custom sliders`. The four numbers `[[a, b], [c, d]]` tell
+# where the two starter arrows land: `a,c` move the right arrow, and `b,d` move the up
+# arrow. The unit square becomes the orange parallelogram. The little house makes flips
+# and rotations easy to spot.
 
 # %%
 def play_grid(preset, a, b, c, d):
@@ -265,8 +268,9 @@ plt.show()
 # %% [markdown]
 # ### 3D → 2D shadows
 #
-# This is a game: rotate the lamp and keep as much spread as possible. PCA in Chapter 21
-# does the same search in one step.
+# This is a game: the 3D axes mean left-right, front-back, and up-down. Rotate the lamp
+# and keep as much spread as possible in the 2D shadow. PCA in Chapter 21 does the same
+# search in one step.
 
 # %%
 points3d = la.tilted_cloud(n=260, seed=11)
@@ -279,7 +283,9 @@ def shadow_widget(angle_a, angle_b):
     fig = make_subplots(rows=1, cols=2, specs=[[{"type": "scene"}, {"type": "xy"}]], subplot_titles=("3D cloud", "2D shadow"))
     fig.add_trace(go.Scatter3d(x=points3d[:, 0], y=points3d[:, 1], z=points3d[:, 2], mode="markers", marker=dict(size=3, opacity=0.75), showlegend=False), row=1, col=1)
     fig.add_trace(go.Scatter(x=shadow[:, 0], y=shadow[:, 1], mode="markers", marker=dict(size=6, opacity=0.75), showlegend=False), row=1, col=2)
-    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=2)
+    fig.update_xaxes(title_text="shadow width", scaleanchor="y", scaleratio=1, row=1, col=2)
+    fig.update_yaxes(title_text="shadow height", row=1, col=2)
+    fig.update_layout(scene=dict(xaxis_title="3D x (left-right)", yaxis_title="3D y (front-back)", zaxis_title="3D z (up-down)"))
     fig.update_layout(title=f"Your spread {spread:.2f}; best {best:.2f}")
     style_plotly(fig, height=420).show()
 

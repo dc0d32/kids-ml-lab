@@ -42,7 +42,8 @@ WORKBOOK = Workbook(
     chapter=8,
     title="Workbook · Compare guessers honestly",
     intro=(
-        "The model zoo has many animals. None wins forever, so the honest move is to test them with fair rules."
+        "The model zoo has many animals. None wins forever, so the honest move is to test them with fair rules. "
+        "A fold is one hidden chunk in cross-validation. A baseline is the boring score to beat."
     ),
     questions=[
         Question(
@@ -131,6 +132,16 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             hint="It gets all 90 cats right and all 10 dogs wrong.",
             why="The lazy model scores `90 / 100 = **90%**`. Big shiny number! But it misses every dog, which is why the baseline check comes first.",
+        ),
+        Question(
+            prompt="What is the grown-up name for one answer pile being much bigger than the other?",
+            kind="choice",
+            choices=["class imbalance", "feature importance", "kernel"],
+            answer="class imbalance",
+            why=(
+                "That is **class imbalance**. Accuracy can look high because the common pile is huge, "
+                "so the baseline is the first scoreboard number to check."
+            ),
         ),
         Question(
             prompt="Is that always-cat model useful if you care about finding dogs?",

@@ -44,8 +44,9 @@ def train_torch(shape: str, hidden: int, lr: float, seed: int):
 def _():
     lesson.say(
         """
-Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
-but it is not a new kind of thinking.
+Everything so far was NumPy you could read top to bottom. PyTorch is a **library**: a toolbox of code other people maintain so we do not have to rebuild every wrench.
+
+We are switching because bigger image and text models have too many parameters for hand-written bookkeeping. The thinking stays the same; PyTorch keeps the receipts.
 
 The promise is bigger: PyTorch calls a recipe-tracking array a tensor. When you call `backward()`, PyTorch walks that recipe backward and fills in gradients for every weight.
 """
@@ -75,6 +76,7 @@ def _():
     if guess is None:
         return
 
+    lesson.say("Read the code comparison line by line. Left is the tiny NumPy toolbox we wrote; right is the PyTorch library spelling of the same forward pass, loss, backward pass, and step.")
     col_a, col_b = st.columns(2)
     with col_a:
         st.code(
@@ -128,6 +130,8 @@ x.grad      # 4, because the slope of x² at x = 2 is 4
     )
     lesson.look_for("the `.grad` bucket. `backward()` filled it by walking the recipe in reverse.")
     lesson.jargon("tensor", "A NumPy-like array that can remember the operations that created it, so gradients can be traced backward.")
+    lesson.jargon("requires_grad", "The switch that tells a tensor: keep the recipe because we will need gradients later.")
+    lesson.jargon("autograd", "PyTorch's automatic gradient tracker: it records the recipe during the forward pass and replays it backward.")
     lesson.say(
         """
 Those gradient buckets **accumulate**. PyTorch adds new gradients to whatever is already
@@ -176,6 +180,8 @@ for epoch in range(450):
         language="python",
     )
     lesson.look_for("the same four moves: forward pass, loss, backward gradients, downhill step. Same dance, bigger shoes.")
+    lesson.jargon("optimizer", "The object that uses gradients to update parameters. SGD is the plain downhill-step optimizer.")
+    lesson.jargon("epoch", "One full pass through the practice data.")
 
 
 @lesson.step("Move the PyTorch knobs", beat="forreal")

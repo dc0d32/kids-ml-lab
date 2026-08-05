@@ -59,7 +59,7 @@ def _():
         """
 Here comes the shiny machine. The **T** in GPT stands for **Transformer**. Yours is tiny, and it reads nursery rhymes and fables, but the idea is the same.
 
-The game still has not changed: **guess the next letter**. New engine, same race!
+The game still has not changed: **guess the next letter**. Chapter 22 counted one letter back. Chapter 23 used a fixed memory window. Chapter 24 lets each spot choose which earlier spots matter.
 """
     )
     lesson.kid_corner(
@@ -72,12 +72,13 @@ Before the mechanism, grab the real question: **I am about to guess the next let
 In `the cat sat on the m`, the useful clue may be far back, sitting on `cat`. A fixed window of three cannot reach that far.
 """
     )
+    lesson.say("Think of it like sticky notes. The current spot writes a **query**: what clue do I need? Earlier spots wear **keys**: what clue am I? Their **values** are the content the model can mix in.")
     attention_toy = pd.DataFrame(
         [["earlier t", 1, 10], ["earlier h", 2, 20], ["earlier e", 1, 30]],
-        columns=["place", "attention weight tokens", "value number"],
+        columns=["place", "key-match chips", "value number"],
     )
     st.dataframe(attention_toy, hide_index=True, width="content")
-    st.info("Weights 1/4, 2/4, 1/4 make 10×1/4 + 20×2/4 + 30×1/4 = 20. Attention mixes value numbers using learned weights.")
+    st.info("Softmax turns the key-match chips into weights: 1/4, 2/4, 1/4. Then attention mixes values: 10×1/4 + 20×2/4 + 30×1/4 = 20.")
     lesson.jargon("query, key, value", "One position holds up a question, earlier positions wear labels, and the model copies more content from labels that match the question.")
 
 
@@ -105,7 +106,7 @@ def _():
 
 @lesson.step("The four attention lines", beat="seeit")
 def _():
-    lesson.say("Here is the mechanism with the panels off. Scores become weights; weights mix values; the mask blocks future peeking.")
+    lesson.say("Here is the mechanism with the panels off. Query-key matches make scores. Softmax turns scores into weights. Weights mix values. The mask blocks future peeking.")
     st.code(
         """
 scores = query @ key.T / sqrt(head_size)
@@ -120,7 +121,7 @@ out = weights @ value
 
 @lesson.step("Inspect live attention", beat="play")
 def _():
-    lesson.say("A trained tiny Transformer has several attention heads. Pick one row and watch which earlier characters it leaned on.")
+    lesson.say("A trained tiny Transformer has several attention heads. A **head** is one separate clue-lookback machine; several heads can look for different habits at the same time.")
     bundle = trained_transformer()
     made = generate_transformer(bundle, start="the ", temperature=0.9, length=160, seed=5)
     chars, heads = attention_snapshot(bundle, made)

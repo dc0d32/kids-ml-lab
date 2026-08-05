@@ -141,6 +141,15 @@ positive scores; blue points need negative scores.
 
 @lesson.step("Invent a height", beat="seeit")
 def _():
+    lesson.say(
+        """
+Before the 3D picture appears, name the third axis. **x3** is not a new measurement
+someone collected. It is a new number we invent from the old two: **x3 = x1² + x2²**.
+
+We will use x3 as **height**. Points far from the middle get a bigger height; points
+near the middle stay low. Red and blue are still the two answers.
+"""
+    )
     guess = lesson.predict(
         "If we add x3 = x1² + x2² to circle data, what happens to points far from the middle?",
         ["They rise higher", "They sink lower", "Nothing changes"],
@@ -214,7 +223,13 @@ def _():
 
 @lesson.step("XOR gets its own new feature", beat="seeit")
 def _():
-    lesson.say("XOR has its own escape hatch: add **x3 = x1 × x2**.")
+    lesson.say(
+        """
+XOR needs a different invented height. Use **x3 = x1 × x2**. That product is 1 only
+at the corner **(1, 1)**, so it gives the model a handle on the one corner that kept
+ruining the straight line.
+"""
+    )
     X3 = np.c_[X_xor, X_xor[:, 0] * X_xor[:, 1]]
     score = X3[:, 0] + X3[:, 1] - 2 * X3[:, 2] - 0.5
     st.dataframe(
@@ -236,7 +251,8 @@ def _():
     lesson.say(
         """
 Adding a feature is one way to bend the answer back in the original picture.
-Another way is to use a model that builds bends itself.
+Another way is to use a model that builds bends itself. The tree and tiny neural
+net below are previews; the only thing to notice today is the shape of their bends.
 """
     )
     shape = st.selectbox("Shape", ["circles", "xor", "moons"], index=0, key="ch03_bendy_shape")
@@ -259,9 +275,12 @@ Another way is to use a model that builds bends itself.
 def _():
     lesson.say(
         """
-scikit-learn can add polynomial features for us, then fit a straight model in
-that bigger feature space. Degree 1 means no extra bend. Higher degree adds more
-terms, which gives the boundary more ways to curve.
+scikit-learn can add **polynomial features** for us: extra columns made from
+powers and products like x1² or x1×x2. Then it fits a straight model using those
+extra columns.
+
+Degree 1 means no extra bend. Higher degree adds more terms, which gives the
+boundary more ways to curve.
 """
     )
     degree = st.slider("Polynomial degree", 1, 8, 2, key="ch03_degree")

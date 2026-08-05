@@ -24,12 +24,12 @@ MINI_PENGUINS = pd.DataFrame(
 
 BUNDLED = pd.DataFrame(
     [
-        ["penguins", "one bird", "species"],
-        ["mushrooms", "one mushroom", "edible"],
-        ["monsters", "one trading-card creature", "is_boss"],
-        ["bikes", "one rental day", "rentals"],
+        ["penguins", "one bird", "island, beak, flipper, weight, sex", "species"],
+        ["mushrooms", "one mushroom", "cap, smell, gill clues", "edible"],
+        ["monsters", "one trading-card creature", "element, home, attack, magic, speed", "is_boss"],
+        ["bikes", "one rental day", "season, weather, temperature, humidity, wind", "rentals"],
     ],
-    columns=["table", "one row means", "target"],
+    columns=["table", "one row means", "clue columns include", "target"],
 )
 
 WORKBOOK = Workbook(
@@ -130,6 +130,26 @@ WORKBOOK = Workbook(
             why=(
                 "Smell is a smart first pick because some mushroom smells are loud clues. Row number is not a real trait. "
                 "Cap colour may help, but it is less direct. Feature drafting is choosing a hunch, then testing it."
+            ),
+        ),
+        Question(
+            prompt="A feature-importance bar chart has one very tall bar. What should you ask next?",
+            kind="choice",
+            choices=["Is this a real clue or a shortcut?", "Can I ignore the target?", "Should I hide the row count?"],
+            answer="Is this a real clue or a shortcut?",
+            why=(
+                "Feature importance means how much the trained model leaned on a column. A tall bar can be a real clue, "
+                "or it can be leakage wearing a fake moustache."
+            ),
+        ),
+        Question(
+            prompt="In a confusion matrix, what do the off-diagonal cells show?",
+            kind="choice",
+            choices=["correct guesses", "mix-ups", "blank cells"],
+            answer="mix-ups",
+            why=(
+                "Rows are real answers and columns are model guesses. The diagonal is correct; off-diagonal cells are "
+                "where the model confused one class for another."
             ),
         ),
     ],

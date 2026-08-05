@@ -49,7 +49,10 @@ The next three chapters build three guessers. This first one fits on a kitchen-t
     lesson.kid_corner(
         "Line up letter cards from a name like dominoes. Every time two cards touch, drop a tally mark in that box. Later, draw the next card from the busiest boxes."
     )
-    lesson.say("Names get bumper pads: a blank **`.`** at the start and another at the finish. So `mia` enters the tally machine as `.mia.`.")
+    lesson.say(
+        "Names get bumper pads: a blank **`.`** at the start and another at the finish. "
+        "That dot is not a period from a sentence; it is a special blank character that says start or stop. So `mia` enters the tally machine as `.mia.`."
+    )
     tiny = pd.DataFrame(
         [[".mia.", ". → m, m → i, i → a, a → ."], [".mo.", ". → m, m → o, o → ."], [".mae.", ". → m, m → a, a → e, e → ."]],
         columns=["padded word", "pairs you tally"],
@@ -66,6 +69,7 @@ The next three chapters build three guessers. This first one fits on a kitchen-t
         return
     st.info("The `m → a`, `m → i`, and `m → o` boxes get 1 each. The chart is already taking shape!")
     lesson.jargon("bigram", "A pair of touching characters. `m → a` is one bigram.")
+    lesson.jargon("vocabulary", "The list of characters the model is allowed to use, including the blank `.`.")
 
 
 @lesson.step("The whole tally chart", beat="seeit")
@@ -106,6 +110,7 @@ def _():
     if guess is None:
         return
 
+    lesson.jargon("corpus", "The pile of text you train or count from: names, rhymes, or fables here.")
     corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch22_row_corpus")
     _, vocab, _, _, _, probs = bigram_bundle(corpus)
     letters = list(vocab.chars)

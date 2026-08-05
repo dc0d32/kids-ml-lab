@@ -61,8 +61,9 @@ use_house_style()
 # %% [markdown]
 # ## ✏️ Work it out
 #
-# Four points lie nearly sideways. Project onto x, then onto y. Spread is the sum of
-# squared distances from the middle. Grown-ups call that measured spread **variance**.
+# Four points lie nearly sideways. **Project** onto x, then onto y: cast a smaller shadow
+# by keeping one number and dropping the other. Spread is the sum of squared distances from
+# the middle. Grown-ups call that measured spread **variance**.
 #
 # "Keep the points spread out" sounds visual, but it means something practical. If two
 # points land on the same shadow spot, the shadow forgot the difference between them. If
@@ -81,8 +82,9 @@ print("y spread:", spread(table["y shadow"]))
 # squishes pairs together. Spread is information because it keeps points different from
 # each other.
 #
-# > 📖 **Grown-ups call this:** **principal component analysis** searches for the shadow
-# > where the points stay as spread out as possible.
+# > 📖 **Grown-ups call this:** A **principal component** is one best-shadow direction.
+# > **Principal component analysis**, or **PCA**, searches for the shadow where the points
+# > stay as spread out as possible.
 
 # %%
 workbook.render(21)
@@ -146,10 +148,10 @@ print("variance kept:", round(kept, 3))
 # shared strokes make shared mistakes. Two different tools are agreeing that look-alike
 # digits live near each other. Payoff!
 #
-# t-SNE is a different kind of squishing. It tries to keep neighbours together rather than
+# t-SNE is a different method from PCA. It tries to keep neighbours together rather than
 # keeping global spread. It bends and stretches the map to make local neighbourhoods
-# visible. The gap between two islands, or the size of an island, is not a measured fact.
-# People over-read these plots because they look like maps.
+# visible, so the distances can lie. The gap between two islands, or the size of an island,
+# is not a measured fact. People over-read these plots because they look like maps.
 
 # %%
 fig = plot_digits_tsne(n=600, seed=0)

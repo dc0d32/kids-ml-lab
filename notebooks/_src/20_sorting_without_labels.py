@@ -47,6 +47,7 @@ use_house_style()
 #
 # > 📖 **Grown-ups call this:** **clustering** means sorting data into groups when answer
 # > labels are missing.
+# > A **cluster** is one of those groups: points that ended up in the same pile.
 
 # %% [markdown]
 # ## ✏️ Work it out
@@ -96,6 +97,8 @@ new_centres
 # Round two changes nothing. The centres have converged!
 #
 # > 📖 **Grown-ups call this:** **k-means** means using k moving centres to make k piles.
+# > A **centroid** is the middle of a cluster. k-means centres move to the centroid of
+# > their points.
 
 # %%
 workbook.render(20)
@@ -146,9 +149,10 @@ plt.show()
 # %% [markdown]
 # ### Squeeze a photo to five colours
 #
-# Treat every pixel as a point in 3D colour space: red, green, blue. Fit on a sample of
-# pixels, then repaint every pixel with its centre colour. Look at the palette afterward:
-# those are the colours that survived the squeeze.
+# Treat every pixel as a point in 3D colour space: `(red amount, green amount, blue
+# amount)`. The pixel at row 10, column 20 becomes one dot in colour-world. Fit on a sample
+# of pixels, then repaint every pixel with its nearest centre colour. Look at the palette
+# afterward: those are the colours that survived the squeeze.
 
 # %%
 image = default_flower_image()

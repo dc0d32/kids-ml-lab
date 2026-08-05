@@ -5,7 +5,7 @@ from kidsml.workbook import Question, Workbook
 WORKBOOK = Workbook(
     chapter=16,
     title='Workbook · Translate NumPy to PyTorch',
-    intro='PyTorch uses different names, but the pieces are the ones you already built.',
+    intro='PyTorch is a library: a toolbox of ready-made code. It uses tensors, autograd, and optimizers, but the pieces are the ones you already built: forward pass, loss, backward gradients, and a step.',
     questions=[
         Question(
             prompt='Our raw layer a @ W + b matches which PyTorch layer?',
@@ -21,6 +21,11 @@ WORKBOOK = Workbook(
             prompt='What command asks PyTorch to pass blame backward through the graph?',
             kind='text', answer=['backward', '.backward()', 'loss.backward()', 'backward()'],
             why='backward() follows the recorded tensor recipe backward and fills in gradients for every parameter that helped make the loss.',
+        ),
+        Question(
+            prompt='What does requires_grad=True tell a tensor to do?',
+            kind='open',
+            why='It tells the tensor to keep the recipe of operations so PyTorch autograd can walk backward later and compute gradients.',
         ),
         Question(
             prompt='Why do we call optimizer.zero_grad() before each new step?',
