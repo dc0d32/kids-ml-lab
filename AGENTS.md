@@ -197,7 +197,7 @@ A chapter is three files, where `NN` and `S` come from `CHAPTERS` in `kidsml/ui.
 
 | File | What it is |
 |---|---|
-| `app/pages/NN_S.py` | the Streamlit page — sliders and pictures, code hidden except in the "For Real" beat |
+| `app/pages/NN_S.py` | the Streamlit chapter — **stepped**, one idea per screen |
 | `notebooks/_src/NN_S.py` | the notebook source, jupytext `py:percent` (`# %%` / `# %% [markdown]`) |
 | `worksheets/NN_S.py` | the interactive workbook — a `WORKBOOK = Workbook(...)` |
 
@@ -207,6 +207,48 @@ Then:
 ./run.sh build NN
 uv run pytest tests -q -k "NN_"
 ```
+
+### Pages are stepped — one idea per screen
+
+A chapter page is **not** a long scrolling document. Scrolling invites skimming, and
+skimming is how a reader reaches the end of a chapter having understood none of it.
+`kidsml/lesson.py` turns a chapter into a sequence of screens with Back/Next, a progress
+bar and a beat trail.
+
+```python
+from kidsml import lesson
+
+lesson.begin(3)
+
+@lesson.step("Four points, four answers", beat="hook")
+def _():
+    lesson.say("Here is the smallest hard problem in machine learning.")
+    ...
+
+lesson.finish()
+```
+
+Rules for steps:
+
+- **A step is 1–3 sentences and one thing to look at.** If a step needs scrolling, it
+  should have been two steps.
+- **8–14 steps per chapter.** A test fails below 5. Above ~20 it drags.
+- **Predict, then reveal.** Use `lesson.predict(question, choices, correct=, why=)` before
+  showing a result. It returns `None` until they commit, so the step can withhold the
+  reveal. A wrong prediction followed by a surprise teaches far more than a correct one
+  that was never in doubt. This is the single most valuable pattern in the framework —
+  every chapter should use it at least twice.
+- **Nothing passive.** Every step wants a slider to move, a question to answer, or a
+  picture with `lesson.look_for("...")` telling them what to notice in it.
+- Steps must still run in the six beats' order: hook → byhand → seeit → play → forreal →
+  challenge.
+
+Helpers: `lesson.say`, `predict`, `look_for`, `aha`, `careful`, `kid_corner`, `jargon`,
+`figure`, `show`, `mermaid`, `workbook`, `controls`.
+
+Notebooks stay linear — scrolling is the right shape for a document you edit and re-run.
+`kidsml/ui.py` keeps the older non-stepped helpers for the Home page.
+
 
 ### The six beats — every chapter, same order
 

@@ -1,7 +1,10 @@
-"""Every Streamlit chapter page must run without blowing up.
+"""Every Streamlit chapter page must run without blowing up — on every step.
+
+Chapters are stepped, one idea per screen, so rendering the first screen proves almost
+nothing. These tests click all the way through each chapter.
 
 This uses Streamlit's own test harness, which really executes the page script and
-captures any exception — a plain HTTP 200 would not tell us anything useful.
+captures any exception. A plain HTTP 200 would not tell us anything useful.
 """
 
 from __future__ import annotations
@@ -17,7 +20,10 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGES = ROOT / "app" / "pages"
 
 # Some chapters train a small model on first render, so give them room.
-TIMEOUT_SECONDS = 180
+TIMEOUT_SECONDS = 240
+
+# A chapter with more screens than this has almost certainly lost the reader.
+MAX_STEPS = 30
 
 existing = sorted(p for p in PAGES.glob("[0-9][0-9]_*.py"))
 
@@ -26,10 +32,42 @@ def test_at_least_one_page_exists():
     assert existing, "no chapter pages found in app/pages/"
 
 
-@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
-def test_page_runs_without_error(page: Path):
+def _next_button(at):
+    for button in at.button:
+        if "Next" in button.label:
+            return button
+    return None
+
+
+def _walk(page: Path):
+    """Click Next until it runs out. Returns (app, number of steps seen)."""
     at = AppTest.from_file(str(page), default_timeout=TIMEOUT_SECONDS).run()
-    assert not at.exception, f"{page.name} raised: {[e.message for e in at.exception]}"
+    assert not at.exception, f"{page.name} step 1 raised: {[e.message for e in at.exception]}"
+
+    steps = 1
+    while steps <= MAX_STEPS:
+        button = _next_button(at)
+        if button is None or button.disabled:
+            return at, steps
+        button.click().run()
+        steps += 1
+        assert not at.exception, (
+            f"{page.name} step {steps} raised: {[e.message for e in at.exception]}"
+        )
+
+    pytest.fail(f"{page.name} has more than {MAX_STEPS} steps — split it or trim it")
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_every_step_of_the_page_runs(page: Path):
+    _walk(page)
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_page_is_broken_into_steps(page: Path):
+    """One idea per screen. A page with two steps is still a wall."""
+    _, steps = _walk(page)
+    assert steps >= 5, f"{page.name} has only {steps} step(s) — that is still a wall of page"
 
 
 def test_home_runs_without_error():
