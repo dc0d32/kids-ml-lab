@@ -65,10 +65,6 @@ That is not a toy achievement. It is the map of modern machine learning, built b
 """
     )
     lesson.kid_corner("You did not get one magic wand. You filled a backpack with tools. Now you can reach in and pick the tool for the job.")
-
-
-@lesson.step("Your inventory", beat="byhand")
-def _():
     lesson.say("You have personally built this backpack of tools. Shake it and it rattles:")
     built = [
         "a linear model",
@@ -86,10 +82,10 @@ def _():
     ]
     st.dataframe(pd.DataFrame({"tool": built}), hide_index=True, width="content")
     lesson.look_for("how many different tools are not neural networks. Modern ML is a toolbox, not one spell.")
-
-
-@lesson.step("One picture of the course", beat="seeit")
-def _():
+    fig = course_map_figure()
+    lesson.show(fig)
+    lesson.look_for("the green line to Chapter 24, and the red branch that detoured through clustering and PCA.")
+    st.caption("The whole map, and it is lowkey enormous: green is the neural-network road. Red is learning without answer labels.")
     guess = lesson.predict(
         "Which road carried you from one neuron to the Transformer?",
         ["The red no-labels branch", "The green neural-network road", "The classical-model loop"],
@@ -99,10 +95,7 @@ def _():
     )
     if guess is None:
         return
-    fig = course_map_figure()
-    lesson.show(fig)
-    lesson.look_for("the green line to Chapter 24, and the red branch that detoured through clustering and PCA.")
-    st.caption("The whole map, and it is lowkey enormous: green is the neural-network road. Red is learning without answer labels.")
+    lesson.aha("You followed the green road all the way from a line to attention, then met the red no-labels tools on the side road.")
 
 
 @lesson.step("Where this is already in your life", beat="play")
@@ -152,10 +145,6 @@ def _():
     made = generate_transformer(bundle, start=prompt, temperature=temperature, length=180, seed=seed)
     st.text_area("Your tiny model continues", made, height=140, key="ch25_hallucination_text")
     lesson.look_for("how it keeps the shape of text without checking whether the sentence is true.")
-
-
-@lesson.step("Being smart about AI", beat="forreal")
-def _():
     lesson.say(
         """
 Being smart about AI:

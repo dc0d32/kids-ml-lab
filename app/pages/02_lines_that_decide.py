@@ -181,19 +181,24 @@ one clear mistake lets us watch one correction happen.
     if guess is None:
         return
 
-    st.write(f"Wrong? **{was_wrong}**. New w = **({w_after[0]:.0f}, {w_after[1]:.0f})**, new b = **{b_after:.0f}**.")
+    update_table = {
+        "line": ["before", "after"],
+        "w1": [w_bad[0], w_after[0]],
+        "w2": [w_bad[1], w_after[1]],
+        "b": [b_bad, b_after],
+        "missed point?": [was_wrong, False],
+        "score for (6, 5)": [
+            score_line(X_tiny[[5]], w_bad[0], w_bad[1], b_bad)[0],
+            score_line(X_tiny[[5]], w_after[0], w_after[1], b_after)[0],
+        ],
+    }
+    st.dataframe(update_table, hide_index=True, width="content")
     lesson.say(
         """
-Why does adding the point help? The score for that same point jumps from **-9**
-to **7(6) + 6(5) - 19 = 53**. The point is now strongly on the red side.
-"""
+        Why does adding the point help? The score for that same point jumps from **-9**
+        to **7(6) + 6(5) - 19 = 53**. The point is now strongly on the red side.
+        """
     )
-    lesson.aha("You trained a model with one pencil correction: find a mistake, nudge the line, check again.")
-
-
-@lesson.step("Before and after the update", beat="seeit")
-def _():
-    lesson.say("The circled red point caused the update. Watch how one correction changes the boundary.")
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.4))
     for ax, w_now, b_now, title in [
         (axes[0], w_bad, b_bad, "Before the one update"),
@@ -205,6 +210,7 @@ def _():
         ax.set_title(title)
     lesson.show(fig)
     lesson.look_for("the circled point. The line did not learn a whole rule in one step; it made one wrong point less wrong.")
+    lesson.aha("You trained a model with one pencil correction: find a mistake, nudge the line, check again.")
 
 
 @lesson.step("Learning is many corrections", beat="seeit")
@@ -246,17 +252,13 @@ straight out from that line, toward red.
     lesson.look_for("b gliding the line in parallel, and w1 or w2 rotating it.")
 
 
-@lesson.step("A real perceptron settles", beat="forreal")
+@lesson.step("A real perceptron settles, then stalls", beat="forreal")
 def _():
     lesson.say("scikit-learn has a perceptron too. On clean blobs, a straight separator exists, so the model can settle.")
     X, y = toy_shape("blobs", n=180, noise=0.25, seed=2)
     model = Perceptron(max_iter=1000, random_state=0).fit(X, y)
     st.code("Perceptron(max_iter=1000).fit(X, y)", language="python")
     st.write(f"On clean blobs, scikit-learn gets **{model.score(X, y):.0%}** right.")
-
-
-@lesson.step("When a line runs out of road", beat="forreal")
-def _():
     guess = lesson.predict(
         "What happens if the correct boundary must bend, but the perceptron only owns one straight line?",
         ["It leaves mistakes behind", "It bends the line", "It refuses to answer"],

@@ -199,6 +199,17 @@ def _():
 
 @lesson.step("Late fixes can chase noise", beat="play")
 def _():
+    lesson.say("Here is the danger in the wiggle data: early fixes chase the big wave; late, strong fixes can start chasing lonely bumps.")
+    trace = cached_trace(50, 0.45, 3, 8)
+    early = trace["stages"][11]
+    late = trace["stages"][-1]
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.2))
+    for ax, stage, title in zip(axes, [early, late], ["12 fixes: pattern", "50 strong fixes: noise hunt"]):
+        ax.scatter(trace["x"], trace["y"], color="#3B82F6", edgecolors="white")
+        ax.plot(trace["x_grid"], stage["running_grid"], color="#10B981")
+        ax.set_title(title)
+    lesson.show(fig)
+    lesson.look_for("the extra bends in the right panel. Those wiggles are the model answering individual noisy dots.")
     lesson.careful(
         "Boosting overfits more easily than a forest because it keeps staring at the current mistakes. "
         "If some leftovers are noise from bad labels or wiggly data, strong late trees may chase that noise instead of the real pattern."

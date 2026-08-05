@@ -158,16 +158,12 @@ def _():
         lesson.look_for("the rebuilt digit. Drag until your eyes stop trusting it.")
     lesson.show(plot_variance_curve(curve, components))
     lesson.look_for("where your component count hits the curve. The first few directions do most of the work!")
-
-
-@lesson.step("The ghost digits", beat="play")
-def _():
     lesson.say("Those rebuilt digits are mixed from ghostly directions. PCA did not store a tiny 8; it stored directions that can rebuild many digits.")
     lesson.show(plot_eigendigits(8))
     lesson.look_for("strokes that look like pieces of many digits at once, not one clean number.")
 
 
-@lesson.step("Labels come after the squish", beat="forreal")
+@lesson.step("Two maps of hidden digits", beat="forreal")
 def _():
     lesson.say(
         """
@@ -177,36 +173,35 @@ Clusters appear even though PCA never saw a digit label. Surprise: the shadow ke
 """
     )
     fig, kept = cached_digits_pca_plot()
-    lesson.show(fig)
-    lesson.look_for("digits that overlap. Chapter 17's confusion matrix warned you about the same idea: shared strokes make shared mistakes.")
+    left, right = st.columns(2, gap="large")
+    with left:
+        lesson.show(fig)
+        st.caption(f"PCA kept {kept:.1%} of the pixel spread in two shadows.")
+    with right:
+        lesson.show(cached_tsne_plot())
+        st.caption("t-SNE keeps nearby digits near each other, then bends the map to show neighbourhoods.")
+    lesson.look_for("digits that overlap in PCA, then islands in t-SNE. Shared strokes make shared mistakes.")
     st.metric("variance kept in two PCA shadows", f"{kept:.1%}")
-
-
-@lesson.step("A prettier map can lie", beat="forreal")
-def _():
-    lesson.say("t-SNE keeps neighbours together, so the picture can look cleaner than PCA.")
-    lesson.show(cached_tsne_plot())
-    lesson.look_for("islands of nearby digits, not the exact size of gaps between islands.")
     lesson.careful(
         "t-SNE bends and stretches the map to make local neighbourhoods visible. The gap between two islands, or the size of an island, is not a measured fact."
     )
 
 
-@lesson.step("Flat shadows have limits", beat="forreal")
+@lesson.step("Flat shadows meet penguins", beat="forreal")
 def _():
     lesson.say("PCA is linear. It can pick a flat shadow, not unwrap every shape.")
-    lesson.show(plot_pca_linear_failure())
-    lesson.look_for("the two curved arms crossing in the shadow. No flat angle can untangle them cleanly.")
-    lesson.careful("If two curved arms cross in every flat shadow, PCA cannot separate them no matter which angle it chooses.")
-
-
-@lesson.step("Penguins in one direction", beat="forreal")
-def _():
-    lesson.say("The same squishing idea works on ordinary tables too. Here PCA picks a first shadow through penguin measurements.")
+    left, right = st.columns(2, gap="large")
+    with left:
+        lesson.show(plot_pca_linear_failure())
+        lesson.look_for("the two curved arms crossing in the shadow. No flat angle can untangle them cleanly.")
     loadings, first_kept = cached_penguin_pca()
-    st.dataframe(loadings, hide_index=True, width="stretch")
+    with right:
+        st.markdown("**Penguin first shadow**")
+        st.dataframe(loadings, hide_index=True, width="stretch")
+        lesson.look_for("body-mass and flipper-length weights. Big weights often read like a size direction for penguins.")
     st.metric("penguin first-component variance", f"{first_kept:.1%}")
-    lesson.look_for("body-mass and flipper-length weights. Big weights often read like a size direction for penguins.")
+    lesson.say("The same squishing idea still works on ordinary tables. Here the first penguin shadow reads mostly like body size.")
+    lesson.careful("If two curved arms cross in every flat shadow, PCA cannot separate them no matter which angle it chooses.")
 
 
 @lesson.step("Check yourself", beat="challenge")

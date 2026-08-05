@@ -197,10 +197,6 @@ def _():
             loss_curve(losses, ax=ax, title=f"PyTorch trained in {seconds:.2f}s")
             lesson.show(fig)
     lesson.look_for("the loss curve and boundary moving together as the same Part 3 machine learns.")
-
-
-@lesson.step("Why use the grown-up tool?", beat="forreal")
-def _():
     guess = lesson.predict(
         "At this toy size, what is the best reason to use PyTorch?",
         ["It changes the math", "It scales the bookkeeping", "It removes data problems"],

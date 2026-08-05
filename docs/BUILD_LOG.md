@@ -118,6 +118,19 @@ Replaced with `kidsml/workbook.py`: a `Workbook` is a list of `Question`s
 point. They render as real inputs with instant answer-checking — via Streamlit widgets on
 a page, and via ipywidgets in a notebook, from the *same* definition.
 
+---
+
+## 2026-08-05 — Flow audit for chapters 00–05
+
+Kids were losing the thread when prose screens introduced ideas before the matching picture
+arrived. Chapters 01, 02, 03, 04 and 05 now keep the key visual on the same screen as the
+idea: the first regression line, squared-error boxes, the perceptron before/after update,
+XOR's contradiction table with its corner plot, the logistic shrug boundary, penguin
+probability bars, and a one-hot before/after table.
+
+Chapter 00 was checked and left alone: each screen already has either a table, interaction,
+code, workbook, or challenge list that earns the click.
+
 Each chapter's questions live in `worksheets/NN_slug.py` rather than in one shared file,
 so several chapters can be written in parallel without stepping on each other.
 
@@ -522,3 +535,74 @@ The workbook and the notebooks were checked and are unaffected — they hand the
 straight to Streamlit and Jupyter without wrapping it.
 
 **555 tests pass.**
+
+---
+
+## 2026-08-05 — Flow audit for chapters 13–19
+
+Merged split screens where a kid had to click before seeing the picture that completed the
+thought. Chapter 14 now keeps the hidden-space table, hidden lines, and combined boundary
+in one payoff sequence; Chapter 17 reveals the confusion matrix on the prediction screen;
+Chapter 19 shows the k boundary and sweet-spot curve together.
+
+Built chapters 13–19 and ran the targeted page/notebook/workbook tests: **77 passed**.
+
+---
+
+## 2026-08-05 — Flow audit for chapters 06–12
+
+Moved visual payoffs onto the screens that introduce them: Chapter 06 now shows boosting
+chasing noisy wiggles, Chapter 07 puts kernels beside the road-style switcher, Chapter 08
+shows the baseline number, and Chapter 12 shows the squished output surface immediately.
+
+Chapter 11 brings the grid mover up to the second screen so kids can start playing before
+the vector details. Chapter 12 folds the trained divider into the training screen.
+
+---
+
+## 2026-08-05 — Flow: un-fragmenting the chapters
+
+Owner, with his kids using the course:
+
+> "Kids are pretty unhappy with the lack of flow at times, and get confused. More of that
+> will mean they'll lose interest, and all this will have been for nothing."
+
+Two bugs, and **the second one was self-inflicted**.
+
+### Bug 1 — a concept introduced before there was anything to look at
+
+A screen would explain an idea and put the picture of it on the *next* screen, so the reader
+had to hold something abstract across a page turn. Chapter 05 explained one-hot encoding
+with **no before/after table** — the single thing that makes one-hot obvious. Chapter 02
+walked through a perceptron update across 25 lines of arithmetic with nothing to look at.
+Chapter 03 argued the XOR contradiction with the four points invisible. Chapter 12 described
+what the squish buys without showing the surface it changes.
+
+Fixed by pulling each picture onto the screen that introduces it.
+
+### Bug 2 — one thought split across two screens, and that one is on me
+
+When the pages were converted to the stepped format I set a floor of 5 steps and a target of
+8-14, and told the agents to hit it. **A count target gets met by splitting things that
+should not be split.** Chapter 21 ended up with four separate screens of 4-7 lines. Chapter
+19 had "Morph the boundary" and "There is a sweet spot" — one idea about `k`, cut in half.
+
+23 screens merged away across 15 chapters. Chapter 21 went 11 → 8, chapter 25 went 10 → 7.
+Chapter 11's grid mover — the thing the owner most expects his kids to sit and play with —
+moved from deep in the chapter to step 2.
+
+The rule is now stated properly: **a screen must stand on its own — something to read,
+something to look at, and ideally something to move.** Seven steps is a fine chapter.
+
+### The guard
+
+`tests/test_pages.py` now fails any mid-chapter screen with nothing to look at and nothing
+to move, exempting the opening hook and the challenge lists.
+
+Writing it repeated a mistake from earlier the same day: the first version checked call
+sites only, and reported a false failure on a chapter that draws its chart through a
+module-level helper. It now resolves helpers first. **Twice in one day a grep-shaped test
+has lied** — once about plotly styling, once here. Tests that pattern-match source text need
+to follow the indirection the source actually uses.
+
+**581 tests pass.** 271 screens across 26 chapters, none of them a dead click.

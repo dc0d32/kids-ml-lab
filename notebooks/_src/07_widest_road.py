@@ -146,6 +146,17 @@ plt.show()
 # RBF kernel uses distance from points, so it can make smooth islands. Same SVM, different
 # idea of what a road can be.
 
+# %%
+fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
+for ax, kernel in zip(axes, ["linear", "poly", "rbf"]):
+    X, y, model = fit_svm_shape("circles", kernel=kernel, C=3.0, gamma=1.0, noise=0.18, seed=2)
+    decision_boundary(model.predict, X, y, ax=ax, steps=140, shade_confidence=False, title=f"{kernel} kernel")
+plt.show()
+
+# %% [markdown]
+# Same data, three road styles. The word **kernel** belongs with the picture of the road
+# changing shape.
+
 # %% [markdown]
 # ## 💻 In real code
 #

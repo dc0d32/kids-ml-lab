@@ -49,10 +49,6 @@ The next three chapters build three guessers. This first one fits on a kitchen-t
     lesson.kid_corner(
         "Line up letter cards from a name like dominoes. Every time two cards touch, drop a tally mark in that box. Later, draw the next card from the busiest boxes."
     )
-
-
-@lesson.step("Tally marks before code", beat="byhand")
-def _():
     lesson.say("Names get bumper pads: a blank **`.`** at the start and another at the finish. So `mia` enters the tally machine as `.mia.`.")
     tiny = pd.DataFrame(
         [[".mia.", ". → m, m → i, i → a, a → ."], [".mo.", ". → m, m → o, o → ."], [".mae.", ". → m, m → a, a → e, e → ."]],

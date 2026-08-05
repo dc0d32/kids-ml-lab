@@ -82,6 +82,15 @@ hand
 # > stay zero, so the boundary stays put. Far-away points become more confident; the line
 # > does not move.
 
+# %%
+X_demo, _ = toy_shape('blobs', n=180, noise=0.22, seed=4)
+demo_neuron = Neuron(w=np.array([2.0, -1.0]), b=0.5, activation='sigmoid')
+neuron_surface_figure(demo_neuron, X_demo, steps=45, title='The squish turns the raw ramp into 0..1')
+
+# %% [markdown]
+# Look for the ramp flattening into a floor and ceiling. The middle fence stays in the same
+# place.
+
 # %% [markdown]
 # ## 👀 Take a look
 #

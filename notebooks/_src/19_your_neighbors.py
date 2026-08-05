@@ -111,16 +111,6 @@ plt.show()
 fig = plot_knn_hand_boundary(k=1)
 plt.show()
 
-# %% [markdown]
-# ## 🎛️ Your turn
-#
-# Change the query point and k in the app. Here is one frozen setup to poke.
-
-# %%
-fig, votes = plot_knn_play(k=7, qx=0.0, qy=0.0)
-plt.show()
-votes
-
 # %%
 curve = knn_accuracy_curve()
 curve
@@ -134,8 +124,19 @@ ax.set_title("The sweet spot is usually in the middle")
 plt.show()
 
 # %% [markdown]
-# Look for the middle sweet spot. k = 1 memorises noisy points. Huge k smooths so much
-# that the whole plane starts giving one sleepy answer. Even k can tie in a two-class vote.
+# Look for both views of k. k = 1 memorises noisy points. Huge k smooths so much that the
+# whole plane starts giving one sleepy answer. The useful spot is usually between those
+# cliffs. Even k can tie in a two-class vote.
+
+# %% [markdown]
+# ## 🎛️ Your turn
+#
+# Change the query point and k in the app. Here is one frozen setup to poke.
+
+# %%
+fig, votes = plot_knn_play(k=7, qx=0.0, qy=0.0)
+plt.show()
+votes
 
 # %% [markdown]
 # ### Catch #1: prediction is the expensive part

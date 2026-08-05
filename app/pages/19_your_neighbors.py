@@ -119,10 +119,16 @@ def _():
 
 @lesson.step("Morph the boundary", beat="seeit")
 def _():
-    boundary_k = st.select_slider("Boundary k", options=[1, 3, 5], value=1, key="ch19_boundary_k")
-    fig = plot_knn_hand_boundary(boundary_k)
-    lesson.show(fig)
-    lesson.look_for("what happens as k grows. The wider crowd smooths the tiny islands.")
+    left, right = st.columns(2, gap="large")
+    with left:
+        boundary_k = st.select_slider("Boundary k", options=[1, 3, 5], value=1, key="ch19_boundary_k")
+        fig = plot_knn_hand_boundary(boundary_k)
+        lesson.show(fig)
+    with right:
+        curve = cached_curve()
+        st.line_chart(curve.set_index("k"), height=260)
+    lesson.look_for("both views of k. The wider crowd smooths tiny islands, and the accuracy curve shows the middle sweet spot.")
+    lesson.say("k = 1 memorises every noisy point. Huge k smooths until the plane starts giving one sleepy answer. The useful spot is usually between those cliffs.")
     lesson.careful("An even k can tie in a two-class problem. Odd k does not remove every tie, but it dodges the common one.")
 
 
@@ -138,13 +144,6 @@ def _():
         lesson.show(fig)
         st.dataframe(votes, hide_index=True)
     lesson.look_for("the star and its vote lines. Drag the star across the border and watch whose votes storm in.")
-
-
-@lesson.step("There is a sweet spot", beat="play")
-def _():
-    curve = cached_curve()
-    st.line_chart(curve.set_index("k"), height=260)
-    lesson.look_for("the middle sweet spot. k = 1 memorises every noisy point; huge k smooths until the plane starts giving one sleepy answer.")
 
 
 @lesson.step("Predict the timing cost", beat="forreal")

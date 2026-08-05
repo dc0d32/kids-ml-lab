@@ -156,13 +156,6 @@ def _():
     )
     st.dataframe(table.round(3), hide_index=True, width="stretch")
     lesson.look_for("hidden rows with the same XOR answer. They are no longer trapped in opposite corners; the map has been folded.")
-
-
-@lesson.step("Plot the hidden space", beat="seeit")
-def _():
-    X_xor, y_xor, snaps = trained_xor_snapshots()
-    model = model_from_snapshot([2, 3, 1], snaps[-1], activation="tanh", seed=2)
-    hidden = model.hidden_outputs(X_xor)
     fig = plt.figure(figsize=(6.2, 5.0))
     ax = fig.add_subplot(111, projection="3d")
     colors = np.where(y_xor == 1, "#EF4444", "#3B82F6")
@@ -172,10 +165,10 @@ def _():
     ax.set_zlabel("h3")
     ax.set_title("XOR points after the hidden layer")
     lesson.show(fig)
-    lesson.look_for("the four points in hidden coordinates. The network changed the map before making the final cut.")
+    lesson.look_for("the hidden-space picture. The table numbers became a new map where the final neuron can make one clean cut.")
 
 
-@lesson.step("The three hidden lines", beat="seeit")
+@lesson.step("Hidden lines make the bend", beat="seeit")
 def _():
     guess = lesson.predict(
         "Why do the three hidden neurons learn different lines?",
@@ -189,19 +182,16 @@ def _():
 
     X_xor, y_xor, snaps = trained_xor_snapshots()
     model = model_from_snapshot([2, 3, 1], snaps[-1], activation="tanh", seed=2)
-    fig = hidden_surfaces_figure(model, X_xor, steps=65)
-    lesson.show(fig)
-    lesson.look_for("the three straight hidden lines. Each one sends a different ramp reading to the output neuron.")
-
-
-@lesson.step("The combined boundary", beat="seeit")
-def _():
-    X_xor, y_xor, snaps = trained_xor_snapshots()
-    model = model_from_snapshot([2, 3, 1], snaps[-1], activation="tanh", seed=2)
-    fig, ax = lesson.figure(5.4, 4.7)
-    boundary_with_hidden(model, X_xor, y_xor, ax=ax, title="Hidden lines plus final boundary", steps=180)
-    lesson.show(fig)
-    lesson.look_for("hidden lines first, then the shaded final boundary. The bend comes from reading hidden coordinates.")
+    lesson.say("Each hidden neuron draws one straight line and sends a ramp reading. The output neuron combines those readings, so the final edge bends in the original picture.")
+    left, right = st.columns(2, gap="large")
+    with left:
+        fig = hidden_surfaces_figure(model, X_xor, steps=65)
+        lesson.show(fig)
+    with right:
+        fig, ax = lesson.figure(5.4, 4.7)
+        boundary_with_hidden(model, X_xor, y_xor, ax=ax, title="Hidden lines plus final boundary", steps=180)
+        lesson.show(fig)
+    lesson.look_for("one argument across both pictures: straight hidden lines make new coordinates, and the final neuron reads them as a bent boundary.")
 
 
 @lesson.step("Scrub the training", beat="play")

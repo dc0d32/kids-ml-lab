@@ -38,6 +38,27 @@ use_house_style()
 # > 📖 **Grown-ups call this:** **logistic regression** — a straight-line score followed
 # > by an S-curve that turns it into a probability.
 
+# %%
+X_shrug, y_shrug = toy_shape("blobs", n=120, noise=0.25, seed=10)
+fig, ax = plt.subplots(figsize=(5.8, 4.2))
+ax.scatter(
+    X_shrug[:, 0],
+    X_shrug[:, 1],
+    c=np.where(y_shrug == 1, WARM, COOL),
+    s=38,
+    alpha=0.75,
+    edgecolors="white",
+    linewidths=0.4,
+)
+draw_line(2, -2, 0, ax=ax)
+ax.scatter([0], [0], s=190, facecolors="none", edgecolors=ACCENT, linewidths=2.5)
+ax.set_title("The boundary is the unsure place")
+plt.show()
+
+# %% [markdown]
+# **Look for:** the circled spot on the line. A hard model must pick a side there,
+# even though it is exactly on the fence.
+
 # %% [markdown]
 # ## ✏️ Work it out
 #

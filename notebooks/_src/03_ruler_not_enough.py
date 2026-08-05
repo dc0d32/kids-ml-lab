@@ -85,15 +85,28 @@ plt.show()
 # Assume a perfect line exists. Its score is **w1·x1 + w2·x2 + b**. Red points need
 # positive scores; blue points need negative scores.
 #
-# Here is what each XOR corner demands:
-#
-# | point | answer | what the line would need |
-# |---|---|---|
-# | (0, 0) | blue | b < 0 |
-# | (1, 1) | blue | w1 + w2 + b < 0 |
-# | (1, 0) | red | w1 + b > 0 |
-# | (0, 1) | red | w2 + b > 0 |
-#
+# Here is what each XOR corner demands. Keep the corner picture beside the table while
+# you read it.
+
+# %%
+xor_demands = pd.DataFrame(
+    {
+        "point": ["(0, 0)", "(1, 1)", "(1, 0)", "(0, 1)"],
+        "answer": ["blue", "blue", "red", "red"],
+        "score formula": ["b", "w1 + w2 + b", "w1 + b", "w2 + b"],
+        "perfect line needs": ["< 0", "< 0", "> 0", "> 0"],
+    }
+)
+display(xor_demands)
+
+fig, ax = plt.subplots(figsize=(5, 4.5))
+scatter_2d(X_xor, y_xor, ax=ax, size=120)
+for i, (x1, x2) in enumerate(X_xor):
+    ax.text(x1 + 0.03, x2 + 0.03, "red" if y_xor[i] == 1 else "blue", fontsize=10)
+ax.set_title("XOR demands opposite corners")
+plt.show()
+
+# %% [markdown]
 # Now add the two red demands. From **w1 + b > 0** and **w2 + b > 0**, the left
 # sides add to **w1 + w2 + 2b**, and two positive things add to something positive:
 # **w1 + w2 + 2b > 0**.

@@ -109,21 +109,31 @@ Assume a perfect line exists. Its score is **w1·x1 + w2·x2 + b**. Red points n
 positive scores; blue points need negative scores.
 """
     )
-    st.markdown(
-        """
-| point | answer | what the line would need |
-|---|---|---|
-| (0, 0) | blue | b < 0 |
-| (1, 1) | blue | w1 + w2 + b < 0 |
-| (1, 0) | red | w1 + b > 0 |
-| (0, 1) | red | w2 + b > 0 |
-"""
-    )
+    demands, picture = st.columns([1.15, 1], gap="large")
+    with demands:
+        st.dataframe(
+            {
+                "point": ["(0, 0)", "(1, 1)", "(1, 0)", "(0, 1)"],
+                "answer": ["blue", "blue", "red", "red"],
+                "score formula": ["b", "w1 + w2 + b", "w1 + b", "w2 + b"],
+                "perfect line needs": ["< 0", "< 0", "> 0", "> 0"],
+            },
+            hide_index=True,
+            width="stretch",
+        )
+    with picture:
+        fig, ax = lesson.figure(4.4, 4.0)
+        scatter_2d(X_xor, y_xor, ax=ax, size=200)
+        for i, (x1, x2) in enumerate(X_xor):
+            ax.text(x1 + 0.04, x2 + 0.04, "red" if y_xor[i] == 1 else "blue", fontsize=10)
+        ax.set_title("Keep the XOR corners in view")
+        lesson.show(fig)
+    lesson.look_for("the opposite corners. The table is asking one line to put both red corners positive and both blue corners negative.")
     lesson.say(
         """
-Add the two red demands and you get **w1 + w2 + 2b > 0**. Add the two blue
-demands and you get the same left side, but now **w1 + w2 + 2b < 0**.
-"""
+        Add the two red demands and you get **w1 + w2 + 2b > 0**. Add the two blue
+        demands and you get the same left side, but now **w1 + w2 + 2b < 0**.
+        """
     )
     lesson.aha("The same number cannot be bigger than zero and smaller than zero. That is why no straight line can solve XOR.")
     lesson.jargon("linearly separable", "A dataset is linearly separable if one straight line can split it perfectly.")

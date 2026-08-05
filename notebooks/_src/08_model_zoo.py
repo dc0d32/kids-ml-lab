@@ -182,6 +182,13 @@ print("mean:", round(float(scores.mean()), 3), "spread:", round(float(scores.std
 
 # %%
 print("lopsided baseline accuracy:", lopsided_baseline())
+pd.DataFrame(
+    {
+        "guesser": ["always common class", "fancy model"],
+        "score": [f"{lopsided_baseline():.0%}", "92%"],
+        "what it proves": ["the data is lopsided", "only 2 points above the floor"],
+    }
+)
 
 # %% [markdown]
 # A useless model can score high when one class is much more common. Check the baseline

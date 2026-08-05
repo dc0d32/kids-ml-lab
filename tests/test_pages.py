@@ -201,3 +201,55 @@ def test_markdown_inside_styled_boxes_actually_renders(page: Path):
             return
         button.click().run()
         steps += 1
+
+
+VISUAL_OR_INTERACTIVE = (
+    "lesson.show(", "lesson.mermaid(", "lesson.workbook(",
+    "st.dataframe(", "st.table(", "st.plotly_chart(", "st.image(",
+    "st.line_chart(", "st.bar_chart(", "st.area_chart(", "st.metric(", "st.code(",
+    "st.slider(", "st.radio(", "st.selectbox(", "st.multiselect(", "st.checkbox(",
+    "st.button(", "st.text_input(", "st.number_input(", "st.file_uploader(",
+    "st_canvas(", "st.select_slider(", "st.toggle(",
+)
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_every_screen_has_something_to_look_at(page: Path):
+    """A screen of pure prose in the middle of a chapter is a wasted click.
+
+    It is usually one of two bugs: an idea introduced a screen before its picture, or one
+    thought sliced in half to pad the step count. Both make a reader hold something
+    abstract across a page turn, and that is where the kids reported losing the thread.
+
+    Exempt: the opening hook (it may be setting a scene before any data exists) and the
+    challenge screens (a list of dares is the right shape for those).
+    """
+    source = page.read_text(encoding="utf-8")
+
+    # Pages define module-level helpers that draw. A call to one of those counts as a
+    # visual, so resolve them first — checking call sites alone reported a false failure
+    # on a screen that draws its chart through a helper.
+    drawing_helpers = set()
+    for match in re.finditer(r"^def (\w+)\(.*?(?=^def |\Z)", source, re.S | re.M):
+        if any(item in match.group(0) for item in VISUAL_OR_INTERACTIVE):
+            drawing_helpers.add(match.group(1) + "(")
+
+    blocks = re.split(r"(?=@lesson\.step\()", source)
+    steps = [b for b in blocks if b.startswith("@lesson.step(")]
+
+    for index, block in enumerate(steps):
+        title = re.search(r'@lesson\.step\("([^"]+)"', block).group(1)
+        beat = re.search(r'beat="(\w+)"', block)
+        beat = beat.group(1) if beat else "play"
+
+        if index == 0 or beat == "challenge":
+            continue
+
+        body = block[block.find("def _"):]
+        shows_something = any(item in body for item in VISUAL_OR_INTERACTIVE) or any(
+            helper in body for helper in drawing_helpers
+        )
+        assert shows_something, (
+            f"{page.name}: screen {title!r} has nothing to look at and nothing to move. "
+            "Either bring its picture onto this screen, or merge it with the next one."
+        )

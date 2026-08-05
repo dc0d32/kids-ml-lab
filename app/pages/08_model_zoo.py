@@ -219,6 +219,19 @@ def _():
     lesson.say(
         f"A useless model that always says the most common class scores **{baseline:.0%}** on a lopsided dataset."
     )
+    st.metric("boring baseline", f"{baseline:.0%}", "always predicts the common class")
+    st.dataframe(
+        pd.DataFrame(
+            {
+                "guesser": ["always common class", "fancy model"],
+                "score": [f"{baseline:.0%}", "92%"],
+                "what it proves": ["the data is lopsided", "only 2 points above the floor"],
+            }
+        ),
+        hide_index=True,
+        width="stretch",
+    )
+    lesson.look_for("how close the fancy score is to the boring floor. The applause starts after the baseline.")
     lesson.careful(
         "Check the baseline first, or you may celebrate a model that learned nothing. "
         "A fancy model has to beat the boring answer before it earns applause."

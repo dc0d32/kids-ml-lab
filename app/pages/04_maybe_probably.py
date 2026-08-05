@@ -42,11 +42,23 @@ It says red or blue and never wavers. A point sitting on the boundary should say
 **honestly, I have no idea**.
 """
     )
+    X_shrug, y_shrug = toy_shape("blobs", n=120, noise=0.25, seed=10)
+    fig, ax = lesson.figure(5.8, 4.2)
+    ax.scatter(
+        X_shrug[:, 0],
+        X_shrug[:, 1],
+        c=np.where(y_shrug == 1, WARM, COOL),
+        s=38,
+        alpha=0.75,
+        edgecolors="white",
+        linewidths=0.4,
+    )
+    draw_line(2, -2, 0, ax=ax)
+    ax.scatter([0], [0], s=190, facecolors="none", edgecolors=ACCENT, linewidths=2.5)
+    ax.set_title("The boundary is the unsure place")
+    lesson.show(fig)
+    lesson.look_for("the circled spot on the line. A hard model must pick a side there, even though it is exactly on the fence.")
     lesson.jargon("logistic regression", "A straight-line score followed by an S-curve that turns it into a probability.")
-
-
-@lesson.step("The boundary becomes 50/50", beat="byhand")
-def _():
     lesson.say(
         """
         Keep Chapter 2's raw line score **z**. Positive should lean red. Negative should
@@ -54,8 +66,7 @@ def _():
 
         So we need a squish machine: any score in, a probability from 0 to 1 out. The one
         used everywhere is **sigmoid(z) = 1 / (1 + e^-z)**. The **e** is a particular
-        number, about **2.718**; you do not need to memorize it. It makes the odds change
-        by the same multiplier for each step in z.
+        number, about **2.718**; you do not need to memorize it.
         """
     )
     guess = lesson.predict(
@@ -191,11 +202,7 @@ def _():
     lesson.show(fig)
     lesson.look_for("the circled penguin sitting closest to the model's fuzzy middle. That penguin is the official vibe check.")
     st.write(f"Most uncertain penguin: **{uncertain['species']}**, probability Gentoo = **{uncertain['gentoo_probability']:.1%}**.")
-
-
-@lesson.step("Probabilities, then a hard score", beat="forreal")
-def _():
-    penguins, probs = penguin_probabilities()
+    lesson.say("Now compare a few probability promises before they get turned into a hard Gentoo/not-Gentoo score.")
     sample = penguins.iloc[[0, len(penguins) // 2, int(np.argmin(np.abs(probs - 0.5))), -1]][["species", "gentoo_probability"]]
     st.bar_chart(sample.set_index("species"))
     lesson.look_for("the bar closest to halfway. That is the model admitting a hard call.")

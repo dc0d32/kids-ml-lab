@@ -41,6 +41,23 @@ use_house_style()
 weeks, dollars = allowance()
 pd.DataFrame({"weeks saved": weeks, "dollars": dollars})
 
+# %%
+fig, ax = plt.subplots(figsize=(6.6, 4.4))
+ax.scatter(weeks, dollars, s=55, color="#60A5FA", edgecolors="#171B26", linewidths=0.9)
+xs = np.linspace(weeks.min(), 20, 80)
+ax.plot(xs, 3 * xs + 5, color=ACCENT, label="candidate line")
+ax.scatter([20], [65], s=90, color=ACCENT, edgecolors="white", zorder=4)
+ax.vlines(20, dollars.min(), 65, color="#94A3B8", linestyle="--", linewidth=1.4)
+ax.set_xlabel("weeks saved")
+ax.set_ylabel("dollars")
+ax.set_title("Read a number from the line")
+ax.legend(loc="best", fontsize=9)
+plt.show()
+
+# %% [markdown]
+# **Look for:** the green dot at week 20. The line turns one input number into one
+# dollar guess.
+
 # %% [markdown]
 # ## ✏️ Work it out
 #

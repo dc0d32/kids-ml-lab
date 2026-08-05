@@ -65,10 +65,6 @@ The game still has not changed: **guess the next letter**. New engine, same race
     lesson.kid_corner(
         "When you guess the next word in a story, your eyes zip back to useful clues. Maybe the clue is next door. Maybe it is two sentences back waving a tiny flag."
     )
-
-
-@lesson.step("Which old letters should I look at?", beat="byhand")
-def _():
     lesson.say(
         """
 Before the mechanism, grab the real question: **I am about to guess the next letter. Which earlier letters should I look at?**

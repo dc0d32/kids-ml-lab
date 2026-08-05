@@ -152,9 +152,19 @@ pd.DataFrame(
 w_bad = np.array([1.0, 1.0])
 b_bad = -20.0
 w_after, b_after, was_wrong = perceptron_step(w_bad, b_bad, X_tiny[5], y_tiny[5])
-print("wrong?", was_wrong)
-print("new w:", w_after)
-print("new b:", b_after)
+pd.DataFrame(
+    {
+        "line": ["before", "after"],
+        "w1": [w_bad[0], w_after[0]],
+        "w2": [w_bad[1], w_after[1]],
+        "b": [b_bad, b_after],
+        "missed point?": [was_wrong, False],
+        "score for (6, 5)": [
+            score_line(X_tiny[[5]], w_bad[0], w_bad[1], b_bad)[0],
+            score_line(X_tiny[[5]], w_after[0], w_after[1], b_after)[0],
+        ],
+    }
+)
 
 # %% [markdown]
 # Why does adding the point help? The score for that same point jumps from **-9**

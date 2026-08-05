@@ -190,6 +190,17 @@ plt.show()
 # knows how to ask: is this column 0 or 1?
 
 # %%
+mushrooms = load_table("mushrooms")
+smell_rows = mushrooms[mushrooms["smell"].isin(["almond", "fishy", "none"])].drop_duplicates("smell")
+smell_rows = smell_rows[["smell", "edible"]].reset_index(drop=True)
+encoded_smells = pd.get_dummies(smell_rows["smell"], prefix="smell").astype(int)
+pd.concat([smell_rows, encoded_smells], axis=1)
+
+# %% [markdown]
+# **Look for:** one word turning into several yes/no switches. Each row has one smell
+# switch turned on.
+
+# %%
 mush_model, X_train, X_test, y_train, y_test, mush_scores, text = mushroom_tree(max_depth=4)
 mush_scores
 

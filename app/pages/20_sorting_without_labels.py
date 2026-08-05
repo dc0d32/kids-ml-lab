@@ -52,6 +52,8 @@ piles before anyone hands you the pile names.
     lesson.careful(
         "The danger is that 'clump' sounds like a thing everyone will agree on. Sometimes one person's two piles are another person's three piles. The dots do not wear name tags."
     )
+    lesson.show(plot_kmeans_stage(kmeans_history(k=3, seed=0, bad_start=False)[0]))
+    lesson.look_for("the dots before they have names. Your eyes start hunting for piles before the algorithm says a word.")
     lesson.kid_corner("Put blocks on the floor. Move them into piles by what feels near. You do not need names for the piles before you start.")
     lesson.jargon("clustering", "Sorting data into groups when the answer labels are missing.")
 

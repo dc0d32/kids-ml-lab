@@ -163,6 +163,21 @@ plt.show()
 # panel is the newest fix; the left panel is the total after the fixes have been added.
 #
 # > 💡 **Aha!** A smooth-looking curve can be built out of many tiny step shapes.
+
+# %%
+trace = boosting_trace(n_steps=50, learning_rate=0.45, max_depth=3, seed=8)
+early = trace["stages"][11]
+late = trace["stages"][-1]
+fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.2))
+for ax, stage, title in zip(axes, [early, late], ["12 fixes: pattern", "50 strong fixes: noise hunt"]):
+    ax.scatter(trace["x"], trace["y"], color="#3B82F6", edgecolors="white")
+    ax.plot(trace["x_grid"], stage["running_grid"], color="#10B981")
+    ax.set_title(title)
+plt.show()
+
+# %% [markdown]
+# Look at the extra bends in the right panel. Those wiggles are the model answering
+# individual noisy dots.
 #
 # > ⚠️ **Careful** Boosting overfits more easily than a forest because it keeps staring at
 # > the current mistakes. If some leftovers are noise from bad labels or wiggly data,

@@ -108,6 +108,12 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 #     E --> F[Chapter 14 stacks bends into new features]
 # ```
 
+# %%
+M = la.matrix(*la.PRESETS["shear (push the top over)"])
+fig = grid_figure(M, "First: a matrix moves the floor")
+display(Markdown("**Look for:** grey grid before, blue grid after. The house makes the move hard to miss."))
+plt.show()
+
 # %% [markdown]
 # ## ✏️ Work it out
 #

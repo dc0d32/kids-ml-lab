@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import matplotlib.pyplot as plt
+import pandas as pd
 import streamlit as st
 
 from kidsml import lesson, ui
@@ -177,6 +178,12 @@ straight into a tree as a sentence, so we turn it into yes/no columns like
 `smell_almond`, `smell_fishy`, and `smell_none`.
 """
     )
+    mushrooms = load_table("mushrooms")
+    smell_rows = mushrooms[mushrooms["smell"].isin(["almond", "fishy", "none"])].drop_duplicates("smell")
+    smell_rows = smell_rows[["smell", "edible"]].reset_index(drop=True)
+    encoded = pd.get_dummies(smell_rows["smell"], prefix="smell").astype(int)
+    st.dataframe(pd.concat([smell_rows, encoded], axis=1), hide_index=True, width="stretch")
+    lesson.look_for("one word turning into several yes/no switches. Each row has one smell switch turned on.")
     lesson.jargon("one-hot encoding", "Turning one word column into many yes/no columns the tree can ask about.")
 
 

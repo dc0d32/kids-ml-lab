@@ -186,6 +186,21 @@ graph LR
     lesson.look_for("the last box. Neural networks need the bend, not the box of numbers.")
 
 
+@lesson.step("The grid mover", beat="byhand")
+def _():
+    lesson.say("This is the centre of the chapter. Pick a preset, then drag the four numbers. Grey grid before; blue grid after. The whole floor moves!")
+    knobs, picture = lesson.controls()
+    with knobs:
+        _, M = preset_matrix("ch11_grid", index=0)
+        landed = la.where_the_arrows_land(M)
+        st.write(f"`(1,0)` → **{np.round(landed['right arrow (1, 0)'], 2)}**")
+        st.write(f"`(0,1)` → **{np.round(landed['up arrow (0, 1)'], 2)}**")
+        st.metric("area multiplier", f"{la.area_change(M):.2f}")
+    with picture:
+        lesson.show(grid_figure(M, "Drag until the house does something weird"))
+        lesson.look_for("the little house. Rotations, flips, and shears are harder to miss on a house than on a blob.")
+
+
 @lesson.step("A vector is an arrow", beat="byhand")
 def _():
     lesson.say("A vector is a little trip: **how far** and **which way**. Drag the two parts of `[3, 4]` and watch the old 3-4-5 triangle pop open.")
@@ -276,21 +291,6 @@ def _():
         lesson.show(basis_figure(M))
         lesson.look_for("the two coloured landing arrows. Once those are known, every other arrow is forced.")
     lesson.jargon("linear", "It means grid lines stay straight and evenly spaced. No secret extra wiggle is allowed.")
-
-
-@lesson.step("The grid mover", beat="play")
-def _():
-    lesson.say("This is the centre of the chapter. Pick a preset, then drag the four numbers. Grey grid before; blue grid after. The whole floor moves!")
-    knobs, picture = lesson.controls()
-    with knobs:
-        _, M = preset_matrix("ch11_grid", index=0)
-        landed = la.where_the_arrows_land(M)
-        st.write(f"`(1,0)` → **{np.round(landed['right arrow (1, 0)'], 2)}**")
-        st.write(f"`(0,1)` → **{np.round(landed['up arrow (0, 1)'], 2)}**")
-        st.metric("area multiplier", f"{la.area_change(M):.2f}")
-    with picture:
-        lesson.show(grid_figure(M, "Drag until the house does something weird"))
-        lesson.look_for("the little house. Rotations, flips, and shears are harder to miss on a house than on a blob.")
 
 
 @lesson.step("Area is the determinant", beat="play")

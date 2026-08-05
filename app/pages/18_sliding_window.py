@@ -85,21 +85,7 @@ def _():
     show_image(output, ax=axes[2], numbers=True, title="3 by 3 output", cmap="magma")
     fig.tight_layout()
     lesson.show(fig)
-    lesson.look_for("the 3 by 3 output. The window has 9 legal landing pads.")
-
-
-@lesson.step("The edge lights up", beat="seeit")
-def _():
-    image = tiny_image()
-    kernel = vision.KERNEL_PRESETS["vertical edge"]
-    output = vision.convolve2d_valid(image, kernel)
-    fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.4))
-    show_image(image, ax=axes[0], numbers=True, title="image")
-    show_image(kernel, ax=axes[1], numbers=True, title="kernel", cmap="coolwarm")
-    show_image(output, ax=axes[2], numbers=True, title="output", cmap="magma")
-    fig.tight_layout()
-    lesson.show(fig)
-    lesson.look_for("the big output numbers. They flash where dark pixels crash into bright pixels.")
+    lesson.look_for("the 3 by 3 output. The window has 9 legal landing pads, and the big numbers flash where dark pixels crash into bright pixels.")
     lesson.aha("You detected an edge by hand, using the same multiply-and-add at every position!")
 
 

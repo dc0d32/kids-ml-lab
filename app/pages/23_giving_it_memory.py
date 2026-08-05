@@ -63,10 +63,6 @@ That one extra handful moves us from tally chart to neural network. Same mission
     lesson.kid_corner(
         "Instead of asking the kid beside you, ask the last three kids in line what letters they are holding. Then slap down your next-card guess."
     )
-
-
-@lesson.step("Slide a three-letter window", beat="byhand")
-def _():
     lesson.say("Slide a three-letter window across `cat`, and four training examples pop out. The blank `.` still marks the starting gate and the finish line.")
     windows = pd.DataFrame(
         [["...", "c"], ["..c", "a"], [".ca", "t"], ["cat", "."]],

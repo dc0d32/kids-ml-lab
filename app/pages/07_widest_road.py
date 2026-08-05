@@ -193,23 +193,18 @@ High gamma means each point reaches a short distance, which can create tiny isla
     lesson.careful("A kid-repeat version: **C is strictness; gamma is reach**. Strict and short-reach can memorise islands.")
 
 
-@lesson.step("Road styles are kernels", beat="play")
-def _():
-    lesson.say(
-        """
-The road style tells the SVM what shapes it is allowed to draw.
-
-**Linear** means one straight road. **Polynomial** makes smooth curvy roads.
-**RBF** uses distance from points, so it can make smooth islands.
-"""
-    )
-    lesson.jargon("kernel", "The road style: the rule for what shape the SVM can draw.")
-    lesson.aha("Kernel is not a new model here. It is the SVM choosing a different kind of road.")
-
-
 @lesson.step("Pick the road style", beat="play")
 def _():
-    lesson.say("Now put both knobs together and switch the road style. Same data, different idea of what a road can be.")
+    lesson.say(
+"""
+The road style tells the SVM what shapes it is allowed to draw. **Linear** means one
+straight road. **Polynomial** makes smooth curvy roads. **RBF** uses distance from
+points, so it can make smooth islands.
+
+Put both knobs together and switch the road style. Same data, different idea of what
+a road can be.
+"""
+    )
 
     knobs, picture = lesson.controls()
     with knobs:
@@ -226,6 +221,8 @@ def _():
         decision_boundary(model.predict, X, y, ax=ax, steps=160, shade_confidence=False, title=f"{kernel} SVM")
         lesson.show(fig)
     lesson.look_for("where the boundary curls around individual points, especially with high C and high gamma.")
+    lesson.jargon("kernel", "The road style: the rule for what shape the SVM can draw.")
+    lesson.aha("Kernel is not a new model here. It is the SVM choosing a different kind of road.")
 
 
 @lesson.step("Penguins have fence posts too", beat="forreal")

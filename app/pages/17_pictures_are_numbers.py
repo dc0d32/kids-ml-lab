@@ -126,11 +126,6 @@ def _():
     fig, _ = image_strip(first_examples, titles=first_titles, width=1.1)
     lesson.show(fig)
     lesson.look_for("how wobbly real handwriting is. The model has to learn the family resemblance, not memorize one museum-perfect 3.")
-
-
-@lesson.step("Average ghosts still look like digits", beat="seeit")
-def _():
-    _, y, images = cached_digits()
     averages = vision.average_digit_images(images, y)
     fig = vision.plot_small_images(averages, titles=[f"average {i}" for i in range(10)], width=1.35)
     lesson.show(fig)
@@ -183,10 +178,6 @@ def _():
     if guess is None:
         return
     lesson.say("Now we test that hunch on fresh held-out digits the model did not train on.")
-
-
-@lesson.step("The confusion map", beat="forreal")
-def _():
     report = cached_digit_model()
     st.code(
         """

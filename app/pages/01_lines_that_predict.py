@@ -30,6 +30,18 @@ already have a plan: put a line near the dots, then read the line's height at
 week 20.
 """
     )
+    fig, ax = lesson.figure(6.6, 4.4)
+    ax.scatter(weeks, dollars, s=55, color="#60A5FA", edgecolors="#171B26", linewidths=0.9)
+    xs = np.linspace(weeks.min(), 20, 80)
+    ax.plot(xs, 3 * xs + 5, color=ACCENT, label="candidate line")
+    ax.scatter([20], [65], s=90, color=ACCENT, edgecolors="white", zorder=4)
+    ax.vlines(20, dollars.min(), 65, color="#94A3B8", linestyle="--", linewidth=1.4)
+    ax.set_xlabel("weeks saved")
+    ax.set_ylabel("dollars")
+    ax.set_title("Read a number from the line")
+    ax.legend(loc="best", fontsize=9)
+    lesson.show(fig)
+    lesson.look_for("the green dot at week 20. The line turns one input number into one dollar guess.")
     lesson.jargon("linear regression", "A line used to predict a number.")
 
 
@@ -52,24 +64,12 @@ so the mistake is **15 - 14 = 1**.
 def _():
     lesson.say(
         """
-One mistake is not enough to judge the line. We need one score for all four rows,
-so we square each mistake and add the squares.
+        One mistake is not enough to judge the line. We need one score for all four rows,
+        so we square each mistake and add the squares.
 
-Signs can hide errors: **+2 + (-2) = 0**, even though the line missed twice.
-Squaring says **2² + (-2)² = 4 + 4 = 8**, so both misses count.
-"""
-    )
-    lesson.aha(
-        "Big mistakes get louder. A miss of 8 becomes **8² = 64**. A miss of 2 becomes **2² = 4**. "
-        "The first miss is four times as far away, but it costs sixteen times as much."
-    )
-
-
-@lesson.step("The square is a real square", beat="seeit")
-def _():
-    lesson.say(
-        "Back to that word **squared**. We have been squaring the misses to keep them "
-        "positive — but the word is doing more work than that, and the graph shows it."
+        Signs can hide errors: **+2 + (-2) = 0**, even though the line missed twice.
+        Squaring says **2² + (-2)² = 4 + 4 = 8**, so both misses count.
+        """
     )
     guess = lesson.predict(
         "On the graph, what will one squared mistake look like?",
@@ -81,6 +81,10 @@ def _():
     if guess is None:
         return
 
+    lesson.aha(
+        "Big mistakes get louder. A miss of 8 becomes **8² = 64**. A miss of 2 becomes **2² = 4**. "
+        "The first miss is four times as far away, but it costs sixteen times as much."
+    )
     lesson.say("The squared mistake is not a mystery word. On the graph, it is a real square.")
     fig, ax = lesson.figure(7, 4.6)
     regression_fit(weeks, dollars, 3, 5, ax=ax, show_errors=True, show_squares=True)

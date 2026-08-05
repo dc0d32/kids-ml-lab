@@ -118,7 +118,8 @@ pd.DataFrame(
 
 # %% [markdown]
 # Look for rows with the same XOR answer. They are no longer trapped in opposite corners;
-# the map has been folded before the output neuron makes one final cut.
+# the map has been folded before the output neuron makes one final cut. The table numbers
+# become a hidden-space picture.
 
 # %%
 fig = plt.figure(figsize=(6.2, 5.0))
@@ -132,16 +133,17 @@ ax.set_title('XOR points after the hidden layer')
 plt.show()
 
 # %%
+hidden_surfaces_figure(model, X_xor, steps=65)
+
+# %%
 fig, ax = plt.subplots(figsize=(5.4, 4.6))
 boundary_with_hidden(model, X_xor, y_xor, ax=ax, title='Hidden lines plus final boundary', steps=180)
 plt.show()
 
-# %%
-hidden_surfaces_figure(model, X_xor, steps=65)
-
 # %% [markdown]
-# The three coloured lines are the three hidden neurons. Each one sends a different ramp
-# reading to the output neuron, and the output neuron combines those readings.
+# Read these in order. The table shows the new hidden coordinates. The three coloured
+# hidden lines send ramp readings. The final neuron combines those readings, so the shaded
+# boundary bends in the original picture.
 #
 # Why do they learn different lines? They start with small random differences. After that,
 # each neuron receives slightly different gradients, so their jobs peel apart. If every

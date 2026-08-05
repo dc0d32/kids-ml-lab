@@ -80,6 +80,10 @@ red, but a training rule needs a bounded target to compare with `0` and `1`.
 The squish clips the wild number into a soft confidence score without moving the fence.
 """
     )
+    X, _ = toy_shape("blobs", n=180, noise=0.22, seed=4)
+    demo_neuron = Neuron(w=np.array([2.0, -1.0]), b=0.5, activation="sigmoid")
+    st.plotly_chart(neuron_surface_figure(demo_neuron, X, steps=45, title="The squish turns the raw ramp into 0..1"), width="stretch")
+    lesson.look_for("the ramp flattening into a floor and ceiling. The middle fence stays in the same place.")
     lesson.careful(
         "If you double w1, w2, and b, every raw score doubles. The zero places stay zero, so "
         "the boundary stays put. Far-away points become more confident; the line does not move."
@@ -222,12 +226,6 @@ Chapter 13 opens that training rule and shows how the knobs move.
     )
     st.dataframe(compare.round(3), hide_index=True, width="stretch")
     lesson.look_for("matching behaviour, not matching exact learned numbers.")
-
-
-@lesson.step("The trained divider", beat="forreal")
-def _():
-    X_fit, y_fit, w_mine, b_mine, _, _, _, _ = fit_blob_models()
-    learned = Neuron(w=w_mine, b=b_mine, activation="sigmoid")
     fig, ax = lesson.figure(5.8, 4.6)
     decision_boundary(lambda G: learned.forward(G), X_fit, y_fit, ax=ax, steps=180, title="Our trained neuron")
     lesson.show(fig)
