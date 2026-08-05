@@ -203,3 +203,40 @@ def test_q_is_followed_by_u():
     likeliest = vocab.itos[int(np.argmax(after_q))]
 
     assert likeliest == "u", f"chapter 22 promises q leads to u; the data says {likeliest!r}"
+
+
+# ---------------------------------------------------------------------------
+# Samples shown to the reader must show more than one answer
+# ---------------------------------------------------------------------------
+#
+# A table of five examples that are all the same class looks fine, runs fine, and teaches
+# the reader nothing — there is no contrast to notice. This bit us three times: chapter 00
+# dealt six all-negative creatures, chapters 02 and 12 took the first five dogs (all
+# puppies), and chapter 09 opened the penguin data with eight Adelie in a row.
+
+
+def test_the_by_hand_dogs_include_both_answers():
+    """Chapters 02 and 12 walk through five of the ten dogs by hand."""
+    from kidsml.datasets import two_blobs_tiny
+
+    _, labels = two_blobs_tiny()
+    rows = [0, 3, 5, 7, 9]  # the selection both chapters use
+
+    shown = labels[rows]
+    assert set(shown.tolist()) == {0, 1}, (
+        "the by-hand dogs are all the same kind, so the score never changes sign and "
+        "there is nothing for the reader to notice"
+    )
+
+
+def test_the_first_look_at_the_penguins_shows_every_species():
+    """Chapter 09 asks the reader to tell three species apart, so all three must appear."""
+    from kidsml.datasets import load_table
+
+    penguins = load_table("penguins")
+    sample = penguins.groupby("species", group_keys=False).head(3)
+
+    assert sample["species"].nunique() == penguins["species"].nunique(), (
+        "the opening sample of the penguin data misses a species — the file is sorted, "
+        "so taking the first rows shows only one"
+    )

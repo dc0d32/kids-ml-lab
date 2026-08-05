@@ -16,6 +16,12 @@ from kidsml.plots import ACCENT, decision_boundary, draw_line, scatter_2d
 lesson.begin(2)
 
 X_tiny, y_tiny = two_blobs_tiny()
+
+# Five dogs to work through by hand: a mix of both answers, and including the one the
+# worked example uses. Taking the first five would have handed the reader five puppies
+# and nothing to compare them against.
+HAND_ROWS = [0, 3, 5, 7, 9]
+
 w_start = np.array([1.0, 1.0])
 b_start = -8.0
 w_bad = np.array([1.0, 1.0])
@@ -48,25 +54,111 @@ flowchart LR
     lesson.look_for("the score machine first, then the sign check that turns a number into a colour.")
 
 
+@lesson.step("Ten dogs at the park", beat="hook")
+def _():
+    lesson.say(
+        """
+Here is the thing we want to decide. Ten dogs, and for each one we wrote down
+two numbers: **how tall** it is in hand-spans, and **how heavy** it is in bags
+of sugar.
+
+Some are puppies. Some are fully grown. Nobody wrote that down — that's the bit
+we want the line to work out.
+"""
+    )
+
+    table = {
+        "how tall (x1)": X_tiny[:, 0],
+        "how heavy (x2)": X_tiny[:, 1],
+        "really a": np.where(y_tiny == 1, "grown dog", "puppy"),
+    }
+    st.dataframe(table, hide_index=True, width="content")
+
+    lesson.say(
+        """
+Notice what changed since Chapter 1. There, each thing had **one** number — the
+weeks you'd been saving — so the data sat on a number line. Now each dog has
+**two** numbers, so every dog is a dot on a **map**.
+
+That's the whole reason this chapter needs a line instead of a threshold. On a
+number line you'd split things with a single point. On a map you split them with
+a line.
+"""
+    )
+
+    fig, ax = lesson.figure(5.4, 4.4)
+    scatter_2d(X_tiny, y_tiny, ax=ax, size=110)
+    ax.set_xlabel("how tall (hand-spans)")
+    ax.set_ylabel("how heavy (bags of sugar)")
+    ax.set_title("Ten dogs, two measurements each")
+    lesson.show(fig)
+
+    lesson.look_for(
+        "the empty gap running diagonally between the two clumps. Puppies are small "
+        "on both measurements, grown dogs are big on both. Any line you draw through "
+        "that gap does the job."
+    )
+
+
+@lesson.step("Guess a line", beat="hook")
+def _():
+    lesson.say(
+        """
+So let's guess one. The simplest idea in the world: **add the two numbers
+together, and if the total is more than 8, call it a grown dog.**
+
+Written the way the model writes it, that is:
+
+**score = 1·x1 + 1·x2 − 8**
+
+The two **1**s say how much each measurement counts — here, equally. The **−8**
+is where we set the bar. Score above zero means the total beat 8.
+"""
+    )
+
+    fig, ax = lesson.figure(5.4, 4.4)
+    scatter_2d(X_tiny, y_tiny, ax=ax, size=110)
+    ax.set_xlabel("how tall (hand-spans)")
+    ax.set_ylabel("how heavy (bags of sugar)")
+    draw_line(w_start[0], w_start[1], b_start, ax=ax, label="x1 + x2 = 8")
+    ax.legend(loc="lower left", fontsize=9)
+    ax.set_title("Our guess, drawn on the map")
+    lesson.show(fig)
+
+    lesson.look_for("that the guessed line lands in the gap. We picked those three numbers by eye — the rest of the chapter is about getting a machine to pick them instead.")
+
+    lesson.jargon(
+        "weights and bias",
+        "The two multipliers are the <b>weights</b>, and the number on the end is the "
+        "<b>bias</b>. Same pair you met in Chapter 1, doing the same jobs — the weights "
+        "set the tilt, the bias slides it.",
+    )
+
+
 @lesson.step("Five scores by hand", beat="byhand")
 def _():
     lesson.say(
         """
-Try this score rule on five points: **score = 1·x1 + 1·x2 - 8**.
-Positive score means red. Negative score means blue. For point **(6, 5)** the
-arithmetic is **1(6) + 1(5) - 8 = 3**, so the guess is red.
+Time to check the guess. Run **score = 1·x1 + 1·x2 − 8** on the first five dogs
+and see whether the sign matches the truth.
+
+Take the dog at **(6, 5)**: **1(6) + 1(5) − 8 = 3**. Positive, so the line calls
+it a grown dog.
 """
     )
-    scores = score_line(X_tiny[:5], w_start[0], w_start[1], b_start)
+    scores = score_line(X_tiny[HAND_ROWS], w_start[0], w_start[1], b_start)
     hand = {
-        "x1": X_tiny[:5, 0],
-        "x2": X_tiny[:5, 1],
-        "score = x1 + x2 - 8": scores,
-        "guess": np.where(scores > 0, "red", "blue"),
-        "truth": np.where(y_tiny[:5] == 1, "red", "blue"),
+        "how tall (x1)": X_tiny[HAND_ROWS, 0],
+        "how heavy (x2)": X_tiny[HAND_ROWS, 1],
+        "score = x1 + x2 − 8": scores,
+        "line says": np.where(scores > 0, "grown dog", "puppy"),
+        "really a": np.where(y_tiny[HAND_ROWS] == 1, "grown dog", "puppy"),
     }
-    st.dataframe(hand, hide_index=True, width="stretch")
-    lesson.look_for("the sign of the score. Positive and negative are the whole decision.")
+    st.dataframe(hand, hide_index=True, width="content")
+    lesson.look_for(
+        "the sign of the score, and nothing else about it. A score of 3 and a score of "
+        "300 make the same decision. All the line does is tell you which side you are on."
+    )
 
 
 @lesson.step("One pencil update", beat="byhand")

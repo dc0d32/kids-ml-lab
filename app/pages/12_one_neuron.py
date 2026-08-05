@@ -89,12 +89,25 @@ def _():
 one side, a negative score lands on the other, and zero is the fence.
 """
     )
-    X_tiny, _ = two_blobs_tiny()
+    X_tiny, y_tiny = two_blobs_tiny()
+    # A mix of both answers. The first five rows are all the same class, so the score
+    # would never change sign and the fence would be invisible.
+    rows = [0, 3, 5, 7, 9]
     neuron = Neuron(w=np.array([1.0, 1.0]), b=-7.0, activation="sigmoid")
-    raw = neuron.raw(X_tiny[:5])
+    raw = neuron.raw(X_tiny[rows])
     st.code("Neuron(w=[1, 1], b=-7).raw(X)   # x1 + x2 - 7", language="python")
-    st.dataframe(pd.DataFrame({"x1": X_tiny[:5, 0], "x2": X_tiny[:5, 1], "raw z": raw}), hide_index=True)
-    lesson.look_for("raw scores near zero. Those points are near the fence.")
+    st.dataframe(
+        pd.DataFrame(
+            {
+                "x1": X_tiny[rows, 0],
+                "x2": X_tiny[rows, 1],
+                "raw z": raw,
+                "side": np.where(raw > 0, "positive", "negative"),
+            }
+        ),
+        hide_index=True,
+    )
+    lesson.look_for("where the sign flips as you read down. Somewhere between those two rows sits the fence, and the score nearest zero is the point standing closest to it.")
 
 
 @lesson.step("Move the neuron sliders", beat="play")

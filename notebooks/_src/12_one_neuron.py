@@ -98,7 +98,10 @@ workbook.render(12)
 # %%
 X_tiny, y_tiny = two_blobs_tiny()
 neuron = Neuron(w=np.array([1.0, 1.0]), b=-7.0, activation='sigmoid')
-pd.DataFrame({'x1': X_tiny[:5, 0], 'x2': X_tiny[:5, 1], 'raw z': neuron.raw(X_tiny[:5])})
+# A mix of both answers. The first five rows are all one class, so the score would
+# never change sign and the fence would be invisible.
+rows = [0, 3, 5, 7, 9]
+pd.DataFrame({'x1': X_tiny[rows, 0], 'x2': X_tiny[rows, 1], 'raw z': neuron.raw(X_tiny[rows])})
 
 # %% [markdown]
 # The raw numbers are not probabilities yet. They are signed distances from the line

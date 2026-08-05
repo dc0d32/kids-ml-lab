@@ -60,9 +60,12 @@ cabinet full of drawers, not one neat graph.
     )
 
     penguins = datasets.load_table("penguins")
-    st.dataframe(penguins.head(8), hide_index=True, width="stretch")
+    # Take a few of each species rather than the first eight rows. The file is sorted by
+    # species, so head(8) is eight Adelie — a misleading first look at a three-way problem.
+    sample = penguins.groupby("species", group_keys=False).head(3)
+    st.dataframe(sample, hide_index=True, width="stretch")
     st.caption(f"penguins has {len(penguins)} rows and {len(penguins.columns)} columns. Flatland has failed the a full audit, no cap.")
-    lesson.look_for("word columns, number columns, and blank-looking cells. Real tables are mixed.")
+    lesson.look_for("word columns, number columns, and blank-looking cells — and three different species, which is what we are being asked to tell apart.")
     lesson.kid_corner(
         "Imagine sorting a huge box of trading cards. You cannot hold every card in the air at once. "
         "You look at one clue at a time: colour, power, height, team, missing sticker."

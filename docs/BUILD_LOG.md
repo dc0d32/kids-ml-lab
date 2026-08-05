@@ -339,3 +339,46 @@ Also fixed: the empty radio label in `lesson.predict` that Streamlit warns about
 accessibility.
 
 **495 tests pass in 188s.**
+
+---
+
+## 2026-08-05 — Chapter 02 had a hole between its first two screens
+
+Owner's report: *"in 'lines that decide', between start here and work it out, we're
+missing context."* Correct, and there were three separate gaps stacked on top of each
+other:
+
+1. **The data had no meaning.** Ten bare coordinates appeared in a table. No story, no
+   picture, nothing to say what x1 and x2 *were*.
+2. **Two features arrived unannounced.** Chapter 01 had a single input (weeks saved).
+   Chapter 02 silently switched to two, which is precisely the change that makes a *line*
+   necessary instead of a threshold — and it went unmentioned.
+3. **The candidate line fell out of the sky.** `score = 1·x1 + 1·x2 − 8` was handed over
+   with no account of where those three numbers came from.
+
+Two screens now sit in the gap. **Ten dogs at the park** gives the data a story (how tall
+in hand-spans, how heavy in bags of sugar; puppies versus grown dogs), plots it, and says
+out loud that one number per thing puts you on a number line while two puts you on a map —
+which is why we need a line. **Guess a line** then derives the score rule from an idea a
+kid would actually have ("add them up, and if the total beats 8 call it a grown dog"),
+draws it on the map, and admits we picked the numbers by eye — which is what sets up the
+rest of the chapter.
+
+### And the same bug as chapter 00, twice more
+
+Looking at the by-hand table revealed it was slicing `X_tiny[:5]` — and the data is
+ordered, so those five rows are **all puppies**. The worked example, the dog at (6, 5),
+wasn't even in the table. An audit for the pattern found two more:
+
+- **chapter 12** used the same `[:5]` slice, so the neuron's score never changed sign and
+  the fence it was meant to demonstrate was invisible
+- **chapter 09** opened the penguin data with `head(8)`, and the file is sorted by
+  species, so the reader's first look at a three-species problem was eight Adelie
+
+All three now take a deliberate mix, and `tests/test_teaching.py` guards it.
+
+The general lesson, now stated twice in this log because it keeps costing us: **taking the
+first N rows of ordered data is a bug in a teaching artefact even when it is not a bug in
+the code.** Anything shown to a reader as evidence needs both answers in it.
+
+**501 tests pass.**

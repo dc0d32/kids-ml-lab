@@ -50,7 +50,9 @@ use_house_style()
 
 # %%
 penguins = datasets.load_table("penguins")
-penguins.head(8)
+# The file is sorted by species, so head(8) would be eight Adelie — a misleading
+# first look at a three-way problem. Take a few of each instead.
+penguins.groupby("species", group_keys=False).head(3)
 
 # %%
 print("rows:", len(penguins))

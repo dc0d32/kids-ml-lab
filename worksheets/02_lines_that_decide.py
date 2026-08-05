@@ -4,15 +4,17 @@ import pandas as pd
 
 from kidsml.workbook import Question, Workbook
 
+# Five of the ten dogs from the chapter — a mix of both answers, so counting them
+# actually tells you something. Five puppies in a row would not.
 TINY_POINTS = pd.DataFrame(
     [
-        [1, 1, "blue"],
-        [2, 1, "blue"],
-        [1, 2, "blue"],
-        [2, 3, "blue"],
-        [3, 2, "blue"],
+        [1, 1, "puppy"],
+        [2, 3, "puppy"],
+        [6, 5, "grown dog"],
+        [8, 6, "grown dog"],
+        [7, 8, "grown dog"],
     ],
-    columns=["x1", "x2", "truth"],
+    columns=["how tall (x1)", "how heavy (x2)", "really a"],
 )
 
 BIAS_POINTS = pd.DataFrame(
@@ -29,23 +31,27 @@ WORKBOOK = Workbook(
     chapter=2,
     title="Workbook · Let a line choose sides",
     intro=(
-        "A perceptron makes a raw score first. Then it uses the sign: positive means red, "
-        "negative means blue."
+        "Ten dogs, measured two ways: how tall in hand-spans, how heavy in bags of sugar. "
+        "The line scores each dog, then reads the sign — positive means grown dog, "
+        "negative means puppy."
     ),
     questions=[
         Question(
             prompt=(
-                "Use **score = x1 + x2 - 8**. For these five points, how many scores are positive, "
-                "so the line guesses **red**?"
+                "Use **score = x1 + x2 − 8**. For these five dogs, how many scores come out "
+                "positive — that is, how many does the line call a **grown dog**?"
             ),
             kind="number",
-            answer=0,
+            answer=3,
             tolerance=0.01,
             table=TINY_POINTS,
-            hint="Compute x1 + x2 - 8 for each row. Positive means red.",
+            hint="Work out x1 + x2 − 8 for each row. Positive means grown dog.",
             why=(
-                "The scores are -6, -5, -5, -3, and -3. All are negative, so every guess is blue. "
-                "That is the perceptron rhythm: coordinates funnel into one score, then the sign snaps into a class."
+                "The scores are −6, −3, +3, +6 and +7, so three come out positive — and those "
+                "three are exactly the grown dogs. This one guessed line got all five right.\n\n"
+                "That is the whole perceptron rhythm: two coordinates funnel into one score, "
+                "then the sign snaps that score into an answer. Notice the size of the score "
+                "does no work at all. +3 and +7 mean the same thing."
             ),
         ),
         Question(
@@ -55,22 +61,22 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             hint="Use w1×x1 + w2×x2 + b = 1×6 + 1×5 - 20.",
             why=(
-                "The score is **1(6) + 1(5) - 20 = -9**. It is negative, so this bad line drops a red point "
-                "on the blue side. That wrong sign is the alarm bell for training."
+                "The score is **1(6) + 1(5) − 20 = −9**. Negative, so this bad line files a grown dog "
+                "under puppy. That wrong sign is the alarm bell that starts training."
             ),
         ),
         Question(
-            prompt="Point **(6, 5)** is really red. With score -9, what did the bad line guess?",
+            prompt="The dog at **(6, 5)** is really a grown dog. With a score of −9, what did the bad line guess?",
             kind="choice",
-            choices=["red", "blue"],
-            answer="blue",
+            choices=["grown dog", "puppy"],
+            answer="puppy",
             why=(
-                "Negative scores mean blue, so the line guessed blue. The truth is red, so the update has one job: raise "
+                "Negative scores mean puppy, so the line guessed puppy. It is really a grown dog, so the update has one job: raise "
                 "this point's future score."
             ),
         ),
         Question(
-            prompt="Because that red point was missed, add its first coordinate to w1. New **w1** = ?",
+            prompt="Because that grown dog was missed, add its first coordinate to w1. New **w1** = ?",
             kind="number",
             answer=7,
             tolerance=0.01,

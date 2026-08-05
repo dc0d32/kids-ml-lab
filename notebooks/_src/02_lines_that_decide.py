@@ -44,31 +44,99 @@ use_house_style()
 #
 # Read the diagram left to right: the perceptron is a score machine followed by a sign check.
 
+# %% [markdown]
+# ### Ten dogs at the park
+#
+# Here is the thing we want to decide. Ten dogs, and for each one we wrote down two
+# numbers: **how tall** it is in hand-spans, and **how heavy** it is in bags of sugar.
+#
+# Some are puppies. Some are fully grown. Nobody wrote that down — that's the bit we
+# want the line to work out.
+
 # %%
 X_tiny, y_tiny = two_blobs_tiny()
-pd.DataFrame({"x1": X_tiny[:, 0], "x2": X_tiny[:, 1], "answer": np.where(y_tiny, "red", "blue")})
+pd.DataFrame(
+    {
+        "how tall (x1)": X_tiny[:, 0],
+        "how heavy (x2)": X_tiny[:, 1],
+        "really a": np.where(y_tiny == 1, "grown dog", "puppy"),
+    }
+)
 
 # %% [markdown]
-# ## ✏️ Work it out
+# Notice what changed since Chapter 1. There, each thing had **one** number — the weeks
+# you'd been saving — so the data sat on a number line. Now each dog has **two** numbers,
+# so every dog is a dot on a **map**.
 #
-# Try this score rule on five points:
+# That's the whole reason this chapter needs a line instead of a threshold. On a number
+# line you split things with a single point. On a map you split them with a line.
+
+# %%
+fig, ax = plt.subplots(figsize=(5.4, 4.4))
+scatter_2d(X_tiny, y_tiny, ax=ax, size=110)
+ax.set_xlabel("how tall (hand-spans)")
+ax.set_ylabel("how heavy (bags of sugar)")
+ax.set_title("Ten dogs, two measurements each")
+plt.show()
+
+# %% [markdown]
+# **Look for:** the empty gap running diagonally between the two clumps. Puppies are
+# small on both measurements, grown dogs are big on both. Any line through that gap does
+# the job.
 #
-# **score = 1·x1 + 1·x2 - 8**
+# ### Guess a line
 #
-# Positive score means red. Negative score means blue. For point **(6, 5)** the
-# arithmetic would be **1(6) + 1(5) - 8 = 3**, so the guess is red.
+# So let's guess one. The simplest idea in the world: **add the two numbers together, and
+# if the total is more than 8, call it a grown dog.** Written the way the model writes it:
+#
+# **score = 1·x1 + 1·x2 − 8**
+#
+# The two **1**s say how much each measurement counts — here, equally. The **−8** is where
+# we set the bar. Score above zero means the total beat 8.
+#
+# > 📖 **Grown-ups call this:** the two multipliers are the **weights** and the number on
+# > the end is the **bias**. Same pair you met in Chapter 1, doing the same jobs — the
+# > weights set the tilt, the bias slides it.
 
 # %%
 w_start = np.array([1.0, 1.0])
 b_start = -8.0
-scores = score_line(X_tiny[:5], w_start[0], w_start[1], b_start)
+
+fig, ax = plt.subplots(figsize=(5.4, 4.4))
+scatter_2d(X_tiny, y_tiny, ax=ax, size=110)
+ax.set_xlabel("how tall (hand-spans)")
+ax.set_ylabel("how heavy (bags of sugar)")
+draw_line(w_start[0], w_start[1], b_start, ax=ax, label="x1 + x2 = 8")
+ax.legend(loc="lower left", fontsize=9)
+ax.set_title("Our guess, drawn on the map")
+plt.show()
+
+# %% [markdown]
+# We picked those three numbers by eye. The rest of the chapter is about getting a
+# machine to pick them instead.
+
+# %% [markdown]
+# ## ✏️ Work it out
+#
+# Time to check the guess. Run **score = 1·x1 + 1·x2 − 8** on five of the dogs and see
+# whether the sign matches the truth.
+#
+# Take the dog at **(6, 5)**: **1(6) + 1(5) − 8 = 3**. Positive, so the line calls it a
+# grown dog.
+
+# %%
+# A mix of both answers, including the dog the worked example uses. The first five rows
+# would all have been puppies, leaving nothing to compare against.
+hand_rows = [0, 3, 5, 7, 9]
+
+scores = score_line(X_tiny[hand_rows], w_start[0], w_start[1], b_start)
 pd.DataFrame(
     {
-        "x1": X_tiny[:5, 0],
-        "x2": X_tiny[:5, 1],
+        "how tall (x1)": X_tiny[hand_rows, 0],
+        "how heavy (x2)": X_tiny[hand_rows, 1],
         "score": scores,
-        "guess": np.where(scores > 0, "red", "blue"),
-        "truth": np.where(y_tiny[:5] == 1, "red", "blue"),
+        "line says": np.where(scores > 0, "grown dog", "puppy"),
+        "really a": np.where(y_tiny[hand_rows] == 1, "grown dog", "puppy"),
     }
 )
 
