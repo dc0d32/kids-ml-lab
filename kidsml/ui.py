@@ -151,13 +151,24 @@ def jargon(term: str, plain: str) -> None:
     )
 
 
+def workbook(number: int) -> None:
+    """Render this chapter's interactive workbook, right here on the page.
+
+    There is no printer in this house, so the "do it by hand" questions live on screen:
+    scrap paper for the working out, then type the answer in and get told why.
+    """
+    from kidsml import workbook as wb
+
+    book = wb.load(number)
+    if book is None:
+        return
+    st.divider()
+    wb.render(number)
+
+
 def worksheet_link(number: int) -> None:
-    """Point at the printable worksheet for this chapter."""
-    slug = chapter_slug(number)
-    st.markdown(
-        f"📄 Printable worksheet: `worksheets/{number:02d}_{slug}.md` "
-        "— grab a pencil before you scroll on."
-    )
+    """Backwards-compatible alias for :func:`workbook`."""
+    workbook(number)
 
 
 # ---------------------------------------------------------------------------

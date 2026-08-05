@@ -27,7 +27,7 @@ Every chapter — all 25 of them — follows the exact same six beats:
 | Beat | What happens |
 |------|--------------|
 | 1. **Hook** 🎣 | A question or a game. Plain English. No math, no code. |
-| 2. **By hand** ✏️ | A worksheet with 3–6 rows of tiny numbers. You solve it with a pencil. |
+| 2. **By hand** ✏️ | 3–6 rows of tiny numbers. You work them out, type your answer in, and find out *why* the question was asked. |
 | 3. **See it** 👀 | A picture or animation of the exact thing you just did by hand. |
 | 4. **Play** 🎛️ | Sliders and buttons. Move one knob, watch the picture change instantly. |
 | 5. **For real** 💻 | 10–25 lines of actual code on actual data. |
@@ -104,9 +104,13 @@ Every chapter — all 25 of them — follows the exact same six beats:
 
 ```
 kidsml/       shared library — one source of truth for data, plots, and math
-notebooks/    one notebook per chapter
+notebooks/    one notebook per chapter (built from notebooks/_src/)
 app/          Streamlit playground, one page per chapter
 data/         small bundled datasets and text corpora
-worksheets/   printable pen-and-paper sheets (+ answer keys for grown-ups)
+worksheets/   interactive workbooks — questions with instant answer-checking
+tools/        dataset preparation and notebook building
 tests/        smoke tests and runtime budgets
+docs/         BUILD_LOG.md — what was built and why
 ```
+
+Working on this repo? Start with [`AGENTS.md`](AGENTS.md).

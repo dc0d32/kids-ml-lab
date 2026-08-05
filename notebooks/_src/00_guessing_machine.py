@@ -53,8 +53,8 @@ pretty(zeeps)
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Below are six creatures I have already sorted. **Cover the rest of this notebook with
-# your hand.** Look only at the table, and work out my rule.
+# Below are six creatures I have already sorted. Look only at the table, and work out
+# my rule. Scrap paper helps.
 
 # %%
 SECRET = "big_square"          # ← don't peek at what this means yet!
@@ -72,16 +72,19 @@ examples["zeep?"] = np.where(labels[shown], "✅ zeep", "❌ not a zeep")
 examples
 
 # %% [markdown]
-# Now, **on paper**, write down your answer for each of these three. Don't scroll yet.
+# Now work through the questions below. Type your answer in each box and press **Check** —
+# you'll find out not just whether you were right, but why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(0)
+
+# %% [markdown]
+# Here are the three creatures the questions asked about, and the real answers.
 
 # %%
 quiz = pretty(zeeps.iloc[hidden])
-quiz
-
-# %% [markdown]
-# Written them down? Good. Here are the real answers.
-
-# %%
 truth = labels[hidden]
 answers = quiz.copy()
 answers["the truth"] = np.where(truth, "zeep", "not a zeep")

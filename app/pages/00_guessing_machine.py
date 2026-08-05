@@ -49,7 +49,7 @@ ui.little_kid_corner(
 )
 
 # ---------------------------------------------------------------------------
-ui.beat("byhand", "Pencil out. Six examples, three questions.")
+ui.beat("byhand", "Scrap paper out. Six examples, then some questions.")
 
 col_a, col_b = st.columns([1, 1], gap="large")
 
