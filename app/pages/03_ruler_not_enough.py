@@ -22,11 +22,12 @@ ui.page_setup(3)
 ui.beat("hook")
 st.markdown(
     """
-Here are Chapter 2's sliders on circles. Try every ruler line you want. The middle and
-the ring refuse to separate.
+Chapter 2 gave us a ruler: one straight line can choose red or blue. Now the line
+runs out of road.
 
-Now make the problem even smaller: XOR has four points and four answers. No line on
-Earth works.
+Try the ruler on circles. The middle wants one answer and the ring wants the
+other. A single line can cut left from right, or top from bottom, but it cannot
+wrap around the middle.
 """
 )
 X_xor, y_xor = xor_exact()
@@ -44,19 +45,31 @@ with col_b:
     draw_line(w1_fail, w2_fail, b_fail, ax=ax)
     ax.set_title("Try to make circles perfect with one line")
     ui.show(fig)
+st.markdown("Notice the best-looking ruler still slices through part of the ring or part of the middle.")
 
+st.markdown(
+    """
+XOR makes the failure tiny enough to prove. It has four points. Opposite corners
+match. If one line cannot solve four dots, then the problem is the shape of the
+boundary, not the amount of data.
+"""
+)
 fig, ax = ui.figure(5, 4.5)
 scatter_2d(X_xor, y_xor, ax=ax, size=120)
 for i, (x1, x2) in enumerate(X_xor):
     ax.text(x1 + 0.03, x2 + 0.03, str(int(y_xor[i])), fontsize=12)
 ax.set_title("XOR: opposite corners match")
 ui.show(fig)
+st.markdown("Look diagonally: the two red points are not neighbors, and the two blue points are not neighbors either.")
 
 # ---------------------------------------------------------------------------
 ui.beat("byhand", "A tiny proof with inequalities.")
 st.markdown(
     """
-For XOR, red means the score must be positive. Blue means negative.
+Assume a perfect line exists. Its score is **w1·x1 + w2·x2 + b**. Red points need
+positive scores; blue points need negative scores.
+
+Here is what each XOR corner demands:
 
 | point | answer | what the line would need |
 |---|---|---|
@@ -64,18 +77,48 @@ For XOR, red means the score must be positive. Blue means negative.
 | (1, 1) | blue | w1 + w2 + b < 0 |
 | (1, 0) | red | w1 + b > 0 |
 | (0, 1) | red | w2 + b > 0 |
+"""
+)
+st.markdown(
+    """
+Now add the two red demands. From **w1 + b > 0** and **w2 + b > 0**, the left
+sides add to **w1 + w2 + 2b**, and two positive things add to something positive:
+**w1 + w2 + 2b > 0**.
 
-Add the two red rows: **w1 + w2 + 2b > 0**.
+Add the two blue demands. From **b < 0** and **w1 + w2 + b < 0**, the same left
+side appears, but now it must be negative: **w1 + w2 + 2b < 0**.
 
-Add the two blue rows: **w1 + w2 + 2b < 0**.
-
-The same number cannot be bigger than zero and smaller than zero. The ruler loses.
+The same number cannot be bigger than zero and smaller than zero. That is why no
+straight line can solve XOR.
 """
 )
 ui.jargon("linearly separable", "A dataset is linearly separable if one straight line can split it perfectly.")
 
 # ---------------------------------------------------------------------------
 ui.beat("seeit", "Escape route 1: invent a better feature.")
+st.markdown(
+    """
+A circle problem is hard in **x1, x2** because "inside or ring?" is really about
+distance from the middle. So we add a new feature:
+
+**x3 = x1² + x2²**
+
+Point **(2, 0)** becomes **x3 = 2² + 0² = 4**. Point **(0.3, 0.4)** becomes
+**0.3² + 0.4² = 0.09 + 0.16 = 0.25**. The ring rises; the middle stays low.
+"""
+)
+ui.mermaid(
+    """
+flowchart LR
+    A[Original x1 and x2] --> B[Add x3 = x1^2 + x2^2]
+    B --> C[Lift into 3D]
+    C --> D[Cut with a flat plane]
+    D --> E[Drop back to 2D]
+    E --> F[Circle boundary]
+""",
+    height=260,
+)
+st.markdown("The diagram says the trick: make height from distance, cut flat, then look back down.")
 X, y = toy_shape("circles", n=220, noise=0.08, seed=1)
 r2 = X[:, 0] ** 2 + X[:, 1] ** 2
 colors = np.where(y == 1, WARM, COOL)
@@ -87,7 +130,13 @@ plane_z = np.full_like(plane_x, 0.55)
 fig3.add_trace(go.Surface(x=plane_x, y=plane_y, z=plane_z, opacity=0.35, showscale=False, colorscale=[[0, ACCENT], [1, ACCENT]]))
 fig3.update_layout(height=520, scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="x1² + x2²"))
 st.plotly_chart(fig3, use_container_width=True)
-st.markdown("We did not get a bendy model. We got a straight model in a cleverer space. From above, that flat slice looks like a circle.")
+st.markdown(
+    """
+Notice that the cut is flat in the lifted picture. The boundary back on the
+floor is curved because the height came from **x1² + x2²**. A flat slice at
+**x3 = 0.55** casts the circle **x1² + x2² = 0.55** below it.
+"""
+)
 
 X3 = np.c_[X_xor, X_xor[:, 0] * X_xor[:, 1]]
 score = X3[:, 0] + X3[:, 1] - 2 * X3[:, 2] - 0.5
@@ -95,10 +144,25 @@ st.dataframe(
     {"x1": X3[:, 0], "x2": X3[:, 1], "x1*x2": X3[:, 2], "new straight score": score, "answer": y_xor},
     hide_index=True,
 )
-st.markdown("XOR has its own escape hatch: add **x3 = x1 × x2**. The score is positive exactly on the red rows.")
+st.markdown(
+    """
+XOR has its own escape hatch: add **x3 = x1 × x2**. For **(1, 1)** the score is
+**1 + 1 - 2(1) - 0.5 = -0.5**, blue. For **(1, 0)** it is
+**1 + 0 - 2(0) - 0.5 = 0.5**, red.
+"""
+)
 
 # ---------------------------------------------------------------------------
 ui.beat("play", "Escape route 2: let the boundary bend.")
+st.markdown(
+    """
+Adding a feature is one way to bend the answer back in the original picture.
+Another way is to use a model that builds bends itself.
+
+A decision tree bends with boxy cuts. A tiny neural net bends smoothly. Both are
+still making regions of red and blue; they are no longer trapped with one ruler.
+"""
+)
 shape = st.selectbox("Shape", ["circles", "xor", "moons"], index=0)
 Xb, yb = toy_shape(shape, n=240, noise=0.15, seed=3)
 tree = DecisionTreeClassifier(max_depth=4, random_state=0).fit(Xb, yb)
@@ -112,10 +176,17 @@ with cols[1]:
     fig, ax = ui.figure(5.3, 4.6)
     decision_boundary(lambda G: mlp.predict_proba(G)[:, 1], Xb, yb, ax=ax, shade_confidence=True, title="A tiny neural net bends smoothly")
     ui.show(fig)
-st.markdown("The next five chapters are five different ways of getting that bend.")
+st.markdown("Look at the two styles of bend: square corners on the left, a smoother curve on the right.")
 
 # ---------------------------------------------------------------------------
 ui.beat("forreal")
+st.markdown(
+    """
+scikit-learn can add polynomial features for us, then fit a straight model in
+that bigger feature space. Degree 1 means no extra bend. Higher degree adds more
+terms, which gives the boundary more ways to curve.
+"""
+)
 degree = st.slider("Polynomial degree", 1, 8, 2)
 cols = st.columns(2)
 for col, real_shape in zip(cols, ["moons", "circles"]):
@@ -125,7 +196,7 @@ for col, real_shape in zip(cols, ["moons", "circles"]):
         fig, ax = ui.figure(5.3, 4.6)
         decision_boundary(lambda G, p=pipe: p.predict_proba(G)[:, 1], Xm, ym, ax=ax, shade_confidence=True, title=f"{real_shape}, degree {degree}")
         ui.show(fig)
-ui.careful("High degree can wiggle so much that it starts memorising dots. That is over-studying.")
+ui.careful("Notice when the curve starts chasing individual dots. That is over-studying, and it becomes a major problem later.")
 
 # ---------------------------------------------------------------------------
 ui.beat("challenge")

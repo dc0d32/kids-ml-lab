@@ -45,7 +45,7 @@ WORKBOOK = Workbook(
             hint="Compute x1 + x2 - 8 for each row. Positive means red.",
             why=(
                 "The scores are -6, -5, -5, -3, and -3. All are negative, so every guess is blue. "
-                "The model makes a number first, then turns the sign into a class."
+                "This is the perceptron rhythm: coordinates become one score, then the sign becomes a class."
             ),
         ),
         Question(
@@ -55,7 +55,8 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             hint="Use w1×x1 + w2×x2 + b = 1×6 + 1×5 - 20.",
             why=(
-                "The score is 6 + 5 - 20 = **-9**. It is negative, so this bad line puts the point on the blue side."
+                "The score is **1(6) + 1(5) - 20 = -9**. It is negative, so this bad line puts a red point "
+                "on the blue side. That wrong sign is what triggers training."
             ),
         ),
         Question(
@@ -64,7 +65,8 @@ WORKBOOK = Workbook(
             choices=["red", "blue"],
             answer="blue",
             why=(
-                "Negative scores mean blue, so the line guessed blue. The truth is red, which triggers one perceptron update."
+                "Negative scores mean blue, so the line guessed blue. The truth is red, so the update must raise "
+                "this point's future score."
             ),
         ),
         Question(
@@ -73,7 +75,10 @@ WORKBOOK = Workbook(
             answer=7,
             tolerance=0.01,
             hint="Old w1 was 1. Add x1 = 6.",
-            why="New w1 is **7**. The update is small enough to do by hand: add the missed red point to the weights.",
+            why=(
+                "New w1 is **1 + 6 = 7**. Adding a missed red point to the weights raises that point's score "
+                "next time, pushing the boundary toward including it on the red side."
+            ),
         ),
         Question(
             prompt="Add the second coordinate to w2. New **w2** = ?",
@@ -81,7 +86,10 @@ WORKBOOK = Workbook(
             answer=6,
             tolerance=0.01,
             hint="Old w2 was 1. Add x2 = 5.",
-            why="New w2 is **6**. Training is a nudge, not magic: the weights move toward the red point.",
+            why=(
+                "New w2 is **1 + 5 = 6**. The update is a nudge in the direction of the missed point, not magic. "
+                "For (6, 5), both weights need to care more about that red region."
+            ),
         ),
         Question(
             prompt="For this missed red point, add 1 to the bias. New **b** = ?",
@@ -89,7 +97,10 @@ WORKBOOK = Workbook(
             answer=-19,
             tolerance=0.01,
             hint="Start at -20 and add 1.",
-            why="New b is **-19**. The bias lets the line slide as the perceptron learns.",
+            why=(
+                "New b is **-20 + 1 = -19**. Bias changes every score by the same amount, so geometrically it "
+                "slides the line without changing which way it faces."
+            ),
         ),
         Question(
             prompt="Can one straight line that must pass through **(0, 0)** separate these red and blue points?",
@@ -99,7 +110,8 @@ WORKBOOK = Workbook(
             table=BIAS_POINTS,
             hint="The blue points sit above the red points, but a line pinned to the origin has very little room to slide between them.",
             why=(
-                "No. The bias **b** lets a line slide. Without it, every line is pinned to (0, 0), and this clean split is impossible."
+                "No. The bias **b** lets a line slide into the gap between piles. Without b, every boundary is "
+                "pinned to (0, 0), so the line can rotate but cannot move into the clean space between these rows."
             ),
         ),
         Question(
@@ -107,7 +119,8 @@ WORKBOOK = Workbook(
             kind="open",
             hint="Ask whether a perfect straight divider exists.",
             why=(
-                "It may keep changing because perfection is impossible. That is an honest limit of the perceptron, not a coding bug."
+                "It may keep changing because perfection is impossible. One update fixes one mistake, but with overlap "
+                "that fix can create another mistake somewhere else. That is a limit of the model, not a coding bug."
             ),
         ),
     ],

@@ -26,11 +26,14 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# The chapter-2 line says red or blue and never wavers.
+# Chapter 3 showed why a hard line sometimes needs help: some boundaries must
+# bend. But even when a straight boundary is good enough, Chapter 2's perceptron
+# has another problem.
 #
-# But a point sitting right on the line should say: **honestly, I have no idea**.
+# It says red or blue and never wavers. A point sitting on the boundary should not
+# sound certain. It should say: **honestly, I have no idea**.
 #
-# How do we make a model admit that?
+# This chapter keeps the line score, then turns it into confidence.
 #
 # > 📖 **Grown-ups call this:** **logistic regression** — a straight-line score followed
 # > by an S-curve that turns it into a probability.
@@ -38,11 +41,12 @@ use_house_style()
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Compute or look up the S-curve for these seven values.
+# Start with the same raw line score **z**. Positive should lean red. Negative
+# should lean blue. A score near 0 should mean a shrug.
 #
-# **sigmoid(z) = 1 / (1 + e^-z)**
-#
-# Hint: at z = 0, e⁰ = 1, so sigmoid(0) = 1/2 exactly.
+# The S-curve we use is **sigmoid(z) = 1 / (1 + e^-z)**. At **z = 0**, the
+# arithmetic is **1 / (1 + e⁰) = 1 / (1 + 1) = 0.5**, so the boundary becomes the
+# 50/50 place.
 
 # %%
 z = np.array([-4, -2, -1, 0, 1, 2, 4], dtype=float)
@@ -50,7 +54,25 @@ p = sigmoid(z)
 pd.DataFrame({"z": z, "sigmoid(z)": np.round(p, 3)})
 
 # %% [markdown]
-# Look at those seven points and join them in your head. You have drawn the S-curve.
+# Why this S-shape and not any other? It has the habits we need: every output is
+# between 0 and 1, 0 turns into exactly 0.5, and opposite scores balance out. For
+# example, **sigmoid(2) ≈ 0.88** and **sigmoid(-2) ≈ 0.12**.
+#
+# It also has a training-friendly meaning: adding 1 to the score multiplies the
+# red-vs-blue odds by the same amount each time. That steady rule is why this
+# particular S-curve shows up everywhere.
+#
+# ```mermaid
+# flowchart LR
+#     A[Point features] --> B[Raw score z]
+#     B --> C[Sigmoid S-curve]
+#     C --> D[Probability]
+#     D --> E{p >= 0.5?}
+#     E -->|yes| F[red]
+#     E -->|no| G[blue]
+# ```
+#
+# Notice where the threshold sits: p = 0.5 happens exactly when the raw score z is 0.
 
 # %% [markdown]
 # Now work through the interactive workbook. Type your answer in each box and press
@@ -64,8 +86,9 @@ workbook.render(4)
 # %% [markdown]
 # ## 👀 See It
 #
-# The slider in the app changes `w`. Here, change `w` in code. Large `w` makes a cliff.
-# Small `w` makes a shrug.
+# The slider in the app changes `w`. Here, change `w` in code. Large `w` makes the
+# S-curve look like Chapter 2's hard step. Small `w` makes a model that shrugs for
+# almost every score.
 
 # %%
 w = 1.0
@@ -80,12 +103,17 @@ ax.set_title("The S-curve")
 plt.show()
 
 # %% [markdown]
-# Chapter 2 is what happens when this curve becomes a near-vertical cliff.
+# Look at the dashed 0.5 line. Scores near zero land near that line, which is the
+# shrug zone.
 
 # %% [markdown]
 # ## 🎛️ Play With It
 #
-# The boundary is still a straight line. The confidence around it is new.
+# The probability is curved, but the decision boundary stays straight. Why? The
+# model says red when **p ≥ 0.5**, and sigmoid reaches 0.5 exactly at **z = 0**.
+#
+# The set of points with **z = w1·x1 + w2·x2 + b = 0** is the same straight line as
+# before. The new thing is the fade of confidence around it.
 
 # %%
 X, y = toy_shape("blobs", n=220, noise=0.28, seed=6)
@@ -100,7 +128,14 @@ ax.set_title("The fade is uncertainty")
 plt.show()
 
 # %% [markdown]
-# Confidence is a promise. A wrong 99% promise gets punished hard.
+# Notice that the black boundary is perfectly straight, even though the shading
+# changes smoothly. For a concrete score, use **w1 = 2**, **w2 = -1**, **b = 0.5**,
+# and point **(1, 3)**:
+#
+# **z = 2(1) + (-1)(3) + 0.5 = -0.5**, so **sigmoid(-0.5) ≈ 0.38**. That means
+# "38% red," not a hard no.
+#
+# Confidence is a promise. The table below shows how expensive broken promises get.
 
 # %%
 rows = []
@@ -109,9 +144,21 @@ for pred, truth in [(0.9, 1), (0.6, 1), (0.1, 1), (0.99, 0), (0.5, 0)]:
 pd.DataFrame(rows)
 
 # %% [markdown]
+# If the truth is red, predicting **0.6** gives penalty about **-log(0.6) = 0.51**.
+# Predicting **0.1** gives **-log(0.1) = 2.30**.
+#
+# If the truth is blue and the model says **0.99 red**, the true class only got
+# probability **0.01**, so the penalty is **-log(0.01) = 4.61**. Being unsure and
+# wrong is forgivable. Being certain and wrong is expensive.
+
+# %% [markdown]
 # ## 💻 For Real
 #
-# Predict whether a penguin is a Gentoo from two measurements: flipper length and weight.
+# Now use real penguins. The model sees flipper length and weight, then estimates
+# how likely each penguin is to be Gentoo.
+#
+# The circled penguin is the closest to 50/50. That is not failure; it is useful
+# honesty about a hard call.
 
 # %%
 penguins = load_table("penguins").dropna(subset=["species", "flipper_length_mm", "weight_g"]).copy()
@@ -148,7 +195,7 @@ sample
 # 3. **Find the shrug zone.** Move a point near the boundary and watch the probability
 #    approach 50%.
 # 4. 🧸 **Little Kid Corner:** Stand near one side of a room and say "probably red team."
-#    Stand on the middle tape line and say "I don't know." That middle shrug is the idea.
+#    Stand on the middle tape line and say "I do not know." That middle shrug is the idea.
 #
 # ---
 # **Next up:** Chapter 05 · *Twenty Questions* — where a model asks its way to an answer.

@@ -25,12 +25,24 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# Chapter 1's line answered **how much?**
+# Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
 #
-# Now the line answers **which one?** One side is blue. The other side is red.
+# Same line, new question: **which side?** A point on one side becomes blue. A
+# point on the other side becomes red. The model still computes a number first,
+# but now the sign of that number makes the decision.
 #
 # > 📖 **Grown-ups call this:** a **perceptron** — an old-school model that decides which
 # > side of a line a point is on.
+#
+# ```mermaid
+# flowchart LR
+#     A[Point x1 and x2] --> B[Weighted sum z]
+#     B --> C{z > 0?}
+#     C -->|yes| D[red]
+#     C -->|no| E[blue]
+# ```
+#
+# Read the diagram left to right: the perceptron is a score machine followed by a sign check.
 
 # %%
 X_tiny, y_tiny = two_blobs_tiny()
@@ -39,11 +51,12 @@ pd.DataFrame({"x1": X_tiny[:, 0], "x2": X_tiny[:, 1], "answer": np.where(y_tiny,
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Try the line:
+# Try this score rule on five points:
 #
 # **score = 1·x1 + 1·x2 - 8**
 #
-# Positive score means red. Negative score means blue.
+# Positive score means red. Negative score means blue. For point **(6, 5)** the
+# arithmetic would be **1(6) + 1(5) - 8 = 3**, so the guess is red.
 
 # %%
 w_start = np.array([1.0, 1.0])
@@ -60,12 +73,11 @@ pd.DataFrame(
 )
 
 # %% [markdown]
-# Now train once by hand. Use a line that gets the red point `(6, 5)` wrong:
+# Now make the line too strict: **w = (1, 1), b = -20**. The same red point gets
+# **1(6) + 1(5) - 20 = -9**, so the model guesses blue.
 #
-# **w = (1, 1), b = -20**
-#
-# The score is `6 + 5 - 20 = -9`, so it guesses blue. The truth is red. The perceptron
-# rule says: add the point to the weights, and add 1 to the bias.
+# When a red point is missed, the perceptron adds the point's coordinates to the
+# weights and adds 1 to **b**.
 
 # %%
 w_bad = np.array([1.0, 1.0])
@@ -74,6 +86,13 @@ w_after, b_after, was_wrong = perceptron_step(w_bad, b_bad, X_tiny[5], y_tiny[5]
 print("wrong?", was_wrong)
 print("new w:", w_after)
 print("new b:", b_after)
+
+# %% [markdown]
+# Why does adding the point help? The score for that same point jumps from **-9**
+# to **7(6) + 6(5) - 19 = 53**. The point is now strongly on the red side.
+#
+# Changing **b** is different from changing **w**. It adds the same amount to every
+# point's score, so the boundary slides without turning.
 
 # %% [markdown]
 # Now work through the interactive workbook. Type your answer in each box and press
@@ -85,12 +104,9 @@ from kidsml import workbook
 workbook.render(2)
 
 # %% [markdown]
-# You trained a model by hand.
-
-# %% [markdown]
 # ## 👀 See It
 #
-# The circled point caused the update. Watch the line move.
+# The circled red point caused the update. Watch how one correction changes the boundary.
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(10, 4.4))
@@ -103,6 +119,10 @@ for ax, w_now, b_now, title in [
     draw_line(w_now[0], w_now[1], b_now, ax=ax)
     ax.set_title(title)
 plt.show()
+
+# %% [markdown]
+# Notice that the line did not learn a whole rule in one step. It made one wrong
+# point less wrong.
 
 # %%
 hist = perceptron_history(X_tiny, y_tiny, w=(0, 0), b=0, steps=12)
@@ -118,10 +138,18 @@ ax.set_title(f"Step {step}: {int(row.mistakes)} mistake(s)")
 plt.show()
 
 # %% [markdown]
+# Follow the mistake count. Training stops only when a straight line can make every
+# point happy.
+
+# %% [markdown]
 # ## 🎛️ Play With It
 #
-# Change `w1`, `w2`, and `b`. The `w` arrow points toward red. The bias `b` slides the
-# line without turning it.
+# The boundary is the place where **w1·x1 + w2·x2 + b = 0**. The **w** arrow sticks
+# straight out from that line.
+#
+# Why perpendicular? If you walk along the boundary, the score must stay 0. Moving
+# in the **w** direction changes the score fastest, so **w** cannot point along the
+# line. It points across the line, toward red.
 
 # %%
 X, y = toy_shape("blobs", n=180, noise=0.25, seed=2)
@@ -137,13 +165,23 @@ ax.set_title("w points toward red")
 plt.show()
 
 # %% [markdown]
+# Move `b` and the line glides in parallel. Move `w1` or `w2` and the line rotates.
+
+# %% [markdown]
 # ## 💻 For Real
 #
-# scikit-learn has a Perceptron too.
+# scikit-learn has a Perceptron too. On clean blobs, a straight separator exists,
+# so the model can settle.
 
 # %%
 model = Perceptron(max_iter=1000, random_state=0).fit(X, y)
 print("blobs score:", model.score(X, y))
+
+# %% [markdown]
+# Now look at shapes where the ruler is in trouble. A perceptron keeps fixing the
+# first mistake it sees. If the data overlaps, or if the correct boundary must
+# bend, one fix can undo an earlier fix. Then the weights keep moving because zero
+# mistakes is not available.
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
@@ -154,7 +192,8 @@ for ax, shape in zip(axes, ["moons", "circles"]):
 plt.show()
 
 # %% [markdown]
-# Circles fail because a line cannot wrap around the middle. That cliffhanger matters.
+# Notice the leftover mistakes. The algorithm is not lazy; one straight line has
+# run out of road.
 
 # %% [markdown]
 # ## 🏆 Challenge

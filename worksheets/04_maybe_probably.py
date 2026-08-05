@@ -32,7 +32,10 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             table=Z_VALUES,
             hint="At z = 0, the bottom is 1 + 1.",
-            why="sigmoid(0) = 1 / (1 + 1) = **0.5**. Right on the decision line, the honest answer is 50/50.",
+            why=(
+                "sigmoid(0) = **1 / (1 + 1) = 0.5**. That matters because z = 0 is the decision line, "
+                "so the model is exactly 50/50 on the boundary."
+            ),
         ),
         Question(
             prompt="Rounded to two decimals, what is **sigmoid(2)**?",
@@ -41,13 +44,19 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             table=Z_VALUES,
             hint="The notebook table rounds sigmoid(2) to 0.881.",
-            why="sigmoid(2) is about **0.88**. Positive scores become probabilities above 0.5, but they do not become 1 right away.",
+            why=(
+                "sigmoid(2) is about **0.88**. Positive scores become probabilities above 0.5, but they do not jump "
+                "straight to 1. The curve leaves room for uncertainty."
+            ),
         ),
         Question(
             prompt="If you plot the seven sigmoid points, what letter shape does the curve look like?",
             kind="text",
             answer=["s", "an s", "s curve", "s-curve", "the letter s"],
-            why="It looks like an **S**. Students draw the squish before naming it, so the name has somewhere to land.",
+            why=(
+                "It looks like an **S**: flat near 0, steep in the middle, and flat near 1. That shape turns any raw "
+                "score into maybe, probably, or almost certain."
+            ),
         ),
         Question(
             prompt="If the model says **90% red** and the truth is red, how should the penalty feel?",
@@ -55,28 +64,38 @@ WORKBOOK = Workbook(
             choices=["small", "medium", "huge"],
             answer="small",
             table=PENALTIES,
-            why="A confident correct answer should have a small penalty. The promise was strong, and it came true.",
+            why=(
+                "A confident correct answer should have a small penalty. The model gave high probability to the true "
+                "answer, so training should not push hard against that choice."
+            ),
         ),
         Question(
             prompt="If the model says **10% red** and the truth is red, how should the penalty feel?",
             kind="choice",
             choices=["small", "medium", "huge"],
             answer="huge",
-            why="Saying 10% red means the model was 90% sure of blue. Being that confident and wrong should hurt a lot.",
+            why=(
+                "Saying 10% red means the model was 90% sure of blue. Since the truth was red, the model was not merely "
+                "wrong; it was confidently wrong, so the penalty should be huge."
+            ),
         ),
         Question(
             prompt="If the model says **99% red** and the truth is blue, how should the penalty feel?",
             kind="choice",
             choices=["small", "medium", "huge"],
             answer="huge",
-            why="A wrong 99% promise is the loudest kind of mistake. Log loss punishes confident wrong answers because confidence is a promise.",
+            why=(
+                "A wrong 99% promise gives the true class only 1% probability. Log loss treats that as a serious broken "
+                "promise, so the model learns to save near-certainty for safer cases."
+            ),
         ),
         Question(
             prompt="Why should 99% and wrong hurt so much?",
             kind="open",
             hint="Imagine someone saying, 'I am almost certain,' and then being wrong.",
             why=(
-                "Because the model did not merely choose the wrong class; it claimed near certainty. The penalty teaches the model to save high confidence for cases it can truly support."
+                "Because the model did not merely choose the wrong class; it claimed near certainty. A 50/50 wrong answer "
+                "says, 'I was unsure.' A 99% wrong answer says, 'Trust me,' and then breaks that trust."
             ),
         ),
         Question(
@@ -84,13 +103,19 @@ WORKBOOK = Workbook(
             kind="choice",
             choices=["yes", "no"],
             answer="no",
-            why="No. The boundary is still straight. The new idea is the fade of confidence around that line.",
+            why=(
+                "No. The boundary is still the line where **z = 0**, because sigmoid(z) equals 0.5 there. The new idea "
+                "is the smooth fade of probability around that straight line."
+            ),
         ),
         Question(
             prompt="Compared with the perceptron, what new thing does logistic regression give you?",
             kind="text",
             answer=["confidence", "probability", "probabilities", "a probability", "uncertainty", "a fade", "maybe/probably/definitely"],
-            why="It gives **probability**: maybe, probably, definitely. A hard yes/no line turns into a line with a shrug zone around it.",
+            why=(
+                "It gives **probability**: maybe, probably, definitely. A hard yes/no line turns into a line with a "
+                "shrug zone, so you can tell the difference between barely red and very red."
+            ),
         ),
     ],
     kid_corner=(

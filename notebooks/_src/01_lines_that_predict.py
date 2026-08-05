@@ -25,12 +25,15 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# If you saved for **20 weeks**, how much money would be in your piggy bank?
+# Chapter 0 showed the whole course in one sentence: learn a rule from examples.
+# This time the answer is not **zeep** or **not zeep**. The answer is a number.
 #
-# You already know how to answer. Draw a line through the dots and read the height at
+# If you saved for **20 weeks**, how much money would be in your piggy bank? You
+# already have a plan: put a line near the dots, then read the line's height at
 # week 20.
 #
-# Congratulations. That line is a model. It turns a week number into a dollar guess.
+# That line is a model. It is a tiny machine: feed in a week number, get out a
+# dollar prediction.
 #
 # > 📖 **Grown-ups call this:** **linear regression** — a line used to predict a number.
 
@@ -41,11 +44,12 @@ pd.DataFrame({"weeks saved": weeks, "dollars": dollars})
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Try this candidate line on four rounded rows:
+# Try the line **dollars = 3 × weeks + 5** on four rounded rows. For week 3, the
+# prediction is **3 × 3 + 5 = 14** dollars. The rounded real amount is 15 dollars,
+# so the mistake is **15 - 14 = 1**.
 #
-# **dollars = 3 × weeks + 5**
-#
-# For each row, write the prediction, the mistake, and the squared mistake.
+# One mistake is not enough to judge the line. We need one score for all four rows,
+# so we square each mistake and add the squares.
 
 # %%
 hand_y = np.round(dollars[:4])
@@ -65,16 +69,20 @@ from kidsml import workbook
 workbook.render(1)
 
 # %% [markdown]
-# Squaring does two jobs.
+# Why square instead of adding the raw mistakes? First, signs can hide errors:
+# **+2 + (-2) = 0**, even though the line missed twice. Squaring says
+# **2² + (-2)² = 4 + 4 = 8**, so both misses count.
 #
-# - A +2 mistake and a -2 mistake both count as bad.
-# - Big mistakes hurt much more than small ones.
+# Second, big mistakes get louder. A miss of 8 becomes **8² = 64**. A miss of 2
+# becomes **2² = 4**. The first miss is four times as far away, but it costs
+# sixteen times as much. That pressure pulls the best line away from giant misses.
 
 # %% [markdown]
 # ## 👀 See It
 #
-# The squared mistake is the **area** of the square. It is not a mystery word. It is a
-# square on the graph.
+# The squared mistake is not a mystery word. On the graph, it is a real square.
+# A taller miss makes a taller square, and the area of that square is the number
+# in the table.
 
 # %%
 fig, ax = plt.subplots(figsize=(7, 4.6))
@@ -85,10 +93,18 @@ ax.set_title("Squared error means square area")
 plt.show()
 
 # %% [markdown]
+# Look at the red boxes: one small vertical miss makes a tiny area, while one tall
+# miss would make a huge area.
+
+# %% [markdown]
 # ## 🎛️ Play With It
 #
-# Change `w` and `b`. The first plot shows your line. The second plot shows where your
-# line sits on the error hill.
+# A line has two knobs. **w** is dollars per week, so it tilts the line. **b** is
+# the starting height, so it slides the line up or down.
+#
+# Every pair of knob settings gets its own average squared mistake. If we draw all
+# those scores as a map, the good settings form a low valley. Nearby lines make
+# nearby predictions, so the score changes smoothly instead of jumping around.
 
 # %%
 w = 3.0
@@ -110,8 +126,12 @@ axes[1].set_title("You are here on the hill")
 plt.show()
 
 # %% [markdown]
-# Now let the computer walk downhill. The gradient means: which way is downhill, and how
-# steep is it?
+# Notice the valley shape on the right. Many terrible lines live up on the walls,
+# and the best line sits near the low floor.
+#
+# A **gradient** is an arrow made from slopes. It says, "if you nudge **w** this
+# way and **b** that way, the loss rises fastest." To learn, the computer walks the
+# opposite way: downhill.
 
 # %%
 path = gradient_descent_line(weeks, dollars, w=0, b=0, lr=0.01, steps=90)
@@ -126,8 +146,23 @@ ax.set_title("Gradient descent walks down the valley")
 plt.show()
 
 # %% [markdown]
-# Here is the learning loop. Read it slowly. It is a loop, a prediction, two slopes, and
-# two nudges.
+# Follow the white dots: each step measures the slope, then nudges the two numbers
+# toward lower error.
+#
+# ```mermaid
+# flowchart LR
+#     A[Choose w and b] --> B[Predict dollars]
+#     B --> C[Measure squared mistakes]
+#     C --> D[Find downhill direction]
+#     D --> E[Nudge w and b]
+#     E --> B
+# ```
+#
+# The loop is the whole training story: fit, measure, adjust, then try again.
+
+# %% [markdown]
+# Here is the learning loop in code. Read it slowly. It is a prediction, two
+# slopes, and two nudges inside a loop.
 
 # %%
 x = weeks
@@ -148,12 +183,13 @@ for step in range(8):
 # %% [markdown]
 # > 💡 **Aha!**
 # >
-# > The model **is two numbers**: `w` and `b`. That is the whole machine.
+# > The model **is two numbers**: `w` and `b`. Training is the loop that chooses them.
 
 # %% [markdown]
 # ## 💻 For Real
 #
-# scikit-learn finds the best line in one line of code.
+# scikit-learn does the same job without showing every downhill step. It still
+# returns the same two things: a slope **w** and a starting height **b**.
 
 # %%
 model = LinearRegression().fit(weeks.reshape(-1, 1), dollars)
@@ -161,8 +197,9 @@ print("w =", round(model.coef_[0], 2))
 print("b =", round(model.intercept_, 2))
 
 # %% [markdown]
-# Now use one real feature: temperature. We predict bike rentals from temperature alone.
-# A line helps, but the real world has rain, holidays, seasons, and surprises.
+# Now use one real feature: temperature. A warmer day often means more bike
+# rentals, so a line can help. But real life also has rain, holidays, seasons, and
+# luck, so the dots will not sit neatly on the line.
 
 # %%
 bikes = load_table("bikes").dropna()
@@ -180,14 +217,18 @@ ax.set_title("A real fitted line")
 plt.show()
 
 # %% [markdown]
+# Look at the spread around the line. Low error does not mean perfect predictions;
+# it means better than nearby lines.
+
+# %% [markdown]
 # ## 🏆 Challenge
 #
 # 1. **Beat the computer.** Find `w` and `b` with a smaller error than scikit-learn.
-# 2. **Make it worse on purpose.** Pick a terrible line and explain why it is terrible.
+# 2. **Make it worse on purpose.** Pick a terrible line and explain which knob did the most damage.
 # 3. **Outlier test.** Move one dot far upward. Which way does the best line tilt?
 # 4. 🧸 **Little Kid Corner:** Put a string near toy cars on the floor. Move the string
 #    until it is close to all the cars. That string is your model.
 #
 # ---
-# **Next up:** Chapter 02 · *Lines That Decide* — where a line stops predicting amounts
-# and starts choosing sides.
+# **Next up:** Chapter 02 · *Lines That Decide* — where the same line stops predicting
+# amounts and starts choosing sides.

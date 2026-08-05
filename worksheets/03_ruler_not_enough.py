@@ -41,7 +41,8 @@ WORKBOOK = Workbook(
             table=XOR_TABLE,
             hint="Opposite corners match. Try to keep both red corners together without catching a blue corner.",
             why=(
-                "No. Many near-misses are possible, and feeling that failure matters. The proof in the next questions shows why the near-miss cannot become perfect."
+                "No. You can get close, but one corner always ends up wrong. The next questions turn that feeling "
+                "into a proof, so the failure does not feel like a bad drawing."
             ),
         ),
         Question(
@@ -49,35 +50,48 @@ WORKBOOK = Workbook(
             kind="choice",
             choices=["b", "w1 + b", "w2 + b", "w1 + w2 + b"],
             answer="w1 + w2 + b",
-            why="Plug in x1 = 1 and x2 = 1. The score becomes **w1 + w2 + b**, and blue would need it to be less than 0.",
+            why=(
+                "Plug in x1 = 1 and x2 = 1: **w1(1) + w2(1) + b = w1 + w2 + b**. "
+                "Because this corner is blue, a perfect line would need that score below 0."
+            ),
         ),
         Question(
             prompt="Which expression belongs to red point **(1, 0)**?",
             kind="choice",
             choices=["b", "w1 + b", "w2 + b", "w1 + w2 + b"],
             answer="w1 + b",
-            why="Plug in x1 = 1 and x2 = 0. The score becomes **w1 + b**, and red would need it to be greater than 0.",
+            why=(
+                "Plug in x1 = 1 and x2 = 0: **w1(1) + w2(0) + b = w1 + b**. This point is red, "
+                "so a perfect line would need the score above 0."
+            ),
         ),
         Question(
             prompt="Add the two red-row needs: **w1 + b > 0** and **w2 + b > 0**. What do you get?",
             kind="choice",
             choices=["w1 + w2 + 2b > 0", "w1 + w2 + 2b < 0", "b < 0"],
             answer="w1 + w2 + 2b > 0",
-            why="Adding the left sides gives **w1 + w2 + 2b**. Adding two things bigger than 0 gives something bigger than 0.",
+            why=(
+                "Adding the left sides gives **w1 + w2 + 2b**. Adding two numbers that are each bigger than 0 "
+                "must give another number bigger than 0, so the red corners demand **w1 + w2 + 2b > 0**."
+            ),
         ),
         Question(
             prompt="Add the two blue-row needs: **b < 0** and **w1 + w2 + b < 0**. What do you get?",
             kind="choice",
             choices=["w1 + w2 + 2b > 0", "w1 + w2 + 2b < 0", "w1 + b > 0"],
             answer="w1 + w2 + 2b < 0",
-            why="Adding those blue inequalities gives **w1 + w2 + 2b < 0**. Now the same number has two opposite demands.",
+            why=(
+                "Adding those blue inequalities gives the same left side, **w1 + w2 + 2b**. But both blue scores "
+                "must be below 0, so their sum must also be below 0."
+            ),
         ),
         Question(
             prompt="Why is that impossible?",
             kind="open",
             hint="Compare the two answers you got from the red rows and the blue rows.",
             why=(
-                "The same number cannot be both greater than 0 and less than 0. That is the clean proof that XOR is not linearly separable."
+                "The red corners require **w1 + w2 + 2b > 0**. The blue corners require **w1 + w2 + 2b < 0**. "
+                "Those are opposite demands on the same number, so the assumed perfect line cannot exist."
             ),
         ),
         Question(
@@ -88,7 +102,8 @@ WORKBOOK = Workbook(
             table=RADIUS_ROWS,
             hint="Square each coordinate, then add.",
             why=(
-                "2² + 0² = **4**. The new feature measures distance from the middle, squared. A straight model can work if the features are cleverer."
+                "2² + 0² = **4**. The new feature measures distance from the middle, squared. Middle points stay low, "
+                "ring points rise, and a flat cut in the lifted space becomes a circle when you look back down."
             ),
         ),
         Question(
@@ -98,7 +113,8 @@ WORKBOOK = Workbook(
             answer="a feature that repeats",
             hint="Stripes come back again and again.",
             why=(
-                "Stripes are periodic, so a repeating feature such as sine or cosine can line them up in a space where a straight model has a chance."
+                "Stripes are periodic: the same kind of region comes back as x1 moves. A repeating feature such as sine "
+                "or cosine gives the model a coordinate that repeats with the pattern instead of growing forever."
             ),
         ),
     ],

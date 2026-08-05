@@ -29,10 +29,12 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# Try Chapter 2's ruler on circles. The middle and the ring refuse to split.
+# Chapter 2 gave us a ruler: one straight line can choose red or blue. Now the line
+# runs out of road.
 #
-# Now shrink the problem to four dots: XOR. Four points. Four answers. No line on Earth
-# works.
+# Try the ruler on circles. The middle wants one answer and the ring wants the
+# other. A single line can cut left from right, or top from bottom, but it cannot
+# wrap around the middle.
 
 # %%
 X_fail, y_fail = toy_shape("circles", n=160, noise=0.08, seed=0)
@@ -46,6 +48,13 @@ draw_line(w1_fail, w2_fail, b_fail, ax=ax)
 ax.set_title("Try to make circles perfect with one line")
 plt.show()
 
+# %% [markdown]
+# Notice the best-looking ruler still slices through part of the ring or part of the middle.
+#
+# XOR makes the failure tiny enough to prove. It has four points. Opposite corners
+# match. If one line cannot solve four dots, then the problem is the shape of the
+# boundary, not the amount of data.
+
 # %%
 X_xor, y_xor = xor_exact()
 fig, ax = plt.subplots(figsize=(5, 4.5))
@@ -56,9 +65,16 @@ ax.set_title("XOR: opposite corners match")
 plt.show()
 
 # %% [markdown]
+# Look diagonally: the two red points are not neighbors, and the two blue points are
+# not neighbors either.
+
+# %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# For XOR, red means the score must be positive. Blue means negative.
+# Assume a perfect line exists. Its score is **w1·x1 + w2·x2 + b**. Red points need
+# positive scores; blue points need negative scores.
+#
+# Here is what each XOR corner demands:
 #
 # | point | answer | what the line would need |
 # |---|---|---|
@@ -67,11 +83,15 @@ plt.show()
 # | (1, 0) | red | w1 + b > 0 |
 # | (0, 1) | red | w2 + b > 0 |
 #
-# Add the two red rows: **w1 + w2 + 2b > 0**.
+# Now add the two red demands. From **w1 + b > 0** and **w2 + b > 0**, the left
+# sides add to **w1 + w2 + 2b**, and two positive things add to something positive:
+# **w1 + w2 + 2b > 0**.
 #
-# Add the two blue rows: **w1 + w2 + 2b < 0**.
+# Add the two blue demands. From **b < 0** and **w1 + w2 + b < 0**, the same left
+# side appears, but now it must be negative: **w1 + w2 + 2b < 0**.
 #
-# The same number cannot be bigger than zero and smaller than zero. The ruler loses.
+# The same number cannot be bigger than zero and smaller than zero. That is why no
+# straight line can solve XOR.
 #
 # > 📖 **Grown-ups call this:** **linearly separable** — one straight line can split the
 # > data perfectly.
@@ -88,12 +108,24 @@ workbook.render(3)
 # %% [markdown]
 # ## 👀 See It
 #
-# Escape route 1: invent a new feature. For circles, add:
+# A circle problem is hard in **x1, x2** because "inside or ring?" is really about
+# distance from the middle. So we add a new feature:
 #
 # **x3 = x1² + x2²**
 #
-# That means "how far from the middle?" Rotate the 3D plot. A flat plane can slice the
-# lifted cloud.
+# Point **(2, 0)** becomes **x3 = 2² + 0² = 4**. Point **(0.3, 0.4)** becomes
+# **0.3² + 0.4² = 0.09 + 0.16 = 0.25**. The ring rises; the middle stays low.
+#
+# ```mermaid
+# flowchart LR
+#     A[Original x1 and x2] --> B[Add x3 = x1^2 + x2^2]
+#     B --> C[Lift into 3D]
+#     C --> D[Cut with a flat plane]
+#     D --> E[Drop back to 2D]
+#     E --> F[Circle boundary]
+# ```
+#
+# The diagram says the trick: make height from distance, cut flat, then look back down.
 
 # %%
 X, y = toy_shape("circles", n=220, noise=0.08, seed=1)
@@ -109,8 +141,9 @@ fig3.update_layout(height=520, scene=dict(xaxis_title="x1", yaxis_title="x2", za
 fig3.show()
 
 # %% [markdown]
-# We did not get a bendy model. We got a straight model in a cleverer space. From above,
-# the flat slice looks like a circle.
+# Notice that the cut is flat in the lifted picture. The boundary back on the
+# floor is curved because the height came from **x1² + x2²**. A flat slice at
+# **x3 = 0.55** casts the circle **x1² + x2² = 0.55** below it.
 
 # %%
 X3 = np.c_[X_xor, X_xor[:, 0] * X_xor[:, 1]]
@@ -118,14 +151,18 @@ score = X3[:, 0] + X3[:, 1] - 2 * X3[:, 2] - 0.5
 pd.DataFrame({"x1": X3[:, 0], "x2": X3[:, 1], "x1*x2": X3[:, 2], "new straight score": score, "answer": y_xor})
 
 # %% [markdown]
-# XOR has its own escape hatch: add **x3 = x1 × x2**. The new straight score is positive
-# exactly on the red rows.
+# XOR has its own escape hatch: add **x3 = x1 × x2**. For **(1, 1)** the score is
+# **1 + 1 - 2(1) - 0.5 = -0.5**, blue. For **(1, 0)** it is
+# **1 + 0 - 2(0) - 0.5 = 0.5**, red.
 
 # %% [markdown]
 # ## 🎛️ Play With It
 #
-# Escape route 2 is a teaser: use a model that can bend. The next five chapters show
-# different ways to get that bend.
+# Adding a feature is one way to bend the answer back in the original picture.
+# Another way is to use a model that builds bends itself.
+#
+# A decision tree bends with boxy cuts. A tiny neural net bends smoothly. Both are
+# still making regions of red and blue; they are no longer trapped with one ruler.
 
 # %%
 Xb, yb = toy_shape("circles", n=240, noise=0.15, seed=3)
@@ -138,10 +175,14 @@ decision_boundary(lambda G: mlp.predict_proba(G)[:, 1], Xb, yb, ax=axes[1], shad
 plt.show()
 
 # %% [markdown]
+# Look at the two styles of bend: square corners on the left, a smoother curve on the right.
+
+# %% [markdown]
 # ## 💻 For Real
 #
-# A scikit-learn pipeline can add polynomial features, then fit logistic regression. The
-# degree controls how bendy the boundary can get.
+# scikit-learn can add polynomial features for us, then fit a straight model in
+# that bigger feature space. Degree 1 means no extra bend. Higher degree adds more
+# terms, which gives the boundary more ways to curve.
 
 # %%
 fig, axes = plt.subplots(2, 3, figsize=(15, 8.5))
@@ -153,8 +194,8 @@ for row, shape in enumerate(["moons", "circles"]):
 plt.show()
 
 # %% [markdown]
-# Degree 1 is straight. Degree 3 bends. Degree 8 may get wild. That wild end is the seed
-# of overfitting: over-studying the training dots.
+# Degree 1 is straight. Degree 3 bends. Degree 8 may get wild and chase individual
+# dots. That wild end is the seed of overfitting: over-studying the training dots.
 
 # %% [markdown]
 # ## 🏆 Challenge
@@ -166,5 +207,5 @@ plt.show()
 #    floor, lift the donut pieces onto chairs. Now a flat tray can separate high from low.
 #
 # ---
-# **Next up:** Chapter 04 · *Maybe, Probably, Definitely* — where a line learns to say
+# **Next up:** Chapter 04 · *Maybe, Probably, Definitely* — where a model learns to say
 # "I am not sure."

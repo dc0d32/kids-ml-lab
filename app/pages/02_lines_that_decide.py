@@ -10,7 +10,7 @@ from kidsml import ui
 from kidsml.datasets import toy_shape, two_blobs_tiny
 from kidsml.linear import mistake_count, perceptron_history, predict_side, score_line
 from kidsml.nn_numpy import perceptron_step
-from kidsml.plots import ACCENT, MUTED, decision_boundary, draw_line, scatter_2d
+from kidsml.plots import ACCENT, decision_boundary, draw_line, scatter_2d
 
 ui.page_setup(2)
 
@@ -18,18 +18,40 @@ ui.page_setup(2)
 ui.beat("hook")
 st.markdown(
     """
-Chapter 1's line answered **how much?**
+Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
 
-Now the line answers **which one?** One side is blue. The other side is red. A single
-line can split the whole world in two.
+Same line, new question: **which side?** A point on one side becomes blue. A
+point on the other side becomes red. The model still computes a number first,
+but now the sign of that number makes the decision.
 """
 )
 ui.jargon("perceptron", "An old-school model that decides which side of a line a point is on.")
+ui.mermaid(
+    """
+flowchart LR
+    A[Point x1 and x2] --> B[Weighted sum z]
+    B --> C{z > 0?}
+    C -->|yes| D[red]
+    C -->|no| E[blue]
+""",
+    height=240,
+)
+st.markdown("Read the diagram left to right: the perceptron is a score machine followed by a sign check.")
 
 X_tiny, y_tiny = two_blobs_tiny()
 
 # ---------------------------------------------------------------------------
 ui.beat("byhand")
+st.markdown(
+    """
+Try this score rule on five points:
+
+**score = 1·x1 + 1·x2 - 8**
+
+Positive score means red. Negative score means blue. For point **(6, 5)** the
+arithmetic would be **1(6) + 1(5) - 8 = 3**, so the guess is red.
+"""
+)
 w_start = np.array([1.0, 1.0])
 b_start = -8.0
 scores = score_line(X_tiny[:5], w_start[0], w_start[1], b_start)
@@ -42,17 +64,31 @@ hand = {
 }
 st.dataframe(hand, hide_index=True, use_container_width=True)
 st.markdown(
-    "Point (6, 5) is red. Our score is **6 + 5 - 8 = 3**, so we guess red. "
-    "Good. Now try a line that gets it wrong: w = (1, 1), b = -20."
+    """
+Now make the line too strict: **w = (1, 1), b = -20**. The same red point gets
+**1(6) + 1(5) - 20 = -9**, so the model guesses blue.
+
+When a red point is missed, the perceptron adds the point's coordinates to the
+weights and adds 1 to **b**.
+"""
 )
 w_bad = np.array([1.0, 1.0])
 b_bad = -20.0
 w_after, b_after, was_wrong = perceptron_step(w_bad, b_bad, X_tiny[5], y_tiny[5])
 st.write(f"Wrong? **{was_wrong}**. New w = **({w_after[0]:.0f}, {w_after[1]:.0f})**, new b = **{b_after:.0f}**.")
-st.markdown("You added the red point's coordinates to the weights. You trained a model by hand.")
+st.markdown(
+    """
+Why does adding the point help? The score for that same point jumps from **-9**
+to **7(6) + 6(5) - 19 = 53**. The point is now strongly on the red side.
+
+Changing **b** is different from changing **w**. It adds the same amount to every
+point's score, so the boundary slides without turning.
+"""
+)
 
 # ---------------------------------------------------------------------------
 ui.beat("seeit")
+st.markdown("The circled red point caused the update. Watch how one correction changes the boundary.")
 fig, axes = ui.two_figures(5.0, 4.4)
 for ax, w_now, b_now, title in [
     (axes[0], w_bad, b_bad, "Before the one update"),
@@ -63,6 +99,7 @@ for ax, w_now, b_now, title in [
     draw_line(w_now[0], w_now[1], b_now, ax=ax)
     ax.set_title(title)
 ui.show(fig)
+st.markdown("Notice that the line did not learn a whole rule in one step. It made one wrong point less wrong.")
 
 hist = perceptron_history(X_tiny, y_tiny, w=(0, 0), b=0, steps=12)
 step = st.slider("Perceptron learning step", 0, len(hist) - 1, min(4, len(hist) - 1))
@@ -72,9 +109,20 @@ decision_boundary(lambda G: predict_side(G, row.w1, row.w2, row.b), X_tiny, y_ti
 draw_line(row.w1, row.w2, row.b, ax=ax)
 ax.set_title(f"Step {step}: {int(row.mistakes)} mistake(s)")
 ui.show(fig)
+st.markdown("Follow the mistake count. Training stops only when a straight line can make every point happy.")
 
 # ---------------------------------------------------------------------------
 ui.beat("play")
+st.markdown(
+    """
+The boundary is the place where **w1·x1 + w2·x2 + b = 0**. The **w** arrow sticks
+straight out from that line.
+
+Why perpendicular? If you walk along the boundary, the score must stay 0. Moving
+in the **w** direction changes the score fastest, so **w** cannot point along the
+line. It points across the line, toward red.
+"""
+)
 X, y = toy_shape("blobs", n=180, noise=0.25, seed=2)
 col_a, col_b = st.columns([1, 2], gap="large")
 with col_a:
@@ -90,12 +138,27 @@ with col_b:
     ax.text(w1 * 0.28, w2 * 0.28, "w arrow", color=ACCENT)
     ax.set_title("w points toward red. b slides the line.")
     ui.show(fig)
+st.markdown("Move b and watch the line glide in parallel. Move w1 or w2 and watch the line rotate.")
 
 # ---------------------------------------------------------------------------
 ui.beat("forreal")
+st.markdown(
+    """
+scikit-learn has a perceptron too. On clean blobs, a straight separator exists,
+so the model can settle.
+"""
+)
 model = Perceptron(max_iter=1000, random_state=0).fit(X, y)
 st.code("Perceptron(max_iter=1000).fit(X, y)", language="python")
 st.write(f"On clean blobs, scikit-learn gets **{model.score(X, y):.0%}** right.")
+st.markdown(
+    """
+Now look at shapes where the ruler is in trouble. A perceptron keeps fixing the
+first mistake it sees. If the data overlaps, or if the correct boundary must
+bend, one fix can undo an earlier fix. Then the weights keep moving because zero
+mistakes is not available.
+"""
+)
 cols = st.columns(2)
 for col, shape in zip(cols, ["moons", "circles"]):
     Xr, yr = toy_shape(shape, n=220, noise=0.18, seed=4)
@@ -104,7 +167,7 @@ for col, shape in zip(cols, ["moons", "circles"]):
         fig, ax = ui.figure(5.2, 4.5)
         decision_boundary(lambda G, mm=m: mm.predict(G), Xr, yr, ax=ax, shade_confidence=False, title=f"{shape}: {m.score(Xr, yr):.0%} right")
         ui.show(fig)
-ui.careful("Circles need a boundary that wraps around. One line cannot do that.")
+ui.careful("Notice the leftover mistakes. The algorithm is not lazy; one straight line has run out of road.")
 
 # ---------------------------------------------------------------------------
 ui.beat("challenge")
@@ -112,7 +175,7 @@ st.markdown(
     """
 1. **Beat the algorithm.** Use the sliders until the mistake counter reaches zero.
 2. **Set b to 0.** What can the line no longer do? Hint: it must pass through (0, 0).
-3. **Make the blobs overlap.** A perceptron only settles when perfection is possible.
+3. **Make the blobs overlap.** A perceptron only settles when perfection is possible. What does it do instead?
 4. 🧸 **Little Kid Corner:** Lay a pencil between two piles of toys. One side is red team,
    the other is blue team. Move the pencil until nobody is on the wrong side.
 """
