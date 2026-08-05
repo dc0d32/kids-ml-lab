@@ -5,9 +5,9 @@ read this file top to bottom you have read *all* of the maths a neural network d
 
 The layout mirrors the chapters:
 
-* :func:`sigmoid`, :func:`relu`, :func:`tanh_`  — the "squish" functions (Ch 11)
-* :class:`Neuron`                              — one neuron, forward and backward (Ch 11-12)
-* :class:`MLP`                                 — layers of neurons (Ch 13-14)
+* :func:`sigmoid`, :func:`relu`, :func:`tanh_`  — the "squish" functions (Ch 12)
+* :class:`Neuron`                              — one neuron, forward and backward (Ch 12-12)
+* :class:`MLP`                                 — layers of neurons (Ch 14-14)
 
 Shapes convention used everywhere: ``X`` is ``(n_samples, n_features)`` and a layer's
 weight matrix ``W`` is ``(n_inputs, n_outputs)``.
@@ -126,7 +126,7 @@ class Neuron:
 
     ``output = squish(w1*x1 + w2*x2 + ... + b)``
 
-    That is the whole thing. Chapter 11 builds this by hand; chapter 12 teaches it to
+    That is the whole thing. Chapter 12 builds this by hand; chapter 13 teaches it to
     learn with :meth:`step`.
     """
 
@@ -220,7 +220,7 @@ class MLP:
     """A plain feed-forward neural network, written out by hand.
 
     ``MLP([2, 3, 1])`` means: 2 inputs, a hidden layer of 3 neurons, 1 output neuron.
-    That is exactly the network in chapter 13.
+    That is exactly the network in chapter 14.
 
     Everything is stored in ``self.Ws`` and ``self.bs`` — ordinary NumPy arrays you can
     print, plot, or edit with a slider.
@@ -256,7 +256,7 @@ class MLP:
     def forward(self, X, keep: bool = False):
         """Run the network. With ``keep=True`` also return every in-between value.
 
-        The kept values are what chapter 13 draws: each hidden neuron's own output.
+        The kept values are what chapter 14 draws: each hidden neuron's own output.
         """
         a = np.asarray(X, dtype=float)
         zs, activations = [], [a]
@@ -351,7 +351,7 @@ class MLP:
 def numeric_gradient(model: MLP, X, y, eps: float = 1e-6):
     """Estimate the gradients the slow, obvious way: nudge a weight, see what happens.
 
-    Chapter 12 uses this to prove the backprop code is right — and chapter 15 uses the
+    Chapter 13 uses this to prove the backprop code is right — and chapter 16 uses the
     same trick to show PyTorch agrees with us.
     """
     dWs = [np.zeros_like(W) for W in model.Ws]

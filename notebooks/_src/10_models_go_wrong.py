@@ -207,4 +207,4 @@ workbook.render(10)
 
 # %% [markdown]
 # ---
-# **Next up:** Chapter 11 · *One Neuron* — the models become tiny machines made of weights, adds, and one squish.
+# **Next up:** Chapter 12 · *One Neuron* — the models become tiny machines made of weights, adds, and one squish.

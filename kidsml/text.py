@@ -53,7 +53,7 @@ class CharVocab:
 
 
 # ---------------------------------------------------------------------------
-# Counting pairs (chapter 21)
+# Counting pairs (chapter 22)
 # ---------------------------------------------------------------------------
 
 
@@ -111,8 +111,8 @@ def sample_bigram(probs: np.ndarray, vocab: CharVocab, rng: np.random.Generator 
 def bigram_nll(words, probs: np.ndarray, vocab: CharVocab) -> float:
     """How surprised the model is by real words. Lower is better.
 
-    This is the same "loss" number the neural models report, so chapter 22 can say
-    honestly whether it beat chapter 21.
+    This is the same "loss" number the neural models report, so chapter 23 can say
+    honestly whether it beat chapter 22.
     """
     total, count = 0.0, 0
     for word in words:
@@ -124,7 +124,7 @@ def bigram_nll(words, probs: np.ndarray, vocab: CharVocab) -> float:
 
 
 # ---------------------------------------------------------------------------
-# Context windows (chapters 22 and 23)
+# Context windows (chapters 23 and 23)
 # ---------------------------------------------------------------------------
 
 
@@ -189,7 +189,7 @@ VOWELS = set("aeiou")
 def letter_groups(vocab: CharVocab) -> list[str]:
     """Label each vocabulary entry as vowel / consonant / blank.
 
-    Chapter 22 colours the learned embedding plot with this — and the vowels turn out
+    Chapter 23 colours the learned embedding plot with this — and the vowels turn out
     to have grouped themselves together, without anyone ever mentioning vowels.
     """
     groups = []

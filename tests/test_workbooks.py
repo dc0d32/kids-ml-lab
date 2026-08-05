@@ -50,9 +50,9 @@ def test_every_question_accepts_its_own_answer(chapter: int):
 
 @pytest.mark.parametrize("chapter", chapters_with_workbooks, ids=lambda c: f"ch{c:02d}")
 def test_workbook_has_a_little_kid_corner(chapter: int):
-    """Chapter 24 is a wrap-up, but every teaching chapter owes the 4th grader something."""
+    """Chapter 25 is a wrap-up, but every teaching chapter owes the 4th grader something."""
     book = wb.load(chapter)
-    if chapter == 24:
+    if chapter == 25:
         return
     assert book.kid_corner, f"chapter {chapter:02d} has no Little Kid Corner"
 

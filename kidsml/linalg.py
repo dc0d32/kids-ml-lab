@@ -57,7 +57,7 @@ def project_onto(v, onto) -> np.ndarray:
     """The shadow of ``v`` cast along ``onto``.
 
     Shine a light straight down onto the line through ``onto``; this is where ``v`` lands.
-    Chapter 21's PCA is this exact operation, with the line chosen to lose the least.
+    Chapter 22's PCA is this exact operation, with the line chosen to lose the least.
     """
     v = np.asarray(v, dtype=float)
     onto = np.asarray(onto, dtype=float)
@@ -280,7 +280,7 @@ def spread_of(points) -> float:
 
 
 def best_shadow_spread(points3d) -> float:
-    """The most spread any flat shadow can keep. This is what PCA finds in Chapter 21."""
+    """The most spread any flat shadow can keep. This is what PCA finds in Chapter 22."""
     points = np.asarray(points3d, dtype=float)
     centred = points - points.mean(axis=0)
     singular_values = np.linalg.svd(centred, compute_uv=False)

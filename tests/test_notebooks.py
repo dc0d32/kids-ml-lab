@@ -19,13 +19,13 @@ NOTEBOOKS = ROOT / "notebooks"
 # Wall-clock seconds. Chapters that train something get more room, but not much.
 DEFAULT_BUDGET = 60
 BUDGETS = {
-    14: 120,   # deeper nets, several trainings
-    15: 120,   # PyTorch import alone is slow
-    16: 120,   # digits MLP
-    17: 240,   # the small CNN
-    20: 120,   # PCA over all the digits
-    22: 180,   # MLP language model
-    23: 300,   # the tiny Transformer
+    15: 120,   # deeper nets, several trainings
+    16: 120,   # PyTorch import alone is slow
+    17: 120,   # digits MLP
+    18: 240,   # the small CNN
+    21: 120,   # PCA over all the digits
+    23: 180,   # MLP language model
+    24: 300,   # the tiny Transformer
 }
 
 notebooks = sorted(NOTEBOOKS.glob("[0-9][0-9]_*.ipynb"))

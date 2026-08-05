@@ -26,7 +26,7 @@ improvement.
    comprehension pyramids, no `functools`, no metaprogramming. The code is teaching
    material, not production code.
 3. **Small datasets.** Everything comes from `kidsml.datasets` or is defined inline.
-   Nothing downloads at runtime except Fashion-MNIST in Chapter 17, and that is cached.
+   Nothing downloads at runtime except Fashion-MNIST in Chapter 18, and that is cached.
 4. **Laptop-sized, CPU-only.** No GPU anywhere. `tests/test_notebooks.py` enforces a
    wall-clock budget per chapter. **If a chapter blows its budget, shrink the dataset or
    the number of training steps — never the explanation.**
@@ -180,7 +180,7 @@ export LD_LIBRARY_PATH=$(cat .nix-libs)     # .nix-libs is created by run.sh on 
 ./run.sh lab          # JupyterLab
 ./run.sh test         # all tests
 ./run.sh build        # regenerate every notebook from notebooks/_src/
-./run.sh build 13 14  # regenerate only chapters 13 and 14
+./run.sh build 13 14  # regenerate only chapters 14 and 14
 ```
 
 There is also a `flake.nix` devShell (`nix develop`) that sets the same paths

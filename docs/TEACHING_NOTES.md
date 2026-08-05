@@ -62,21 +62,22 @@ There is no correct route. Pick the one that matches the kid in front of you.
 **The full course**, in order, about 15–20 sittings. Best if they're enjoying it.
 
 **The impatient route** — for a kid who only wants to know how ChatGPT works. Go
-00 → 01 → 02 → 03 → 11 (linear algebra) → 12 → 13 → 14 → 22 → 23 → 24. Skips the
+00 → 01 → 02 → 03 → 11 (linear algebra) → 12 → 13 → 14 → 23 → 24 → 25. Skips the
 classical models entirely. You can always come back for them, and after seeing a
 Transformer they often *want* to.
 
 **The "I like puzzles" route** — 00 → 05 → 06 → 07 → 08 → 09 → 10. Trees and honest
 evaluation, no calculus-shaped ideas anywhere. Genuinely satisfying on its own.
 
-**Rainy afternoon, one chapter, no commitment** — 00, 05, 19 or 21 all stand alone and
-each has a strong payoff inside 40 minutes.
+**Rainy afternoon, one chapter, no commitment** — 00, 05, 11, 20 and 22 all stand alone
+and each has a strong payoff inside 40 minutes. Chapter 11 in particular is the one they
+are most likely to wander back to on their own.
 
 ### If you only have time for six chapters
 
 00 (what learning from examples means) · 02 (a line that decides) · 03 (why one line isn't
-enough) · 11 (linear algebra, where space starts moving) · 13 (hidden layers — the payoff)
-· 23 (the Transformer). That's the spine.
+enough) · 11 (linear algebra, where space starts moving) · 14 (hidden layers — the payoff)
+· 24 (the Transformer). That's the spine.
 
 ---
 
@@ -98,19 +99,20 @@ Your job is mostly to not talk over these.
 | 09 | Their own feature picks losing to the model's feature importances. Or beating them. |
 | 10 | A model that is 99% accurate and completely useless. |
 | 11 | Two matrices applied in a row being **exactly** the same as one matrix — difference 0.00. Then a squish going in the middle and the grid bending. |
-| 12 | The slow obvious gradient and the clever fast one agreeing to eleven decimal places. |
-| 13 | The three hidden lines sliding into place during training, and XOR becoming separable in the new space. **This is the big one.** |
-| 14 | Test loss turning around and climbing while train loss keeps falling. |
-| 15 | PyTorch's gradients matching the ones they computed by hand. |
-| 16 | Reading a digit off a grid of numbers with their own eyes. |
-| 17 | Detecting an edge with a pencil, then finding the same filter inside a trained network. |
-| 18 | k=1 carving an island around every noisy point — Chapter 05's overfitting, wearing a different hat. |
-| 19 | Their own photo collapsing to five colours. |
-| 20 | An 8 still looking like an 8 with most of its information thrown away. |
-| 21 | The tally chart inventing pronounceable names that don't exist. |
-| 22 | **The vowels clustering on their own.** Nobody told it what a vowel is. |
-| 23 | The attention map lighting up, and the honest scale conversation afterwards. |
-| 24 | The whole course on one page, and realising they built all of it. |
+| 12 | The neuron diagram, and the realisation that the inside of the brackets is Chapter 02 and the squish is Chapter 04. |
+| 13 | The slow obvious gradient and the clever fast one agreeing to eleven decimal places. |
+| 14 | The three hidden lines sliding into place during training, and XOR becoming separable in the new space. **This is the big one.** |
+| 15 | Test loss turning around and climbing while train loss keeps falling. |
+| 16 | PyTorch's gradients matching the ones they computed by hand. |
+| 17 | Reading a digit off a grid of numbers with their own eyes. |
+| 18 | Detecting an edge with a pencil, then finding the same filter inside a trained network. |
+| 19 | k=1 carving an island around every noisy point — Chapter 05's overfitting, wearing a different hat. |
+| 20 | Their own photo collapsing to five colours. |
+| 21 | An 8 still looking like an 8 with most of its information thrown away. |
+| 22 | The tally chart inventing pronounceable names that don't exist. |
+| 23 | **The vowels clustering on their own.** Nobody told it what a vowel is. |
+| 24 | The attention map lighting up, and the honest scale conversation afterwards. |
+| 25 | The whole course on one page, and realising they built all of it. |
 
 ---
 
@@ -151,13 +153,13 @@ What works:
 
 - Give the younger one **the sliders** while the older one reads. One drives, one navigates.
 - The Little Kid Corner games are genuinely better done on a carpet than on a screen —
-  Chapter 02's is a pencil between two piles of toys, Chapter 19's is sorting laundry.
+  Chapter 02's is a pencil between two piles of toys, Chapter 20's is sorting laundry.
 - Let them **be the model**: you give examples, they guess the rule. They'll beat the
   computer at Chapter 00 and it will make their week.
 - Don't ask them to follow the maths. If they want to, let them; if not, they're getting
   the idea anyway, which is the whole point of the corner.
 
-Chapters that work particularly well for a 9-year-old: **00, 05, 16, 19, 21**.
+Chapters that work particularly well for a 9-year-old: **00, 05, 11, 17, 20, 22**.
 
 ---
 
@@ -171,7 +173,7 @@ to be enough to do some genuinely amazing stuff, and it's also why it can be con
 completely wrong. Both facts come from the same place.
 
 **"Is it alive / does it know it exists?"**
-No. Chapter 23 builds a small one from scratch, and there's nowhere in there for that to
+No. Chapter 24 builds a small one from scratch, and there's nowhere in there for that to
 live. It's matrix multiplications and a squish, repeated. Being unimpressed by the mechanism
 while being impressed by the results is the correct position.
 
@@ -183,10 +185,10 @@ adults do, which is the actually useful position to be in.
 **"Why does it lie?"**
 It was never trained to be right. It was trained to produce likely-looking text. Looking
 right and being right are different targets, and it only ever practised one of them.
-Chapter 24 shows this using their own model.
+Chapter 25 shows this using their own model.
 
 **"Could I build ChatGPT?"**
-You already built a tiny one in Chapter 23. The difference is quantity — a few hundred
+You already built a tiny one in Chapter 24. The difference is quantity — a few hundred
 thousand pounds of computing time, and roughly a billion times more of everything. Not a
 missing secret. That's the honest and much more interesting answer.
 
@@ -204,7 +206,7 @@ Usually a different random seed. Chapter 08 is entirely about how much of a scor
 ```
 
 - **Everything runs on the laptop.** No GPU, no cloud, no accounts, nothing to sign up for.
-- **Nothing goes on the internet** except a one-time ~30 MB dataset download in Chapter 17,
+- **Nothing goes on the internet** except a one-time ~30 MB dataset download in Chapter 18,
   which is then cached.
 - **Every chapter finishes in seconds.** If something takes minutes, something is wrong —
   run `./run.sh test`.
@@ -223,7 +225,7 @@ The honest next steps, in order of payoff:
 1. **Their own data.** Anything they collect themselves for two weeks — screen time, sleep,
    how far a paper aeroplane goes with different folds. The models in this course are more
    than good enough, and it stops being an exercise.
-2. **Chapter 24's project list.** Ten of them, each about a weekend.
+2. **Chapter 25's project list.** Ten of them, each about a weekend.
 3. **Maths, in this order**: algebra → vectors and matrices (Chapter 11 is the on-ramp) →
    derivatives. That sequence unlocks the next tier and nothing skips well.
 4. **A GPU**, only when a project actually needs one. Not before.
