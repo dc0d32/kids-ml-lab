@@ -33,11 +33,13 @@ Written like this::
 
 from __future__ import annotations
 
+import textwrap
 from dataclasses import dataclass, field
 from typing import Callable
 
 import matplotlib.pyplot as plt
 import streamlit as st
+from markdown_it import MarkdownIt
 
 from kidsml.plots import use_house_style
 from kidsml.ui import CHAPTER_BY_NUMBER
@@ -52,6 +54,42 @@ BEATS = {
     "challenge": ("🏆", "Go further"),
 }
 BEAT_ORDER = list(BEATS)
+
+
+
+# Streamlit parses markdown — but only when it is handling the whole block. The moment we
+# wrap text in our own <div> for styling, everything inside is treated as raw HTML and
+# `**like this**` renders with the asterisks showing. So we do the markdown ourselves
+# first. (markdown-it-py ships with Streamlit, so this costs no new dependency.)
+_MARKDOWN = MarkdownIt("commonmark", {"breaks": True, "html": True})
+
+
+def _dedent(text: str) -> str:
+    """Strip the indentation a triple-quoted string picks up from sitting in a function.
+
+    Four leading spaces mean "code block" in markdown, so an indented block of prose comes
+    out in a monospace box with its asterisks showing instead of as a paragraph with bold.
+    """
+    lines = text.strip("\n").split("\n")
+    body = [line for line in lines[1:] if line.strip()]
+
+    # A triple-quoted string often starts right after the quotes, so its first line has no
+    # indent while the rest do. Line it up before measuring the common prefix.
+    if body and lines[0].strip() and not lines[0].startswith(" "):
+        pad = min(len(line) - len(line.lstrip()) for line in body)
+        lines[0] = " " * pad + lines[0]
+
+    return textwrap.dedent("\n".join(lines))
+
+
+def _as_html(text: str) -> str:
+    """Markdown to HTML, for text that has to sit inside one of our styled boxes."""
+    return _MARKDOWN.render(_dedent(text))
+
+
+def _inline_html(text: str) -> str:
+    """Same, for a short phrase that should not become its own paragraph."""
+    return _MARKDOWN.renderInline(_dedent(text).replace("\n", " ").strip())
 
 
 @dataclass
@@ -89,7 +127,7 @@ def begin(chapter: int) -> None:
         f"<div class='kml-chapter-head'>"
         f"<div class='kml-part'>{part}</div>"
         f"<h1>{title}</h1>"
-        f"<p class='kml-idea'>{idea}</p>"
+        f"<p class='kml-idea'>{_inline_html(idea)}</p>"
         f"</div>",
         unsafe_allow_html=True,
     )
@@ -217,7 +255,7 @@ def _draw_nav(steps: list[Step], index: int) -> None:
 
 def say(markdown: str) -> None:
     """Prose, held to a readable column width. Keep it to a few sentences."""
-    st.markdown(f"<div class='kml-say'>{markdown}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='kml-say'>{_as_html(markdown)}</div>", unsafe_allow_html=True)
 
 
 def predict(question: str, choices: list[str], correct: int | None = None,
@@ -236,7 +274,10 @@ def predict(question: str, choices: list[str], correct: int | None = None,
     """
     slot = f"kml_predict_{_current.chapter}_{key or question[:20]}"
 
-    st.markdown(f"<div class='kml-predict'><b>{question}</b></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='kml-predict'><b>{_inline_html(question)}</b></div>",
+        unsafe_allow_html=True,
+    )
 
     if slot not in st.session_state:
         picked = st.radio(
@@ -263,7 +304,10 @@ def predict(question: str, choices: list[str], correct: int | None = None,
 
 def look_for(what: str) -> None:
     """Point at what matters in the picture above. A figure with no pointer is decoration."""
-    st.markdown(f"<div class='kml-look'>👀 <b>Look for:</b> {what}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='kml-look'>👀 <b>Look for:</b> {_inline_html(what)}</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def aha(body: str) -> None:
@@ -281,7 +325,8 @@ def kid_corner(body: str) -> None:
 def jargon(term: str, plain: str) -> None:
     """Name the thing only *after* the idea has landed."""
     st.markdown(
-        f"<div class='kml-jargon'>📖 Grown-ups call this <b>{term}</b>. {plain}</div>",
+        f"<div class='kml-jargon'>📖 Grown-ups call this <b>{term}</b>. "
+        f"{_inline_html(plain)}</div>",
         unsafe_allow_html=True,
     )
 

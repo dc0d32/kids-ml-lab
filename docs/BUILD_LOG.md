@@ -490,3 +490,35 @@ where the reader is told the ring rises, and the next step adds the cutting plan
 lift, then see the cut.
 
 **529 tests pass.**
+
+---
+
+## 2026-08-05 — Bold was rendering as literal asterisks
+
+Owner: *"streamlit renders `**<something>**` literally, not in bold/italic."*
+
+`lesson.say` wraps its text in a `<div>` so the CSS can hold it to a readable column width.
+That was the bug: **Streamlit parses markdown only when it owns the whole block.** The
+moment the text sits inside our own HTML, everything within is treated as raw HTML and
+`**like this**` arrives with the asterisks showing. 527 bold markers across the course,
+none of them working.
+
+Fixed by rendering the markdown ourselves before wrapping, using `markdown-it-py` — which
+ships with Streamlit, so it costs no new dependency. `lesson.say`, `look_for`, `jargon`,
+the prediction question and the chapter's one-line idea all go through it.
+
+**A worse one hid underneath.** Chapter 04 had a `lesson.say` block indented eight spaces
+to line up with the surrounding code. Four leading spaces mean *code block* in markdown, so
+that entire passage — the explanation of the sigmoid, the one place `e` is introduced — was
+rendering as a grey monospace box. `_dedent` now strips the indentation a triple-quoted
+string picks up from living inside a function, including the awkward case where the first
+line sits right after the quotes and has no indent while the rest do.
+
+`tests/test_pages.py` now clicks through every step of every chapter and fails on a literal
+`**` inside any styled box. It caught chapter 04 immediately, which is how the code-block
+problem surfaced at all.
+
+The workbook and the notebooks were checked and are unaffected — they hand their markdown
+straight to Streamlit and Jupyter without wrapping it.
+
+**555 tests pass.**

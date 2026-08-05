@@ -175,3 +175,29 @@ def test_predictions_do_not_ask_about_invisible_things(page: Path):
             f"{page.name}, step {title.group(1) if title else '?'}: the question says "
             f"{question.group(1)[:60]!r} but nothing is drawn before the prediction gate"
         )
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_markdown_inside_styled_boxes_actually_renders(page: Path):
+    """`**bold**` must come out bold, not with the asterisks showing.
+
+    Streamlit parses markdown only when it owns the whole block. Wrapping text in our own
+    <div> for styling makes it raw HTML, so `lesson.say` renders the markdown itself
+    first. Every chapter is full of bold, so this is worth a real check.
+    """
+    at = AppTest.from_file(str(page), default_timeout=TIMEOUT_SECONDS).run()
+
+    steps = 1
+    while steps <= MAX_STEPS:
+        for element in at.markdown:
+            value = element.value
+            if "kml-say" in value or "kml-look" in value or "kml-jargon" in value:
+                assert "**" not in value, (
+                    f"{page.name} step {steps}: literal ** in a styled box — markdown is "
+                    f"not being rendered.\n    {value[:160]}"
+                )
+        button = _next_button(at)
+        if button is None or button.disabled:
+            return
+        button.click().run()
+        steps += 1
