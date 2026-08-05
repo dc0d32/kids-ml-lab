@@ -45,7 +45,7 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             table=CREATURES,
             hint="Look only at rows where has_wings is yes, then count can_fly = yes.",
-            why="The winged flyers are sparrow, eagle, bat, and bumblebee: **4**. The yes bucket also has penguin and ostrich, which do not fly.",
+            why="The winged flyers are sparrow, eagle, bat, and bumblebee: **4**. Penguin and ostrich also have wings but do not fly, so this bucket is useful but still mixed.",
         ),
         Question(
             prompt="For **has_wings**, how many creatures in the **yes** bucket do **not** fly?",
@@ -54,7 +54,7 @@ WORKBOOK = Workbook(
             tolerance=0.01,
             table=CREATURES,
             hint="Penguin and ostrich both have wings but do not fly.",
-            why="There are **2** winged non-flyers: penguin and ostrich. This is why the bucket is mixed, not perfect.",
+            why="There are **2** winged non-flyers: penguin and ostrich. Mixed means both answers are still in the same bucket, so the tree will need another question for that branch.",
         ),
         Question(
             prompt="For **has_wings**, how many creatures in the **no** bucket can fly?",
@@ -71,7 +71,7 @@ WORKBOOK = Workbook(
             answer=0,
             tolerance=0.01,
             hint="p_yes = 1 and p_no = 0.",
-            why="1 - 1² - 0² = **0**. A clean bucket has no mix because every row in it has the same answer.",
+            why="1 - 1² - 0² = **0**. A clean bucket has no mix because every row has the same answer, so the tree could stop asking questions there.",
         ),
         Question(
             prompt="A bucket has 3 yes and 3 no. What is the mix?",
@@ -79,7 +79,7 @@ WORKBOOK = Workbook(
             answer=0.5,
             tolerance=0.01,
             hint="Both fractions are 3/6 = 0.5.",
-            why="1 - (3/6)² - (3/6)² = 1 - 0.25 - 0.25 = **0.5**. Half-and-half is messy.",
+            why="1 - (3/6)² - (3/6)² = 1 - 0.25 - 0.25 = **0.5**. Half-and-half is the messiest two-answer bucket because either answer is equally likely.",
         ),
         Question(
             prompt="For the **has_wings** yes bucket, compute **1 - (4/6)² - (2/6)²**. Round to two decimals.",
@@ -87,7 +87,7 @@ WORKBOOK = Workbook(
             answer=0.44,
             tolerance=0.01,
             hint="The exact answer is 4/9.",
-            why="The yes bucket mix is **4/9 ≈ 0.44**. The no bucket is 0, so the weighted score for the whole split is about 0.27.",
+            why="The yes bucket mix is **4/9 ≈ 0.44**. The no bucket is 0, so the weighted split score is `(6×0.44 + 4×0) / 10 ≈ 0.27`.",
         ),
         Question(
             prompt="Which first question has the lowest weighted mix in this table?",
@@ -96,7 +96,7 @@ WORKBOOK = Workbook(
             answer="has_wings",
             table=SPLITS,
             why=(
-                "**has_wings** wins on this tiny dataset. A tree is not magic; it tries candidate questions and chooses the split that makes cleaner buckets."
+                "**has_wings** wins on this tiny dataset. A tree is not magic; it tries candidate questions, scores how mixed the buckets are, and chooses the split with less cleanup left."
             ),
         ),
         Question(
@@ -104,7 +104,7 @@ WORKBOOK = Workbook(
             kind="open",
             hint="Think about how much work remains after the first split.",
             why=(
-                "Cleaner buckets mean the next questions have less mess to clean up. The first split matters because every later branch starts from those buckets."
+                "Cleaner buckets mean the next questions have less mess to clean up. The first split matters because every later branch starts from those buckets, so a poor first split makes the whole flowchart work harder."
             ),
         ),
         Question(
@@ -112,14 +112,14 @@ WORKBOOK = Workbook(
             kind="choice",
             choices=["depth-1 tree", "depth-20 tree"],
             answer="depth-20 tree",
-            why="The depth-20 tree can carve many tiny boxes around training points. That power can turn into memorising noise.",
+            why="The depth-20 tree can carve many tiny boxes around training points. That can turn into memorising: *this exact dot is red*, even when the dot is noise and does not teach a useful rule.",
         ),
         Question(
             prompt="What picture clue would show that a tree is memorising?",
             kind="open",
             hint="Look for a boundary that wraps tiny boxes around individual dots.",
             why=(
-                "A memorising tree often has many tiny boxes around individual training points, plus training accuracy much higher than test accuracy."
+                "A memorising tree often has many tiny boxes around individual training points, plus training accuracy much higher than test accuracy. It looks great on rows it studied and shaky on new rows."
             ),
         ),
     ],

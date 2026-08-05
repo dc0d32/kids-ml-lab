@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Chapter 07 · The Widest Road
 #
-# ### Don't just separate — separate with the biggest gap.
+# ### Separate with the biggest gap.
 #
 # *Part 1 · Classical models*
 #
@@ -29,13 +29,14 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# Chapter 2's perceptron stops when it finds **any** line that separates the dots. But
-# several perfect lines can exist. Which one would you trust for a new point?
+# Chapter 2's perceptron stops when it finds **any** line that separates the dots. That is
+# enough for yesterday's dots, but it may be a nervous choice for tomorrow's dot.
 #
-# Your instinct says: pick the line with the biggest empty gap around it.
+# Imagine a new point lands a tiny bit away from where you expected. A line that hugs one
+# class has no safety space; a small wiggle can push the new point to the wrong side.
 #
-# > 🧸 **Little Kid Corner** — Imagine walking between two puddles. You do not walk
-# > touching one puddle. You take the widest dry path.
+# Your instinct says: pick the line with the biggest empty gap around it. Wider roads
+# survive small surprises better.
 
 # %%
 X_hand, y_hand, candidates = svm_hand_points()
@@ -48,9 +49,21 @@ ax.legend(fontsize=8)
 plt.show()
 
 # %% [markdown]
+# Notice the green road leaves room on both sides. The grey roads separate the training
+# dots too, but one side is close enough that a small measurement wiggle could cross it.
+#
+# > 🧸 **Little Kid Corner** — Imagine walking between two puddles. You do not walk
+# > touching one puddle. You take the widest dry path because your foot might wobble.
+
+# %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Measure the safety gap. The road with the biggest smallest gap wins.
+# The safety gap is the distance from the road to the closest dot on either side. A road
+# is only as safe as its closest danger.
+#
+# For `x = 2.5`, the nearest blue dot has `x = 2`, so the blue gap is `2.5 - 2 = 0.5`.
+# The nearest red dot has `x = 4`, so the red gap is `4 - 2.5 = 1.5`. The smallest gap is
+# `0.5`.
 
 # %%
 pd.DataFrame({"x1": X_hand[:, 0], "x2": X_hand[:, 1], "class": ["blue"] * 3 + ["red"] * 3})
@@ -59,6 +72,9 @@ pd.DataFrame({"x1": X_hand[:, 0], "x2": X_hand[:, 1], "class": ["blue"] * 3 + ["
 candidates
 
 # %% [markdown]
+# For `x = 3.0`, both nearest gaps are `1.0`, so its smallest gap is bigger. Both roads
+# fit the old dots. The wider road is the one we trust more for dots we have not seen.
+#
 # > 📖 **Grown-ups call this:** a **support vector machine** chooses the separating road
 # > with the widest safe gap.
 #
@@ -76,8 +92,11 @@ workbook.render(7)
 # %% [markdown]
 # ## 👀 See It
 #
-# The ringed points hold the road in place. Remove a far-away point and the road barely
-# moves. Remove a ringed point and the road jumps.
+# Once the road is as wide as possible, most dots are not pushing on it. They are far back
+# inside their own side, so moving them a little would not shrink the road.
+#
+# The closest dots are different. They touch the edge of the road like fence posts. Move
+# or remove one of those, and the widest possible road may change.
 
 # %%
 fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
@@ -87,10 +106,23 @@ for ax, remove in zip(axes, ["none", "non-support", "support"]):
 plt.show()
 
 # %% [markdown]
+# The ringed points are the support vectors. Delete a far-away point and the road barely
+# moves. Delete a ringed point and the road can jump because the old road was resting
+# against it.
+
+# %% [markdown]
 # ## 🎛️ Play With It
 #
-# `C` asks how much we care about getting every training point right versus keeping the
-# road wide. `gamma` asks how far each point's influence reaches for the RBF road.
+# Real data is messy, so the road sometimes has to choose: stay wide, or bend hard to fix
+# every training dot.
+#
+# `C` is the strictness knob. Low C says, "keep a wide road, even if a few training dots
+# are on the wrong side." High C says, "training mistakes are expensive," so the road
+# narrows or bends to chase them.
+#
+# `gamma` is the reach knob for the RBF road. Low gamma means each point reaches far,
+# making broad smooth shapes. High gamma means each point reaches a short distance, which
+# can create tiny islands.
 
 # %%
 X, y, model = fit_svm_shape("circles", kernel="rbf", C=3.0, gamma=1.0, noise=0.18, seed=2)
@@ -99,13 +131,18 @@ decision_boundary(model.predict, X, y, ax=ax, steps=160, shade_confidence=False,
 plt.show()
 
 # %% [markdown]
-# > ⚠️ **Careful** Low C keeps the road wide and forgives a few mistakes. High C narrows
-# > the road to chase every dot. Huge gamma can draw a tiny island around each point.
+# Watch what happens near noisy dots. High C and high gamma can make the boundary curl
+# around individual points, which feels impressive on training data and may be fragile on
+# new data.
+#
+# > ⚠️ **Careful** A kid-repeat version: **C is strictness; gamma is reach**. Strict and
+# > short-reach can memorise islands. Forgiving and long-reach gives a smoother road.
 
 # %% [markdown]
 # ## 💻 For Real
 #
-# Penguins are real data. We use two beak measurements so the road is plottable.
+# Penguins are real data, not toy dots. We use two beak measurements so the road can be
+# drawn. The ringed penguins are the ones close enough to hold the road in place.
 
 # %%
 X_peng, y_peng, species, peng_model, support = penguin_svm()
@@ -118,8 +155,23 @@ plt.show()
 print(f"support vectors: {len(support)} out of {len(X_peng)} penguins")
 
 # %% [markdown]
-# Back to Chapter 3: an RBF SVM is like the lifting-into-3D trick for circles, but it uses
-# a shortcut so you do not build the extra columns by hand. The proof comes later.
+# Notice how many penguins are not ringed. They still helped show where the classes live,
+# but they are not the points that set the final road width.
+#
+# Now connect back to Chapter 3. There, circles became easier after we invented a new
+# `radius²` feature and lifted the data into a space where a straight slice could work.
+# An RBF SVM uses the same kind of idea without asking you to build all those extra
+# columns by hand.
+#
+# ```mermaid
+# graph LR
+#     A[2D circle dots] --> B[imagine extra features]
+#     B --> C[straight cut there]
+#     C --> D[curved road back here]
+# ```
+#
+# The diagram is the kernel trick in kid language: make the data easier to cut somewhere
+# else, then read the cut back in the original picture.
 
 # %%
 X_c, y_c, lifted_predict = fit_circles_lifted()
@@ -128,6 +180,10 @@ fig, axes = plt.subplots(1, 2, figsize=(10, 4.2))
 decision_boundary(lifted_predict, X_c, y_c, ax=axes[0], steps=140, shade_confidence=False, title="linear SVM + radius feature")
 decision_boundary(rbf_model.predict, X_rbf, y_rbf, ax=axes[1], steps=140, shade_confidence=False, title="RBF shortcut")
 plt.show()
+
+# %% [markdown]
+# Look for the same lesson in both panels: a straight idea in a lifted space can become a
+# curved boundary in the original space.
 
 # %% [markdown]
 # ## 🏆 Challenge

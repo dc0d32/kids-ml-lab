@@ -70,7 +70,7 @@ WORKBOOK = Workbook(
         Question(
             prompt="Why does this babbler make pronounceable nonsense instead of brilliant names every time?",
             kind="open",
-            why="It only looks one letter back. If it has just seen `a`, it knows nothing about whether the word started `ma`, `ka`, or `bra`. Chapter 22 gives it a longer memory.",
+            why="It only looks one letter back. If it has seen `a`, it knows nothing about whether the word started `ma`, `ka`, or `bra`. Chapter 22 gives it a longer memory.",
         ),
     ],
     kid_corner="Put letter cards in bowls. After an `m`, put lots of `a` cards, some `i` cards, and a few weird cards. Draw one card. That is sampling.",

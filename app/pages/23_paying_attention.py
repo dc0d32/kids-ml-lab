@@ -44,7 +44,7 @@ def shown_char(ch: str) -> str:
     if ch == "\n":
         return "↵"
     if ch == " ":
-        return "␠"
+        return "sp"
     return ch
 
 

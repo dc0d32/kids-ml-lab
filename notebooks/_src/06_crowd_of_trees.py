@@ -29,33 +29,67 @@ use_house_style()
 # ## 🎣 The Hook
 #
 # At a party, ask everyone to guess how many jellybeans are in a jar. One person may be
-# wildly wrong. The **average** of many guesses is often spooky-good.
+# wildly high. Another may be low. The **average** can land closer than most individual
+# guesses because the high and low mistakes cancel.
 #
-# Trees can do that too. There are two crowd tricks: **vote**, or **take turns fixing
-# mistakes**.
+# But that only works if the guesses are different. If everyone copied the same wrong
+# number from the same person, averaging would repeat the same mistake.
+#
+# Forests create useful disagreement on purpose: each tree sees a random sample of rows
+# and is allowed to consider random columns while it grows.
+#
+# ```mermaid
+# graph LR
+#     A[training table] --> B[random row samples]
+#     A --> C[random column choices]
+#     B --> D[many different trees]
+#     C --> D
+#     D --> E[majority vote]
+# ```
+#
+# Notice why two trees can disagree even though they came from the same table. Tree 1 may
+# never see row 17. Tree 2 may not be offered the `speed` column at a split. Their
+# mistakes become different mistakes, and voting can steady them.
 #
 # > 🧸 **Little Kid Corner** — Ask five people where a hidden toy is. If four point under
-# > the couch, check there first. The crowd vote is stronger than one noisy guess.
+# > the couch, check there first. The crowd vote is stronger than one noisy guess when
+# > people are not copying each other.
 
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Crowd trick 1: each tiny tree votes red or blue. Tally the majority.
+# Here five tiny trees vote red or blue. For point A, the tally is red, red, blue, red,
+# red: `4 red` versus `1 blue`, so the crowd says red.
+#
+# Voting helps when errors point in different directions. If one tree overreacts to a
+# noisy dot and another tree never saw that dot, the majority can ignore the one odd vote.
+# If all five trees learned the same bad rule, the vote will not save us.
 
 # %%
 tiny_vote_table()
 
 # %% [markdown]
-# Crowd trick 2: fix what is left over. The leftover mistake is `actual - current guess`.
+# Crowd trick 2 is different. Instead of independent trees voting at the end, boosting
+# lines trees up in order. Each new tiny tree looks at what the current team still gets
+# wrong.
+#
+# The leftover is called a residual: `actual answer - current guess`. If the real answer
+# is 2 and the current guess is 5, the residual is `2 - 5 = -3`. The next tree learns to
+# push that guess downward.
 
 # %%
 tiny_boosting_table()
 
 # %% [markdown]
+# In the table, point C starts at 5 but should be 8, so the leftover is `8 - 5 = 3`. If
+# we add half of that fix, `5 + 1.5 = 6.5`. The new leftover is `8 - 6.5 = 1.5`, smaller
+# than before.
+#
 # > 📖 **Grown-ups call this:** an **ensemble** is a model made by combining many smaller
 # > models.
 #
-# > 📖 **Grown-ups call this:** a **residual** is the leftover mistake.
+# > 📖 **Grown-ups call this:** a **residual** is the leftover mistake: actual answer
+# > minus current guess.
 
 # %% [markdown]
 # Now work through the interactive workbook. Type your answer in each box and press
@@ -69,8 +103,12 @@ workbook.render(6)
 # %% [markdown]
 # ## 👀 See It
 #
-# One tree draws a jagged staircase. A forest is still made of trees, but the vote smooths
-# the jagged edges.
+# Chapter 5 gave us one blocky-bendy tree. Here the forest keeps that same building block,
+# then lets many versions vote.
+#
+# The forest is not magic smoothing paint. It is many stair-step boundaries laid over the
+# same problem, with random differences between them. The final vote can look calmer than
+# any one tree.
 
 # %%
 X, y, tree, forest = fit_tree_and_forest(shape="moons", n_estimators=30, noise=0.25, seed=4)
@@ -79,14 +117,32 @@ decision_boundary(tree.predict, X, y, ax=axes[0], steps=150, shade_confidence=Fa
 decision_boundary(forest.predict, X, y, ax=axes[1], steps=150, shade_confidence=False, title="30 trees voting")
 plt.show()
 
+# %% [markdown]
+# Look at the edges. The single tree often has sharp little bites. The forest is still
+# made of blocky cuts, but the vote usually removes some lonely mistakes.
+
 # %%
 forest_vote_counts(forest, [0.0, 0.0])
 
 # %% [markdown]
 # ## 🎛️ Play With It
 #
-# Gradient boosting is easier to see in 1D. Fit a stump. Plot the leftover mistakes. Fit
-# the next stump to those leftovers. Add it on. Repeat.
+# Boosting is easier to see on one wiggly line. Start with a plain guess. Measure the
+# leftovers. Fit a small tree to those leftovers. Add a small amount of that new tree to
+# the running prediction. Then repeat.
+#
+# ```mermaid
+# graph LR
+#     A[predict] --> B[measure leftovers]
+#     B --> C[fit tiny tree]
+#     C --> D[add small fix]
+#     D --> E[better prediction]
+#     E --> B
+# ```
+#
+# The loop works because the next tree is not trying to relearn the whole answer. It is
+# learning the part the team still misses. A lot of small corrections can build a curve
+# that one tiny tree could never draw.
 
 # %%
 trace = boosting_trace(n_steps=20, learning_rate=0.25, max_depth=1, seed=0)
@@ -103,19 +159,25 @@ axes[2].set_title("newest little tree")
 plt.show()
 
 # %% [markdown]
+# Read the three panels left to right. The middle panel is what remains wrong; the right
+# panel is the newest fix; the left panel is the total after the fixes have been added.
+#
 # > 💡 **Aha!** A smooth-looking curve can be built out of many tiny step shapes.
 #
-# > ⚠️ **Careful** Boosting learns in order. Too many strong fixes can chase noise and
-# > wobble around the points.
+# > ⚠️ **Careful** Boosting overfits more easily than a forest because it keeps staring at
+# > the current mistakes. If some leftovers are noise from bad labels or wiggly data,
+# > strong late trees may chase that noise instead of the real pattern.
 #
-# Forests are independent and hard to mess up. Boosting is sequential, often a bit
-# stronger, and easier to overfit. On table data, boosted trees win many competitions.
-# That surprises people who expected the answer to always be neural networks.
+# Forests are independent and sturdy. Boosting is sequential, often a bit stronger, and
+# easier to overfit. On table data, boosted trees win many competitions. That surprises
+# people who expected the answer to always be neural networks.
 
 # %% [markdown]
 # ## 💻 For Real
 #
 # The monster table was generated from a secret rule, with 5% of labels flipped on purpose.
+# That means some training answers are lies. A perfect training score would be suspicious,
+# because a model would have to learn the lies too.
 
 # %%
 scores, importances, secret = monster_models()
@@ -128,12 +190,11 @@ importances
 print(secret)
 
 # %% [markdown]
-# Attack, magic, and speed rise to the top. Element, home, and height do not matter much.
-# That matches the secret rule. A model scoring 100% would be suspicious because some
-# labels are deliberately wrong.
+# Look for the tallest bars before revealing the rule. Attack, magic, and speed rise to
+# the top; element, home, and height matter much less. That matches the secret rule.
 
 # %% [markdown]
-# ## �� Challenge
+# ## 🏆 Challenge
 #
 # 1. How few trees does the forest need before it beats the one tree?
 # 2. Make boosting overfit the wiggle: use many steps and deeper tiny trees.

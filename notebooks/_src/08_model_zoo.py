@@ -8,7 +8,9 @@
 # ---
 #
 # You now know several guessers: lines, probabilities, trees, crowds, and widest roads.
-# Which one should you use? The honest answer is: **try them and see**.
+# Which one should you use? The honest answer is: **try them and see**. But *see* is
+# harder than it sounds, because a model can look brilliant on the rows it studied and
+# stumble on new rows.
 
 # %%
 import matplotlib.pyplot as plt
@@ -31,7 +33,21 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# *See* is harder than it sounds. This chapter is mostly about not lying to yourself.
+# This chapter is about fair races. We compare models on data they did not train on, we
+# repeat the race, and we always ask what a boring baseline could score.
+#
+# ```mermaid
+# graph LR
+#     A[all labelled rows] --> B[training rows]
+#     A --> C[hidden test rows]
+#     B --> D[train model]
+#     D --> E[predict hidden rows]
+#     C --> E
+#     E --> F[test score]
+# ```
+#
+# Notice the wall between training rows and hidden test rows. If the model studies the
+# test rows, the score stops being evidence about new data.
 #
 # > 🧸 **Little Kid Corner** — If you test a bike, a scooter, and skates, use the same
 # > hill for all three. A fair race needs fair rules.
@@ -39,7 +55,25 @@ use_house_style()
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Cut 10 rows into 5 folds of 2 rows. Each round hides one fold as the test set.
+# One train/test split can be lucky. Maybe the easy rows landed in the test set. Maybe the
+# hard rows did. Cross-validation turns that one race into several smaller races.
+#
+# Cut 10 rows into 5 folds of 2 rows. Each round hides one fold as the test set and trains
+# on the other four folds. Every row gets a turn being hidden.
+#
+# ```mermaid
+# graph TD
+#     A[10 rows] --> B[5 folds]
+#     B --> C[round 1: fold 1 tests]
+#     B --> D[round 2: fold 2 tests]
+#     B --> E[more rounds rotate]
+#     C --> F[average and spread]
+#     D --> F
+#     E --> F
+# ```
+#
+# The rotation is the point. A bouncy test score is not a bug; it is a warning that one
+# split is a shaky fact.
 
 # %%
 fold_table = pd.DataFrame(
@@ -55,6 +89,8 @@ fold_table
 print("average =", (0.80 + 0.70 + 0.90 + 0.80 + 0.60) / 5)
 
 # %% [markdown]
+# Average arithmetic: `(0.80 + 0.70 + 0.90 + 0.80 + 0.60) / 5 = 3.80 / 5 = 0.76`.
+#
 # > 📖 **Grown-ups call this:** **cross-validation** means taking turns hiding different
 # > chunks, then reporting the average and spread.
 
@@ -70,11 +106,20 @@ workbook.render(8)
 # %% [markdown]
 # ## 👀 See It
 #
-# Here is the model zoo. The same data goes to every model. No model wins on every shape.
+# Here is the model zoo. Every model gets the same training rows and the same hidden test
+# rows. That keeps the race fair.
+#
+# Watch the shapes. Lines like straight-ish borders. Trees like boxes. RBF SVMs like
+# smooth islands. kNN listens to nearby points. No personality wins every kind of problem.
 
 # %%
 fig = plot_zoo(shape="moons", n=180, noise=0.20, seed=0)
 plt.show()
+
+# %% [markdown]
+# Look at both parts of each mini-plot: the boundary shape and the test score in the
+# title. A model can have the wrong personality for one shape and the right personality
+# for another.
 
 # %%
 pd.DataFrame({"model": list(MODEL_PERSONALITIES), "personality": list(MODEL_PERSONALITIES.values())})
@@ -86,14 +131,21 @@ pd.DataFrame({"model": list(MODEL_PERSONALITIES), "personality": list(MODEL_PERS
 # %% [markdown]
 # ## 🎛️ Play With It
 #
-# If I let you study the exact test questions, your score means nothing.
+# Scoring a model on its own training data is like taking a practice test after memorising
+# the answer key. It may tell you the model stored the rows. It does not tell you whether
+# it learned a pattern that works on new rows.
 
 # %%
 pd.DataFrame([deep_tree_train_test()])
 
 # %% [markdown]
 # > ⚠️ **Careful** Evaluating on the training data is a fake victory. A deep tree can
-# > score 100% there and still miss new points.
+# > score 100% there by memorising tiny boxes, then miss new points that do not land in
+# > those boxes.
+#
+# Now change only the split seed. The model type and dataset stay the same; the rows
+# assigned to the hidden test set change. If the test score jumps, that is useful
+# information: this single split was noisy.
 
 # %%
 bounce = split_bounce_scores(test_size=0.30, max_seed=10)
@@ -105,6 +157,11 @@ ax.plot(bounce["seed"], bounce["test accuracy"], marker="o")
 ax.set_xlabel("split seed")
 ax.set_ylabel("test accuracy")
 plt.show()
+
+# %% [markdown]
+# Cross-validation exists because of that bounce. Instead of trusting one split, it
+# rotates through several hidden chunks and reports the average **and** the spread. A
+# score without a spread is only half a fact.
 
 # %%
 scores = fold_scores()
@@ -118,19 +175,23 @@ print("mean:", round(float(scores.mean()), 3), "spread:", round(float(scores.std
 print("lopsided baseline accuracy:", lopsided_baseline())
 
 # %% [markdown]
-# A useless model can score high when one class is much more common. Chapter 10 digs into
-# that trap. A score without a spread is half a fact.
+# A useless model can score high when one class is much more common. Check the baseline
+# first, or you may celebrate a model that learned nothing. Chapter 10 digs into that
+# trap.
 
 # %% [markdown]
 # ## 💻 For Real
 #
-# Here is an honest penguin leaderboard: mean ± spread from five folds, sorted.
+# Here is the penguin race with fair rules: five folds, the same rows for every model,
+# and mean plus spread. The baseline is included because a fancy model has to beat the
+# boring answer before it earns applause.
 
 # %%
 penguin_leaderboard()
 
 # %% [markdown]
-# If two means are closer than their spreads, do not brag that one crushed the other.
+# If two means are closer than their spreads, do not brag that one crushed the other. Read
+# `0.96 ± 0.03` as a small cloud of possible scores, not one magic number.
 
 # %% [markdown]
 # ## 🏆 Challenge

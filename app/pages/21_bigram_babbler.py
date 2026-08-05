@@ -35,7 +35,7 @@ def label(ch: str) -> str:
     if ch == STOP:
         return "."
     if ch == " ":
-        return "␠"
+        return "sp"
     return ch
 
 

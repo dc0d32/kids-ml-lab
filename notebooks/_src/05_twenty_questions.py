@@ -8,7 +8,8 @@
 # ---
 #
 # In Chapter 3, a straight line failed on circles and XOR. We had two escapes:
-# **invent new features**, or use a **bendy model**. This is the first bendy model.
+# **invent new features**, or use a **bendy model**. This chapter is the first bendy
+# model: it bends by asking questions.
 
 # %%
 import matplotlib.pyplot as plt
@@ -32,10 +33,24 @@ use_house_style()
 # %% [markdown]
 # ## 🎣 The Hook
 #
-# Think of **Twenty Questions** or **Guess Who**.
+# Think of **Twenty Questions** or **Guess Who**. You do not need one giant rule at the
+# start. You ask one useful yes/no question, split the pile, then ask a new question
+# inside each smaller pile.
 #
-# Is it bigger than a cat? Does it have wings? You split the pile, then ask another
-# question. A decision tree is that game. The clever part is choosing the first question.
+# That is why a tree is a flowchart. The clever part is not the drawing; it is choosing
+# which question makes the next step easiest.
+#
+# ```mermaid
+# graph TD
+#     A[Start with one pile] --> B{Has wings?}
+#     B -->|yes| C{Has feathers?}
+#     B -->|no| D[mostly cannot fly]
+#     C -->|yes| E{Lives in water?}
+#     C -->|no| F[can fly]
+# ```
+#
+# Notice the tree asks **one question at a time**. A row never answers every question in
+# the diagram; it walks one path until it reaches an answer.
 #
 # > 🧸 **Little Kid Corner** — Put toy animals in a pile. Ask one yes/no question, like
 # > *does it have wings?* Move the yes toys left and the no toys right. Keep asking until
@@ -47,27 +62,34 @@ use_house_style()
 # %% [markdown]
 # ## ✏️ Do It By Hand
 #
-# Here are ten made-up creatures. We want to guess `can_fly`.
+# Here are ten made-up creatures. We want to guess `can_fly`, but the tree is only allowed
+# to start with **one** column. It tries possible first questions such as `has_wings` and
+# `lives_in_water`.
 
 # %%
 creatures = load_table("creatures")
 creatures
 
 # %% [markdown]
-# A mixed bucket is messy. A clean bucket is good.
+# A bucket is **mixed** when different answers are still stuck together. Six animals with
+# 3 flyers and 3 non-flyers is very mixed. Four flyers and 0 non-flyers is clean.
 #
-# For two answers, the bucket mix score is:
+# The Gini mix score says: pick two random animals from the bucket. How likely are you to
+# be surprised by two different answers? For two answers, the score is:
 #
 # `1 - p_yes² - p_no²`
 #
-# A bucket with 3 flyers and 3 non-flyers has `1 - (3/6)² - (3/6)² = 0.5`.
-# A bucket with 4 flyers and 0 non-flyers has `1 - 1² - 0² = 0`.
-#
-# Now try every possible first question.
+# Half-and-half gives `1 - (3/6)² - (3/6)² = 1 - 9/36 - 9/36 = 0.5`. A clean bucket gives
+# `1 - 1² - 0² = 0`. Lower means less mess left for the next question.
 
 # %%
 splits = creature_split_table()
 splits
+
+# %% [markdown]
+# The weighted mix column counts both buckets. For `has_wings`, the yes bucket has 6
+# animals and mix `1 - (4/6)² - (2/6)² = 0.444`, while the no bucket has 4 animals and mix
+# `0`. So the split score is `(6×0.444 + 4×0) / 10 = 0.267`.
 
 # %%
 print("Best first question:", splits.iloc[0]["first question"])
@@ -84,7 +106,12 @@ workbook.render(5)
 # %% [markdown]
 # ## 👀 See It
 #
-# Now sklearn builds a tree from the same ten rows. It picks the same first question.
+# The computer is not guessing from vibes. It tries the same kind of split table, picks
+# the least-mixed question, and repeats that inside the new buckets.
+#
+# Each split uses one column because a tree question has one job: send the row left or
+# right. Later questions can use different columns, but only after the row has reached
+# that branch.
 
 # %%
 model, X_creatures, y_creatures = fit_creature_tree(max_depth=3)
@@ -92,14 +119,22 @@ fig, ax = plt.subplots(figsize=(11, 5))
 plot_decision_tree(model, creature_feature_names(), ["cannot fly", "can fly"], ax=ax)
 plt.show()
 
+# %% [markdown]
+# Read the picture from top to bottom. At every box, the tree asks one yes/no question and
+# sends the row down exactly one branch.
+
 # %%
 print("Computer's first split:", creature_feature_names()[int(model.tree_.feature[0])])
 
 # %% [markdown]
 # ## 🎛️ Play With It
 #
-# Change `DEPTH`. A tree bends by making **stairs**: horizontal and vertical cuts.
-# Depth 1 is a stump. Depth 20 can carve a tiny box around almost every point.
+# Change `DEPTH`. Chapter 3 asked for a bendy boundary. A tree can bend, but not like a
+# smooth rubber band. On a two-column picture, `x1 <= 0.4` makes a vertical cut and
+# `x2 <= -0.2` makes a horizontal cut.
+#
+# That is why the boundary becomes a staircase. More depth means more questions, and more
+# questions mean more little rectangles.
 
 # %%
 SHAPE = "moons"
@@ -115,6 +150,10 @@ plt.show()
 print("train accuracy:", round(model.score(X_train, y_train), 3))
 print("test accuracy:", round(model.score(X_test, y_test), 3))
 
+# %% [markdown]
+# Notice the boundary is made only of horizontal and vertical cuts. The tree cannot draw a
+# diagonal line; it can only stack enough stair steps to fake one.
+
 # %%
 scores = tree_depth_scores(SHAPE, n=N, noise=NOISE, seed=SEED)
 scores
@@ -129,17 +168,24 @@ ax.legend()
 plt.show()
 
 # %% [markdown]
-# > 💡 **Aha!** A tree is not smooth-bendy. It is **blocky-bendy**. Each question cuts only
-# > left-right or up-down. Enough little cuts can carve almost any shape.
+# > 💡 **Aha!** A tree is **blocky-bendy**. Each question makes one straight cut, but a
+# > chain of small cuts can wrap around moons, circles, or XOR without inventing new
+# > features.
 #
-# > ⚠️ **Careful** A depth-20 tree can get 100% on its own dots by memorising tiny boxes.
-# > That is like memorising last year's test answers. It feels great until the questions change.
+# > ⚠️ **Careful** A deep tree can score better on its own training dots by making tiny
+# > boxes around awkward points. That is memorising: it learns *this exact dot goes red*
+# > instead of learning a rule that helps on the next dot. Chapter 8 turns this worry into
+# > a fair test.
 
 # %% [markdown]
 # ## 💻 For Real
 #
-# Mushrooms are a real table of words. A column that says `smell` cannot be a number, so
-# we make one yes/no column per smell. That is one-hot encoding.
+# Real tables often contain words. A column that says `smell = almond` cannot go straight
+# into a tree as a sentence, so we turn it into yes/no columns like `smell_almond`,
+# `smell_fishy`, and `smell_none`.
+#
+# This is called one-hot encoding. It gives the tree the same kind of question it already
+# knows how to ask: is this column 0 or 1?
 
 # %%
 mush_model, X_train, X_test, y_train, y_test, mush_scores, text = mushroom_tree(max_depth=4)
@@ -152,9 +198,9 @@ shallow_mushroom_scores()
 print(text[:2200])
 
 # %% [markdown]
-# Smell sits at the top. Real mushroom guides talk about smell too. The data and the
-# foragers agree. In this bundled table, depth 4 is the first tree that gets almost all
-# test mushrooms right.
+# Look at the top question before you read the whole printed tree. Smell sits near the
+# top, and real mushroom guides talk about smell too. That agreement is a good sign: the
+# model found a clue a human forager would recognise.
 
 # %% [markdown]
 # ## 🏆 Challenge

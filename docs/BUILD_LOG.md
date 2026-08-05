@@ -162,3 +162,19 @@ Built Part 4's first seeing chapters.
 - Chapter 16 turns sklearn's 8×8 digits into visible number grids, trains a small seeded `MLPClassifier`, shows confusion-matrix mistakes, first-layer weights, and a canvas-to-8×8 digit demo.
 - Chapter 17 adds `kidsml/vision.py` for plain valid convolutions, kernel presets, drawing preprocessing, and a small CPU PyTorch CNN/MLP comparison. Fashion-MNIST downloads to `data/torchvision/` when available and falls back to sklearn digits if needed.
 - Both chapters use interactive Python workbooks rather than printable handouts.
+
+---
+
+## 2026-08-05 — Part 6 finale chapters
+
+Built Chapters 21-24 as the generative-text finale: bigram counting, a fixed-window MLP with letter embeddings, a tiny causal Transformer with attention maps, and the course wrap-up. The shared language-model code lives in `kidsml/langmodels.py` so pages and notebooks use the same training, sampling, scoring, and attention helpers.
+
+The models are intentionally small and CPU-only. Measured notebook runtimes in the chapter-only test run were 6.24s (Ch21), 6.81s (Ch22), 13.16s (Ch23), and 1.84s (Ch24), well below their budgets.
+
+---
+
+## 2026-08-05 — Chapters 01-04 teaching prose deepened
+
+Reworked the Part 1 linear-model chapters so each teaching point has setup, concrete arithmetic, and a "why this matters" landing. The app pages, notebook sources, generated notebooks, and workbook `why=` explanations now explain squared error, gradients, perceptron geometry, XOR impossibility, feature lifting, sigmoid probabilities, and log-loss confidence in kid-readable steps.
+
+Added Mermaid structure diagrams for the gradient-descent loop, perceptron score-to-class flow, 3D feature-lift pipeline, and logistic score-to-probability flow. Measured notebook runtimes after rebuilding: Ch01 3.60s, Ch02 3.22s, Ch03 5.01s, Ch04 2.98s.

@@ -35,35 +35,95 @@ ui.beat("hook", "A crowd can be wiser than one guesser.")
 
 st.markdown(
     """
-At a party, ask everyone to guess how many jellybeans are in a jar. One person may be
-wildly wrong. The **average** of many guesses is often spooky-good.
+At a party, ask everyone to guess how many jellybeans are in a jar. One person
+may be wildly high. Another may be low. The **average** can land closer than
+most individual guesses because the high and low mistakes cancel.
 
-Trees can do that too.
+But that only works if the guesses are different. If everyone copied the same
+wrong number from the same person, averaging would repeat the same mistake.
 
-There are two crowd tricks: **vote**, or **take turns fixing mistakes**. Both are used
-all over real machine learning.
+Forests create useful disagreement on purpose: each tree sees a random sample
+of rows and is allowed to consider random columns while it grows.
+"""
+)
+
+ui.mermaid(
+    """
+graph LR
+    A[training table] --> B[random row samples]
+    A --> C[random column choices]
+    B --> D[many different trees]
+    C --> D
+    D --> E[majority vote]
+""",
+    height=300,
+)
+
+st.markdown(
+    """
+Notice why two trees can disagree even though they came from the same table.
+Tree 1 may never see row 17. Tree 2 may not be offered the `speed` column at a
+split. Their mistakes become different mistakes, and voting can steady them.
 """
 )
 
 ui.little_kid_corner(
     "Ask five people where a hidden toy is. If four point under the couch, check there first. "
-    "The crowd vote is stronger than one noisy guess."
+    "The crowd vote is stronger than one noisy guess when people are not copying each other."
 )
 
 # ---------------------------------------------------------------------------
 ui.beat("byhand", "Crowd trick 1: vote.")
 
-st.markdown("Each tiny tree votes red or blue. You tally the majority.")
+st.markdown(
+    """
+Here five tiny trees vote red or blue. For point A, the tally is red, red,
+blue, red, red: `4 red` versus `1 blue`, so the crowd says red.
+
+Voting helps when errors point in different directions. If one tree overreacts
+to a noisy dot and another tree never saw that dot, the majority can ignore the
+one odd vote. If all five trees learned the same bad rule, the vote will not save us.
+"""
+)
 st.dataframe(tiny_vote_table(), hide_index=True, use_container_width=True)
 
-st.markdown("Crowd trick 2: fix what is left over.")
+st.markdown(
+    """
+Crowd trick 2 is different. Instead of independent trees voting at the end,
+boosting lines trees up in order. Each new tiny tree looks at what the current
+team still gets wrong.
+
+The leftover is called a residual: `actual answer - current guess`. If the real
+answer is 2 and the current guess is 5, the residual is `2 - 5 = -3`. The next
+tree learns to push that guess downward.
+"""
+)
 st.dataframe(tiny_boosting_table(), hide_index=True, use_container_width=True)
+
+st.markdown(
+    """
+In the table, point C starts at 5 but should be 8, so the leftover is `8 - 5 =
+3`. If we add half of that fix, `5 + 1.5 = 6.5`. The new leftover is `8 - 6.5 =
+1.5`, smaller than before.
+"""
+)
 
 ui.jargon("ensemble", "A model made by combining many smaller models.")
 ui.jargon("residual", "The leftover mistake: actual answer minus current guess.")
 
 # ---------------------------------------------------------------------------
 ui.beat("seeit", "One jagged tree beside a voting forest.")
+
+st.markdown(
+    """
+Chapter 5 gave us one blocky-bendy tree. Here the forest keeps that same
+building block, then lets many versions vote.
+
+The forest is not magic smoothing paint. It is many stair-step boundaries laid
+over the same problem, with random differences between them. The final vote can
+look calmer than any one tree.
+"""
+)
 
 shape = ui.shape_picker(default="moons", key="ch06_shape", include=("moons", "circles", "xor", "spiral"))
 noise = ui.noise_slider(default=0.25, key="ch06_noise")
@@ -76,6 +136,13 @@ decision_boundary(tree.predict, X, y, ax=axes[0], steps=150, shade_confidence=Fa
 decision_boundary(forest.predict, X, y, ax=axes[1], steps=150, shade_confidence=False, title=f"{n_estimators} trees voting")
 ui.show(fig)
 
+st.markdown(
+    """
+Look at the edges. The single tree often has sharp little bites. The forest is
+still made of blocky cuts, but the vote usually removes some lonely mistakes.
+"""
+)
+
 x1 = st.slider("Click-ish point: feature 1", -2.5, 2.5, 0.0, 0.1, key="vote_x1")
 x2 = st.slider("Click-ish point: feature 2", -2.5, 2.5, 0.0, 0.1, key="vote_x2")
 votes = forest_vote_counts(forest, [x1, x2])
@@ -83,6 +150,34 @@ st.info(f"For that point, **{votes['red']} of {n_estimators}** trees said red an
 
 # ---------------------------------------------------------------------------
 ui.beat("play", "Boosting builds a curve from little steps.")
+
+st.markdown(
+    """
+Boosting is easier to see on one wiggly line. Start with a plain guess. Measure
+the leftovers. Fit a small tree to those leftovers. Add a small amount of that
+new tree to the running prediction. Then repeat.
+"""
+)
+
+ui.mermaid(
+    """
+graph LR
+    A[predict] --> B[measure leftovers]
+    B --> C[fit tiny tree]
+    C --> D[add small fix]
+    D --> E[better prediction]
+    E --> B
+""",
+    height=250,
+)
+
+st.markdown(
+    """
+The loop works because the next tree is not trying to relearn the whole answer.
+It is learning the part the team still misses. A lot of small corrections can
+build a curve that one tiny tree could never draw.
+"""
+)
 
 steps = st.slider("Boosting step", 1, 50, 12, key="boost_step")
 rate = st.slider("How much of each fix to add", 0.05, 0.60, 0.25, 0.05, key="boost_rate")
@@ -101,19 +196,41 @@ axes[2].plot(trace["x_grid"], stage["newest_grid"], color="#10B981")
 axes[2].set_title("newest little tree")
 ui.show(fig)
 
+st.markdown(
+    """
+Read the three panels left to right. The middle panel is what remains wrong;
+the right panel is the newest fix; the left panel is the total after the fixes
+have been added.
+"""
+)
+
 ui.aha("A smooth-looking curve can be built out of many tiny step shapes.")
-ui.careful("Boosting learns in order. Too many strong fixes can chase noise and wobble around the points.")
+ui.careful(
+    "Boosting overfits more easily than a forest because it keeps staring at the current "
+    "mistakes. If some leftovers are noise from bad labels or wiggly data, strong late "
+    "trees may chase that noise instead of the real pattern."
+)
 
 # ---------------------------------------------------------------------------
 ui.beat("forreal", "Monsters have a secret rule.")
+
+st.markdown(
+    """
+The monster table was generated from a secret rule, with 5% of labels flipped
+on purpose. That means some training answers are lies. A perfect training score
+would be suspicious, because a model would have to learn the lies too.
+"""
+)
 
 scores, importances, secret = cached_monsters()
 st.dataframe(scores, hide_index=True, use_container_width=True)
 st.bar_chart(importances.set_index("feature group"))
 
 st.markdown(
-    "Attack, magic, and speed rise to the top. Element, home, and height do not matter much. "
-    "Now reveal the rule that made the data:"
+    """
+Look for the tallest bars before revealing the rule. Attack, magic, and speed
+rise to the top; element, home, and height matter much less.
+"""
 )
 st.code(secret)
 st.warning("Five percent of the labels were flipped on purpose. A model scoring 100% here would be suspicious.")
