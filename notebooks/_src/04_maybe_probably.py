@@ -24,7 +24,7 @@ from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, use_h
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Chapter 3 showed why a hard line sometimes needs help: some boundaries must
 # bend. But even when a straight boundary is good enough, Chapter 2's perceptron
@@ -39,7 +39,7 @@ use_house_style()
 # > by an S-curve that turns it into a probability.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Start with the same raw line score **z**. Positive should lean red. Negative
 # should lean blue. A score near 0 should mean a shrug.
@@ -84,7 +84,7 @@ from kidsml import workbook
 workbook.render(4)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The slider in the app changes `w`. Here, change `w` in code. Large `w` makes the
 # S-curve look like Chapter 2's hard step. Small `w` makes a model that shrugs for
@@ -107,7 +107,7 @@ plt.show()
 # shrug zone.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # The probability is curved, but the decision boundary stays straight. Why? The
 # model says red when **p ≥ 0.5**, and sigmoid reaches 0.5 exactly at **z = 0**.
@@ -152,7 +152,7 @@ pd.DataFrame(rows)
 # wrong is forgivable. Being certain and wrong is expensive.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Now use real penguins. The model sees flipper length and weight, then estimates
 # how likely each penguin is to be Gentoo.
@@ -187,7 +187,7 @@ sample = penguins.iloc[[0, len(penguins) // 2, int(np.argmin(np.abs(probs - 0.5)
 sample
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Find a confident mistake.** Look for a penguin with a high probability and the
 #    wrong answer.

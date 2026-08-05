@@ -63,3 +63,17 @@ happen in) and matplotlib for data. In notebooks use a fenced ```mermaid block â
 renders it natively.
 
 See the "How much to explain" section of AGENTS.md for the full standard.
+
+## Voice
+
+**Bill Nye energy**: fast, delighted, physical, never solemn. Short sentences, concrete
+nouns, second person. Someone who thinks this is the coolest thing and can't wait to show
+you.
+
+**The running joke**: the reader gets secondhand embarrassment when a parent uses Gen-Z
+slang, so the course does it on purpose â€” one or two per chapter, deliberately a beat
+late or over-explained. The joke is the course being pleased with itself for knowing the
+word. Keep it out of any explanation doing real work; captions, asides and metric labels
+are the right home. If it isn't funny, leave it out.
+
+See the "Voice" section of AGENTS.md for the full standard.

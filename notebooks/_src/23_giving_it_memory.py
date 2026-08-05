@@ -23,7 +23,7 @@ from kidsml.text import bigram_counts, bigram_nll, counts_to_probs, letter_group
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Chapter 22 could see **one** letter back. Let's give it **three**.
 #
@@ -34,7 +34,7 @@ use_house_style()
 # > three kids in line what letters they are holding. Then guess the next card.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Slide a three-letter window over `cat`.
 
@@ -53,7 +53,7 @@ windows
 # > that add to 1. Bigger scores get more probability.
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The pipeline is readable now:
 #
@@ -110,7 +110,7 @@ plt.show()
 # start makes a perfect picture.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Train three fixed-window models. Only the memory length changes.
 
@@ -138,7 +138,7 @@ loss_curve(models[3].losses, ax=ax, title="Training loss, block size 3", ylabel=
 plt.show()
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Does the neural net beat the Chapter 22 bigram on the same held-out words?
 
@@ -186,7 +186,7 @@ print(X.shape, y.shape)
 # > Chapter 24 fixes that in a different way.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Find a starter that the MLP finishes like a real name.
 # 2. Compare block size 1 and 5 using the same starter.

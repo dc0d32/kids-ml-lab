@@ -28,14 +28,14 @@ understood.
 
 A session that works:
 
-1. **Read the Hook out loud, together.** Don't let them read it silently. The hook is
+1. **Read the opening screen out loud, together.** Don't let them read it silently. It is
    written to be a conversation opener, and it dies on the page.
 2. **Do the "By Hand" part with a pencil, on scrap paper, before touching the workbook
    boxes.** This is the part they will want to skip. Don't let them. The whole design of
    this course assumes they have personally done the arithmetic at least once.
 3. **Let them loose on the sliders.** Say nothing for a few minutes. Seriously — sit on
-   your hands. The play beat is where the understanding actually forms, and narrating over
-   it interrupts exactly the process you want.
+   your hands. The slider screens are where the understanding actually forms, and
+   narrating over them interrupts exactly the process you want.
 4. **Ask them to explain the picture back to you.** Not "do you understand?" — they will
    always say yes. Ask "so what happens if I drag this one all the way over?" and let them
    predict *before* they drag it. A wrong prediction followed by a surprise is worth more

@@ -13,13 +13,36 @@ pencil, then becomes a picture you can poke with a slider, and only *then* becom
 
 ## Start here
 
+You need [`uv`](https://docs.astral.sh/uv/getting-started/installation/) and nothing else —
+it fetches the right Python and every package on first run.
+
+**macOS / Linux**
+
 ```bash
 ./run.sh app     # the interactive playground  ← start here
 ./run.sh lab     # JupyterLab notebooks (same chapters, with the code visible)
-./run.sh test    # smoke tests
+./run.sh test    # the tests
 ```
 
-First run will take a few minutes while `uv` builds the environment. After that it's instant.
+**Windows (PowerShell)**
+
+```powershell
+.\run.ps1 app
+.\run.ps1 lab
+.\run.ps1 test
+```
+
+Or skip the launchers entirely, on any platform:
+
+```bash
+uv run streamlit run app/Home.py
+uv run jupyter lab notebooks
+```
+
+First run takes a few minutes while `uv` builds the environment. After that it's instant.
+Everything runs on the CPU — there is no GPU anywhere in this course, and nothing needs
+an account, a key, or an internet connection (except a one-time 30 MB dataset in
+Chapter 18).
 
 ---
 

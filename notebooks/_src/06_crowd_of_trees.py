@@ -26,7 +26,7 @@ from kidsml.trees import (
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # At a party, ask everyone to guess how many jellybeans are in a jar. One person may be
 # wildly high. Another may be low. The **average** can land closer than most individual
@@ -56,7 +56,7 @@ use_house_style()
 # > people are not copying each other.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Here five tiny trees vote red or blue. For point A, the tally is red, red, blue, red,
 # red: `4 red` versus `1 blue`, so the crowd says red.
@@ -101,7 +101,7 @@ from kidsml import workbook
 workbook.render(6)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Chapter 5 gave us one blocky-bendy tree. Here the forest keeps that same building block,
 # then lets many versions vote.
@@ -125,7 +125,7 @@ plt.show()
 forest_vote_counts(forest, [0.0, 0.0])
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Boosting is easier to see on one wiggly line. Start with a plain guess. Measure the
 # leftovers. Fit a small tree to those leftovers. Add a small amount of that new tree to
@@ -173,7 +173,7 @@ plt.show()
 # people who expected the answer to always be neural networks.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # The monster table was generated from a secret rule, with 5% of labels flipped on purpose.
 # That means some training answers are lies. A perfect training score would be suspicious,
@@ -194,7 +194,7 @@ print(secret)
 # the top; element, home, and height matter much less. That matches the secret rule.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. How few trees does the forest need before it beats the one tree?
 # 2. Make boosting overfit the wiggle: use many steps and deeper tiny trees.

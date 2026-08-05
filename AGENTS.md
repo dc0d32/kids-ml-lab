@@ -41,7 +41,10 @@ improvement.
 
 ## Voice
 
-- Short sentences. Concrete nouns. Second person — "your line", "you already know this".
+Aim for **Bill Nye**: fast, delighted, physical, never solemn. Short sentences. Concrete
+nouns. Second person — "your line", "you already know this". The energy of someone who
+genuinely thinks this is the coolest thing and cannot wait to show you.
+
 - Never write "simply", "just", "obviously", or "trivial". They are the exact words that
   make a nervous reader give up.
 - Humour is welcome. Condescension is not.
@@ -49,6 +52,34 @@ improvement.
   under three minutes.
 - Every chapter needs a **🧸 Little Kid Corner**: the same idea with zero algebra, usually
   a physical game or an analogy the 4th grader can act out.
+
+### The running joke: dad slang, used slightly wrong
+
+The 8th grader this was written for gets secondhand embarrassment when his dad uses
+Gen-Z/Gen-Alpha slang. So the course does it on purpose. **The joke is not the slang. The
+joke is the course being visibly pleased with itself for knowing the slang.**
+
+How to land it:
+
+- **Rarely.** One or two per chapter, maximum. Peppered, not poured. The gag dies instantly
+  if it's on every screen.
+- **Slightly off**, the way a parent uses it — a beat late, too formal, or over-explained.
+  *"A tree this deep has, and I believe I am using this correctly, no aura."*
+- **Never inside an explanation that's doing real work.** Put it in a caption, an aside, a
+  challenge title, a metric label — the places where a reader losing a second to an eye-roll
+  costs nothing. Clarity always outranks the bit.
+- **Keep it kind and keep it clean.** It's never at the reader's expense.
+- Usable vocabulary: cooked, mid, goated, no cap, bet, sus, lowkey, based, cringe, ate,
+  let him cook, touch grass, main character, NPC, aura, delulu, vibe check, side quest,
+  glazing. Avoid anything crude or body-related.
+
+Good: `st.metric("Model's aura", "0")` under a chart of a model that just failed.
+Good: *"Nine multiplies and one add. That's it. That's the whole convolution. It is, as
+they say, mid — and mid is exactly why it's fast enough to run on every pixel."*
+Bad: three slang terms in one paragraph, or slang in the middle of the backprop derivation.
+
+If you can't make it funny, leave it out. An unfunny bit is worse than no bit.
+
 
 ---
 
@@ -186,6 +217,11 @@ export LD_LIBRARY_PATH=$(cat .nix-libs)     # .nix-libs is created by run.sh on 
 There is also a `flake.nix` devShell (`nix develop`) that sets the same paths
 declaratively.
 
+**Windows** uses `run.ps1`, which takes the same subcommands. Both launchers set
+`PYTHONUTF8=1`, because the chapters are full of emoji and the Windows console default
+encoding is not UTF-8. If you read a repo file in Python, **pass `encoding="utf-8"`
+explicitly** — the platform default is not the same everywhere.
+
 Datasets are committed, so `tools/prepare_data.py` only needs re-running if a source
 changes.
 
@@ -254,12 +290,12 @@ Notebooks stay linear — scrolling is the right shape for a document you edit a
 
 | Call | Header | What goes in it |
 |---|---|---|
-| `ui.beat("hook")` | 🎣 The Hook | A question or a game. Plain English. No math, no code. |
-| `ui.beat("byhand")` | ✏️ Do It By Hand | A few rows of tiny numbers, worked out with a pencil, then the same thing in code so they see it match. |
-| `ui.beat("seeit")` | 👀 See It | A picture of the exact thing they just did by hand. |
-| `ui.beat("play")` | 🎛️ Play With It | Sliders. One knob → the picture changes within a second. This is the heart of the chapter. |
-| `ui.beat("forreal")` | 💻 For Real | 10–25 lines of real code on real-ish data. |
-| `ui.beat("challenge")` | 🏆 Challenge | Numbered quests — beat the machine, break it on purpose — ending with a 🧸 item. |
+| `ui.beat("hook")` | 🎣 Start here | A question or a game. Plain English. No math, no code. |
+| `ui.beat("byhand")` | ✏️ Work it out | A few rows of tiny numbers, worked out with a pencil, then the same thing in code so they see it match. |
+| `ui.beat("seeit")` | 👀 Take a look | A picture of the exact thing they just did by hand. |
+| `ui.beat("play")` | 🎛️ Your turn | Sliders. One knob → the picture changes within a second. This is the heart of the chapter. |
+| `ui.beat("forreal")` | 💻 In real code | 10–25 lines of real code on real-ish data. |
+| `ui.beat("challenge")` | 🏆 Go further | Numbered quests — beat the machine, break it on purpose — ending with a 🧸 item. |
 
 Start every page with `ui.page_setup(N)` and end it with `ui.worksheet_link(N)`.
 End every notebook with a `---` and a one-line **Next up:** teaser.

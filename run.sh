@@ -7,6 +7,9 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# The chapters are full of emoji; never let a narrow locale break them.
+export PYTHONUTF8=1
+
 # On NixOS, pip wheels can't find libstdc++/libz because there is no global /usr/lib.
 # Point LD_LIBRARY_PATH at the right store paths (cached, since `nix eval` is slow).
 if [ -e /etc/NIXOS ] && [ -z "${KIDSML_SKIP_NIX_LIBS:-}" ]; then

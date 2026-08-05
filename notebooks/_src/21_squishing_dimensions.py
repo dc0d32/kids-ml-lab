@@ -41,7 +41,7 @@ from kidsml.unsupervised import (
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Same hand. Same wall. Different angle. The useful shadow keeps the story.
 #
@@ -59,7 +59,7 @@ use_house_style()
 # > shadow gives the best clue.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Four points lie nearly sideways. Project onto x, then onto y. Spread is the sum of
 # squared distances from the middle.
@@ -88,7 +88,7 @@ print("y spread:", spread(table["y shadow"]))
 workbook.render(21)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The app lets you hunt for the best angle. Here we compare one human-picked shadow with
 # PCA's answer.
@@ -112,7 +112,7 @@ plt.show()
 # story.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Compress one digit to n components and rebuild it.
 
@@ -131,7 +131,7 @@ plt.show()
 # components. PCA mixes them to rebuild digits.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # First, PCA squishes all 8x8 digits to two numbers. The labels only colour the plot
 # afterwards; PCA never saw them.
@@ -175,7 +175,7 @@ loadings
 print("first-component variance:", round(first_kept, 3))
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. How many components before you can still read a digit?
 # 2. Which two digits stay tangled longest?

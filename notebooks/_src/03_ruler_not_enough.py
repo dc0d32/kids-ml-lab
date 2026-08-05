@@ -27,7 +27,7 @@ from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, scatt
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Chapter 2 gave us a ruler: one straight line can choose red or blue. Now the line
 # runs out of road.
@@ -69,7 +69,7 @@ plt.show()
 # not neighbors either.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Assume a perfect line exists. Its score is **w1·x1 + w2·x2 + b**. Red points need
 # positive scores; blue points need negative scores.
@@ -106,7 +106,7 @@ from kidsml import workbook
 workbook.render(3)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # A circle problem is hard in **x1, x2** because "inside or ring?" is really about
 # distance from the middle. So we add a new feature:
@@ -156,7 +156,7 @@ pd.DataFrame({"x1": X3[:, 0], "x2": X3[:, 1], "x1*x2": X3[:, 2], "new straight s
 # **1 + 0 - 2(0) - 0.5 = 0.5**, red.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Adding a feature is one way to bend the answer back in the original picture.
 # Another way is to use a model that builds bends itself.
@@ -178,7 +178,7 @@ plt.show()
 # Look at the two styles of bend: square corners on the left, a smoother curve on the right.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # scikit-learn can add polynomial features for us, then fit a straight model in
 # that bigger feature space. Degree 1 means no extra bend. Higher degree adds more
@@ -198,7 +198,7 @@ plt.show()
 # dots. That wild end is the seed of overfitting: over-studying the training dots.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Rank the six toy shapes.** Which ones can one straight line handle?
 # 2. **Prove XOR again.** Explain the contradiction without using equations.

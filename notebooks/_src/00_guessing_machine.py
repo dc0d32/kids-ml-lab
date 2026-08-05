@@ -21,7 +21,7 @@ from kidsml.zeeps import RULES, all_zeeps, encode, label_with, learning_curve, p
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # I am thinking of a **secret rule**.
 #
@@ -51,7 +51,7 @@ zeeps = all_zeeps()
 pretty(zeeps)
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Below are six creatures I have already sorted. Look only at the table, and work out
 # my rule. Scrap paper helps.
@@ -92,7 +92,7 @@ print("The secret rule was:", RULES[SECRET])
 answers
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Now the computer plays the same game. It gets **exactly what you got** — those same
 # six examples and nothing else.
@@ -113,7 +113,7 @@ what_the_computer_sees
 # > the column it's trying to guess is the **label**.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Here is the entire machine learning program. Three lines.
 
@@ -138,7 +138,7 @@ print("How did you do?")
 # or changes what goes into **line 2**. That's the whole course.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Now the most important picture in the course. We give the computer 1 example, then 2,
 # then 3... all the way to 17, and each time we ask how often it gets the rest right.
@@ -186,7 +186,7 @@ plt.show()
 # score. Some patterns are just harder to spot — for you *and* for the machine.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Beat the machine.** Change `N_EXAMPLES` to `3` and re-run. Can you still get all
 #    three right? Can the computer? Why is it so much harder for it than for you?

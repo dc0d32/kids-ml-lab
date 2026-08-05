@@ -36,7 +36,7 @@ from kidsml.unsupervised import (
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # You already sort without labels. Laundry becomes piles before anyone gives the piles
 # fancy names.
@@ -48,7 +48,7 @@ use_house_style()
 # > labels are missing.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # k-means has two steps:
 #
@@ -96,7 +96,7 @@ new_centres
 workbook.render(20)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The app has a step button. Here are four steps from one run.
 
@@ -120,7 +120,7 @@ fig = plot_kmeans_stage(bad_history[-1])
 plt.show()
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # How many clumps should there be? The honest answer is: you judge it.
 #
@@ -162,7 +162,7 @@ fig = plot_palette(palette)
 plt.show()
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # k-means likes round-ish, similar-sized blobs because each centre owns the points closest
 # to it, making straight-ish borders. Crescents need a curved border, so k-means slices
@@ -189,7 +189,7 @@ table
 print("cluster/species agreement:", round(score, 3))
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Find a seed that makes k-means fail on easy blobs.
 # 2. Find the k where the elbow is clearest.

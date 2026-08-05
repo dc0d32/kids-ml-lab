@@ -35,7 +35,7 @@ from kidsml.unsupervised import (
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # A new point arrives. Look at the closest old points. Copy their answer.
 #
@@ -57,7 +57,7 @@ use_house_style()
 # > on which team the sock joins.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # The new point is at **(0, 0)**. The old points are labelled.
 #
@@ -91,7 +91,7 @@ for k in [1, 3, 5]:
 workbook.render(19)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The dashed circle grows until it touches the k-th neighbour.
 
@@ -111,7 +111,7 @@ fig = plot_knn_hand_boundary(k=1)
 plt.show()
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Change the query point and k in the app. Here is one frozen setup.
 
@@ -161,7 +161,7 @@ timing.round(2)
 penguin_knn_scores(k=7)
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # ```python
 # from sklearn.pipeline import make_pipeline
@@ -181,7 +181,7 @@ print("8x8 digit accuracy with k = 3:", round(digits_knn_score(k=3), 3))
 # similar-looking digits often sit near each other in pixel-number space.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Find the k that scores best on moons.
 # 2. Find a dataset shape where kNN beats the early straight-line models.

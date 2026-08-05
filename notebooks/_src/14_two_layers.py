@@ -22,7 +22,7 @@ from kidsml.plots import decision_boundary, loss_curve, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # XOR is back because it is the test that tells us whether Part 3 worked.
 #
@@ -45,7 +45,7 @@ use_house_style()
 # reports feed one final neuron.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # We will make two hidden features by hand: **OR-ish** and **AND-ish**. This table is the
 # whole XOR story in miniature.
@@ -88,7 +88,16 @@ plt.show()
 # where one straight line works. That is Chapter 3 escape route 1, automated.
 
 # %% [markdown]
-# ## 👀 See It
+# Work these out on scrap paper, then type your answers in. You'll be told not only
+# whether you were right, but why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(14)
+
+# %% [markdown]
+# ## 👀 Take a look
 #
 # Train `[2, 3, 1]` on XOR, then draw each hidden neuron's line and the final boundary.
 
@@ -113,7 +122,7 @@ hidden_surfaces_figure(model, X_xor, steps=65)
 # hidden neuron started identical, they would tend to march in a crowd.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Change the hidden size and activation in the app. Here are three sizes on XOR.
 
@@ -134,7 +143,7 @@ plt.show()
 # in original space because the output line is reading transformed hidden coordinates.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # More hidden neurons can help, but they can also wiggle around noisy dots.
 
@@ -153,7 +162,7 @@ plt.show()
 # More hidden neurons give the network more ways to wiggle. That can help with real
 # patterns, and it can over-study noise. Chapter 15 is about that trade.
 #
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Smallest XOR solver.** What is the fewest hidden neurons that can solve XOR?
 # 2. **Try spiral.** How many hidden neurons does it need before it looks decent?

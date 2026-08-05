@@ -95,7 +95,7 @@ BEAT_ORDER = ["hook", "byhand", "seeit", "play", "forreal", "challenge"]
 
 
 def _beats_of(page: Path) -> list[str]:
-    return re.findall(r'@lesson\.step\([^)]*beat="(\w+)"', page.read_text(), re.S)
+    return re.findall(r'@lesson\.step\([^)]*beat="(\w+)"', page.read_text(encoding="utf-8"), re.S)
 
 
 @pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
@@ -103,7 +103,7 @@ def test_steps_run_through_the_beats_in_order(page: Path):
     """Hook, then by hand, then see it, then play, then for real, then challenge.
 
     Several steps may share a beat, but a chapter must never go backwards — a reader
-    who has reached 'For Real' should not be dropped back into 'Play'.
+    who has reached 'In real code' should not be dropped back into 'Your turn'.
     """
     beats = _beats_of(page)
     assert beats, f"{page.name} declares no beats"
@@ -120,13 +120,21 @@ def test_chapter_asks_before_it_tells(page: Path):
 
     Two per chapter is the floor, placed in front of the genuinely surprising moments.
     """
-    count = page.read_text().count("lesson.predict(")
+    count = page.read_text(encoding="utf-8").count("lesson.predict(")
     assert count >= 2, f"{page.name} has {count} prediction(s) — ask before you tell"
 
 
 @pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
 def test_no_deprecated_streamlit_width_argument(page: Path):
-    assert "use_container_width" not in page.read_text(), (
+    assert "use_container_width" not in page.read_text(encoding="utf-8"), (
         f"{page.name} uses use_container_width, which Streamlit has deprecated. "
         'Use width="stretch" or width="content".'
+    )
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_chapter_has_a_little_kid_corner(page: Path):
+    """The 4th grader is owed one per chapter, in the styled box rather than buried."""
+    assert "lesson.kid_corner(" in page.read_text(encoding="utf-8"), (
+        f"{page.name} has no lesson.kid_corner() — the younger sibling gets left out"
     )

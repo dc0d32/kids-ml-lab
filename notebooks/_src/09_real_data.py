@@ -21,7 +21,7 @@ from kidsml.plots import ACCENT, confusion_grid, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Every dataset so far had **exactly two columns**, so we could draw the whole thing.
 #
@@ -57,7 +57,7 @@ print("columns:", len(penguins.columns))
 print("columns:", list(penguins.columns))
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Real tables give you three chores before the model deserves attention.
 #
@@ -116,7 +116,7 @@ realdata.all_dataset_scores()
 # > not learn. For classes, it says the most common answer every time.
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Pick any bundled table and inspect it before training. Shape first. Column kinds next.
 # Missing cells next. Then ask how lopsided the target is.
@@ -142,7 +142,7 @@ info["missing"]
 info["target_counts"].head(10)
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # The Feature Draft: pick the columns your model may use. This is not a guessing contest
 # where the computer is always right; it is a draft.
@@ -186,7 +186,7 @@ print(datasets.MONSTER_SECRET_RULE)
 # On mushrooms, try to find the single question that gets you furthest.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Two plots are worth building into your reflexes: a confusion matrix for classes, and
 # predicted-versus-actual for numbers.
@@ -237,7 +237,7 @@ bike["worst"]
 # grew over the years this table covers, and our weather-only model did not know that story.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Find the **smallest set of columns** that still beats 95% of the full model's score.
 # 2. Find a column that makes the model worse.

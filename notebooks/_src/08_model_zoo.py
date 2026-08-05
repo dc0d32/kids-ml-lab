@@ -31,7 +31,7 @@ from kidsml.trees import (
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # This chapter is about fair races. We compare models on data they did not train on, we
 # repeat the race, and we always ask what a boring baseline could score.
@@ -53,7 +53,7 @@ use_house_style()
 # > hill for all three. A fair race needs fair rules.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # One train/test split can be lucky. Maybe the easy rows landed in the test set. Maybe the
 # hard rows did. Cross-validation turns that one race into several smaller races.
@@ -104,7 +104,7 @@ from kidsml import workbook
 workbook.render(8)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Here is the model zoo. Every model gets the same training rows and the same hidden test
 # rows. That keeps the race fair.
@@ -129,7 +129,7 @@ pd.DataFrame({"model": list(MODEL_PERSONALITIES), "personality": list(MODEL_PERS
 # > of the field.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Scoring a model on its own training data is like taking a practice test after memorising
 # the answer key. It may tell you the model stored the rows. It does not tell you whether
@@ -180,7 +180,7 @@ print("lopsided baseline accuracy:", lopsided_baseline())
 # trap.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Here is the penguin race with fair rules: five folds, the same rows for every model,
 # and mean plus spread. The baseline is included because a fancy model has to beat the
@@ -194,7 +194,7 @@ penguin_leaderboard()
 # `0.96 ± 0.03` as a small cloud of possible scores, not one magic number.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Find a shape where logistic regression wins or ties.
 # 2. Find a seed where a bad model looks good.

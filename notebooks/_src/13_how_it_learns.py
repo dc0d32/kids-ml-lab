@@ -21,7 +21,7 @@ from kidsml.plots import decision_boundary, loss_curve, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # In Chapter 12 you moved the sliders. That was learning by hand: try a number, look at the
 # mistakes, try a better number.
@@ -44,7 +44,7 @@ use_house_style()
 # learned number knows which way to move.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # One point: **x = (1, 2)**, answer **1**. Start with **w1 = 0, w2 = 0, b = 0**.
 #
@@ -87,7 +87,16 @@ rows
 # > negative moves up.
 
 # %% [markdown]
-# ## 👀 See It
+# Work these out on scrap paper, then type your answers in. You'll be told not only
+# whether you were right, but why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(13)
+
+# %% [markdown]
+# ## 👀 Take a look
 #
 # > 📖 **Grown-ups call this:** a **gradient** is a number that says how the loss changes if
 # > one learned number is nudged upward.
@@ -124,7 +133,7 @@ pd.DataFrame({'largest difference': [max_difference]})
 # The two routes found the same slopes.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Try different learning rates in the app. Here is one training run.
 
@@ -157,7 +166,7 @@ ax.set_title('The weights walk across the loss valley')
 plt.show()
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Here is the limit from Chapter 12, now with learning turned on. XOR still has the wrong
 # shape for one neuron, so training can lower loss without solving the pattern.
@@ -179,7 +188,7 @@ pd.DataFrame(starts).round(3)
 # Both starts use the same rule. The final numbers differ because each start finds a
 # different best straight-line compromise.
 #
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Find the biggest safe step.** Raise the learning rate until the loss stops behaving.
 # 2. **Break it later.** Find a rate where the first few steps improve, then the curve gets worse.

@@ -227,8 +227,11 @@ def _():
 2. **Break it later.** Find a rate where the first few steps improve, then the curve gets worse.
 3. **Set lr to zero.** Explain why the map is not enough without a step.
 4. **Explain the bumps.** The loss is measured after jumps, not drawn by a smooth pen.
-5. 🧸 **Little Kid Corner:** If your throw is short, toss harder next time. If it sails over the fence, use a smaller correction.
 """
+    )
+
+    lesson.kid_corner(
+        "Play beanbag-toss at a target. If your throw lands short, throw a bit harder next time. If it sails over, ease off. How much you change your throw by is the learning rate — change it too much and you'll never settle."
     )
 
 

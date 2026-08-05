@@ -31,7 +31,7 @@ from kidsml.trees import (
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Think of **Twenty Questions** or **Guess Who**. You do not need one giant rule at the
 # start. You ask one useful yes/no question, split the pile, then ask a new question
@@ -60,7 +60,7 @@ use_house_style()
 # > until it reaches an answer.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Here are ten made-up creatures. We want to guess `can_fly`, but the tree is only allowed
 # to start with **one** column. It tries possible first questions such as `has_wings` and
@@ -104,7 +104,7 @@ from kidsml import workbook
 workbook.render(5)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The computer is not guessing from vibes. It tries the same kind of split table, picks
 # the least-mixed question, and repeats that inside the new buckets.
@@ -127,7 +127,7 @@ plt.show()
 print("Computer's first split:", creature_feature_names()[int(model.tree_.feature[0])])
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Change `DEPTH`. Chapter 3 asked for a bendy boundary. A tree can bend, but not like a
 # smooth rubber band. On a two-column picture, `x1 <= 0.4` makes a vertical cut and
@@ -178,7 +178,7 @@ plt.show()
 # > a fair test.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Real tables often contain words. A column that says `smell = almond` cannot go straight
 # into a tree as a sentence, so we turn it into yes/no columns like `smell_almond`,
@@ -203,7 +203,7 @@ print(text[:2200])
 # model found a clue a human forager would recognise.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Find the shallowest mushroom tree that stays above **95%** on the test set.
 # 2. Find the tree depth where training and test accuracy are farthest apart.

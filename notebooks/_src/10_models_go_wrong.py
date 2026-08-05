@@ -21,7 +21,7 @@ from kidsml.plots import WARM, confusion_grid, scatter_2d, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # A model that is right **99%** of the time can be useless.
 #
@@ -47,7 +47,7 @@ use_house_style()
 # > the one day with smoke.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Imagine 1000 people. The model says **sick** for 10 of them.
 #
@@ -86,7 +86,7 @@ print("recall:", round(metrics["recall"] * 100, 1), "%")
 # > did it catch?
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Failure 1: the useless 99%.
 
@@ -113,7 +113,7 @@ report["metrics"]
 # is painful. There is no universal right answer.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Failure 2: the model cheated.
 
@@ -174,7 +174,7 @@ print("far-away confidence:", f"{far['far_confidence']:.0%}")
 # "I have never seen anything like this." Chapter 00 warned you: a model answers anyway.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # A blunt honesty checklist fits in a few lines.
 
@@ -193,7 +193,7 @@ for item in checklist:
 # being negative. That is doing machine learning carefully.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Build a model that scores 95% and is useless. Hint: make the answer lopsided.
 # 2. Find the threshold where a spam filter starts eating real mail.

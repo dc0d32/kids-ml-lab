@@ -16,7 +16,9 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from IPython.display import Markdown, display
-from ipywidgets import Checkbox, Dropdown, FloatSlider, IntSlider, interact
+from ipywidgets import Checkbox, Dropdown, FloatSlider, IntSlider
+
+from kidsml.interactive import interact
 from plotly.subplots import make_subplots
 
 from kidsml import linalg as la
@@ -84,7 +86,7 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
     return fig
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # You may have been told a matrix is a box of numbers. That is like being told a song is
 # a box of dots on lines.
@@ -102,7 +104,7 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 # ```
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # A vector is an arrow: how far, and which way. The vector `[3, 4]` makes the old 3-4-5
 # triangle.
@@ -157,7 +159,7 @@ for angle in angles:
 pd.DataFrame(rows)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The columns of a matrix are where the starter arrows land. Column one tells where
 # `(1, 0)` goes. Column two tells where `(0, 1)` goes. Once those two are known,
@@ -177,7 +179,7 @@ plt.show()
 # > No secret extra wiggle is allowed.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # ### The grid mover
 #
@@ -277,7 +279,7 @@ interact(
 );
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Chaining two matrices is still one matrix. Doing `A`, then `B`, lands in the same place
 # as doing `B @ A`.
@@ -360,7 +362,7 @@ pd.DataFrame(
 )
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # Work through the interactive questions, then try the quests below.
 

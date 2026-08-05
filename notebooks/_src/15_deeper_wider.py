@@ -21,7 +21,7 @@ from kidsml.plots import decision_boundary, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # You have the whole idea now: line scores, squishes, gradients, and hidden features.
 #
@@ -42,7 +42,7 @@ use_house_style()
 # carry numbers forward and gradients backward.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Count the learnable numbers in `[2, 5, 5, 1]`. Every arrow is a weight, and every
 # non-input neuron gets one bias.
@@ -61,7 +61,16 @@ pd.DataFrame({'layer': ['2 → 5', '5 → 5', '5 → 1', 'biases'], 'count': [10
 # > number inside the model.
 
 # %% [markdown]
-# ## 👀 See It
+# Work these out on scrap paper, then type your answers in. You'll be told not only
+# whether you were right, but why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(15)
+
+# %% [markdown]
+# ## 👀 Take a look
 #
 # Activation zoo: same data, same architecture, different squish.
 
@@ -83,7 +92,7 @@ plt.show()
 # build easily.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Compare width and depth on spiral.
 
@@ -113,7 +122,7 @@ plt.show()
 # images, sounds inside speech, or words inside sentences.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Now watch overfitting. We give the network a small practice set and flip some labels, so
 # some dots are lies.
@@ -172,7 +181,7 @@ plt.show()
 # More data helps too: a single noisy point is less powerful when surrounded by many honest
 # neighbours.
 #
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Smallest spiral net.** Reduce the architecture until spiral breaks.
 # 2. **Overfit hard.** Use few points, many neurons, and no weight decay.

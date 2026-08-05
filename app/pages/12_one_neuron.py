@@ -225,8 +225,11 @@ def _():
 2. **Say yes to everything.** Make almost the whole plane red. Which bias did it take?
 3. **Make a shrug machine.** Set every learned number to zero. What output do you get?
 4. **Feel the XOR wall.** Try to get zero XOR mistakes with one neuron, then explain the Chapter 3 reason it cannot happen.
-5. 🧸 **Little Kid Corner:** Draw a chalk line. Far from the line means a loud answer. On the line means a shrug.
 """
+    )
+
+    lesson.kid_corner(
+        "Draw a chalk line across the floor. Standing far from the line means a loud, confident answer. Standing right on it means a shrug. Take turns standing somewhere and having the other person shout how sure they are."
     )
 
 

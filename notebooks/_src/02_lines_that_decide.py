@@ -23,7 +23,7 @@ from kidsml.plots import ACCENT, decision_boundary, draw_line, scatter_2d, use_h
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Chapter 1 used a line to answer **how much?** The line gave a dollar amount.
 #
@@ -49,7 +49,7 @@ X_tiny, y_tiny = two_blobs_tiny()
 pd.DataFrame({"x1": X_tiny[:, 0], "x2": X_tiny[:, 1], "answer": np.where(y_tiny, "red", "blue")})
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Try this score rule on five points:
 #
@@ -104,7 +104,7 @@ from kidsml import workbook
 workbook.render(2)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The circled red point caused the update. Watch how one correction changes the boundary.
 
@@ -142,7 +142,7 @@ plt.show()
 # point happy.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # The boundary is the place where **w1·x1 + w2·x2 + b = 0**. The **w** arrow sticks
 # straight out from that line.
@@ -168,7 +168,7 @@ plt.show()
 # Move `b` and the line glides in parallel. Move `w1` or `w2` and the line rotates.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # scikit-learn has a Perceptron too. On clean blobs, a straight separator exists,
 # so the model can settle.
@@ -196,7 +196,7 @@ plt.show()
 # run out of road.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Beat the algorithm.** Find slider values with zero mistakes on blobs.
 # 2. **Set b to 0.** What can the line no longer do?

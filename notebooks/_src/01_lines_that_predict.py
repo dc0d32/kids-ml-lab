@@ -23,7 +23,7 @@ from kidsml.plots import ACCENT, loss_surface, regression_fit, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Chapter 0 showed the whole course in one sentence: learn a rule from examples.
 # This time the answer is not **zeep** or **not zeep**. The answer is a number.
@@ -42,7 +42,7 @@ weeks, dollars = allowance()
 pd.DataFrame({"weeks saved": weeks, "dollars": dollars})
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Try the line **dollars = 3 × weeks + 5** on four rounded rows. For week 3, the
 # prediction is **3 × 3 + 5 = 14** dollars. The rounded real amount is 15 dollars,
@@ -78,7 +78,7 @@ workbook.render(1)
 # sixteen times as much. That pressure pulls the best line away from giant misses.
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # The squared mistake is not a mystery word. On the graph, it is a real square.
 # A taller miss makes a taller square, and the area of that square is the number
@@ -97,7 +97,7 @@ plt.show()
 # miss would make a huge area.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # A line has two knobs. **w** is dollars per week, so it tilts the line. **b** is
 # the starting height, so it slides the line up or down.
@@ -186,7 +186,7 @@ for step in range(8):
 # > The model **is two numbers**: `w` and `b`. Training is the loop that chooses them.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # scikit-learn does the same job without showing every downhill step. It still
 # returns the same two things: a slope **w** and a starting height **b**.
@@ -221,7 +221,7 @@ plt.show()
 # it means better than nearby lines.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Beat the computer.** Find `w` and `b` with a smaller error than scikit-learn.
 # 2. **Make it worse on purpose.** Pick a terrible line and explain which knob did the most damage.

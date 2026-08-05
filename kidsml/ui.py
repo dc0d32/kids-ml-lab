@@ -114,12 +114,12 @@ def page_setup(number: int) -> None:
 
 # The six beats. Each one prints a consistent little header.
 _BEATS = {
-    "hook": ("🎣", "The Hook"),
-    "byhand": ("✏️", "Do It By Hand"),
-    "seeit": ("👀", "See It"),
-    "play": ("🎛️", "Play With It"),
-    "forreal": ("💻", "For Real"),
-    "challenge": ("🏆", "Challenge"),
+    "hook": ("🎣", "Start here"),
+    "byhand": ("✏️", "Work it out"),
+    "seeit": ("👀", "Take a look"),
+    "play": ("🎛️", "Your turn"),
+    "forreal": ("💻", "In real code"),
+    "challenge": ("🏆", "Go further"),
 }
 
 

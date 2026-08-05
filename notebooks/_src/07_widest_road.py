@@ -27,7 +27,7 @@ from kidsml.trees import (
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Chapter 2's perceptron stops when it finds **any** line that separates the dots. That is
 # enough for yesterday's dots, but it may be a nervous choice for tomorrow's dot.
@@ -56,7 +56,7 @@ plt.show()
 # > touching one puddle. You take the widest dry path because your foot might wobble.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # The safety gap is the distance from the road to the closest dot on either side. A road
 # is only as safe as its closest danger.
@@ -90,7 +90,7 @@ from kidsml import workbook
 workbook.render(7)
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Once the road is as wide as possible, most dots are not pushing on it. They are far back
 # inside their own side, so moving them a little would not shrink the road.
@@ -111,7 +111,7 @@ plt.show()
 # against it.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Real data is messy, so the road sometimes has to choose: stay wide, or bend hard to fix
 # every training dot.
@@ -139,7 +139,7 @@ plt.show()
 # > short-reach can memorise islands. Forgiving and long-reach gives a smoother road.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Penguins are real data, not toy dots. We use two beak measurements so the road can be
 # drawn. The ringed penguins are the ones close enough to hold the road in place.
@@ -186,7 +186,7 @@ plt.show()
 # curved boundary in the original space.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Add noise and find the C where the road starts chasing it.
 # 2. Make gamma so large that the RBF SVM memorises islands.

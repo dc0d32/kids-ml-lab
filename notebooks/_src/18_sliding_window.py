@@ -26,7 +26,7 @@ from kidsml import vision
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Here is the fix. One small window slides across the image.
 #
@@ -47,7 +47,7 @@ use_house_style()
 # > sliding-window idea with paper.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # This image has a vertical edge: dark on the left, bright on the right.
 
@@ -84,7 +84,7 @@ print("first window answer:", first_answer)
 # > over a picture. Multiply what lines up, then add.
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Now do all 9 window positions with the same plain double loop.
 
@@ -106,7 +106,7 @@ plt.show()
 # > position.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Edit the kernel below. A blur is a kernel full of `1/9` values because each output cell
 # becomes the average of its 3×3 neighbourhood. Try `vertical edge`, `horizontal edge`,
@@ -135,7 +135,7 @@ fig, conv = vision.plot_kernel_demo(pattern, vision.KERNEL_PRESETS["blur"])
 plt.show()
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # The kernels above were designed by a person. What if we let the model choose its own?
 # That is the leap.
@@ -200,7 +200,7 @@ plt.show()
 # Shirt, coat, and pullover can be hard even for humans in 28×28 gray pixels.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Diagonal hunter.** Design a 3×3 kernel that lights up on diagonal edges.
 # 2. **Tiny champion.** Change the CNN channels in `kidsml/vision.py` in a copy of the function. What is the fewest that still beats the MLP?

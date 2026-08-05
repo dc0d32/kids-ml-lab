@@ -26,7 +26,7 @@ from kidsml import vision
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Squint at this 8 by 8 grid of numbers. Can you read the digit hiding in it?
 
@@ -64,7 +64,7 @@ vision.digit_as_flat_row(images[example_index])
 # > corners, holes, and edges. Chapter 18 fixes that exact weakness.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Your eyes can read the bright numbers below as a digit. The model will only see numbers.
 
@@ -95,7 +95,7 @@ pd.DataFrame(shape)
 # > pixel is one number. A colour pixel is three numbers: red, green, and blue.
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Here are ten real examples, then the average image for each digit.
 
@@ -124,7 +124,7 @@ plt.show()
 # > numbers.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # A notebook cannot use the drawing canvas from the app. Here you can hand-edit the
 # 8 by 8 numbers directly. Change a few values and run the cell again.
@@ -160,7 +160,7 @@ plt.show()
 # > a real machine-learning bug.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Here is the whole training idea. The real helper uses the same ingredients and a fixed seed.
 
@@ -207,7 +207,7 @@ plt.show()
 # the network can combine.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Hardest digit.** Use the confusion matrix. Which row has the most mistakes?
 # 2. **Find an easy mistake.** Pick a wrong image where you can read the digit right away.

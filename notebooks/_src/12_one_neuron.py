@@ -23,7 +23,7 @@ from kidsml.plots import decision_boundary, draw_line, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Part 3 sounds like a new planet: **neural networks**. It is not. A neuron is the
 # straight-line score from Chapter 2, followed by the probability squish from Chapter 4.
@@ -48,7 +48,7 @@ use_house_style()
 # > Chapter 4 outside.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Use **w1 = 2**, **w2 = -1**, **b = 0.5**. First build the raw score `z`, then squish it.
 #
@@ -78,7 +78,16 @@ hand
 # > does not move.
 
 # %% [markdown]
-# ## 👀 See It
+# Work these out on scrap paper, then type your answers in. You'll be told not only
+# whether you were right, but why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(12)
+
+# %% [markdown]
+# ## 👀 Take a look
 #
 # `Neuron.raw(X)` shows the Chapter 2 score before the squish. A positive raw score lands
 # on one side, a negative score lands on the other, and zero is the fence.
@@ -96,7 +105,7 @@ pd.DataFrame({'x1': X_tiny[:5, 0], 'x2': X_tiny[:5, 1], 'raw z': neuron.raw(X_ti
 # machine.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # The 3D surface is the neuron's output over the whole plane. In the app you can rotate it;
 # here the same object appears below.
@@ -133,7 +142,7 @@ pd.DataFrame(
 )
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Now we train the neuron instead of choosing its numbers by hand. Scikit-learn calls the
 # same idea **logistic regression**: a line score, a sigmoid, and a training rule.
@@ -167,7 +176,7 @@ plt.show()
 # Look at the gap between the two blob clouds. The trained neuron found a straight divider
 # there, which is Chapter 2 plus Chapter 4 stacked together.
 #
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Find perfect blob weights.** Use the app sliders until the blob mistakes hit zero.
 #    Which knob mostly rotates the line?

@@ -33,7 +33,7 @@ from kidsml.text import counts_to_probs
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Yours will be tiny, and it will read nursery rhymes and fables, but it is the same idea.
 #
@@ -43,7 +43,7 @@ use_house_style()
 # > the useful bits. Maybe the clue is nearby. Maybe it was two sentences ago.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Before the mechanism, here is the question:
 #
@@ -70,7 +70,7 @@ print("weighted average =", float((weights * values).sum()))
 # > that match the question.
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # A position may only look backward. If it could see forward, it would peek at the answer.
 # That is data leakage from Chapter 10 in a new costume.
@@ -94,7 +94,7 @@ print("out = weights @ value")
 # stabiliser, not a new idea.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Train a tiny Transformer on about 17KB of rhymes and fables.
 
@@ -143,7 +143,7 @@ for i in order:
 # square.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Compare the whole Part 6 ladder on the same held-out text.
 
@@ -182,7 +182,7 @@ print(made[:220])
 # idea. About a billion times more of everything.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Try temperature 0.1 and 1.6. Which failure do you prefer?
 # 2. Start with a phrase from a nursery rhyme, then one you invented.

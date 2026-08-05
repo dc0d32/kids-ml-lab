@@ -273,8 +273,11 @@ def _():
 2. **Try spiral.** How many hidden neurons does it need before it looks decent?
 3. **Set XOR weights by hand.** Use OR-ish and AND-ish to beat training.
 4. **Watch the lines.** Scrub the training slider and say what each hidden line learned.
-5. 🧸 **Little Kid Corner:** Three friends make a team. Two notice where you stand. The last friend listens and decides.
 """
+    )
+
+    lesson.kid_corner(
+        "Three friends, one job. Two of them each watch one thing: *are you left of the tree?* and *are you past the bench?* Neither knows the answer alone. The third friend hears both replies and calls it. That is a hidden layer."
     )
 
 

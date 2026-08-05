@@ -23,7 +23,7 @@ from kidsml.text import CharVocab, STOP, bigram_counts, bigram_nll, counts_to_pr
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # You want to know how ChatGPT works. Here is the honest answer: **it guesses the next
 # letter. Over and over.**
@@ -37,7 +37,7 @@ use_house_style()
 # > touch, put a tally mark in that box. Later, draw the next card from the busiest boxes.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Every name secretly starts and ends with the blank character **`.`**.
 #
@@ -60,7 +60,7 @@ print("The m → a, m → i, and m → o boxes get 1 each.")
 # > one bigram.
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # Build the full tally chart on first names.
 
@@ -105,7 +105,7 @@ pd.DataFrame(
 # > fact about names by counting.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Pick a row. Here is the `q` row.
 
@@ -137,7 +137,7 @@ pd.DataFrame(
 # Low temperature is boring and safe. High temperature is weird and adventurous.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # The score is the average surprise on hidden names. Lower is better.
 
@@ -165,7 +165,7 @@ loss
 # > It has no idea what happened three letters ago. That wall is Chapter 23.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. Find the most predictable next letter. Try `q`, `x`, and `.`.
 # 2. Make the babbler produce a real name by luck.

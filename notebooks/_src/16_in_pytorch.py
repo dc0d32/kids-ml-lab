@@ -24,7 +24,7 @@ from kidsml.plots import decision_boundary, loss_curve, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # Everything so far was NumPy you could read top to bottom. PyTorch is the grown-up tool,
 # but it is not a new kind of thinking.
@@ -44,7 +44,7 @@ use_house_style()
 # changed by almost nothing.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # Line up the two versions piece by piece. Our NumPy code stores arrays and calls methods
 # we wrote. PyTorch stores tensors and modules that do the same jobs.
@@ -69,7 +69,16 @@ pt
 # sums, squishes, loss, or step.
 
 # %% [markdown]
-# ## 👀 See It
+# Work these out on scrap paper, then type your answers in. You'll be told not only
+# whether you were right, but why the question was worth asking.
+
+# %%
+from kidsml import workbook
+
+workbook.render(16)
+
+# %% [markdown]
+# ## 👀 Take a look
 #
 # > 📖 **Grown-ups call this:** a **tensor** is a NumPy-like array that can remember the
 # > operations that created it, so gradients can be traced backward.
@@ -82,7 +91,7 @@ pt
 # For our loop, old blame would be stale, so `zero_grad()` clears the buckets first.
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Now we settle the mystery question: is PyTorch doing the same backprop as our NumPy code?
 #
@@ -116,7 +125,7 @@ pd.DataFrame({'NumPy loss': [np_loss], 'PyTorch loss': [th_loss], 'biggest gradi
 # the next update step is the same step.
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # Here is the PyTorch version training on a toy shape. The code is shorter because PyTorch
 # handles the bookkeeping: storing parameters, tracing operations, and applying the step.
@@ -140,7 +149,7 @@ plt.show()
 # Watch the loss curve and boundary together. This is the same Part 3 machine: forward
 # pass, loss, backward gradients, downhill step.
 #
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # 1. **Add a layer.** Change `[2, 3, 1]` to `[2, 3, 3, 1]`.
 # 2. **Forget zero_grad.** In a notebook, remove it and watch old blame pile up.

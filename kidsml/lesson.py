@@ -44,12 +44,12 @@ from kidsml.ui import CHAPTER_BY_NUMBER
 
 # The six beats, in order, with the label shown in the progress trail.
 BEATS = {
-    "hook": ("🎣", "The Hook"),
-    "byhand": ("✏️", "By Hand"),
-    "seeit": ("👀", "See It"),
-    "play": ("🎛️", "Play"),
-    "forreal": ("💻", "For Real"),
-    "challenge": ("🏆", "Challenge"),
+    "hook": ("🎣", "Start here"),
+    "byhand": ("✏️", "Work it out"),
+    "seeit": ("👀", "Take a look"),
+    "play": ("🎛️", "Your turn"),
+    "forreal": ("💻", "In real code"),
+    "challenge": ("🏆", "Go further"),
 }
 BEAT_ORDER = list(BEATS)
 
@@ -319,37 +319,45 @@ _STYLE = """
 <style>
   /* Reading width. Long lines are the fastest way to lose a 13-year-old. */
   .kml-say, .kml-jargon, .kml-look, .kml-predict { max-width: 68ch; }
-  .kml-say { font-size: 1.06rem; line-height: 1.65; margin-bottom: 0.6rem; }
+  .kml-say { font-size: 1.06rem; line-height: 1.68; margin-bottom: 0.6rem; color: #D5DEE9; }
   .kml-say p { margin-bottom: 0.7rem; }
 
   .kml-chapter-head { margin-bottom: 0.4rem; }
-  .kml-chapter-head h1 { margin: 0.1rem 0 0.2rem 0; font-size: 2.0rem; letter-spacing: -0.01em; }
+  .kml-chapter-head h1 { margin: 0.1rem 0 0.2rem 0; font-size: 2.0rem;
+                         letter-spacing: -0.01em; color: #F0F6FC; }
   .kml-part { text-transform: uppercase; letter-spacing: 0.09em; font-size: 0.72rem;
-              color: #64748B; font-weight: 700; }
-  .kml-idea { color: #475569; font-size: 1.12rem; margin: 0 0 0.7rem 0; max-width: 70ch; }
+              color: #7D8899; font-weight: 700; }
+  .kml-idea { color: #9FB0C4; font-size: 1.12rem; margin: 0 0 0.7rem 0; max-width: 70ch; }
 
   .kml-trail { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.5rem 0 0.4rem 0; }
   .kml-beat { font-size: 0.74rem; padding: 0.16rem 0.6rem; border-radius: 999px;
-              background: #F1F5F9; color: #94A3B8; font-weight: 600; }
-  .kml-beat-on { background: #10B981; color: white; }
+              background: #1B212E; color: #6E7A8C; font-weight: 600; }
+  .kml-beat-on { background: #34D399; color: #08130E; }
 
   .kml-step-title { margin: 0.9rem 0 0.5rem 0; }
-  .kml-step-title h2 { margin: 0.1rem 0 0 0; font-size: 1.45rem; letter-spacing: -0.01em; }
-  .kml-step-count { font-size: 0.72rem; color: #94A3B8; font-weight: 700;
+  .kml-step-title h2 { margin: 0.1rem 0 0 0; font-size: 1.45rem;
+                       letter-spacing: -0.01em; color: #F0F6FC; }
+  .kml-step-count { font-size: 0.72rem; color: #6E7A8C; font-weight: 700;
                     text-transform: uppercase; letter-spacing: 0.08em; }
 
-  .kml-predict { background: #EFF6FF; border-left: 4px solid #3B82F6;
-                 padding: 0.75rem 1rem; border-radius: 6px; margin: 0.6rem 0; }
-  .kml-look { background: #FFFBEB; border-left: 4px solid #F59E0B;
-              padding: 0.6rem 1rem; border-radius: 6px; margin: 0.5rem 0; font-size: 0.96rem; }
-  .kml-jargon { background: #F8FAFC; border-left: 4px solid #CBD5E1;
+  /* Muted panels rather than bright cards — nothing here should glow. */
+  .kml-predict { background: #14243B; border-left: 3px solid #60A5FA;
+                 padding: 0.75rem 1rem; border-radius: 6px; margin: 0.6rem 0;
+                 color: #DCE7F5; }
+  .kml-look { background: #2A2416; border-left: 3px solid #D9A441;
+              padding: 0.6rem 1rem; border-radius: 6px; margin: 0.5rem 0;
+              font-size: 0.96rem; color: #E8DCC2; }
+  .kml-jargon { background: #171B26; border-left: 3px solid #3A4152;
                 padding: 0.6rem 1rem; border-radius: 6px; margin: 0.6rem 0;
-                font-size: 0.94rem; color: #475569; }
+                font-size: 0.94rem; color: #9FB0C4; }
 
-  .kml-nav-space { margin-top: 1.6rem; border-top: 1px solid #E2E8F0; padding-top: 0.4rem; }
+  .kml-nav-space { margin-top: 1.6rem; border-top: 1px solid #262C3A; padding-top: 0.4rem; }
 
   /* The progress bar reads better thin. */
   .stProgress > div > div > div { height: 5px; }
+
+  /* Matplotlib figures are drawn on the page colour, so drop the default white card. */
+  [data-testid="stImage"] img { background: transparent; }
 
   #MainMenu, footer { visibility: hidden; }
 </style>

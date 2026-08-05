@@ -13,36 +13,83 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 
 # Two classes, two colours, everywhere in the course. Warm = class 1, cool = class 0.
-COOL = "#3B82F6"  # blue  — class 0
-WARM = "#EF4444"  # red   — class 1
-ACCENT = "#10B981"  # green — the model's own line / prediction
+# These are the lighter variants of the usual blue/red/green, because thin lines on a
+# dark background need more brightness than they do on white.
+COOL = "#60A5FA"  # blue  — class 0
+WARM = "#F87171"  # red   — class 1
+ACCENT = "#34D399"  # green — the model's own line / prediction
 MUTED = "#94A3B8"
 
+# The page background, so figures sit on the page instead of glowing on top of it.
+BACKGROUND = "#0E1117"
+PANEL = "#171B26"
+INK = "#E6EDF3"
+
 POINT_CMAP = ListedColormap([COOL, WARM])
-REGION_CMAP = LinearSegmentedColormap.from_list("kidsml", ["#BFDBFE", "#FFFFFF", "#FECACA"])
+REGION_CMAP = LinearSegmentedColormap.from_list("kidsml", ["#16304F", "#171B26", "#4A1D22"])
+
+# Ramps that start at the panel colour instead of at white. Matplotlib's built-in
+# sequential maps (Blues, gray) bottom out at pure white, which on a dark page is a
+# rectangle of glare.
+COUNT_CMAP = LinearSegmentedColormap.from_list("kidsml_count", ["#171B26", "#1E3A5F", "#3B82F6"])
+PIXEL_CMAP = LinearSegmentedColormap.from_list("kidsml_pixel", ["#0E1117", "#7C8798", "#D5DEE9"])
 
 CLASS_NAMES = ("blue", "red")
 
 
 def use_house_style() -> None:
     """Apply the course's matplotlib defaults. Call once at the top of a notebook."""
+    _pin_plotly_renderer()
     mpl.rcParams.update(
         {
             "figure.figsize": (6.0, 5.0),
             "figure.dpi": 110,
+            "figure.facecolor": BACKGROUND,
+            "savefig.facecolor": BACKGROUND,
+            "axes.facecolor": PANEL,
+            "axes.edgecolor": "#3A4152",
+            "axes.labelcolor": INK,
+            "text.color": INK,
+            "xtick.color": "#9AA4B8",
+            "ytick.color": "#9AA4B8",
+            "grid.color": "#2A3040",
             "axes.grid": True,
-            "grid.alpha": 0.25,
+            "grid.alpha": 0.55,
             "axes.spines.top": False,
             "axes.spines.right": False,
             "axes.titlesize": 13,
             "axes.titleweight": "bold",
+            "axes.titlecolor": INK,
             "axes.labelsize": 11,
             "font.size": 11,
             "legend.frameon": False,
+            "legend.labelcolor": INK,
             "lines.linewidth": 2.2,
-            "scatter.edgecolors": "white",
+            # Points are outlined in the panel colour, not white, so they read as cut out
+            # of the background rather than stuck on with a halo.
+            "scatter.edgecolors": PANEL,
         }
     )
+
+
+def _pin_plotly_renderer() -> None:
+    """Stop plotly guessing how to display a figure.
+
+    Left to itself, ``fig.show()`` sniffs the environment, and when it can't recognise one
+    it falls back to opening a web browser — which blocks. Under headless notebook
+    execution that turns a two-second chapter into a minutes-long hang, intermittently,
+    which is the worst kind of bug to chase.
+
+    ``plotly_mimetype`` hands JupyterLab a small JSON payload and lets it do the drawing,
+    which plotly 6 supports out of the box. The ``notebook`` renderer would also work, but
+    it re-embeds the whole plotly library into every single figure, which turned one
+    chapter into a three-minute notebook run.
+    """
+    try:
+        import plotly.io as pio
+    except ImportError:
+        return
+    pio.renderers.default = "plotly_mimetype"
 
 
 # ---------------------------------------------------------------------------
@@ -54,14 +101,14 @@ def scatter_2d(X, y=None, ax=None, size: int = 45, alpha: float = 0.95, labels: 
     """Draw a 2D dataset. ``y`` may be None (then everything is grey)."""
     ax = ax or plt.gca()
     if y is None:
-        ax.scatter(X[:, 0], X[:, 1], s=size, c=MUTED, edgecolors="white", linewidths=0.8, alpha=alpha)
+        ax.scatter(X[:, 0], X[:, 1], s=size, c=MUTED, edgecolors=PANEL, linewidths=0.8, alpha=alpha)
     else:
         y = np.asarray(y)
         for cls, colour, name in ((0, COOL, CLASS_NAMES[0]), (1, WARM, CLASS_NAMES[1])):
             m = y == cls
             if m.any():
                 ax.scatter(
-                    X[m, 0], X[m, 1], s=size, c=colour, edgecolors="white",
+                    X[m, 0], X[m, 1], s=size, c=colour, edgecolors=PANEL,
                     linewidths=0.8, alpha=alpha, label=name if labels else None, zorder=3,
                 )
         if labels:
@@ -168,7 +215,7 @@ def regression_fit(x, y, w: float, b: float, ax=None, show_errors: bool = True, 
             )
     xs = np.linspace(x.min(), x.max(), 2)
     ax.plot(xs, w * xs + b, color=ACCENT, zorder=2, label=f"y = {w:.2f}·x + {b:.2f}")
-    ax.scatter(x, y, s=55, c=COOL, edgecolors="white", linewidths=0.9, zorder=3, label="the real data")
+    ax.scatter(x, y, s=55, c=COOL, edgecolors=PANEL, linewidths=0.9, zorder=3, label="the real data")
     ax.legend(loc="best", fontsize=9)
     return ax
 
@@ -203,11 +250,11 @@ def loss_surface(x, y, w_range=(-1, 7), b_range=(-10, 20), steps: int = 120):
 # ---------------------------------------------------------------------------
 
 
-def show_image(img, ax=None, title: str | None = None, cmap: str = "gray_r", numbers: bool = False):
+def show_image(img, ax=None, title: str | None = None, cmap=None, numbers: bool = False):
     """Show a small image. With ``numbers=True`` the pixel values are printed on top."""
     ax = ax or plt.gca()
     img = np.asarray(img, dtype=float)
-    ax.imshow(img, cmap=cmap, interpolation="nearest")
+    ax.imshow(img, cmap=cmap or PIXEL_CMAP, interpolation="nearest")
     ax.set_xticks([])
     ax.set_yticks([])
     ax.grid(False)
@@ -217,14 +264,14 @@ def show_image(img, ax=None, title: str | None = None, cmap: str = "gray_r", num
             shade = (v - lo) / (hi - lo + 1e-9)
             ax.text(
                 c, r, f"{v:.0f}", ha="center", va="center", fontsize=8,
-                color="white" if shade > 0.55 else "#111827",
+                color=BACKGROUND if shade > 0.6 else INK,
             )
     if title:
         ax.set_title(title)
     return ax
 
 
-def image_strip(images, titles=None, cmap: str = "gray_r", width: float = 1.5):
+def image_strip(images, titles=None, cmap=None, width: float = 1.5):
     """A row of small images. Handy for 'here are 8 examples' moments."""
     images = list(images)
     fig, axes = plt.subplots(1, len(images), figsize=(width * len(images), width + 0.4))
@@ -239,7 +286,7 @@ def confusion_grid(cm, labels=None, ax=None, title: str = "What gets mixed up wi
     """A confusion matrix you can actually read: counts printed in the cells."""
     ax = ax or plt.gca()
     cm = np.asarray(cm)
-    ax.imshow(cm, cmap="Blues")
+    ax.imshow(cm, cmap=COUNT_CMAP)
     n = cm.shape[0]
     labels = list(range(n)) if labels is None else list(labels)
     ax.set_xticks(range(n), labels, fontsize=8)
@@ -252,7 +299,7 @@ def confusion_grid(cm, labels=None, ax=None, title: str = "What gets mixed up wi
     for (r, c), v in np.ndenumerate(cm):
         if v:
             ax.text(c, r, str(int(v)), ha="center", va="center", fontsize=8,
-                    color="white" if v > big * 0.55 else "#111827")
+                    color=INK if v > big * 0.25 else "#8792A6")
     return ax
 
 
@@ -273,5 +320,5 @@ def heatmap(matrix, xlabels=None, ylabels=None, ax=None, title: str | None = Non
         big = m.max() if m.max() else 1
         for (r, c), v in np.ndenumerate(m):
             ax.text(c, r, fmt.format(v), ha="center", va="center", fontsize=6,
-                    color="white" if v > big * 0.5 else "#111827")
+                    color=BACKGROUND if v > big * 0.5 else INK)
     return im

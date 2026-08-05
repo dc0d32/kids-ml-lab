@@ -18,7 +18,7 @@ from kidsml.plots import ACCENT, COOL, MUTED, WARM, use_house_style
 use_house_style()
 
 # %% [markdown]
-# ## 🎣 The Hook
+# ## 🎣 Start here
 #
 # You started with a secret-rule game. You ended by training a tiny Transformer.
 #
@@ -29,7 +29,7 @@ use_house_style()
 # > tools. Now you know which tool to pull out.
 
 # %% [markdown]
-# ## ✏️ Do It By Hand
+# ## ✏️ Work it out
 #
 # **You have personally built:**
 #
@@ -47,7 +47,7 @@ use_house_style()
 # - a Transformer
 
 # %% [markdown]
-# ## 👀 See It
+# ## 👀 Take a look
 #
 # One picture of the whole course.
 
@@ -91,7 +91,7 @@ fig = course_map_figure()
 plt.show()
 
 # %% [markdown]
-# ## 🎛️ Play With It
+# ## 🎛️ Your turn
 #
 # Where these ideas already are in your life.
 
@@ -111,7 +111,7 @@ uses = pd.DataFrame(
 uses
 
 # %% [markdown]
-# ## 💻 For Real
+# ## 💻 In real code
 #
 # The honest limits:
 #
@@ -134,7 +134,7 @@ uses
 # - Using it to learn is great. Using it to avoid learning is a bad trade.
 
 # %% [markdown]
-# ## 🏆 Challenge
+# ## 🏆 Go further
 #
 # Ten weekend projects.
 

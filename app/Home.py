@@ -44,12 +44,12 @@ Each chapter walks the same six beats:
 
 | | Beat | What happens |
 |---|---|---|
-| 🎣 | **The Hook** | A question or a game. Plain English. No math, no code. |
-| ✏️ | **Do It By Hand** | A few rows of tiny numbers, small enough for scrap paper. |
-| 👀 | **See It** | A picture of the exact thing you just worked out. |
-| 🎛️ | **Play With It** | Sliders. Move one knob, watch the picture change instantly. |
-| 💻 | **For Real** | 10–25 lines of actual code on actual data. |
-| 🏆 | **Challenge** | Beat the machine, or break it on purpose. |
+| 🎣 | **Start here** | A question or a game. Plain English. No math, no code. |
+| ✏️ | **Work it out** | A few rows of tiny numbers, small enough for scrap paper. |
+| 👀 | **Take a look** | A picture of the exact thing you just worked out. |
+| 🎛️ | **Your turn** | Sliders. Move one knob, watch the picture change instantly. |
+| 💻 | **In real code** | 10–25 lines of actual code on actual data. |
+| 🏆 | **Go further** | Beat the machine, or break it on purpose. |
 
 Every chapter also has a **🧸 Little Kid Corner** — the same idea with no algebra in it.
 """
@@ -74,7 +74,8 @@ Do a chapter here first, then open the notebook if you want to look under the ho
     )
     st.info(
         "👈 Pick a chapter from the sidebar to begin.\n\n"
-        "If you have never done any of this before, start at **Chapter 00**. "\n        "It takes about half an hour and there is no maths in it."
+        "If you have never done any of this before, start at **Chapter 00**. "
+        "It takes about half an hour and there is no maths in it."
     )
 
 st.divider()
