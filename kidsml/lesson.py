@@ -481,15 +481,91 @@ _STYLE = """
   .kml-nav-space {
       margin-top: 2rem; border-top: 1px solid #262C3A; padding-top: 0.6rem;
   }
+  /* Button labels were sitting high because the label is a block inside a taller
+     button box. Make the button a centring flex container and the label a plain
+     inline run. */
   .stButton > button {
-      border-radius: 9px; font-weight: 600; transition: transform 0.14s ease,
-      box-shadow 0.14s ease, background 0.2s ease;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 2.6rem;
+      line-height: 1.15 !important;
+      padding: 0.5rem 1.1rem !important;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.16s ease, border-color 0.16s ease, background 0.2s ease;
+  }
+  .stButton > button p,
+  .stButton > button div,
+  .stButton > button span {
+      margin: 0 !important; line-height: 1.15 !important;
+      display: inline !important;
   }
   .stButton > button:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(52, 211, 153, 0.22);
+      box-shadow: 0 8px 22px rgba(52, 211, 153, 0.24);
+      border-color: #34D399;
   }
-  .stButton > button:active:not(:disabled) { transform: translateY(0); }
+  .stButton > button:active:not(:disabled) {
+      transform: translateY(0) scale(0.985);
+      box-shadow: 0 2px 8px rgba(52, 211, 153, 0.2);
+  }
+  .stButton > button:focus-visible {
+      outline: 2px solid #34D399; outline-offset: 2px;
+  }
+
+  /* ------------------------------------------------- vertical centring, misc */
+  /* Radio and checkbox rows: dot and text on the same middle line. */
+  [data-testid="stRadio"] label, [data-testid="stCheckbox"] label {
+      display: flex !important; align-items: center !important;
+      gap: 0.45rem; min-height: 1.9rem; line-height: 1.3 !important;
+      transition: color 0.16s ease, transform 0.16s ease;
+  }
+  [data-testid="stRadio"] label p, [data-testid="stCheckbox"] label p {
+      margin: 0 !important; line-height: 1.3 !important;
+  }
+  [data-testid="stRadio"] label:hover { color: #F0F6FC; transform: translateX(2px); }
+
+  /* List items: the marker and the first line should share a baseline. */
+  [data-testid="stMarkdownContainer"] ul,
+  [data-testid="stMarkdownContainer"] ol { padding-left: 1.35rem; margin-bottom: 0.8rem; }
+  [data-testid="stMarkdownContainer"] li { margin: 0.3rem 0; padding-left: 0.15rem; }
+  [data-testid="stMarkdownContainer"] li > p { margin: 0 !important; }
+  [data-testid="stMarkdownContainer"] li::marker { color: #34D399; }
+
+  /* --------------------------------------------------------- control polish */
+  [data-testid="stSlider"] [role="slider"] {
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s ease;
+  }
+  [data-testid="stSlider"]:hover [role="slider"] {
+      transform: scale(1.18);
+      box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.16);
+  }
+  [data-baseweb="select"] > div {
+      border-radius: 9px !important;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  [data-baseweb="select"] > div:hover {
+      border-color: #34D399 !important;
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
+  }
+  [data-testid="stTextInput"] input, [data-testid="stNumberInput"] input {
+      border-radius: 9px; transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  [data-testid="stTextInput"] input:focus, [data-testid="stNumberInput"] input:focus {
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.16);
+  }
+  [data-testid="stMetric"] {
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s ease;
+  }
+  [data-testid="stMetric"]:hover { transform: translateY(-2px); border-color: #34D399; }
+  .kml-beat { cursor: default; }
+  .kml-beat:hover { color: #B8C4D4; }
+  .kml-box { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .kml-box:hover { transform: translateX(2px); }
+  [data-testid="stExpander"] summary { transition: color 0.16s ease; }
+  [data-testid="stExpander"] summary:hover { color: #34D399; }
 
   .stProgress > div > div > div {
       height: 6px; border-radius: 999px;
@@ -529,11 +605,38 @@ _STYLE = """
   /* The aha moment gets a one-shot glow. */
   [data-testid="stAlertContentSuccess"] { animation: kmlGlow 1.5s ease-in-out 1; }
 
+  /* Reveal each block as it scrolls into view, on browsers that support
+     scroll-driven animations. Elements already on screen at load land at the end
+     of the range, so they simply appear — no flash of hidden content, and no
+     JavaScript. Everywhere else the entrance animation above still runs. */
+  @supports (animation-timeline: view()) {
+      /* Scoped to the reading column. Anything in a scrolling or clipped ancestor
+         can fail to resolve a view timeline and would then sit at zero opacity. */
+      .block-container [data-testid="stMarkdown"],
+      .block-container [data-testid="stImage"],
+      .block-container [data-testid="stDataFrame"],
+      .block-container [data-testid="stMetric"],
+      .block-container .stPlotlyChart,
+      .block-container [data-testid="stAlert"],
+      .block-container [data-testid="stTable"],
+      .block-container .stButton {
+          animation: kmlReveal linear both;
+          animation-timeline: view();
+          animation-range: entry 0% entry 55%;
+      }
+  }
+  @keyframes kmlReveal {
+      from { opacity: 0; transform: translateY(22px) scale(0.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
   /* Kids who get motion sick, and school machines with reduced motion on. */
   @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
           animation-duration: 0.001s !important;
           transition-duration: 0.001s !important;
+          animation-timeline: auto !important;
+          transform: none !important;
       }
   }
 

@@ -281,3 +281,25 @@ def test_the_stylesheet_is_responsive():
         "the reading column has a hard pixel width again; use a rem-based min() so it "
         "shrinks with the window"
     )
+
+
+def test_the_stylesheet_centres_and_animates():
+    """Buttons and radio rows centre their text, and things move when you touch them.
+
+    Layout is invisible to AppTest, so the properties get asserted directly. Button
+    labels in particular sat high, because the label is a block inside a taller button.
+    """
+    from kidsml.lesson import _STYLE
+
+    required = {
+        "buttons centre their label": "align-items: center !important",
+        "button labels are not block-level": ".stButton > button p",
+        "list markers are styled": "li::marker",
+        "buttons respond to hover": ".stButton > button:hover",
+        "sliders respond to hover": "[data-testid=\"stSlider\"]:hover",
+        "reveal-on-scroll where supported": "animation-timeline: view()",
+        "reveal is scoped to the reading column": ".block-container [data-testid=\"stMarkdown\"]",
+        "keyboard focus stays visible": ":focus-visible",
+    }
+    for description, token in required.items():
+        assert token in _STYLE, f"stylesheet is missing {description} ({token!r})"

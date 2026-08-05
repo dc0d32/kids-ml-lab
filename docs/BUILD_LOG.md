@@ -754,3 +754,39 @@ asserts the properties that matter (shrinkable column, scaling type, a breakpoin
 columns, no overflow, reduced-motion support) and fails if a hard pixel width comes back.
 
 **640 tests pass.**
+
+---
+
+## 2026-08-05 — Bling: centring, hover, and reveal-on-scroll
+
+Owner: *"text in buttons and list items is not vertically center aligned. Bling please.
+Animations reveal as elements come in fov. Tasteful Hover animations on controls, buttons
+etc."*
+
+**Vertical centring.** A Streamlit button label is a `<p>` inside a `<div>` inside a taller
+button box, so it sits high. The button is now a flex container that centres on both axes,
+with the inner label forced to inline and a shared line-height. Radio and checkbox rows got
+the same treatment so the dot and its text share a middle line. List items got sane spacing
+and a green `::marker`.
+
+**Reveal as you scroll.** Done with CSS scroll-driven animations —
+`animation-timeline: view()` behind an `@supports` guard, so browsers that have it get
+proper viewport-triggered reveals and everything else falls back to the existing entrance
+animation. No JavaScript.
+
+Two traps worth recording. A view-timeline animation with `both` fill sits at zero opacity
+until its element enters, so anything in a clipped or scrolling ancestor that never resolves
+a timeline would stay **invisible** — the reveal is therefore scoped to `.block-container`
+rather than applied globally. And the range is `entry 0% entry 55%`, which means elements
+already on screen at load are past the end of the range and simply appear, with no flash of
+hidden content.
+
+**Hover.** Buttons lift and gain a green edge, slider thumbs grow with a soft halo,
+selectboxes and inputs glow on focus, metric cards lift, boxes nudge sideways, expander
+summaries tint. Keyboard `:focus-visible` outlines were added at the same time, since making
+everything mouse-reactive without that is a regression for anyone tabbing through.
+
+Everything stays behind `prefers-reduced-motion`, which now also neutralises transforms and
+timelines rather than only shortening durations.
+
+**641 tests pass.**
