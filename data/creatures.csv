@@ -1,0 +1,11 @@
+name,has_wings,bigger_than_cat,has_feathers,lives_in_water,can_fly
+sparrow,yes,no,yes,no,yes
+eagle,yes,yes,yes,no,yes
+penguin,yes,yes,yes,yes,no
+ostrich,yes,yes,yes,no,no
+bat,yes,no,no,no,yes
+bumblebee,yes,no,no,no,yes
+cat,no,no,no,no,no
+elephant,no,yes,no,no,no
+dolphin,no,yes,no,yes,no
+goldfish,no,no,no,yes,no
