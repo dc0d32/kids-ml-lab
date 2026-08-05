@@ -119,7 +119,7 @@ def begin(chapter: int) -> None:
     _current = _Lesson(chapter=chapter)
 
     _, _, title, idea, part = CHAPTER_BY_NUMBER[chapter]
-    st.set_page_config(page_title=f"{chapter:02d} · {title}", page_icon="🧪", layout="wide")
+    st.set_page_config(page_title=f"{chapter:02d} · {title}", page_icon="🧪", layout="centered")
     use_house_style()
     _inject_style()
 
@@ -254,8 +254,14 @@ def _draw_nav(steps: list[Step], index: int) -> None:
 
 
 def say(markdown: str) -> None:
-    """Prose, held to a readable column width. Keep it to a few sentences."""
-    st.markdown(f"<div class='kml-say'>{_as_html(markdown)}</div>", unsafe_allow_html=True)
+    """Prose. Keep it to a few sentences.
+
+    Handed straight to Streamlit rather than wrapped in our own ``<div>``. Wrapping made
+    the element size to its content, and a block with a max-width inside a fit-content
+    parent collapses to the width of its longest word — which is exactly how the text
+    ended up one word per line. The column width now comes from the page container.
+    """
+    st.markdown(_dedent(markdown))
 
 
 def predict(question: str, choices: list[str], correct: int | None = None,
@@ -275,7 +281,7 @@ def predict(question: str, choices: list[str], correct: int | None = None,
     slot = f"kml_predict_{_current.chapter}_{key or question[:20]}"
 
     st.markdown(
-        f"<div class='kml-predict'><b>{_inline_html(question)}</b></div>",
+        f"<div class='kml-box kml-predict'><b>{_inline_html(question)}</b></div>",
         unsafe_allow_html=True,
     )
 
@@ -305,7 +311,7 @@ def predict(question: str, choices: list[str], correct: int | None = None,
 def look_for(what: str) -> None:
     """Point at what matters in the picture above. A figure with no pointer is decoration."""
     st.markdown(
-        f"<div class='kml-look'>👀 <b>Look for:</b> {_inline_html(what)}</div>",
+        f"<div class='kml-box kml-look'>👀 <b>Look for:</b> {_inline_html(what)}</div>",
         unsafe_allow_html=True,
     )
 
@@ -325,7 +331,7 @@ def kid_corner(body: str) -> None:
 def jargon(term: str, plain: str) -> None:
     """Name the thing only *after* the idea has landed."""
     st.markdown(
-        f"<div class='kml-jargon'>📖 Grown-ups call this <b>{term}</b>. "
+        f"<div class='kml-box kml-jargon'>📖 Grown-ups call this <b>{term}</b>. "
         f"{_inline_html(plain)}</div>",
         unsafe_allow_html=True,
     )
@@ -336,7 +342,14 @@ def figure(width: float = 6.4, height: float = 4.8):
 
 
 def show(fig, clear: bool = True) -> None:
-    st.pyplot(fig, width="content")
+    """Render a matplotlib figure and free it.
+
+    Stretched to the container rather than drawn at its natural pixel size, so a wide
+    figure inside a narrow column scales down instead of overflowing. The page is a
+    centred column now, so natural size is often wider than the space available.
+    """
+    fig.patch.set_alpha(0)
+    st.pyplot(fig, width="stretch")
     if clear:
         plt.close(fig)
 
@@ -365,52 +378,201 @@ def controls():
 
 _STYLE = """
 <style>
-  /* Reading width. Long lines are the fastest way to lose a 13-year-old. */
-  .kml-say, .kml-jargon, .kml-look, .kml-predict { max-width: 68ch; }
-  .kml-say { font-size: 1.06rem; line-height: 1.68; margin-bottom: 0.6rem; color: #D5DEE9; }
-  .kml-say p { margin-bottom: 0.7rem; }
+  /* ---------------------------------------------------------------- layout */
+  /* One centred column that shrinks with the window. Everything is in rem or a
+     viewport unit so browser zoom and a resized window behave like any other
+     site — no fixed pixel widths anywhere in the reading column. */
+  .block-container {
+      max-width: min(62rem, 100%) !important;
+      padding-top: clamp(1rem, 3vw, 2.2rem) !important;
+      padding-bottom: 4rem !important;
+      padding-left: clamp(0.9rem, 4vw, 3rem) !important;
+      padding-right: clamp(0.9rem, 4vw, 3rem) !important;
+      margin: 0 auto !important;
+  }
 
-  .kml-chapter-head { margin-bottom: 0.4rem; }
-  .kml-chapter-head h1 { margin: 0.1rem 0 0.2rem 0; font-size: 2.0rem;
-                         letter-spacing: -0.01em; color: #F0F6FC; }
-  .kml-part { text-transform: uppercase; letter-spacing: 0.09em; font-size: 0.72rem;
-              color: #7D8899; font-weight: 700; }
-  .kml-idea { color: #9FB0C4; font-size: 1.12rem; margin: 0 0 0.7rem 0; max-width: 70ch; }
+  /* Anything we emit as raw HTML must stretch, not shrink-wrap. A block with a
+     max-width inside a fit-content parent collapses to its longest word. */
+  [data-testid="stMarkdown"] { width: 100% !important; }
+  [data-testid="stMarkdownContainer"] { width: 100% !important; }
+  .kml-box { width: 100%; box-sizing: border-box; }
 
-  .kml-trail { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.5rem 0 0.4rem 0; }
-  .kml-beat { font-size: 0.74rem; padding: 0.16rem 0.6rem; border-radius: 999px;
-              background: #1B212E; color: #6E7A8C; font-weight: 600; }
-  .kml-beat-on { background: #34D399; color: #08130E; }
+  /* --------------------------------------------------------------- reading */
+  [data-testid="stMarkdownContainer"] p {
+      font-size: clamp(0.98rem, 0.55vw + 0.86rem, 1.09rem);
+      line-height: 1.72;
+      color: #D5DEE9;
+      margin-bottom: 0.75rem;
+  }
+  [data-testid="stMarkdownContainer"] li { font-size: 1.05rem; line-height: 1.66; color: #D5DEE9; }
+  [data-testid="stMarkdownContainer"] strong { color: #F0F6FC; font-weight: 650; }
+  [data-testid="stMarkdownContainer"] code {
+      background: #1B212E; color: #9FD8B4; padding: 0.1em 0.36em; border-radius: 4px;
+  }
 
-  .kml-step-title { margin: 0.9rem 0 0.5rem 0; }
-  .kml-step-title h2 { margin: 0.1rem 0 0 0; font-size: 1.45rem;
-                       letter-spacing: -0.01em; color: #F0F6FC; }
-  .kml-step-count { font-size: 0.72rem; color: #6E7A8C; font-weight: 700;
-                    text-transform: uppercase; letter-spacing: 0.08em; }
+  /* ------------------------------------------------------------------ head */
+  .kml-chapter-head { text-align: center; margin-bottom: 0.2rem; }
+  .kml-chapter-head h1 {
+      margin: 0.2rem 0 0.3rem 0;
+      font-size: clamp(1.5rem, 3.2vw + 0.7rem, 2.15rem); letter-spacing: -0.02em;
+      color: #F0F6FC; line-height: 1.15;
+  }
+  .kml-part {
+      text-transform: uppercase; letter-spacing: 0.13em; font-size: 0.7rem;
+      color: #7D8899; font-weight: 700;
+  }
+  .kml-idea {
+      color: #9FB0C4; font-size: clamp(0.95rem, 1vw + 0.72rem, 1.12rem);
+      margin: 0 auto 0.5rem auto; max-width: 60ch;
+  }
 
-  /* Muted panels rather than bright cards — nothing here should glow. */
-  .kml-predict { background: #14243B; border-left: 3px solid #60A5FA;
-                 padding: 0.75rem 1rem; border-radius: 6px; margin: 0.6rem 0;
-                 color: #DCE7F5; }
-  .kml-look { background: #2A2416; border-left: 3px solid #D9A441;
-              padding: 0.6rem 1rem; border-radius: 6px; margin: 0.5rem 0;
-              font-size: 0.96rem; color: #E8DCC2; }
-  .kml-jargon { background: #171B26; border-left: 3px solid #3A4152;
-                padding: 0.6rem 1rem; border-radius: 6px; margin: 0.6rem 0;
-                font-size: 0.94rem; color: #9FB0C4; }
+  /* ----------------------------------------------------------------- trail */
+  .kml-trail {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.7rem 0 0.5rem 0;
+      justify-content: center;
+  }
+  .kml-beat {
+      font-size: 0.72rem; padding: 0.18rem 0.66rem; border-radius: 999px;
+      background: #1B212E; color: #6E7A8C; font-weight: 600;
+      transition: all 0.35s ease;
+  }
+  .kml-beat-on {
+      background: #34D399; color: #08130E;
+      box-shadow: 0 0 14px rgba(52, 211, 153, 0.35);
+  }
 
-  .kml-nav-space { margin-top: 1.6rem; border-top: 1px solid #262C3A; padding-top: 0.4rem; }
+  /* ------------------------------------------------------------ step title */
+  .kml-step-title { text-align: center; margin: 1.1rem 0 1.1rem 0; }
+  .kml-step-title h2 {
+      margin: 0.25rem 0 0 0;
+      font-size: clamp(1.18rem, 1.9vw + 0.66rem, 1.58rem);
+      letter-spacing: -0.015em; color: #F0F6FC;
+  }
+  .kml-step-count {
+      font-size: 0.7rem; color: #6E7A8C; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.11em;
+  }
 
-  /* The progress bar reads better thin. */
-  .stProgress > div > div > div { height: 5px; }
+  /* ------------------------------------------------------------------ boxes */
+  .kml-box { padding: 0.85rem 1.1rem; border-radius: 10px; margin: 0.85rem 0; }
+  .kml-predict {
+      background: linear-gradient(135deg, #14243B 0%, #16283F 100%);
+      border-left: 3px solid #60A5FA; color: #DCE7F5; font-size: 1.05rem;
+  }
+  .kml-look {
+      background: #241F14; border-left: 3px solid #D9A441;
+      color: #E8DCC2; font-size: 1.0rem;
+  }
+  .kml-jargon {
+      background: #171B26; border-left: 3px solid #3A4152;
+      color: #9FB0C4; font-size: 0.97rem;
+  }
 
-  /* Matplotlib figures are drawn on the page colour, so drop the default white card. */
-  [data-testid="stImage"] img { background: transparent; }
+  /* --------------------------------------------------------------- figures */
+  [data-testid="stImage"] { display: flex; justify-content: center; }
+  [data-testid="stImage"] img { background: transparent; border-radius: 8px; }
+  [data-testid="stDataFrame"], [data-testid="stTable"] { margin: 0 auto; }
+  [data-testid="stMetric"] {
+      background: #171B26; border: 1px solid #262C3A; border-radius: 10px;
+      padding: 0.65rem 0.9rem; text-align: center;
+  }
+
+  /* ------------------------------------------------------------------- nav */
+  .kml-nav-space {
+      margin-top: 2rem; border-top: 1px solid #262C3A; padding-top: 0.6rem;
+  }
+  .stButton > button {
+      border-radius: 9px; font-weight: 600; transition: transform 0.14s ease,
+      box-shadow 0.14s ease, background 0.2s ease;
+  }
+  .stButton > button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(52, 211, 153, 0.22);
+  }
+  .stButton > button:active:not(:disabled) { transform: translateY(0); }
+
+  .stProgress > div > div > div {
+      height: 6px; border-radius: 999px;
+      transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ------------------------------------------------------------ animations */
+  /* Every screen arrives with a small rise-and-fade. Streamlit re-runs the
+     script on each click, so this replays on every Next — which is the point. */
+  @keyframes kmlRise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes kmlPop {
+      0%   { opacity: 0; transform: scale(0.94); }
+      60%  { opacity: 1; transform: scale(1.02); }
+      100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes kmlGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(52, 211, 153, 0); }
+      50%      { box-shadow: 0 0 20px rgba(52, 211, 153, 0.28); }
+  }
+
+  .kml-step-title, [data-testid="stMarkdown"], [data-testid="stImage"],
+  [data-testid="stDataFrame"], [data-testid="stMetric"], .stPlotlyChart {
+      animation: kmlRise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  /* Stagger, so the screen assembles itself instead of snapping into place. */
+  [data-testid="stVerticalBlock"] > div:nth-child(1)  { animation-delay: 0.00s; }
+  [data-testid="stVerticalBlock"] > div:nth-child(2)  { animation-delay: 0.04s; }
+  [data-testid="stVerticalBlock"] > div:nth-child(3)  { animation-delay: 0.08s; }
+  [data-testid="stVerticalBlock"] > div:nth-child(4)  { animation-delay: 0.12s; }
+  [data-testid="stVerticalBlock"] > div:nth-child(5)  { animation-delay: 0.16s; }
+
+  .kml-box { animation: kmlPop 0.36s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  [data-testid="stAlert"] { animation: kmlPop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  /* The aha moment gets a one-shot glow. */
+  [data-testid="stAlertContentSuccess"] { animation: kmlGlow 1.5s ease-in-out 1; }
+
+  /* Kids who get motion sick, and school machines with reduced motion on. */
+  @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+          animation-duration: 0.001s !important;
+          transition-duration: 0.001s !important;
+      }
+  }
+
+  /* --------------------------------------------------------- responsiveness */
+  /* Never let anything force the page wider than the window. */
+  [data-testid="stMarkdown"] img, [data-testid="stImage"] img,
+  .stPlotlyChart, [data-testid="stDataFrame"] {
+      max-width: 100% !important;
+      height: auto;
+  }
+  [data-testid="stDataFrame"] { overflow-x: auto; }
+  pre, code { white-space: pre-wrap; word-break: break-word; }
+
+  /* Knobs-beside-picture becomes knobs-above-picture on a narrow window, rather
+     than two columns squeezed until neither works. */
+  @media (max-width: 46rem) {
+      [data-testid="stHorizontalBlock"] { flex-direction: column !important; }
+      [data-testid="stHorizontalBlock"] > div {
+          width: 100% !important; flex: 1 1 100% !important; min-width: 0 !important;
+      }
+      .kml-box { padding: 0.7rem 0.85rem; }
+      .kml-trail { gap: 0.25rem; }
+      .kml-beat { font-size: 0.66rem; padding: 0.14rem 0.5rem; }
+  }
+
+  /* Columns must be allowed to shrink; the default min-width keeps them wide and
+     pushes a horizontal scrollbar onto the whole page. */
+  [data-testid="stHorizontalBlock"] > div { min-width: 0; }
 
   #MainMenu, footer { visibility: hidden; }
 </style>
 """
 
 
-def _inject_style() -> None:
+def apply_style() -> None:
+    """Inject the course stylesheet. Chapters get this from :func:`begin`; the landing
+    page calls it directly so the whole app looks like one thing."""
     st.markdown(_STYLE, unsafe_allow_html=True)
+
+
+def _inject_style() -> None:
+    apply_style()

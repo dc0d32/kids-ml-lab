@@ -253,3 +253,31 @@ def test_every_screen_has_something_to_look_at(page: Path):
             f"{page.name}: screen {title!r} has nothing to look at and nothing to move. "
             "Either bring its picture onto this screen, or merge it with the next one."
         )
+
+
+def test_the_stylesheet_is_responsive():
+    """Zoom and window resizing should behave like any other modern site.
+
+    That means no fixed pixel width on the reading column, type that scales, columns that
+    stack when the window is narrow, and nothing that can force a horizontal scrollbar.
+    Checked here because it is invisible to every other test we have — AppTest reports
+    element values, not layout.
+    """
+    from kidsml.lesson import _STYLE
+
+    required = {
+        "a shrinkable reading column": "max-width: min(",
+        "type that scales with the window": "clamp(",
+        "a narrow-window breakpoint": "@media (max-width:",
+        "columns that stack when narrow": "flex-direction: column",
+        "columns allowed to shrink": "min-width: 0",
+        "images that never overflow": "max-width: 100% !important",
+        "respect for reduced-motion": "prefers-reduced-motion",
+    }
+    for description, token in required.items():
+        assert token in _STYLE, f"stylesheet is missing {description} ({token!r})"
+
+    assert "max-width: 980px" not in _STYLE, (
+        "the reading column has a hard pixel width again; use a rem-based min() so it "
+        "shrinks with the window"
+    )

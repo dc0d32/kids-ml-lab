@@ -698,3 +698,59 @@ found exactly one survivor after the sweep (colour *channels* in chapter 17, use
 before they are defined), which is a good enough signal-to-noise ratio to keep.
 
 **639 tests pass.**
+
+---
+
+## 2026-08-05 — UI overhaul: readable, centred, responsive, animated
+
+Owner: *"the lesson.say parts are word-wrapping on streamlit, to the point that single words
+are getting their own lines. Do a UI overhaul in general. Alignment is all over the place,
+Center is better. Add cool animations."* Then: *"also ensure reactive layout. Zooming in and
+out, or resizing the window should work like any other modern web app."*
+
+### The one-word-per-line bug
+
+`lesson.say` wrapped its text in a `<div class='kml-say'>` with `max-width: 68ch` so prose
+would not run in long lines. Streamlit sized that element to **fit-content**, and a block
+with a max-width inside a fit-content parent collapses to its **min-content** width — which
+is the width of the longest word. Hence one word per line.
+
+This is the *second* problem caused by that wrapper; the first was markdown rendering as
+literal asterisks. So the wrapper is gone: prose now goes straight to `st.markdown` and the
+column width comes from the page container, where it belongs. The remaining coloured boxes
+keep their HTML but are forced to stretch.
+
+### Alignment
+
+Chapters were `layout="wide"`, so some elements ran full-bleed while others shrank to their
+content — which is what "alignment all over the place" was. Everything is now one centred
+column, with the chapter heading, beat trail and step title centred, figures centred, and
+the landing page sharing the same stylesheet via `lesson.apply_style()`.
+
+### Responsive
+
+No fixed pixel widths in the reading column. `max-width: min(62rem, 100%)`, padding in
+`clamp()`, and headings and body type in `clamp()` so browser zoom scales properly. Below
+46rem the knobs-beside-picture layout stacks instead of squeezing, and columns get
+`min-width: 0` so they can actually shrink rather than forcing a horizontal scrollbar.
+Figures now render with `width="stretch"` instead of at natural pixel size, so a wide plot
+in a narrow column scales down.
+
+### Animations
+
+Each screen rises and fades in, staggered by element so the screen assembles rather than
+snapping. Boxes pop, the active beat pill glows, buttons lift on hover, and the progress bar
+eases. Streamlit re-runs the script on every click, so this replays on every Next — which is
+the point.
+
+All of it sits behind `@media (prefers-reduced-motion: reduce)`, because some kids get motion
+sick and some school machines have it switched on.
+
+### Testing
+
+Layout is invisible to `AppTest`, which reports element values rather than rendered geometry
+— that is exactly why this batch of bugs survived so long. `test_the_stylesheet_is_responsive`
+asserts the properties that matter (shrinkable column, scaling type, a breakpoint, stacking
+columns, no overflow, reduced-motion support) and fails if a hard pixel width comes back.
+
+**640 tests pass.**

@@ -13,11 +13,13 @@ import streamlit as st
 # Make ``import kidsml`` work no matter where streamlit was started from.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from kidsml import lesson  # noqa: E402
 from kidsml.plots import use_house_style  # noqa: E402
 from kidsml.ui import CHAPTERS  # noqa: E402
 
-st.set_page_config(page_title="Kids ML Lab", page_icon="🧪", layout="wide")
+st.set_page_config(page_title="Kids ML Lab", page_icon="🧪", layout="centered")
 use_house_style()
+lesson.apply_style()
 
 st.title("🧪 Kids ML Lab")
 st.markdown(
