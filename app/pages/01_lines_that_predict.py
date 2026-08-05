@@ -67,6 +67,10 @@ Squaring says **2² + (-2)² = 4 + 4 = 8**, so both misses count.
 
 @lesson.step("The square is a real square", beat="seeit")
 def _():
+    lesson.say(
+        "Back to that word **squared**. We have been squaring the misses to keep them "
+        "positive — but the word is doing more work than that, and the graph shows it."
+    )
     guess = lesson.predict(
         "On the graph, what will one squared mistake look like?",
         ["A vertical line", "An actual square area", "A curved arrow"],

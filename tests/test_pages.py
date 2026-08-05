@@ -138,3 +138,40 @@ def test_chapter_has_a_little_kid_corner(page: Path):
     assert "lesson.kid_corner(" in page.read_text(encoding="utf-8"), (
         f"{page.name} has no lesson.kid_corner() — the younger sibling gets left out"
     )
+
+
+DEMONSTRATIVE = re.compile(
+    r"\b(these|those)\b|\bthe (table|chart|picture|plot|graph) (above|below)\b"
+    r"|\bshown (here|above|below)\b",
+    re.I,
+)
+DRAWS = ("lesson.show(", "st.dataframe(", "st.table(", "st.image(", "lesson.mermaid(")
+
+
+@pytest.mark.parametrize("page", existing, ids=lambda p: p.stem)
+def test_predictions_do_not_ask_about_invisible_things(page: Path):
+    """If a question says "these", the reader has to be able to see them.
+
+    `lesson.predict` withholds everything after the gate. That is correct for the
+    *reveal* and wrong for the *setup* — chapter 03 once asked "can any line split these
+    four points?" with the four points drawn only after the answer was locked in.
+    """
+    source = page.read_text(encoding="utf-8")
+
+    for block in re.split(r"(?=@lesson\.step\()", source):
+        if "lesson.predict(" not in block:
+            continue
+        gate = block.find("if guess is None")
+        if gate == -1:
+            continue
+
+        question = re.search(r"lesson\.predict\(\s*\n?\s*[\"']([^\"']+)", block)
+        if not question or not DEMONSTRATIVE.search(question.group(1)):
+            continue
+
+        before_gate = block[:gate]
+        title = re.search(r'@lesson\.step\("([^"]+)"', block)
+        assert any(call in before_gate for call in DRAWS), (
+            f"{page.name}, step {title.group(1) if title else '?'}: the question says "
+            f"{question.group(1)[:60]!r} but nothing is drawn before the prediction gate"
+        )

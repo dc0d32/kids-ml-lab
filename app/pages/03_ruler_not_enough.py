@@ -51,24 +51,54 @@ answer and the ring wants the other.
 
 @lesson.step("Four dots are enough to prove it", beat="hook")
 def _():
-    lesson.say("XOR makes the failure tiny enough to prove. It has four points, and opposite corners match.")
+    lesson.say(
+        """
+XOR makes the failure small enough to prove. Four points, and **opposite corners
+match**: bottom-left and top-right are one answer, bottom-right and top-left are
+the other.
+
+Here is the whole dataset. All of it.
+"""
+    )
+
+    truth, picture = st.columns([1, 1], gap="large")
+    with truth:
+        st.dataframe(
+            {
+                "x1": X_xor[:, 0].astype(int),
+                "x2": X_xor[:, 1].astype(int),
+                "answer": np.where(y_xor == 1, "red", "blue"),
+            },
+            hide_index=True,
+            width="content",
+        )
+        st.caption("Four rows. That's the entire problem.")
+
+    with picture:
+        fig, ax = lesson.figure(4.4, 4.0)
+        scatter_2d(X_xor, y_xor, ax=ax, size=200)
+        for i, (x1, x2) in enumerate(X_xor):
+            ax.text(x1 + 0.04, x2 + 0.04, str(int(y_xor[i])), fontsize=13)
+        ax.set_title("XOR: opposite corners match")
+        lesson.show(fig)
+
+    lesson.say("Now get a ruler in your head and try to put the two reds on one side and the two blues on the other.")
+
     guess = lesson.predict(
-        "Can any straight line split these opposite-corner answers perfectly?",
+        "Can any straight line split those four points perfectly?",
         ["Yes", "No", "Only if the line is diagonal"],
         correct=1,
-        why="A diagonal can scoop up one matching pair of corners. Then it scoops up the other matching pair too. The ruler has nowhere clean to land!",
+        why="A diagonal scoops up one matching pair of corners — and then it scoops up the other pair too. The ruler has nowhere clean to land!",
         key="ch03_xor_line",
     )
     if guess is None:
         return
 
-    fig, ax = lesson.figure(5, 4.5)
-    scatter_2d(X_xor, y_xor, ax=ax, size=120)
-    for i, (x1, x2) in enumerate(X_xor):
-        ax.text(x1 + 0.03, x2 + 0.03, str(int(y_xor[i])), fontsize=12)
-    ax.set_title("XOR: opposite corners match")
-    lesson.show(fig)
-    lesson.look_for("the diagonals: the two red points are not neighbors, and the two blue points are not neighbors either.")
+    lesson.look_for(
+        "the diagonals. The two red points are not neighbours, and neither are the two "
+        "blue ones. Whichever way you tilt a ruler, one side always ends up holding one "
+        "of each."
+    )
 
 
 @lesson.step("The contradiction", beat="byhand")

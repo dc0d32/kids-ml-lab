@@ -382,3 +382,33 @@ first N rows of ordered data is a bug in a teaching artefact even when it is not
 the code.** Anything shown to a reader as evidence needs both answers in it.
 
 **501 tests pass.**
+
+---
+
+## 2026-08-05 — A prediction that asked about an invisible plot
+
+Owner's report: in chapter 03, the XOR plot and table didn't show on the *Four dots are
+enough to prove it* screen.
+
+The cause was a misuse of the `lesson.predict` pattern. Everything after the gate is
+withheld until the reader commits — which is right for the **reveal** and wrong for the
+**setup**. The step asked *"can any straight line split these opposite-corner answers?"*
+with the four points drawn only after the answer was locked in. The reader was being asked
+to predict something about a picture they could not see.
+
+The rule, now enforced: **the setup goes before the gate, the reveal goes after.** A
+prediction is only interesting when the reader has enough in front of them to reason with.
+
+Chapter 03's step now shows the four-row truth table and the plot side by side, invites
+the reader to try a ruler in their head, and only then asks. The reveal — that whichever
+way you tilt, one side always ends up holding one of each — stays behind the gate where it
+belongs. The notebook gained the same table, since page and notebook must not disagree.
+
+An audit found one more prediction using a demonstrative, in chapter 01. That one was
+legitimate (it refers to a graph shown several steps earlier and correctly withholds the
+squares) but opened with no framing at all, so it gained a sentence.
+
+`tests/test_pages.py` now checks that a prediction whose question says "these" or "those"
+has something drawn before its gate. Verified against the original broken code.
+
+**527 tests pass.**

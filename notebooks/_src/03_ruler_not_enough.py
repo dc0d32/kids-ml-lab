@@ -57,6 +57,17 @@ plt.show()
 
 # %%
 X_xor, y_xor = xor_exact()
+
+# Four rows. That is the entire problem.
+pd.DataFrame(
+    {
+        "x1": X_xor[:, 0].astype(int),
+        "x2": X_xor[:, 1].astype(int),
+        "answer": np.where(y_xor == 1, "red", "blue"),
+    }
+)
+
+# %%
 fig, ax = plt.subplots(figsize=(5, 4.5))
 scatter_2d(X_xor, y_xor, ax=ax, size=120)
 for i, (x1, x2) in enumerate(X_xor):
