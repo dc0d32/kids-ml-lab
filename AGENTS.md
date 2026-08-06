@@ -176,7 +176,8 @@ kidsml/        the shared library — the single source of truth
   workbook.py    the interactive workbook machinery
   <topic>.py     chapter-specific helpers (zeeps.py, trees.py, ...)
 app/
-  Home.py        the course map landing page
+  Home.py        the router: declares the chapter list via st.navigation
+  welcome.py     the course map landing page
   pages/NN_*.py  one Streamlit page per chapter
 notebooks/
   _src/NN_*.py   chapter SOURCES in jupytext py:percent format  ← edit these
@@ -191,6 +192,11 @@ docs/BUILD_LOG.md   what was built, and why it was built that way
 `CHAPTERS` in `kidsml/ui.py` is the course map. Chapter numbers, slugs, titles and
 one-line ideas come from there and nowhere else — filenames must match it, and a test
 checks that they do.
+
+The sidebar chapter list is declared explicitly in `app/Home.py` with `st.navigation`,
+because Streamlit strips the leading number off a filename and the course refers to itself
+by chapter number constantly. Adding a chapter to `CHAPTERS` is enough; the list builds
+itself.
 
 ---
 

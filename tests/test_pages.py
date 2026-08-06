@@ -75,6 +75,29 @@ def test_home_runs_without_error():
     assert not at.exception, [e.message for e in at.exception]
 
 
+def test_the_welcome_page_runs():
+    at = AppTest.from_file(str(ROOT / "app" / "welcome.py"), default_timeout=TIMEOUT_SECONDS).run()
+    assert not at.exception, [e.message for e in at.exception]
+
+
+def test_the_sidebar_shows_chapter_numbers():
+    """Streamlit strips the leading number off a filename, so the labels are declared.
+
+    The course refers to itself by chapter number constantly — "remember Chapter 03" is
+    useless if the list in the sidebar says "ruler not enough" and nothing else.
+    """
+    from kidsml.ui import CHAPTERS
+
+    router = (ROOT / "app" / "Home.py").read_text(encoding="utf-8")
+    assert "st.navigation(" in router, "the chapter list is back on filename-derived labels"
+    assert 'title=f"{number:02d} · {title}"' in router, (
+        "navigation titles no longer carry the chapter number"
+    )
+    # Every chapter must be in the list, or it becomes unreachable.
+    assert "for number, slug, title, _idea, _part in CHAPTERS" in router
+    assert len(CHAPTERS) == 26
+
+
 @pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: f"ch{c[0]:02d}")
 def test_page_is_named_as_the_course_map_says(chapter):
     """The sidebar order comes from the filenames, so they must match kidsml.ui."""

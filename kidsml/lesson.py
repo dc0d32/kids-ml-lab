@@ -412,8 +412,8 @@ _STYLE = """
 
   /* Anything we emit as raw HTML must stretch, not shrink-wrap. A block with a
      max-width inside a fit-content parent collapses to its longest word. */
-  [data-testid="stMarkdown"] { width: 100% !important; }
-  [data-testid="stMarkdownContainer"] { width: 100% !important; }
+  .block-container [data-testid="stMarkdown"] { width: 100% !important; }
+  .block-container [data-testid="stMarkdownContainer"] { width: 100% !important; }
   .kml-box { width: 100%; box-sizing: border-box; }
 
   /* --------------------------------------------------------------- reading */
@@ -637,19 +637,26 @@ _STYLE = """
       50%      { box-shadow: 0 0 20px rgba(52, 211, 153, 0.28); }
   }
 
-  .kml-step-title, [data-testid="stMarkdown"], [data-testid="stImage"],
-  [data-testid="stDataFrame"], [data-testid="stMetric"], .stPlotlyChart {
+  /* Scoped to the reading column. Applied globally these also animated the sidebar
+     nav on every rerun, which made the chapter list twitch and re-space itself
+     every time you clicked. */
+  .block-container .kml-step-title,
+  .block-container [data-testid="stMarkdown"],
+  .block-container [data-testid="stImage"],
+  .block-container [data-testid="stDataFrame"],
+  .block-container [data-testid="stMetric"],
+  .block-container .stPlotlyChart {
       animation: kmlRise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   /* Stagger, so the screen assembles itself instead of snapping into place. */
-  [data-testid="stVerticalBlock"] > div:nth-child(1)  { animation-delay: 0.00s; }
-  [data-testid="stVerticalBlock"] > div:nth-child(2)  { animation-delay: 0.04s; }
-  [data-testid="stVerticalBlock"] > div:nth-child(3)  { animation-delay: 0.08s; }
-  [data-testid="stVerticalBlock"] > div:nth-child(4)  { animation-delay: 0.12s; }
-  [data-testid="stVerticalBlock"] > div:nth-child(5)  { animation-delay: 0.16s; }
+  .block-container [data-testid="stVerticalBlock"] > div:nth-child(1) { animation-delay: 0.00s; }
+  .block-container [data-testid="stVerticalBlock"] > div:nth-child(2) { animation-delay: 0.04s; }
+  .block-container [data-testid="stVerticalBlock"] > div:nth-child(3) { animation-delay: 0.08s; }
+  .block-container [data-testid="stVerticalBlock"] > div:nth-child(4) { animation-delay: 0.12s; }
+  .block-container [data-testid="stVerticalBlock"] > div:nth-child(5) { animation-delay: 0.16s; }
 
-  .kml-box { animation: kmlPop 0.36s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  [data-testid="stAlert"] { animation: kmlPop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .block-container .kml-box { animation: kmlPop 0.36s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .block-container [data-testid="stAlert"] { animation: kmlPop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
   /* Reveal each block as it scrolls into view, on browsers that support
      scroll-driven animations. Elements already on screen at load land at the end
@@ -711,6 +718,38 @@ _STYLE = """
   /* Columns must be allowed to shrink; the default min-width keeps them wide and
      pushes a horizontal scrollbar onto the whole page. */
   [data-testid="stHorizontalBlock"] > div { min-width: 0; }
+
+  /* ------------------------------------------------------- the chapter list */
+  /* Nothing in the sidebar animates. It is furniture, not content, and a nav that
+     re-lays-itself-out on every click is maddening. */
+  [data-testid="stSidebar"] * { animation: none !important; }
+
+  [data-testid="stSidebarNav"] { padding-top: 0.4rem; }
+  [data-testid="stSidebarNav"] ul { padding: 0 !important; margin: 0 !important; gap: 0 !important; }
+  [data-testid="stSidebarNav"] li {
+      margin: 0 !important; padding: 0 !important; list-style: none !important;
+  }
+  [data-testid="stSidebarNav"] li::marker { content: none !important; }
+  [data-testid="stSidebarNav"] a {
+      display: flex !important; align-items: center !important;
+      min-height: 1.95rem !important;
+      margin: 1px 0 !important;
+      padding: 0.24rem 0.6rem !important;
+      border-radius: 7px;
+      line-height: 1.2 !important;
+      transition: background 0.14s ease, color 0.14s ease, padding-left 0.14s ease;
+  }
+  [data-testid="stSidebarNav"] a span,
+  [data-testid="stSidebarNav"] a p {
+      margin: 0 !important; line-height: 1.2 !important; font-size: 0.9rem;
+  }
+  [data-testid="stSidebarNav"] a:hover {
+      background: #1B212E; color: #F0F6FC; padding-left: 0.85rem !important;
+  }
+  [data-testid="stSidebarNav"] a[aria-current="page"] {
+      background: #16302A; color: #6EE7B7;
+      box-shadow: inset 2px 0 0 #34D399;
+  }
 
   #MainMenu, footer { visibility: hidden; }
 </style>

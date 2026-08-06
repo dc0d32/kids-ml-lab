@@ -822,3 +822,37 @@ identical whether it comes from a chapter, a workbook or the landing page.
 
 **642 tests pass**, including one asserting the good-news boxes are on the course green and
 have not drifted back onto a Streamlit alert.
+
+---
+
+## 2026-08-05 — The chapter list
+
+Owner: *"the chapter list on the left has too much space between items now. clicking on one
+item suddenly squishes it and removed the gap, and the gap comes back after the page loads.
+No gap there please. also render the left side with chapter numbers"*
+
+**The twitching.** The entrance animations were applied globally — to every
+`[data-testid="stMarkdown"]` and every `stVerticalBlock` child on the page, **including the
+sidebar**. So the chapter list re-animated on every rerun: it collapsed as the animation
+restarted from `translateY`, then settled back. Exactly the squish-then-gap the owner
+described.
+
+All animation is now scoped to `.block-container`, and the sidebar is explicitly excluded
+with `[data-testid="stSidebar"] * { animation: none !important; }`. The nav is furniture,
+not content, and a list that re-lays itself out on every click is maddening. Spacing is now
+set deliberately: flex rows, a 1px gap, and a hover that tints and nudges, with the current
+chapter marked by a green inset bar.
+
+**The numbers.** Streamlit derives a sidebar label from the filename and strips the leading
+number, so `00_guessing_machine.py` was showing as "guessing machine". That is bad in a
+course that says "remember Chapter 03" constantly — the reader had no way to tell which one
+that was.
+
+Fixed by declaring the navigation explicitly with `st.navigation`, built straight from
+`CHAPTERS`, giving labels like `00 · The Guessing Machine`. That required splitting the old
+`app/Home.py` in two, because with `st.navigation` the entry script runs on **every** page
+view: `Home.py` is now the router, and the landing content moved to `app/welcome.py`.
+Chapter URLs are unchanged. Adding a chapter to `CHAPTERS` still adds it to the list on its
+own.
+
+**644 tests pass.**
