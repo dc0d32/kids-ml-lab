@@ -5,7 +5,7 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from kidsml import lesson
+from kidsml import kmeansanim, lesson
 from kidsml.unsupervised import (
     default_flower_image,
     kmeans_hand_points,
@@ -37,6 +37,11 @@ def cached_quantized(image, k):
 @st.cache_data(show_spinner=False)
 def cached_penguin_clusters():
     return penguin_kmeans_table()
+
+
+@st.cache_data(show_spinner=False)
+def cached_kmeans_run(k, seed, bad):
+    return kmeansanim.kmeans_run_gif_bytes(k=k, seed=seed, bad_start=bad)
 
 
 @lesson.step("Find piles without labels", beat="hook")
@@ -110,12 +115,19 @@ def _():
         st.session_state["ch20_settings"] = settings
         st.session_state["ch20_step"] = 0
     history = kmeans_history(k=k, seed=seed, bad_start=bad)
+
+    st.image(cached_kmeans_run(k, seed, bad))
+    lesson.look_for(
+        "one full run on its own: every dot recolours to its nearest centre, then the X markers "
+        "glide to the middle of their group, then it repeats — until the title says it has settled."
+    )
+
+    st.caption("Now drive it yourself, one half-step at a time:")
     if st.button("One k-means step ▶", key="ch20_step_button"):
         st.session_state["ch20_step"] = (st.session_state.get("ch20_step", 0) + 1) % len(history)
     step = st.session_state.get("ch20_step", 0)
     fig = plot_kmeans_stage(history[step])
     lesson.show(fig)
-    lesson.look_for("the black X markers. Assign steps recolour dots; move steps shift the centres.")
     st.caption(history[step]["caption"])
 
 

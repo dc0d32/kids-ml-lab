@@ -169,6 +169,49 @@ the train/test split, the attention flow, the course map.
 
 ---
 
+## Animation
+
+Some ideas are about *change over time*, and a before/after pair asks the reader to do the
+animating in their head. A grid bending under a matrix, a window sliding over a picture,
+cluster centres drifting into place — in those the motion **is** the teaching point.
+
+`kidsml/anim.py` is the one recipe: matplotlib frames stitched into a looping GIF with
+Pillow, entirely in memory. Both are already dependencies. Do not add manim — it needs
+cairo and ffmpeg, which breaks "runs with one `uv` command".
+
+```python
+from kidsml import anim
+
+fig, ax = lesson.figure()
+dots = ax.scatter(...)
+
+def draw(i, progress):          # progress runs 0 -> 1, eased, across the moving section
+    dots.set_offsets(start + progress * (end - start))
+
+data = anim.gif_bytes(fig, draw, frames=30)
+```
+
+Then `st.image(data)` on a page (behind `@st.cache_data`), and
+`IPython.display.Image(data=data)` in the notebook.
+
+Rules that were learned the hard way:
+
+- **Animate a claim, not a control.** If the reader benefits from *turning* the parameter,
+  a slider beats a clip. Animate the things the chapter currently asks them to take on
+  trust. Keep the slider as well — the clip explains, the control lets them poke.
+- **25–45 frames, 5–7 seconds.** Every clip in the course together builds in under 8
+  seconds, which is what keeps the notebook budgets safe.
+- **Say what to watch.** A clip gets a `lesson.look_for(...)` like any other picture.
+- **Leave something still.** A looping GIF cannot be paused, so keep a static figure or a
+  before/after pair nearby for a reader who wants to stare.
+- **Give the title room.** `fig.tight_layout()` measures an empty title and then clips the
+  text the moment `draw` sets it. Use `fig.subplots_adjust(top=0.90)` instead.
+- **Check the frames, not the page.** A browser screenshot catches one frame of a loop.
+  Decode the GIF instead — and call `.convert("RGB")` on each frame, because they are mode
+  `"P"` and reading them raw gives palette indices that look like garbage.
+
+---
+
 ## Colour
 
 The app is pure black (AMOLED). Every colour comes from `kidsml/plots.py` and nowhere

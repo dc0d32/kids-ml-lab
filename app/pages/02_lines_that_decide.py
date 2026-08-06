@@ -10,12 +10,18 @@ from sklearn.linear_model import Perceptron
 from kidsml import lesson
 from kidsml.datasets import toy_shape, two_blobs_tiny
 from kidsml.linear import mistake_count, perceptron_history, predict_side, score_line
+from kidsml.lineanim import correction_gif_bytes
 from kidsml.nn_numpy import perceptron_step
 from kidsml.plots import ACCENT, decision_boundary, draw_line, scatter_2d
 
 lesson.begin(2)
 
 X_tiny, y_tiny = two_blobs_tiny()
+
+
+@st.cache_data(show_spinner=False)
+def correction_animation():
+    return correction_gif_bytes()
 
 # Five dogs to work through by hand: a mix of both answers, and including the one the
 # worked example uses. Taking the first five would have handed the reader five puppies
@@ -200,6 +206,13 @@ one clear mistake lets us watch one correction happen.
         to **7(6) + 6(5) - 19 = 53**. The point is now strongly on the red side.
         """
     )
+    st.image(correction_animation(), caption="One correction: the missed dog flashes, then the line swings round to put it on the red side")
+    lesson.look_for(
+        "the circled red dog flash first — it is on the wrong side of the strict line up in "
+        "the corner. Then the boundary sweeps down until that dog sits on the red side. One "
+        "update, one point fixed."
+    )
+    lesson.say("Here is the same before and after held still, side by side.")
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.4))
     for ax, w_now, b_now, title in [
         (axes[0], w_bad, b_bad, "Before the one update"),

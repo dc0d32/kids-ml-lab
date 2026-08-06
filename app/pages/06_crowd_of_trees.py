@@ -5,7 +5,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import streamlit as st
 
-from kidsml import lesson, ui
+from kidsml import boostanim, lesson, ui
 from kidsml.datasets import load_table
 from kidsml.plots import decision_boundary
 from kidsml.trees import (
@@ -23,6 +23,11 @@ lesson.begin(6)
 @st.cache_data(show_spinner=False)
 def cached_trace(steps, learning_rate, max_depth, seed):
     return boosting_trace(n_steps=steps, learning_rate=learning_rate, max_depth=max_depth, seed=seed)
+
+
+@st.cache_data(show_spinner=False)
+def cached_staircase(learning_rate, max_depth):
+    return boostanim.staircase_gif_bytes(learning_rate=learning_rate, max_depth=max_depth, seed=4)
 
 
 @st.cache_data(show_spinner=False)
@@ -164,6 +169,13 @@ def _():
     if guess is None:
         return
 
+    st.image(cached_staircase(0.25, 1))
+    lesson.look_for(
+        "the green line. It starts as one flat step and gains a new stair every round, and the "
+        "running total creeps toward the blue dots — the fixes pile up, they do not replace each other."
+    )
+
+    st.caption("Now stop it anywhere and poke at the knobs:")
     steps = st.slider("Boosting step", 1, 50, 12, key="ch06_boost_step")
     rate = st.slider("How much of each fix to add", 0.05, 0.60, 0.25, 0.05, key="ch06_boost_rate")
     stump_depth = st.slider("How deep is each tiny tree?", 1, 4, 1, key="ch06_boost_depth")

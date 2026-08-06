@@ -13,10 +13,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from IPython.display import Image
 from sklearn.linear_model import Perceptron
 
 from kidsml.datasets import toy_shape, two_blobs_tiny
 from kidsml.linear import mistake_count, perceptron_history, predict_side, score_line
+from kidsml.lineanim import correction_gif_bytes
 from kidsml.nn_numpy import perceptron_step
 from kidsml.plots import ACCENT, decision_boundary, draw_line, scatter_2d, use_house_style
 
@@ -177,7 +179,15 @@ pd.DataFrame(
 
 # ## 👀 Take a look
 #
-# The circled red point caused the update. Watch how one correction changes the boundary.
+# The circled red point caused the update. Watch one correction happen: the missed dog
+# flashes, then the boundary sweeps down from the strict line up in the corner until that
+# dog sits on the red side. One update, one point fixed.
+
+# %%
+Image(data=correction_gif_bytes())
+
+# %% [markdown]
+# Prefer it held still? Here is the same before and after, side by side.
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(10, 4.4))

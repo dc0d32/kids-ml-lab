@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
+from kidsml import gridanim
 from kidsml import lesson
 from kidsml import linalg as la
 from kidsml.nn_numpy import ACTIVATIONS
@@ -47,6 +48,16 @@ def cloud3d():
 @st.cache_data(show_spinner=False)
 def best_shadow_score():
     return la.best_shadow_spread(cloud3d())
+
+
+@st.cache_data(show_spinner=False)
+def chain_clip():
+    return gridanim.chain_gif_bytes()
+
+
+@st.cache_data(show_spinner=False)
+def collapse_clip():
+    return gridanim.collapse_gif_bytes()
 
 
 def safe_key(text: str) -> str:
@@ -336,6 +347,12 @@ def _():
 @lesson.step("Collapse throws information away", beat="play")
 def _():
     lesson.say("When the determinant is 0, the whole plane lands on one line. Different points can crash into the same spot like bumper cars.")
+    st.image(collapse_clip())
+    lesson.look_for(
+        "the house — a shape with a clear roof and a clear door — flatten straight down onto"
+        " one line. The moment it is a line you can no longer tell which way was up. Nothing"
+        " in the flattened picture can unflatten it: that is what 'no way back' means."
+    )
     knobs, picture = lesson.controls()
     with knobs:
         blend = st.slider("blend toward collapse", 0.0, 1.0, 1.0, 0.05, key="ch12_collapse_blend")
@@ -414,6 +431,13 @@ def _():
     )
     if guess is None:
         return
+    st.image(chain_clip())
+    lesson.look_for(
+        "the two journeys race to the same finish. Journey 1 bends the grid by A, pauses so"
+        " you can see where it reached, then bends again by B. Journey 2 snaps back to the"
+        " start and bends once by the single matrix B @ A — and lands on the very same grid."
+        " The house lands in exactly the same spot both ways."
+    )
     left, right = st.columns(2, gap="large")
     with left:
         st.markdown("**Matrix A**")

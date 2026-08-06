@@ -10,12 +10,18 @@ from sklearn.linear_model import LinearRegression
 from kidsml import lesson
 from kidsml.datasets import allowance, load_table
 from kidsml.linear import gradient_descent_line, mse_for_line, squared_error_table
-from kidsml.plots import ACCENT, loss_surface, regression_fit
+from kidsml.lineanim import descent_gif_bytes
+from kidsml.plots import ACCENT, COUNT_CMAP, loss_surface, regression_fit
 
 lesson.begin(1)
 
 weeks, dollars = allowance()
 hand_y = np.round(dollars[:4])
+
+
+@st.cache_data(show_spinner=False)
+def descent_animation():
+    return descent_gif_bytes()
 
 
 @lesson.step("A line can answer how much", beat="hook")
@@ -141,7 +147,7 @@ def _():
     with picture:
         W, B, Z = loss_surface(weeks, dollars, w_range=(0, 6), b_range=(-5, 15))
         fig, ax = lesson.figure(6, 4.5)
-        ax.contourf(W, B, Z, levels=24, cmap="viridis")
+        ax.contourf(W, B, Z, levels=24, cmap=COUNT_CMAP)
         ax.contour(W, B, Z, levels=12, colors="white", alpha=0.35, linewidths=0.7)
         ax.scatter([w], [b], s=110, c=ACCENT, edgecolors="white", zorder=5)
         ax.set_xlabel("w")
@@ -155,26 +161,34 @@ def _():
 def _():
     lesson.say(
         """
-A **gradient** is an arrow made from slopes. It says, "if you nudge **w** this
-way and **b** that way, the average squared mistake rises fastest." Grown-ups
-call that mistake score **loss**.
+A **gradient** is the arrow you get by putting those two slopes together. It points the way
+that makes the average squared mistake climb fastest — nudge **w** this much and **b** that
+much, and the mistake grows quicker than any other direction you could have gone.
 
-To learn, the computer walks the opposite way: downhill. Grown-ups call that
-whole downhill-walking trick **gradient descent**.
+Grown-ups call that mistake score the **loss**. And to learn, the computer walks the exact
+opposite way: downhill. That whole downhill-walking trick is called **gradient descent**.
 """
     )
+    st.image(descent_animation(), caption="Gradient descent walking down into the valley, one step at a time")
+    lesson.look_for(
+        "the dots landing one at a time as the walk feels its way down — a big first leap, "
+        "then shorter and shorter nudges. Watch **w**, **b** and the **error** in the title "
+        "shrink with every step. Nobody told the dot where the valley was; it found it by "
+        "measuring the slope and moving."
+    )
+    lesson.say("Now grab the slider and set how many steps to take. Stop it early and the dot is caught mid-walk, still up on the slope.")
     steps = st.slider("Let the computer take this many downhill steps", 1, 120, 60, key="ch01_steps")
     path = gradient_descent_line(weeks, dollars, w=0, b=0, lr=0.01, steps=steps)
     W, B, Z = loss_surface(weeks, dollars, w_range=(0, 6), b_range=(-5, 15))
     fig, ax = lesson.figure(6, 4.5)
-    ax.contourf(W, B, Z, levels=24, cmap="viridis")
+    ax.contourf(W, B, Z, levels=24, cmap=COUNT_CMAP)
     ax.plot(path["w"], path["b"], marker="o", markersize=2.5, color="white")
     ax.scatter([path["w"][-1]], [path["b"][-1]], s=100, c=ACCENT, edgecolors="white")
     ax.set_xlabel("w")
     ax.set_ylabel("b")
     ax.set_title("The computer walks down the valley")
     lesson.show(fig)
-    lesson.look_for("the white dots: each step measures the slope, then nudges the two numbers toward lower error.")
+    lesson.look_for("how few steps it takes to get most of the way down, and how the last steps barely move — the slope there is almost flat.")
 
 
 @lesson.step("The training loop", beat="play")

@@ -14,12 +14,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+from IPython.display import Image
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.tree import DecisionTreeClassifier
 
+from kidsml import liftanim
 from kidsml.datasets import toy_shape, xor_exact
 from kidsml.linear import predict_side
 from kidsml.plots import ACCENT, COOL, WARM, decision_boundary, draw_line, scatter_2d, style_plotly, use_house_style
@@ -146,8 +148,19 @@ plt.show()
 # The diagram says the trick: make height from distance, cut flat, then look back down. A curve appears on the floor!
 
 # %% [markdown]
-# Enough words. Here is the same circle data with that third number used as **height**.
-# Drag it around.
+# That flowchart is the plan. Now watch it happen. The clip starts on the flat 2D picture
+# you already know, then every point climbs to its own height **x3 = x1² + x2²** — and a
+# flat plane slides through the gap that opens up.
+#
+# Watch the two amber dots: **(2, 0)** rockets up to height 4 with the rest of the ring,
+# while **(0.3, 0.4)** barely leaves the floor at 0.25. Once they split, a flat plane — the
+# thing a straight line could never be in 2D — slides straight through the empty gap.
+
+# %%
+Image(data=liftanim.lift_gif_bytes())
+
+# %% [markdown]
+# Prefer to grab it yourself? Here is the same lifted circle data, live — drag it around.
 
 # %%
 X, y = toy_shape("circles", n=220, noise=0.08, seed=1)

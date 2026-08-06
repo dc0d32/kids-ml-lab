@@ -13,7 +13,9 @@
 # %%
 import matplotlib.pyplot as plt
 import pandas as pd
+from IPython.display import Image
 
+from kidsml import liftanim
 from kidsml.plots import decision_boundary, scatter_2d, use_house_style
 from kidsml.trees import (
     fit_circles_lifted,
@@ -92,6 +94,15 @@ workbook.render(7)
 # %% [markdown]
 # ## 👀 Take a look
 #
+# So how wide *can* the road get? Watch it grow. It starts as a thin line hugging the blue
+# class, then its far edge sweeps across the empty gap. The road cannot widen forever: the
+# moment each edge reaches the closest dot, the growing stops — and those dots light up as
+# the points holding the road in place.
+
+# %%
+Image(data=liftanim.road_gif_bytes())
+
+# %% [markdown]
 # Once the road is as wide as possible, most dots are not pushing on it. They sit far
 # back on their own side, so nudging them a little would not shrink the road.
 #

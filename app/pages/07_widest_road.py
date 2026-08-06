@@ -20,6 +20,13 @@ from kidsml.trees import (
 lesson.begin(7)
 
 
+@st.cache_data(show_spinner=False)
+def _road_animation():
+    from kidsml import liftanim
+
+    return liftanim.road_gif_bytes()
+
+
 @lesson.step("A perfect line can still be nervous", beat="hook")
 def _():
     lesson.say(
@@ -81,6 +88,21 @@ The nearest red dot has `x = 4`, so the red gap is `4 - 2.5 = 1.5`.
 
 @lesson.step("A few points hold the road", beat="seeit")
 def _():
+    lesson.say(
+        """
+So how wide *can* the road get? Watch it grow. It starts as a thin line hugging the blue
+class, then its far edge sweeps across the empty gap.
+
+The road cannot widen forever. The moment each edge reaches the closest dot, the growing
+stops — and those dots light up. They are the ones holding the road in place.
+"""
+    )
+    st.image(_road_animation(), caption="The road widens until it jams against the closest points")
+    lesson.look_for(
+        "the exact moment the growth stops. The edges cannot push past the nearest blue and "
+        "red dots, so those dots get ringed. Everything else has room to spare."
+    )
+
     lesson.say(
         """
 Once the road is as wide as possible, most dots are not pushing on it. The closest dots

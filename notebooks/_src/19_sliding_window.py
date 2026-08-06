@@ -17,8 +17,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from IPython.display import Image
 
 from kidsml import workbook
+from kidsml import convanim
 from kidsml.datasets import digits, tiny_image
 from kidsml.plots import show_image, use_house_style
 from kidsml import vision
@@ -96,6 +98,21 @@ print("first window answer:", first_answer)
 # ## 👀 Take a look
 #
 # Now do all 9 window positions with the same plain double loop. Same move, nine landings.
+# But do not just take the output grid — watch it get *built*. The green window visits all
+# nine landing pads, left to right and then down a row. On each landing the middle panel
+# shows the nine products sitting under the window and their total, and that same total
+# drops into the matching output cell.
+
+# %%
+Image(data=convanim.slide_gif_bytes())
+
+# %% [markdown]
+# Look for the window's nine positions and the output cell filling in behind each one. By
+# the last frame all nine cells are full. Notice the very last landing sits entirely inside
+# the bright block, so its nine products cancel to `0` — the edge finder correctly says "no
+# edge here". The big numbers only flash where dark pixels crash into bright ones.
+#
+# Prefer a still picture? Here is the same convolution frozen, for staring at.
 
 # %%
 output = vision.convolve2d_valid(image, kernel)

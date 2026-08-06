@@ -56,6 +56,7 @@ def gif_bytes(
     hold_last: int = 6,
     first_pause_ms: int = 900,
     last_pause_ms: int = 1600,
+    colors: int = 128,
 ) -> bytes:
     """Render an animation to a looping GIF, in memory.
 
@@ -81,17 +82,30 @@ def gif_bytes(
 
         draw(i, progress)
         fig.canvas.draw()
-        images.append(
-            Image.frombuffer(
-                "RGBA",
-                fig.canvas.get_width_height(),
-                fig.canvas.buffer_rgba(),
-                "raw",
-                "RGBA",
-                0,
-                1,
-            ).convert("P", palette=Image.ADAPTIVE, colors=128)
-        )
+        # `np.asarray(buffer_rgba())` rather than `Image.frombuffer(...,
+        # canvas.get_width_height(), ...)`. On a HiDPI screen the macOS backend hands back
+        # a buffer with twice as many pixels as `get_width_height()` reports, and reading
+        # it at the reported size misaligns every row — the clip comes out ghosted and
+        # sheared. The array knows its own shape, so this is right on every backend.
+        images.append(Image.fromarray(np.asarray(fig.canvas.buffer_rgba()), "RGBA").convert("RGB"))
+
+    # Every frame must be quantised against the *same* palette.
+    #
+    # Letting each frame pick its own adaptive palette looks fine one frame at a time and
+    # produces a garish mess in the finished GIF: the file carries one global colour table,
+    # so frame 12's indices get looked up in frame 0's colours. On a nearly-black clip the
+    # palettes come out similar enough to hide it; on a colourful one — a loss surface, a
+    # heat map — the picture turns to lurid red and green partway through.
+    #
+    # The shared palette is built from a strip of frames sampled across the whole clip, so
+    # colours that only appear late still get a slot.
+    sample_indices = sorted({int(round(t)) for t in np.linspace(0, total - 1, min(6, total))})
+    strip = Image.new("RGB", (images[0].width, images[0].height * len(sample_indices)))
+    for slot, index in enumerate(sample_indices):
+        strip.paste(images[index], (0, images[0].height * slot))
+    master = strip.quantize(colors=colors, method=Image.Quantize.MEDIANCUT)
+
+    images = [frame.quantize(palette=master, dither=Image.Dither.NONE) for frame in images]
 
     durations = [1000 / fps] * total
     if hold_first:
@@ -106,7 +120,7 @@ def gif_bytes(
         append_images=images[1:],
         duration=durations,
         loop=0,
-        disposal=2,
+        disposal=1,
     )
     return buffer.getvalue()
 

@@ -20,8 +20,9 @@
 # %%
 import matplotlib.pyplot as plt
 import pandas as pd
+from IPython.display import Image
 
-from kidsml import workbook
+from kidsml import kmeansanim, workbook
 from kidsml.plots import use_house_style
 from kidsml.unsupervised import (
     default_flower_image,
@@ -110,7 +111,16 @@ workbook.render(20)
 # %% [markdown]
 # ## 👀 Take a look
 #
-# The app has a step button. Here are four steps from one run.
+# The algorithm is *named* after the centres moving to the mean, so watch them do it. In this
+# clip every dot recolours to its nearest centre, then the X markers glide to the middle of
+# their group, then it repeats — until the title says the centres have settled and nothing
+# moves. The two half-steps have their own captions so you can tell them apart.
+
+# %%
+Image(data=kmeansanim.kmeans_run_gif_bytes(k=3, seed=0))
+
+# %% [markdown]
+# Prefer to freeze it? The app has a step button. Here are four steps from the same run.
 
 # %%
 history = kmeans_history(k=3, seed=0)

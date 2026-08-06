@@ -21,6 +21,13 @@ lesson.begin(3)
 X_xor, y_xor = xor_exact()
 
 
+@st.cache_data(show_spinner=False)
+def _lift_animation():
+    from kidsml import liftanim
+
+    return liftanim.lift_gif_bytes()
+
+
 @lesson.step("Let the ruler fail", beat="hook")
 def _():
     lesson.say(
@@ -181,7 +188,21 @@ flowchart TD
 """,
     )
 
-    lesson.say("Enough words. Here is the same circle data with that third number used as **height**. Drag it around.")
+    lesson.say(
+        """
+That flowchart is the plan. Now watch it actually happen. The clip starts on the flat
+2D picture you already know, then every point climbs to its own height **x3 = x1² +
+x2²** — and a flat plane slides through the gap that opens up.
+"""
+    )
+    st.image(_lift_animation(), caption="Flat circle data lifting into 3D, then one flat cut through the gap")
+    lesson.look_for(
+        "the amber dots. **(2, 0)** rockets up to height 4 with the rest of the ring, while "
+        "**(0.3, 0.4)** barely leaves the floor at 0.25. Once they split, a flat plane — the "
+        "thing a straight line could never be in 2D — slides straight through the empty gap."
+    )
+
+    lesson.say("Now grab it yourself. Here is the same lifted data, live — drag it around.")
 
     X, y = toy_shape("circles", n=220, noise=0.08, seed=1)
     height = X[:, 0] ** 2 + X[:, 1] ** 2

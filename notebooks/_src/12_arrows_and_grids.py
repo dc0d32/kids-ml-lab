@@ -15,12 +15,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from IPython.display import Markdown, display
+from IPython.display import Image, Markdown, display
 from ipywidgets import Checkbox, Dropdown, FloatSlider, IntSlider
 
 from kidsml.interactive import interact
 from plotly.subplots import make_subplots
 
+from kidsml import gridanim
 from kidsml import linalg as la
 from kidsml import workbook
 from kidsml.nn_numpy import ACTIVATIONS
@@ -264,6 +265,18 @@ display(Markdown("**Look for:** many blue grid lines stacked on the same line.")
 plt.show()
 
 # %% [markdown]
+# A determinant of `0.00` is a number. Watch it happen instead. The whole grid and the
+# little house squash straight down onto one line and stay there.
+
+# %%
+Image(data=gridanim.collapse_gif_bytes())
+
+# %% [markdown]
+# **Look for:** the house — a shape with a clear roof and a clear door — flatten onto a
+# single line. Once it is a line you can no longer tell which way was up, and nothing can
+# unflatten it. That is what "no way back" means.
+
+# %% [markdown]
 # ### Projection is a shadow
 #
 # Projecting one arrow onto another drops a shadow and keeps the part pointing along the chosen direction.
@@ -319,6 +332,18 @@ interact(
 #
 # Chaining two matrices is still one matrix. Doing `A`, then `B`, lands in the same place
 # as doing `B @ A`. Same footprints!
+#
+# A difference of `0.00000000` is hard to feel. So watch it as a race. **Journey 1** bends
+# the grid by `A`, pauses so you can see where it reached, then bends again by `B`.
+# **Journey 2** snaps back to the start and bends once by the single matrix `B @ A`. Both
+# journeys land on the very same grid — house and all.
+
+# %%
+Image(data=gridanim.chain_gif_bytes())
+
+# %% [markdown]
+# **Look for:** the finish. The two-step trip and the one-matrix trip put the house in
+# exactly the same place. Now the same claim as a table and three still panels:
 
 # %%
 A = la.matrix(1.0, 0.6, 0.0, 1.0)

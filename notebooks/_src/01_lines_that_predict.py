@@ -14,11 +14,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from IPython.display import Image
 from sklearn.linear_model import LinearRegression
 
 from kidsml.datasets import allowance, load_table
 from kidsml.linear import gradient_descent_line, mse_for_line, squared_error_table
-from kidsml.plots import ACCENT, loss_surface, regression_fit, use_house_style
+from kidsml.lineanim import descent_gif_bytes
+from kidsml.plots import ACCENT, COUNT_CMAP, loss_surface, regression_fit, use_house_style
 
 use_house_style()
 
@@ -126,7 +128,7 @@ axes[0].set_ylabel("dollars")
 axes[0].set_title(f"Average squared mistake = {mse_for_line(weeks, dollars, w, b):.2f}")
 
 W, B, Z = loss_surface(weeks, dollars, w_range=(0, 6), b_range=(-5, 15))
-axes[1].contourf(W, B, Z, levels=24, cmap="viridis")
+axes[1].contourf(W, B, Z, levels=24, cmap=COUNT_CMAP)
 axes[1].contour(W, B, Z, levels=12, colors="white", alpha=0.35, linewidths=0.7)
 axes[1].scatter([w], [b], s=110, c=ACCENT, edgecolors="white", zorder=5)
 axes[1].set_xlabel("w")
@@ -138,18 +140,29 @@ plt.show()
 # Notice the valley shape on the right. Many terrible lines live up on the walls,
 # and the best line sits near the low floor.
 #
-# A **gradient** is an arrow made from slopes. It says, "if you nudge **w** this
-# way and **b** that way, the average squared mistake rises fastest." Grown-ups
-# call that mistake score **loss**.
+# A **gradient** is the arrow you get by putting those two slopes together. It points the
+# way that makes the average squared mistake climb fastest — nudge **w** this much and **b**
+# that much, and the mistake grows quicker than any other direction you could have gone.
 #
-# To learn, the computer walks the opposite way: downhill. Grown-ups call that
-# whole downhill-walking trick **gradient descent**.
+# Grown-ups call that mistake score the **loss**. And to learn, the computer walks the exact
+# opposite way: downhill. That whole downhill-walking trick is called **gradient descent**.
+#
+# Watch it happen. The dots land one at a time, feeling their way down: a big first
+# leap, then shorter and shorter nudges. The **w**, **b** and **error** in the title
+# shrink with every step. Nobody told the dot where the valley was — it found it by
+# measuring the slope and moving.
+
+# %%
+Image(data=descent_gif_bytes())
+
+# %% [markdown]
+# Prefer the whole path at once? Here every step is drawn as a dot on the same map.
 
 # %%
 path = gradient_descent_line(weeks, dollars, w=0, b=0, lr=0.01, steps=90)
 
 fig, ax = plt.subplots(figsize=(6, 4.6))
-ax.contourf(W, B, Z, levels=24, cmap="viridis")
+ax.contourf(W, B, Z, levels=24, cmap=COUNT_CMAP)
 ax.plot(path["w"], path["b"], marker="o", markersize=2.5, color="white")
 ax.scatter([path["w"][-1]], [path["b"][-1]], s=110, c=ACCENT, edgecolors="white")
 ax.set_xlabel("w")

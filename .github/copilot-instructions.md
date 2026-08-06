@@ -25,6 +25,8 @@ notebook and a Streamlit page, and both import the same `kidsml/` library.
 - **Colours come from `kidsml/plots.py`.** The page is pure black — a hardcoded dark ink
   colour disappears.
 - **Mermaid node labels are ASCII only.** `x₁` kills the whole diagram silently.
+- **Animations go through `kidsml/anim.py`** (matplotlib frames → GIF). Animate a claim the
+  reader has to take on trust; use a slider when they want to control the parameter.
 
 ## Where things live
 

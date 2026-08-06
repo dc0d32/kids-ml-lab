@@ -1133,3 +1133,82 @@ Part of this round's work was destroyed mid-flight by a `git reset --hard` run i
 worktree that had hours of uncommitted changes in it, and had to be redone from scratch.
 **Commit early and often when several things are editing the same tree**, and never reach
 for `git reset --hard`, `git checkout .` or `git stash` as a way of tidying up.
+
+---
+
+## 2026-08-06 — Ten animations, and one shared recipe for making them
+
+### The ask
+
+"Find other places where we can use animation." Chapter 15's XOR fold had just proved the
+point: the reader used to be *told* that a hidden layer moves the points into a space where
+one line works, and had to believe it from two static scatter plots.
+
+Manim was considered and rejected. It needs cairo and ffmpeg, neither of which installs
+here, and adding them would break the project's "runs with one `uv` command, no network"
+rule. The fold's own recipe — matplotlib frames stitched into a looping GIF with Pillow,
+in memory — needs nothing new and is fast enough to build on every page load.
+
+### What now moves
+
+A survey of all 26 chapters looked for one thing: a moment where the prose promises motion
+and the screen delivers a still. Nine such moments were worth animating.
+
+| Chapter | Was | Now |
+|---|---|---|
+| 01 Walking downhill | The finished descent path printed all at once | Dots land one real gradient step at a time, `w`, `b` and the error ticking down in the title |
+| 02 One pencil update | A before/after pair | The boundary sweeps down until the misclassified dog is on the right side, using the chapter's own by-hand numbers |
+| 03 Invent a height | A static 3D scatter, and "ring points climb like beads on stilts" | Opens as the flat 2D picture seen top-down; the ring rises into a bowl rim as the camera tilts; a plane slides in and cuts. Both worked examples are labelled as they travel |
+| 06 The staircase appears | A slider showing one round at a time | The running total builds stair by stair until it traces the dots |
+| 07 The widest road | A finished road | The margin grows until both edges jam against the closest points, which light up as the support vectors |
+| 12 Two grid moves become one | Three still panels and "largest disagreement: 1e-15" | A race: morph under A, pause, morph under B — then snap back and morph once under `B @ A`, landing on an identical grid |
+| 12 Collapse throws information away | A still picture and a determinant of 0.00 | The grid and the house flatten onto a single line, and hold there |
+| 19 Now slide it everywhere | Three static panels, in a chapter *called* The Sliding Window | The 3×3 window hops all nine landing pads, its nine products and running sum shown, the output filling in cell by cell |
+| 20 k-means | A button you click a dozen times | Points recolour, centres glide to their group's middle, repeat until nothing moves |
+
+Deliberately left alone: the Chapter 12 grid mover, PCA's rotation, and the Chapter 14
+weights walk. In all three the reader wants to *turn* the parameter, and a slider beats a
+clip. That is now the written rule: **animate a claim, not a control** — and keep the
+slider anyway, because the clip explains and the control lets them poke.
+
+### The shared recipe, and two bugs in it
+
+`kidsml/anim.py` generalises the fold: `gif_bytes(fig, draw, frames=...)` calls back per
+frame with an eased 0→1 progress, holds the first and last frames so a loop does not read
+as a flicker, and returns bytes. `travel_spaced` samples a training path by distance
+travelled rather than by step number, because a model sits on a plateau and then moves all
+at once, which otherwise spends the whole clip watching something barely move.
+
+Two real bugs surfaced, both found by chapter authors and both fixed centrally rather than
+worked around locally — three separate copies of a private encoder had appeared before the
+causes were understood:
+
+1. **Per-frame adaptive palettes.** A GIF carries one global colour table, so frame 12's
+   pixel indices were being looked up in frame 0's colours. On a nearly-black clip the
+   palettes came out similar enough to hide it; on Chapter 01's loss surface the picture
+   turned lurid red and green halfway through. Every frame is now quantised against a
+   single palette built from a strip sampled across the whole clip. The descent clip went
+   from 490 KB to 48 KB as a side effect.
+2. **HiDPI buffers.** On a Retina screen the macOS backend returns a buffer with twice as
+   many pixels as `canvas.get_width_height()` reports, so reading it at the reported size
+   sheared every frame. Reading `np.asarray(canvas.buffer_rgba())`, which knows its own
+   shape, is correct on every backend.
+
+A third thing worth writing down: two agents independently reported these GIFs "decode to
+garbage in Pillow but play fine in browsers", and that was half wrong and half right. The
+frames are mode `"P"`; without `.convert("RGB")` you are looking at palette indices. But
+the palette bug was real underneath. **A report of "looks broken, probably fine" deserves a
+proper check, not an explanation.**
+
+### Cost
+
+All ten clips in the course build in 7.4 seconds put together, 5–7 seconds of playback
+each, 25–45 frames. Notebook budgets are untouched.
+
+### Also in this round
+
+Chapter 08's step 9 was doing two unrelated jobs — the sklearn penguin pipeline and then,
+without a break, an 8×8 handwritten-digit score. Its `look_for` pointed at the scaler while
+its `aha` talked about digits. Split into two steps: the pipeline stays with the penguins,
+and the digit result gets its own screen with the setup question that earns it ("does
+anything break if a row gets *long*?").

@@ -8,6 +8,7 @@ import pandas as pd
 import streamlit as st
 
 from kidsml import lesson
+from kidsml import convanim
 from kidsml import vision
 from kidsml import visionextra
 from kidsml.datasets import digits, tiny_image
@@ -31,6 +32,11 @@ def cached_digit_image():
     _, y, images = digits()
     idx = int(np.flatnonzero(y == 3)[0])
     return images[idx] / 16.0
+
+
+@st.cache_data(show_spinner=False)
+def cached_slide_clip():
+    return convanim.slide_gif_bytes()
 
 
 @lesson.step("Pictures need neighbours", beat="hook")
@@ -87,15 +93,17 @@ def _():
     image = tiny_image()
     kernel = vision.KERNEL_PRESETS["vertical edge"]
     output = vision.convolve2d_valid(image, kernel)
-    lesson.say("Across the rows, the 3-high window can start at row 1, row 2, or row 3. Starting at row 4 would hang off the bottom like a tray sliding off a table.")
+    lesson.say("Across the rows, the 3-high window can start at row 1, row 2, or row 3. Starting at row 4 would hang off the bottom like a tray sliding off a table. Three rows, three columns: nine legal landing pads. Watch the window visit every one.")
+    st.image(cached_slide_clip())
+    lesson.look_for("the green window visiting all nine landing pads — left to right, then down a row. On each landing the middle panel shows the nine products under the window and their total, and that same total pops into the matching output cell. By the end all nine cells are filled and you have built the feature map yourself.")
+    lesson.aha("The last landing sits entirely inside the bright block, so its nine products cancel to 0 — the edge finder correctly says 'no edge here'. The big numbers only flash where dark pixels crash into bright ones.")
+    lesson.say("Here is the finished result frozen, for staring at:")
     fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.4))
     show_image(image, ax=axes[0], numbers=True, title="image")
     show_image(kernel, ax=axes[1], numbers=True, title="kernel", cmap="coolwarm")
     show_image(output, ax=axes[2], numbers=True, title="3 by 3 output", cmap="magma")
     fig.tight_layout()
     lesson.show(fig)
-    lesson.look_for("the 3 by 3 output. The window has 9 legal landing pads, and the big numbers flash where dark pixels crash into bright pixels.")
-    lesson.aha("You detected an edge by hand, using the same multiply-and-add at every position!")
     lesson.jargon("stride and padding", "Stride is how far the window jumps. Padding is extra border pixels; this by-hand version uses stride 1 and no padding.")
 
 

@@ -12,7 +12,9 @@
 
 # %%
 import matplotlib.pyplot as plt
+from IPython.display import Image
 
+from kidsml import boostanim
 from kidsml.datasets import load_table
 from kidsml.plots import decision_boundary, use_house_style
 from kidsml.trees import (
@@ -153,6 +155,16 @@ forest_vote_counts(forest, [0.0, 0.0])
 #
 # A depth-1 tiny tree has one split. Grown-ups call that tiny tree a **stump**: short,
 # blunt, and useful in a crowd.
+#
+# Watch the running total build itself. The green line starts as one flat step and gains a
+# new stair every round, and the total creeps toward the blue dots. The fixes pile up — they
+# do not replace each other.
+
+# %%
+Image(data=boostanim.staircase_gif_bytes(learning_rate=0.25, max_depth=1, seed=4))
+
+# %% [markdown]
+# Now freeze one moment and pull it apart into three panels.
 
 # %%
 trace = boosting_trace(n_steps=20, learning_rate=0.25, max_depth=1, seed=0)
