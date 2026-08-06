@@ -1234,3 +1234,47 @@ Added:
 
 None of it is required. `./run.sh app` still works with nothing but `uv`, and that stays
 true: the whole suite passes inside the direnv shell and outside it.
+
+---
+
+## 2026-08-06 — Two environment bugs: NixOS Python, and dropdowns for anyone using reduced motion
+
+### `./run.sh app` failed inside the nix dev shell on NixOS
+
+The shell handed over `uv` but no Python, so uv downloaded its own — a standalone CPython
+built for generic Linux. NixOS has no `/lib64/ld-linux-x86-64.so.2` to run it with:
+
+```
+Could not start dynamically linked executable: .../cpython-3.13.14-linux-x86_64-gnu/bin/python3.13
+```
+
+`LD_LIBRARY_PATH` cannot fix this. What is missing is the ELF *interpreter*, not a library.
+The devShell now ships `python313` and points uv at it with `UV_PYTHON` plus
+`UV_PYTHON_DOWNLOADS=never`.
+
+Linux only, deliberately: on macOS uv's own downloads work, and forcing a different
+interpreter there would invalidate every existing `.venv` for no reason. The shell also
+warns when `.venv` was built against a different interpreter, because the error you get
+otherwise does not point at the cause.
+
+### Every dropdown landed in the top-left corner, for some readers
+
+The stylesheet's `prefers-reduced-motion` block did this:
+
+```css
+*, *::before, *::after { transform: none !important; }
+```
+
+A popup library positions a popup by putting `transform: translate(x, y)` on a
+fixed-position element. Blanking every transform on the page therefore dropped every
+select box, tooltip and date picker at (0, 0). Measured: popup at `top=605` normally,
+`top=0 left=0` with reduced motion on.
+
+Reduced motion is exactly the setting a kid prone to motion sickness is told to turn on, so
+this made the course's dropdowns unusable for the readers most likely to need the setting.
+Our own decorative movement is now switched off one selector at a time, and never by
+blanking transforms globally.
+
+This was invisible to every test and to ordinary browsing — it only appears with an
+accessibility setting enabled. `AGENTS.md` now says to check pages with
+`reducedMotion: "reduce"`.

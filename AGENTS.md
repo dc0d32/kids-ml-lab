@@ -481,3 +481,9 @@ await page.screenshot({ path: "shot.png", fullPage: true });
 Worth checking every time: a 420px-wide viewport, `document.scrollWidth` against
 `clientWidth` for accidental horizontal scroll, and `naturalWidth` against the displayed
 width of any image to see whether a figure is being scaled up.
+
+**And check it with reduced motion on** — `newPage({ reducedMotion: "reduce" })` in
+Playwright, or the OS accessibility setting. A `prefers-reduced-motion` block that blanked
+every `transform` on the page once sent every dropdown in the course to the top-left corner
+of the screen, because that is how a popup library positions a popup. Turn off your own
+animations by name; never with `* { transform: none }`.

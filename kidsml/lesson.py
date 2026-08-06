@@ -890,8 +890,25 @@ _STYLE = """
   @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
           animation-duration: 0.001s !important;
+          animation-delay: 0s !important;
           transition-duration: 0.001s !important;
           animation-timeline: auto !important;
+      }
+
+      /* Our own decorative movement, switched off one selector at a time.
+         This used to be `transform: none !important` on `*`, which was a real bug: every
+         dropdown, tooltip and date picker is positioned by a `transform: translate(x, y)`
+         on a fixed-position popup, so blanking every transform on the page dumped all of
+         them in the top-left corner of the screen. Anyone browsing with reduced motion on
+         — which is a setting kids with motion sickness are told to turn on — could not use
+         a select box anywhere in the course. */
+      .stButton > button:hover:not(:disabled),
+      .stButton > button:active:not(:disabled),
+      [data-testid="stRadio"] label:hover,
+      [data-testid="stSlider"]:hover [role="slider"],
+      [data-testid="stMetric"]:hover,
+      [data-testid="stSidebarNav"] a:hover,
+      .kml-box:hover {
           transform: none !important;
       }
   }
