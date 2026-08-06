@@ -23,7 +23,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_text, plot_tree
 
 from kidsml.datasets import MONSTER_SECRET_RULE, load_table, toy_shape, wiggle
-from kidsml.plots import ACCENT, COOL, MUTED, WARM, decision_boundary, scatter_2d
+from kidsml.plots import ACCENT, COOL, MUTED, PANEL, WARM, decision_boundary, scatter_2d
 
 
 # ---------------------------------------------------------------------------
@@ -353,7 +353,7 @@ def penguin_svm():
 
 
 # ---------------------------------------------------------------------------
-# Chapter 08: model zoo and evaluation
+# Chapter 09: model zoo and evaluation
 # ---------------------------------------------------------------------------
 
 
@@ -438,7 +438,7 @@ def plot_folds(k: int = 5, ax=None):
     for fold in range(k):
         for row in range(k):
             color = WARM if row == fold else COOL
-            ax.add_patch(Rectangle((row * 2, k - fold - 1), 2, 0.8, facecolor=color, alpha=0.75, edgecolor="white"))
+            ax.add_patch(Rectangle((row * 2, k - fold - 1), 2, 0.8, facecolor=color, alpha=0.75, edgecolor=PANEL))
     ax.set_xlim(0, n)
     ax.set_ylim(0, k)
     ax.set_xticks([1, 3, 5, 7, 9], ["part 1", "part 2", "part 3", "part 4", "part 5"], fontsize=8)

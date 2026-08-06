@@ -188,21 +188,49 @@ Clusters appear even though PCA never saw a digit label. Surprise: the shadow ke
     )
 
 
-@lesson.step("Flat shadows meet penguins", beat="forreal")
+@lesson.step("Where the flat shadow gives up", beat="forreal")
 def _():
-    lesson.say("PCA is linear. It can pick a flat shadow, not unwrap every shape.")
+    lesson.say(
+        """
+You just watched PCA find great shadows. Now here is the one thing it cannot do.
+
+PCA only picks **flat** angles — straight-line directions through the cloud. So what shape
+breaks that? Two rings, one tucked inside the other, like a small hoop sitting inside a big
+hoop.
+"""
+    )
+    lesson.say(
+        """
+The only thing that tells the rings apart is **distance from the middle**: inner dots sit
+about 0.4 out, outer dots about 1.0 out. "Distance from the middle" is a curved idea, not a
+straight direction. We even handed PCA a third number for every dot — its exact distance
+from the middle, the perfect clue. But PCA keeps the directions with the most spread, and
+the widest spread is the flat pancake of the rings. So it keeps the pancake and throws the
+distance number away.
+"""
+    )
     left, right = st.columns(2, gap="large")
     with left:
-        lesson.show(plot_pca_linear_failure())
-        lesson.look_for("the two curved arms crossing in the shadow. No flat angle can untangle them cleanly.")
+        fig = plot_pca_linear_failure()
+        fig.axes[0].set_title("Two rings, one flat shadow")
+        lesson.show(fig)
+        lesson.look_for("the two colours sitting right on top of each other. Untangling the rings needed a bend, and PCA does not bend.")
     loadings, first_kept = cached_penguin_pca()
     with right:
         st.markdown("**Penguin first shadow**")
         st.dataframe(loadings, hide_index=True, width="stretch")
-        lesson.look_for("body-mass and flipper-length weights. Big weights often read like a size direction for penguins.")
+        lesson.look_for("which measurements get the biggest weights. Body-mass and flipper-length lead, so shadow 1 mostly means how big the penguin is.")
     st.metric("penguin first-component variance", f"{first_kept:.1%}")
-    lesson.say("The same squishing idea still works on ordinary tables. Here the first penguin shadow reads mostly like body size.")
-    lesson.careful("If two curved arms cross in every flat shadow, PCA cannot separate them no matter which angle it chooses.")
+    lesson.say(
+        """
+Back to an easy shape. On a plain table of penguin measurements the same squishing works
+fine, and the first shadow reads mostly like body size.
+
+So the lesson is the ceiling: PCA is a flat tool. When two classes are wrapped around each
+other, no flat angle can separate them, and you need a tool that can curve — a kernel, or a
+neural network.
+"""
+    )
 
 
 @lesson.step("Check yourself", beat="challenge")

@@ -258,7 +258,7 @@ def _():
     ax.set_ylabel("weight (g)")
     ax.set_title("The circled penguin is the model's biggest shrug")
     lesson.show(fig)
-    lesson.look_for("the circled penguin sitting closest to the model's fuzzy middle. That penguin is the official vibe check.")
+    lesson.look_for("the circled penguin sitting closest to the model's fuzzy middle. That is the one bird the model is least sure about.")
     st.write(f"Most uncertain penguin: **{uncertain['species']}**, probability Gentoo = **{uncertain['gentoo_probability']:.1%}**.")
     lesson.say("Now compare a few probability promises before they get turned into a hard Gentoo/not-Gentoo score.")
     sample = penguins.iloc[[0, len(penguins) // 2, int(np.argmin(np.abs(probs - 0.5))), -1]][["species", "gentoo_probability"]]

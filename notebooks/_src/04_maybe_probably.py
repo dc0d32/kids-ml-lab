@@ -196,7 +196,7 @@ penguins.groupby("species", group_keys=False).head(2)[["species", "island", "fli
 # be Gentoo.
 #
 # The circled penguin is the closest to 50/50. That is not failure; it is useful honesty
-# about a hard call. The circled penguin is the warning light — the official vibe check.
+# about a hard call. Think of it as a warning light for a bird that is genuinely hard to call.
 
 # %%
 penguins["is_gentoo"] = (penguins["species"] == "Gentoo").astype(int)

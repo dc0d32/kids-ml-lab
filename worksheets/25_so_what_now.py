@@ -26,7 +26,7 @@ WORKBOOK = Workbook(
             kind="choice",
             choices=["shared sliding-window filters", "one-letter bigram counting", "k-means centres"],
             answer="shared sliding-window filters",
-            why="Chapter 18's CNN reused learned filters across a picture. That is the seeing-road callback, not the text-road or clustering-road callback.",
+            why="Chapter 19's CNN reused learned filters across a picture. That is the seeing-road callback, not the text-road or clustering-road callback.",
         ),
         Question(
             prompt="A chatbot gives a confident answer about your homework. What should you remember?",
@@ -38,7 +38,7 @@ WORKBOOK = Workbook(
         Question(
             prompt="Why is bias not a spooky extra bug, but a data problem you already understand?",
             kind="open",
-            why="A model copies patterns from its training data. If the data is lopsided, missing people, or unfair, the model can copy that shape too. Chapter 10 already gave you that map.",
+            why="A model copies patterns from its training data. If the data is lopsided, missing people, or unfair, the model can copy that shape too. Chapter 11 already gave you that map.",
         ),
         Question(
             prompt="Name one weekend project you would actually want to build, and which chapter it starts from.",

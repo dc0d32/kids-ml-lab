@@ -21,10 +21,10 @@ NOTEBOOKS = ROOT / "notebooks"
 # Wall-clock seconds. Chapters that train something get more room, but not much.
 DEFAULT_BUDGET = 60
 BUDGETS = {
-    15: 120,   # deeper nets, several trainings
-    16: 120,   # PyTorch import alone is slow
-    17: 120,   # digits MLP
-    18: 240,   # the small CNN
+    16: 120,   # deeper nets, several trainings
+    17: 120,   # PyTorch import alone is slow
+    18: 120,   # digits MLP
+    19: 240,   # the small CNN
     21: 120,   # PCA over all the digits
     23: 180,   # MLP language model
     24: 300,   # the tiny Transformer

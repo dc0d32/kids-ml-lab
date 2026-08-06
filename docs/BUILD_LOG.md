@@ -1003,3 +1003,133 @@ A test asserts the plot background, the Streamlit config and the forced surfaces
 and fails if any of the five old blue-grey hexes reappears in the stylesheet.
 
 **750 tests pass.**
+
+---
+
+## 2026-08-06 — Fit and finish: readability, a reordered curriculum, and plain English
+
+A round of feedback from the repo owner, after reading with the 8th grader. Three themes:
+the pages were hard to *see*, some of the writing was hard to *follow*, and several
+controls were dead.
+
+### The curriculum moved
+
+**k-nearest-neighbours moved from chapter 19 to chapter 08.** It is a supervised
+classifier, and "The Model Zoo" — the chapter about which model when — was racing every
+guesser in the course *except* the simplest one. Chapters 08–18 all shifted up by one.
+
+k-means and PCA stayed in Part 5. They are genuinely unsupervised, and moving clustering
+in front of the Zoo would have weakened the Zoo's "pick a supervised model" race rather
+than strengthening it. Part 5 now opens with chapter 20 instead of 19, and the framing
+sentences moved with it.
+
+`CHAPTERS` in `kidsml/ui.py` is still the only place the order is written down, so the
+sidebar, the course map and the filename tests all followed automatically. The wall-clock
+budgets in `tests/test_notebooks.py` were remapped by hand.
+
+### Every mermaid diagram in the neural-network chapters was invisible
+
+The single worst bug found in this round. The mermaid build bundled with
+`streamlit-mermaid` has an **ASCII-only lexer for unquoted node labels**. A label like
+`X1[x₁]` throws in the browser, and because the failure is a JavaScript exception inside
+the component's iframe, the page renders a **blank gap** where the picture should be — the
+"giant blank space" the owner reported on the One Neuron hook, and the missing picture on
+"XOR is back".
+
+Three fixes, because this class of bug must not come back:
+
+1. The subscripts are gone from the diagram sources. `x1` reads better for a 13-year-old
+   than `x₁` anyway, and "add them up, plus b" beats a sigma.
+2. `lesson.mermaid` now quotes any label containing a non-ASCII character on its way
+   through, so a future author cannot silently break a page.
+3. `tests/test_diagrams.py` fails the build on a non-ASCII unquoted label.
+
+While in there: `_estimated_height` used to assume a left-to-right diagram was one row of
+boxes tall, which clipped the bottom off every branching one. It now ranks the graph
+properly (longest path, with loops broken) and sizes from the widest rank.
+
+### Contrast
+
+The AMOLED theme landed before some of the older figures were checked against it.
+
+- `kidsml/plots.py` gained a named palette — `SHAPE`, `GHOST`, `EDGE`, `GRIDLINE`, `AMBER`,
+  `VIOLET`, `PINK`, `TEAL` — and the grid, axes and class-region colours were all lifted.
+  The rule is now written down in AGENTS.md: **never hardcode a hex**.
+- Chapter 12 (Arrows and Grids) was still drawing on a light-theme palette: the little
+  house was `#0F172A`, a near-black outline on a near-black page, so the shape the whole
+  chapter asks you to watch was not there. It is now `SHAPE`, the brightest thing in the
+  figure, with the "before" grid and house in `GHOST`.
+- The neuron and network diagrams in `kidsml/nnplots.py` used pale pastel fills with the
+  default near-white text on top, so each box hid its own label. Dark panels, bright rims.
+- Markers no longer get white outlines: the house style cuts them out of the panel colour.
+
+### The Next button
+
+Streamlit puts white text on the green primary button — about 1.8:1, which is unreadable.
+It is now very dark green ink on the same green slab, over 10:1, and a disabled Next no
+longer looks live.
+
+### Dead controls, and things that would not re-roll
+
+| Where | Was | Now |
+|---|---|---|
+| 14 · The weights walk | A straight line at every setting: the two weights grew in proportion on a separable problem, so there was nothing to see | Draws the loss valley behind the path (bias held fixed, so the 2D map is honest), with start/end markers. A small rate crawls, a good one lands on the star, a large one overshoots |
+| 15 · Scrub the training | Almost all the movement happened between the first two snapshots | Snapshots resampled by arc length in weight space, plus a learning-rate control |
+| 16 · Weight decay | A linear slider to 0.08, dead above 0.02 | A `select_slider` over the values that actually do something |
+| 17 · PyTorch knobs | No way to train for longer or shorter | A training-steps control; the loss curve and boundary move with it |
+| 18 · Draw a digit | The canvas component's own toolbar draws in near-black — the clear button was invisible | `display_toolbar=False` plus our own bright "Clear the pad and start over" |
+| 22–25 · anything that samples | Cached against a stale roll, so changing the prompt changed nothing | `lesson.regenerate(...)` — a button returning a counter to feed in as the seed |
+
+`lesson.regenerate` is the general fix and is now the documented house rule: **anything
+that rolls dice needs a way to roll again.**
+
+### Teaching
+
+- **Chapter 12 no longer mentions neurons**, which chapter 13 introduces. The chapter's
+  punchline — stacked straight moves collapse into one straight move, so layers buy nothing
+  without a squish — stands perfectly well in the chapter's own vocabulary, with the word
+  itself held back as a teaser.
+- **Chapter 15 animates the fold.** The reader used to be told that a hidden layer moves
+  the points into a space where one line works, and had to take it on faith from two static
+  scatter plots. Now the four XOR corners visibly slide into their hidden coordinates and
+  the separating line drops in. (`kidsml/foldspace.py`, a cached ~30-frame GIF built with
+  Pillow — no new dependency, well inside the notebook budget.)
+- **Chapter 08's k curve now has a hump.** It was scored on one split of easy data and came
+  out flat, which quietly contradicted the chapter's main claim. It is now 5-fold
+  cross-validated, averaged over several datasets, and swept far enough for the collapse:
+  it climbs from k = 1, peaks around k = 5, and falls off a cliff. The failure ends are
+  labelled on the figure.
+- **Chapter 19 shows the data before asking for a prediction.** Betting on a model when you
+  have never seen the pictures is a coin flip, and a coin flip teaches nothing.
+- **Chapter 25 has 30 projects in six labelled groups**, each with the chapters it uses and
+  where the data comes from — all of it collectable by hand or already bundled.
+
+### Language
+
+A pass over every chapter. The rule added to AGENTS.md: **a metaphor may decorate an
+explanation; it must never be the explanation.** Casualties included "Neural networks are
+not a new planet", "a line wearing a costume", "More wiggle is a trade", "two magnets
+clicking shut", "a flat pca shadow still tangles the lifted circles", and "half a fact
+wearing a full-size hat".
+
+The dad-slang running joke stays, but it is now confined to captions, asides, metric labels
+and challenge titles — never inside a sentence that is doing the teaching. Every chapter is
+down to one or two.
+
+Three stacked "Grown-ups call this" boxes in chapter 14 became one. A wall of three
+identical grey boxes reads as a wall.
+
+### Tooling
+
+`tools/shots.mjs` drives a real browser over a chapter's steps and writes screenshots.
+Every visual bug in this round was invisible to `AppTest`, which reports element values and
+not rendered geometry — it cannot see a diagram that failed to parse or a dark shape on a
+dark page. `node_modules/` is gitignored; `npm install playwright` is a developer step, not
+a project dependency.
+
+### A warning for future sessions
+
+Part of this round's work was destroyed mid-flight by a `git reset --hard` run inside a
+worktree that had hours of uncommitted changes in it, and had to be redone from scratch.
+**Commit early and often when several things are editing the same tree**, and never reach
+for `git reset --hard`, `git checkout .` or `git stash` as a way of tidying up.

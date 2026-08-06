@@ -37,8 +37,9 @@ use_house_style()
 # Grab one useful yes/no question, split the pile, then dive into each smaller pile
 # with the next question.
 #
-# That is why a tree is a flowchart with sneakers on. The clever part is not the
-# drawing; it is choosing which question leaves the next step with less mess.
+# So a tree is a flowchart of yes/no questions that you build one question at a
+# time. The clever part is not the drawing; it is choosing which question leaves
+# the next step with less mess.
 #
 # ```mermaid
 # graph TD
@@ -179,7 +180,7 @@ plt.show()
 #
 # > ⚠️ **Careful** A deep tree can score better on its own training dots by fencing tiny
 # > boxes around awkward points. That is memorising: it learns *this exact dot goes red*
-# > instead of a rule that helps on the next dot. Chapter 8 turns this worry into a fair
+# > instead of a rule that helps on the next dot. Chapter 9 turns this worry into a fair
 # > test.
 
 # %% [markdown]

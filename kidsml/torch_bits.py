@@ -1,6 +1,6 @@
 """Tiny PyTorch helpers for the neural-network chapters.
 
-The API mirrors ``kidsml.nn_numpy`` on purpose. Chapter 16 can put the two side by side
+The API mirrors ``kidsml.nn_numpy`` on purpose. Chapter 17 can put the two side by side
 and show that PyTorch is doing the same forward pass and the same backward pass.
 """
 

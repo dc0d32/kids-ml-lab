@@ -14,18 +14,36 @@ import plotly.graph_objects as go
 from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch
 
 from kidsml.nn_numpy import ACTIVATIONS, MLP, Neuron, mse
-from kidsml.plots import ACCENT, COOL, MUTED, WARM, decision_boundary, draw_line, scatter_2d
+from kidsml.plots import (
+    ACCENT,
+    AMBER,
+    COOL,
+    EDGE,
+    INK,
+    MUTED,
+    WARM,
+    decision_boundary,
+    draw_line,
+    scatter_2d,
+)
 
-HIDDEN_COLOURS = [ACCENT, '#8B5CF6', '#F59E0B', '#14B8A6', '#EC4899', '#6366F1', '#84CC16', '#F97316']
+HIDDEN_COLOURS = [ACCENT, '#A78BFA', '#FBBF24', '#5EEAD4', '#F472B6', '#818CF8', '#A3E635', '#FB923C']
+
+# Diagram boxes are dark panels with a bright rim, not pale pastel blobs. The page is pure
+# black and the default text colour is near-white, so a pale fill hid its own label.
+FILL_INPUT = '#0C1726'
+FILL_SUM = '#08201A'
+FILL_SQUISH = '#241A06'
+FILL_OUT = '#26100F'
 
 
-def _round_box(ax, xy, width, height, text, face='#F8FAFC', edge=MUTED):
+def _round_box(ax, xy, width, height, text, face=FILL_SUM, edge=MUTED):
     box = FancyBboxPatch(
         xy, width, height, boxstyle='round,pad=0.05,rounding_size=0.08',
         facecolor=face, edgecolor=edge, linewidth=1.6,
     )
     ax.add_patch(box)
-    ax.text(xy[0] + width / 2, xy[1] + height / 2, text, ha='center', va='center', fontsize=11)
+    ax.text(xy[0] + width / 2, xy[1] + height / 2, text, ha='center', va='center', fontsize=11, color=INK)
     return box
 
 
@@ -48,7 +66,7 @@ def neuron_diagram(weights=(2, -1), bias=0.5, activation='sigmoid'):
     ys = [2.9, 1.45]
     labels = ['$x_1$', '$x_2$']
     for i, y in enumerate(ys):
-        circ = Circle((1.0, y), 0.35, facecolor='#DBEAFE', edgecolor=COOL, linewidth=1.8)
+        circ = Circle((1.0, y), 0.35, facecolor=FILL_INPUT, edgecolor=COOL, linewidth=1.8)
         ax.add_patch(circ)
         ax.text(1.0, y, labels[i], ha='center', va='center', fontsize=12)
         _arrow(ax, (1.35, y), (3.7, 2.2), f'w{i + 1}={weights[i]:g}')
@@ -56,16 +74,16 @@ def neuron_diagram(weights=(2, -1), bias=0.5, activation='sigmoid'):
     ax.text(2.6, 0.55, f'bias b = {bias:g}', ha='center', va='center', fontsize=10, color=MUTED)
     _arrow(ax, (2.9, 0.75), (3.8, 1.95), None)
 
-    sum_circle = Circle((4.2, 2.2), 0.52, facecolor='#DCFCE7', edgecolor=ACCENT, linewidth=2.0)
+    sum_circle = Circle((4.2, 2.2), 0.52, facecolor=FILL_SUM, edgecolor=ACCENT, linewidth=2.0)
     ax.add_patch(sum_circle)
     ax.text(4.2, 2.2, 'add\nup', ha='center', va='center', fontsize=11)
     ax.text(4.2, 3.05, '$z = w_1x_1 + w_2x_2 + b$', ha='center', fontsize=12)
 
     _arrow(ax, (4.72, 2.2), (5.8, 2.2), 'z', ACCENT)
-    _round_box(ax, (5.9, 1.65), 1.55, 1.1, f'{activation}\nsquish', face='#FEF3C7', edge='#F59E0B')
+    _round_box(ax, (5.9, 1.65), 1.55, 1.1, f'{activation}\nsquish', face=FILL_SQUISH, edge=AMBER)
     _arrow(ax, (7.45, 2.2), (8.55, 2.2), '0..1', WARM)
 
-    out = Circle((9.05, 2.2), 0.42, facecolor='#FEE2E2', edgecolor=WARM, linewidth=1.8)
+    out = Circle((9.05, 2.2), 0.42, facecolor=FILL_OUT, edgecolor=WARM, linewidth=1.8)
     ax.add_patch(out)
     ax.text(9.05, 2.2, 'out', ha='center', va='center', fontsize=11)
     fig.tight_layout()
@@ -87,13 +105,13 @@ def network_diagram(sizes=(2, 3, 1), activation='tanh'):
         layer_pos = []
         for j, y in enumerate(ys):
             if layer == 0:
-                face, edge = '#DBEAFE', COOL
+                face, edge = FILL_INPUT, COOL
                 text = f'x{j + 1}'
             elif layer == len(sizes) - 1:
-                face, edge = '#FEE2E2', WARM
+                face, edge = FILL_OUT, WARM
                 text = 'out' if size == 1 else str(j + 1)
             else:
-                face, edge = '#DCFCE7', HIDDEN_COLOURS[(j) % len(HIDDEN_COLOURS)]
+                face, edge = FILL_SUM, HIDDEN_COLOURS[(j) % len(HIDDEN_COLOURS)]
                 text = f'h{j + 1}'
             circ = Circle((layer, y), 0.24, facecolor=face, edgecolor=edge, linewidth=1.8, zorder=3)
             ax.add_patch(circ)
@@ -104,7 +122,7 @@ def network_diagram(sizes=(2, 3, 1), activation='tanh'):
     for layer in range(len(sizes) - 1):
         for start in positions[layer]:
             for end in positions[layer + 1]:
-                ax.plot([start[0] + 0.24, end[0] - 0.24], [start[1], end[1]], color='#CBD5E1', linewidth=1.1, zorder=1)
+                ax.plot([start[0] + 0.24, end[0] - 0.24], [start[1], end[1]], color=EDGE, linewidth=1.1, zorder=1)
 
     labels = ['inputs']
     for layer in range(1, len(sizes) - 1):

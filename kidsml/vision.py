@@ -1,6 +1,6 @@
 """Vision helpers for the picture chapters.
 
-Chapter 17 treats an image as a row of numbers. Chapter 18 puts the neighbour
+Chapter 18 treats an image as a row of numbers. Chapter 19 puts the neighbour
 relationships back with a tiny sliding window and a tiny CNN. The functions here
 are deliberately small and plain so the notebook code can point straight at them.
 """
@@ -86,7 +86,7 @@ class TorchVisionResult:
 
 
 # ---------------------------------------------------------------------------
-# Chapter 17: pictures as rows of numbers
+# Chapter 18: pictures as rows of numbers
 # ---------------------------------------------------------------------------
 
 
@@ -228,7 +228,7 @@ def confidence_table(probabilities: np.ndarray) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# Chapter 18: sliding windows and tiny CNNs
+# Chapter 19: sliding windows and tiny CNNs
 # ---------------------------------------------------------------------------
 
 

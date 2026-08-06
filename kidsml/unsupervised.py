@@ -26,11 +26,11 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from kidsml.datasets import cluster_blobs, digits, load_table, six_points_for_kmeans, toy_shape
-from kidsml.plots import ACCENT, COOL, MUTED, WARM, decision_boundary, scatter_2d, show_image
+from kidsml.plots import ACCENT, COOL, MUTED, PANEL, SHAPE, WARM, decision_boundary, scatter_2d, show_image
 
 
 # ---------------------------------------------------------------------------
-# Chapter 19: k nearest neighbours
+# Chapter 08: k nearest neighbours
 # ---------------------------------------------------------------------------
 
 
@@ -79,7 +79,7 @@ def plot_knn_hand(k: int = 3):
     kth = float(table["distance"].iloc[-1])
     fig, ax = plt.subplots(figsize=(6.2, 5.2))
     colours = np.where(labels == "red", WARM, COOL)
-    ax.scatter(X[:, 0], X[:, 1], s=120, c=colours, edgecolors="white", linewidths=1.2, zorder=3)
+    ax.scatter(X[:, 0], X[:, 1], s=120, c=colours, edgecolors=PANEL, linewidths=1.2, zorder=3)
     ax.scatter([query[0]], [query[1]], marker="*", s=260, c=ACCENT, edgecolors="black", linewidths=0.8, zorder=4)
     for name, point in zip(names, X):
         ax.text(point[0] + 0.25, point[1] + 0.25, name, weight="bold")
@@ -260,10 +260,10 @@ def plot_kmeans_stage(stage):
     for i in range(len(centres)):
         members = X[labels == i]
         if len(members):
-            ax.scatter(members[:, 0], members[:, 1], s=42, color=cmap(i), edgecolors="white", linewidths=0.6, alpha=0.9)
+            ax.scatter(members[:, 0], members[:, 1], s=42, color=cmap(i), edgecolors=PANEL, linewidths=0.6, alpha=0.9)
             for point in members:
                 ax.plot([point[0], centres[i, 0]], [point[1], centres[i, 1]], color=MUTED, linewidth=0.6, alpha=0.35)
-    ax.scatter(centres[:, 0], centres[:, 1], marker="X", s=280, c="black", edgecolors="white", linewidths=1.2, zorder=4)
+    ax.scatter(centres[:, 0], centres[:, 1], marker="X", s=280, c=PANEL, edgecolors=SHAPE, linewidths=1.6, zorder=4)
     ax.set_title(stage["caption"])
     ax.set_xlabel("feature 1")
     ax.set_ylabel("feature 2")
@@ -452,7 +452,7 @@ def plot_shadow_3d(X):
 
 def plot_shadow_2d(shadow, title: str = "Your shadow"):
     fig, ax = plt.subplots(figsize=(5.6, 4.5))
-    ax.scatter(shadow[:, 0], shadow[:, 1], s=18, c=ACCENT, edgecolors="white", linewidths=0.3, alpha=0.8)
+    ax.scatter(shadow[:, 0], shadow[:, 1], s=18, c=ACCENT, edgecolors=PANEL, linewidths=0.3, alpha=0.8)
     ax.set_aspect("equal", adjustable="box")
     ax.set_title(title)
     ax.set_xlabel("shadow left-right")

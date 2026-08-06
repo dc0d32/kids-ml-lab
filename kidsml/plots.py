@@ -20,19 +20,42 @@ WARM = "#F87171"  # red   — class 1
 ACCENT = "#34D399"  # green — the model's own line / prediction
 MUTED = "#8E8E97"
 
+# Extra ink for pictures that need more than three things telling apart. All of these are
+# checked against the panel colour rather than against white: on a black page a mid-tone
+# navy or slate reads as "off", not as "another line".
+AMBER = "#FBBF24"
+VIOLET = "#C4B5FD"
+PINK = "#F472B6"
+TEAL = "#5EEAD4"
+
+# A drawn shape (the little house in Chapter 13, an outline, a highlighted path) needs to
+# be the brightest thing in the figure. Anything darker than the axis labels disappears.
+SHAPE = "#F4F4F6"
+# The faint "before" version of something: the original grid, the old arrow, the untrained
+# boundary. Visible, but clearly the background layer.
+GHOST = "#5A5A64"
+
 # The page background, so figures sit on the page instead of glowing on top of it.
 BACKGROUND = "#000000"
 PANEL = "#0B0B0D"
 INK = "#EDEDF0"
 
+# Structural lines inside a figure: the axes box, the zero lines, the graph-paper grid.
+# These were near-black, which on an AMOLED page meant a chart had no visible frame and a
+# grid you had to hunt for. Dark enough to stay furniture, light enough to find.
+EDGE = "#3C3C44"
+GRIDLINE = "#26262C"
+
 POINT_CMAP = ListedColormap([COOL, WARM])
-REGION_CMAP = LinearSegmentedColormap.from_list("kidsml", ["#16304F", "#0B0B0D", "#4A1D22"])
+# The two class regions. Deep enough not to compete with the dots on top, but bright
+# enough that "which side am I on?" is answerable at a glance.
+REGION_CMAP = LinearSegmentedColormap.from_list("kidsml", ["#1B3E66", "#0B0B0D", "#63242C"])
 
 # Ramps that start at the panel colour instead of at white. Matplotlib's built-in
 # sequential maps (Blues, gray) bottom out at pure white, which on a dark page is a
 # rectangle of glare.
-COUNT_CMAP = LinearSegmentedColormap.from_list("kidsml_count", ["#0B0B0D", "#1E3A5F", "#3B82F6"])
-PIXEL_CMAP = LinearSegmentedColormap.from_list("kidsml_pixel", ["#000000", "#7C8798", "#D6D6DB"])
+COUNT_CMAP = LinearSegmentedColormap.from_list("kidsml_count", ["#0B0B0D", "#24507F", "#60A5FA"])
+PIXEL_CMAP = LinearSegmentedColormap.from_list("kidsml_pixel", ["#000000", "#8892A2", "#F0F0F4"])
 
 CLASS_NAMES = ("blue", "red")
 
@@ -53,16 +76,16 @@ def use_house_style() -> None:
             "figure.facecolor": BACKGROUND,
             "savefig.facecolor": BACKGROUND,
             "axes.facecolor": PANEL,
-            "axes.edgecolor": "#2B2B30",
+            "axes.edgecolor": EDGE,
             "axes.labelcolor": INK,
             "text.color": INK,
-            "xtick.color": "#9A9AA3",
-            "ytick.color": "#9A9AA3",
-            "grid.color": "#1A1A1D",
+            "xtick.color": "#B0B0B9",
+            "ytick.color": "#B0B0B9",
+            "grid.color": GRIDLINE,
             "xtick.labelsize": 7,
             "ytick.labelsize": 7,
             "axes.grid": True,
-            "grid.alpha": 0.55,
+            "grid.alpha": 1.0,
             "axes.spines.top": False,
             "axes.spines.right": False,
             "axes.titlesize": 8.5,
@@ -115,13 +138,13 @@ def _setup_plotly() -> None:
             paper_bgcolor=BACKGROUND,
             plot_bgcolor=PANEL,
             font=dict(color=INK, size=12),
-            colorway=[COOL, WARM, ACCENT, "#F59E0B", "#A78BFA"],
-            xaxis=dict(gridcolor="#1A1A1D", zerolinecolor="#2B2B30"),
-            yaxis=dict(gridcolor="#1A1A1D", zerolinecolor="#2B2B30"),
+            colorway=[COOL, WARM, ACCENT, AMBER, VIOLET],
+            xaxis=dict(gridcolor=GRIDLINE, zerolinecolor=EDGE),
+            yaxis=dict(gridcolor=GRIDLINE, zerolinecolor=EDGE),
             scene=dict(
-                xaxis=dict(backgroundcolor=PANEL, gridcolor="#1A1A1D", color=INK),
-                yaxis=dict(backgroundcolor=PANEL, gridcolor="#1A1A1D", color=INK),
-                zaxis=dict(backgroundcolor=PANEL, gridcolor="#1A1A1D", color=INK),
+                xaxis=dict(backgroundcolor=PANEL, gridcolor=GRIDLINE, color=INK),
+                yaxis=dict(backgroundcolor=PANEL, gridcolor=GRIDLINE, color=INK),
+                zaxis=dict(backgroundcolor=PANEL, gridcolor=GRIDLINE, color=INK),
             ),
         )
     )

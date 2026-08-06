@@ -148,7 +148,7 @@ def _():
         ax.set_ylabel("b")
         ax.set_title("You are here on the error hill")
         lesson.show(fig)
-    lesson.look_for("the dot that says where your current line lives, and the low green-blue valley it wants to reach. The valley has, as I understand it, excellent aura.")
+    lesson.look_for("the dot that says where your current line lives, and the low green-blue valley it wants to reach. Every training step is one walk toward that valley.")
 
 
 @lesson.step("Walking downhill", beat="play")

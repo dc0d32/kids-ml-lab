@@ -379,15 +379,18 @@ def show(fig, clear: bool = True) -> None:
 # source itself. Without this every diagram renders on mermaid's default white card,
 # which on a dark page is a bright rectangle in the middle of the reading column.
 _MERMAID_THEME = (
-    '%%{init: {"theme":"base","themeVariables":{'
+    '%%{init: {"theme":"base",'
+    '"flowchart":{"useMaxWidth":true,"htmlLabels":false,"padding":10,"nodeSpacing":38,'
+    '"rankSpacing":44,"curve":"basis"},'
+    '"themeVariables":{'
     '"background":"#000000",'
+    '"fontFamily":"ui-sans-serif, system-ui, Helvetica, Arial, sans-serif","fontSize":"17px",'
     '"primaryColor":"#131315","primaryTextColor":"#EDEDF0","primaryBorderColor":"#34D399",'
-    '"secondaryColor":"#0B0B0D","secondaryTextColor":"#EDEDF0","secondaryBorderColor":"#2B2B30",'
-    '"tertiaryColor":"#0B0B0D","tertiaryTextColor":"#EDEDF0","tertiaryBorderColor":"#2B2B30",'
-    '"lineColor":"#8E8E97","textColor":"#D6D6DB",'
+    '"secondaryColor":"#0B0B0D","secondaryTextColor":"#EDEDF0","secondaryBorderColor":"#3C3C44",'
+    '"tertiaryColor":"#0B0B0D","tertiaryTextColor":"#EDEDF0","tertiaryBorderColor":"#3C3C44",'
+    '"lineColor":"#A8A8B2","textColor":"#EDEDF0",'
     '"mainBkg":"#131315","nodeBorder":"#34D399","clusterBkg":"#0B0B0D",'
-    '"edgeLabelBackground":"#000000","fontSize":"15px",'
-    '"fontFamily":"ui-sans-serif, system-ui, sans-serif"'
+    '"edgeLabelBackground":"#000000"'
     "}}}%%\n"
 )
 
@@ -395,13 +398,15 @@ _MERMAID_THEME = (
 def _estimated_height(diagram: str) -> int:
     """Guess how tall a diagram needs to be.
 
-    The component reserves a fixed 424px whatever it draws, which left a hole under every
-    small flowchart, so the height is forced from CSS — which means we have to work it out
-    here. A left-to-right flow is one row of boxes however many there are; a top-down one
-    grows by about 84px per box.
+    The component reserves a fixed 424px whatever it draws, so the height is forced from
+    CSS — which means we have to work it out here, and a bad guess either leaves a hole
+    under the picture or slices the bottom off it.
 
-    Biased to over-estimate: slack under a diagram is untidy, but a clipped diagram is
-    broken.
+    Mermaid lays a flowchart out in ranks: everything with no arrow coming in sits in the
+    first rank, everything they point at sits in the second, and so on. Top-down, the
+    number of ranks is the height. Left-to-right, the *widest* rank is the height.
+
+    Biased to over-estimate: slack under a diagram is untidy, a clipped diagram is broken.
     """
     lines = [ln.strip() for ln in diagram.strip().splitlines() if ln.strip()]
     lines = [ln for ln in lines if not ln.startswith("%%")]
@@ -409,14 +414,76 @@ def _estimated_height(diagram: str) -> int:
         return 200
 
     match = re.match(r"(?:graph|flowchart)\s+([A-Za-z]+)", lines[0])
-    direction = match.group(1).upper() if match else "TD"
+    if match is None:
+        return 420
+    direction = match.group(1).upper()
+
+    # Edges look like `A --> B`, `A -. label .-> B`, `A ---|yes| B`. Grab the plain
+    # identifier at each end, ignoring whatever label shape is wrapped around it.
+    body = "\n".join(lines[1:])
+    edges = re.findall(
+        r"([A-Za-z][A-Za-z0-9_]*)\s*(?:\[[^\]]*\]|\(\([^)]*\)\)|\([^)]*\)|\{[^}]*\})?\s*"
+        r"[-=.]+[->ox]*\s*(?:\|[^|]*\|)?\s*"
+        r"([A-Za-z][A-Za-z0-9_]*)",
+        body,
+    )
+    nodes = set(re.findall(r"\b([A-Za-z][A-Za-z0-9_]*)\s*[\[\(\{]", body))
+    for a, b in edges:
+        nodes.add(a)
+        nodes.add(b)
+    if not nodes:
+        return 200
+
+    # Longest path from the start, with loops broken. A "predict, measure, adjust, repeat"
+    # diagram has an arrow going back to the top, and following it forever would report a
+    # diagram twenty ranks deep. Nodes still waiting when nothing has an empty in-tray are
+    # part of a loop, so one of them is released and the walk carries on.
+    remaining = {(a, b) for a, b in edges if a != b}
+    rank = {name: 0 for name in nodes}
+    waiting = set(nodes)
+    while waiting:
+        ready = [n for n in waiting if not any(b == n for _, b in remaining)]
+        if not ready:
+            ready = [sorted(waiting)[0]]
+        for name in ready:
+            for a, b in list(remaining):
+                if a == name:
+                    rank[b] = max(rank[b], rank[name] + 1)
+                    remaining.discard((a, b))
+            waiting.discard(name)
+
+    ranks = max(rank.values()) + 1
+    widest = max(list(rank.values()).count(level) for level in set(rank.values()))
 
     if direction in ("LR", "RL"):
-        return 104
+        return min(70 + 64 * widest, 760)
+    return min(70 + 78 * ranks, 900)
 
-    # One row per node, near enough. Branching diagrams get some slack, which is fine.
-    nodes = set(re.findall(r"\b([A-Za-z][A-Za-z0-9_]*)\s*[\[\(\{]", " ".join(lines[1:])))
-    return min(46 + 84 * max(len(nodes), 2), 760)
+
+# The mermaid build bundled with streamlit-mermaid has an ASCII-only lexer for unquoted
+# node labels. One `x₁` and the whole diagram fails to parse — and because the failure is
+# a browser-side exception, the page simply shows a blank gap where the picture should be.
+# Every label with a character outside ASCII therefore gets quoted on the way through.
+_LABEL_SHAPES = [
+    (re.compile(r"\[([^\[\]\"]+)\]"), "[", "]"),
+    (re.compile(r"\(\(([^()\"]+)\)\)"), "((", "))"),
+    (re.compile(r"\{([^{}\"]+)\}"), "{", "}"),
+    (re.compile(r"\|([^|\"]+)\|"), "|", "|"),
+]
+
+
+def quote_awkward_labels(diagram: str) -> str:
+    """Wrap any node or edge label containing a non-ASCII character in double quotes."""
+
+    def fix(match: re.Match, open_mark: str, close_mark: str) -> str:
+        label = match.group(1)
+        if label.isascii():
+            return match.group(0)
+        return f'{open_mark}"{label}"{close_mark}'
+
+    for pattern, open_mark, close_mark in _LABEL_SHAPES:
+        diagram = pattern.sub(lambda m, o=open_mark, c=close_mark: fix(m, o, c), diagram)
+    return diagram
 
 
 def mermaid(diagram: str, height: int | None = None) -> None:
@@ -436,6 +503,8 @@ def mermaid(diagram: str, height: int | None = None) -> None:
 
     from streamlit_mermaid import st_mermaid
 
+    diagram = quote_awkward_labels(diagram.strip())
+
     # The component ignores the height it is given and reserves 424px whatever the
     # diagram, which left a large hole under every small flowchart. Streamlit puts a
     # `st-key-<key>` class on a keyed container, so the iframe can be sized from CSS.
@@ -449,7 +518,7 @@ def mermaid(diagram: str, height: int | None = None) -> None:
             f"min-height: 0 !important; }}</style>",
             unsafe_allow_html=True,
         )
-        st_mermaid(_MERMAID_THEME + diagram.strip(), height=f"{height}px")
+        st_mermaid(_MERMAID_THEME + diagram, height=f"{height}px")
 
 
 def workbook(chapter: int | None = None) -> None:
@@ -462,6 +531,31 @@ def workbook(chapter: int | None = None) -> None:
 def controls():
     """A left column for knobs and a right column for the picture they change."""
     return st.columns([1, 2], gap="large")
+
+
+def regenerate(label: str = "🎲 Try another one", key: str = "", help: str | None = None) -> int:
+    """A button that hands back a different number every time it is pressed.
+
+    Anything that rolls dice — generating text, sampling a picture, redrawing a canvas —
+    needs a way to ask for another go. Streamlit only re-runs the script when *something*
+    changes, so a step that samples once looks frozen: you change the prompt, and the same
+    words come back because the sampling was cached against the old roll.
+
+    Feed the returned number in as a seed (or as part of a cache key) and the reader gets a
+    button that visibly does something::
+
+        roll = lesson.regenerate(key="babble")
+        words = make_words(prompt, seed=roll)
+    """
+    slot = f"kml_roll_{_current.chapter}_{key or label}"
+    if slot not in st.session_state:
+        st.session_state[slot] = 0
+
+    def bump() -> None:
+        st.session_state[slot] += 1
+
+    st.button(label, key=slot + "_btn", on_click=bump, help=help, type="primary")
+    return int(st.session_state[slot])
 
 
 # ---------------------------------------------------------------------------
@@ -645,6 +739,32 @@ _STYLE = """
   .stButton > button:focus-visible {
       outline: 2px solid #34D399; outline-offset: 2px;
   }
+
+  /* The primary button is a bright green slab. Streamlit puts white text on it, which
+     is about 1.8:1 against #34D399 — unreadable. Very dark green ink on the same slab
+     is over 10:1 and still looks like the same button. */
+  .stButton > button[kind="primary"],
+  .stButton > button[data-testid="stBaseButton-primary"],
+  .stButton > button[kind="primaryFormSubmit"] {
+      background: #34D399 !important;
+      border-color: #34D399 !important;
+      color: #04160E !important;
+      font-weight: 750;
+  }
+  .stButton > button[kind="primary"] *,
+  .stButton > button[data-testid="stBaseButton-primary"] *,
+  .stButton > button[kind="primaryFormSubmit"] * { color: #04160E !important; }
+  .stButton > button[kind="primary"]:hover:not(:disabled),
+  .stButton > button[data-testid="stBaseButton-primary"]:hover:not(:disabled) {
+      background: #6EE7B7 !important; border-color: #6EE7B7 !important;
+  }
+  /* A disabled Next (the last screen) must not look like a live one. */
+  .stButton > button[kind="primary"]:disabled,
+  .stButton > button[data-testid="stBaseButton-primary"]:disabled {
+      background: #14201A !important; border-color: #1E2B25 !important;
+      color: #4A5A52 !important;
+  }
+  .stButton > button[kind="primary"]:disabled * { color: #4A5A52 !important; }
 
   /* ------------------------------------------------- vertical centring, misc */
   /* Radio and checkbox rows: dot and text on the same middle line. */

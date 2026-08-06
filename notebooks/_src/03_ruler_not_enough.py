@@ -34,7 +34,7 @@ use_house_style()
 #
 # Try the ruler on circles. The middle wants one answer and the ring wants the
 # other. A single line can cut left from right, or top from bottom, but it cannot
-# wrap around the middle. The ruler is stuck being a ruler, and I believe this means it has no aura!
+# wrap around the middle, so it always leaves some points on the wrong side.
 
 # %%
 X_fail, y_fail = toy_shape("circles", n=160, noise=0.08, seed=0)

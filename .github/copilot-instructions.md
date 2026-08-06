@@ -15,9 +15,16 @@ notebook and a Streamlit page, and both import the same `kidsml/` library.
 - **Very simple Python.** This code is teaching material. Clever is a bug.
 - **CPU-only, laptop-sized.** Every chapter trains in seconds to a couple of minutes.
   If a chapter is too slow, shrink the dataset — never the explanation.
-- **Never use a term before explaining the idea behind it.**
+- **Never use a term before explaining the idea behind it.** That includes across
+  chapters: nothing may lean on a chapter that comes after it.
 - **Notebook and page must never disagree** — shared logic lives in `kidsml/`.
 - Avoid the words "simply", "just", "obviously", "trivial".
+- **Plain words beat clever ones.** A metaphor may decorate an explanation; it must never
+  *be* the explanation. If a sentence is the only place an idea is stated, state it as
+  plain cause and effect.
+- **Colours come from `kidsml/plots.py`.** The page is pure black — a hardcoded dark ink
+  colour disappears.
+- **Mermaid node labels are ASCII only.** `x₁` kills the whole diagram silently.
 
 ## Where things live
 

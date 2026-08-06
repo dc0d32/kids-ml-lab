@@ -114,7 +114,7 @@ def _():
     fig, ax = lesson.figure(6, 4.8)
     plot_linear_svm_margin(model, X, y, ax=ax, title="removed: non-support point")
     lesson.show(fig)
-    lesson.look_for("the road: it is almost the same because the deleted point was not a fence post. It was, technically, an NPC.")
+    lesson.look_for("the road: it is almost the same because the deleted point was not a fence post. It sat far back on its own side, so removing it changed nothing.")
 
 
 @lesson.step("Delete a fence post", beat="seeit")

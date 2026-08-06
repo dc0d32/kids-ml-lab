@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from kidsml import lesson
+from kidsml import generate_ui, lesson
 from kidsml.datasets import load_words
 from kidsml.langmodels import random_nll, sample_bigram_trace, top_letters
 from kidsml.plots import heatmap
@@ -143,11 +143,12 @@ def _():
     with knobs:
         corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch22_temp_corpus")
         temperature = st.slider("Temperature", 0.05, 2.0, 0.9, 0.05, key="ch22_temp")
-        seed = st.slider("Random seed", 0, 99, 4, key="ch22_temp_seed")
+        roll = generate_ui.regenerate(label="🎲 Roll a new name", key="ch22_temp_roll")
     with picture:
         _, vocab, _, _, _, probs = bigram_bundle(corpus)
-        word, trace = sample_bigram_trace(probs, vocab, seed=seed, temperature=temperature, max_len=14)
+        word, trace = sample_bigram_trace(probs, vocab, seed=roll, temperature=temperature, max_len=14)
         st.markdown(f"**One invention:** `{word or '(blank)'}`")
+        st.caption("The chart rolls its dice fresh each press, so a new name every time is the babbler working.")
         trace_rows = [{"after": label(step["after"]), "picked": label(step["picked"]), "probability": round(step["probability"], 3)} for step in trace]
         st.dataframe(pd.DataFrame(trace_rows), hide_index=True, width="stretch")
         lesson.look_for("probabilities near 1.0 when the temperature is low, and riskier picks when it is high.")
@@ -156,17 +157,13 @@ def _():
 @lesson.step("Press the babble button", beat="play")
 def _():
     lesson.say("Now let the chart roll its uneven die over and over. It keeps clattering until it hits the stop dot.")
+    lesson.say("Every press is a fresh handful of dice rolls, so you get different inventions each time. That is the babbler working, not a bug.")
     corpus = st.selectbox("Corpus", ["names", "rhymes", "fables"], index=0, key="ch22_gen_corpus")
     temperature = st.slider("Temperature", 0.05, 2.0, 0.9, 0.05, key="ch22_gen_temp")
-    seed = st.slider("Random seed", 0, 99, 4, key="ch22_gen_seed")
     n_samples = st.slider("How many inventions?", 5, 15, 10, key="ch22_gen_count")
-    if st.button("Generate inventions", key="ch22_generate"):
-        st.session_state["ch22_generated"] = True
-    if not st.session_state.get("ch22_generated", False):
-        st.caption("Press the button when you are ready to hear the babbler. Lowkey, it is a letter carnival.")
-        return
+    roll = generate_ui.regenerate(label="🎲 Babble again", key="ch22_gen_roll")
     _, vocab, _, _, _, probs = bigram_bundle(corpus)
-    rng = np.random.default_rng(seed)
+    rng = np.random.default_rng(roll)
     samples = [sample_bigram(probs, vocab, rng=rng, temperature=temperature, max_len=18) for _ in range(n_samples)]
     st.write(" · ".join(s if s else "(blank)" for s in samples))
     lesson.look_for("names that almost work. The tally chart is launching pronounceable little accidents.")

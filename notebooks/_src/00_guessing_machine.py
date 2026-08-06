@@ -185,7 +185,7 @@ plt.show()
 # >
 # > Look at the left end. With one or two examples the computer is barely better than
 # > flipping a coin — but it still answers with total confidence. A model never says
-# > *I don't know*. It guesses anyway. Remember that when you get to Chapter 10.
+# > *I don't know*. It guesses anyway. Remember that when you get to Chapter 11.
 #
 # Notice also that the five rules are **not equally hard**. "It is red" is learned
 # almost immediately. "Exactly one of red / big" needs far more examples for the same

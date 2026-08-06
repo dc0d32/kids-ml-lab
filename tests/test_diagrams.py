@@ -2,7 +2,7 @@
 
 Mermaid renders in the browser, so a syntax error shows up as a red error box on the page
 and is completely invisible to every other test here — which is how a broken diagram sat in
-chapter 13 until a reader hit it.
+chapter 14 until a reader hit it.
 
 A full check needs Node and the real mermaid parser (see the note at the bottom). What runs
 here is a lint for the mistakes that actually break diagrams in practice, which is cheap and
@@ -68,6 +68,26 @@ def test_labels_do_not_contain_unquoted_brackets(path: Path, line: int, text: st
                 f"{path.name}:{line} — the mermaid label {label.strip()!r} contains "
                 f"{offender.group(0)!r}, which mermaid reads as a node shape. "
                 'Wrap the label in double quotes: |"like this"|'
+            )
+
+
+@pytest.mark.parametrize(
+    "path,line,text", DIAGRAMS, ids=[f"{p.stem}:{n}" for p, n, _ in DIAGRAMS]
+)
+def test_labels_are_ascii_or_quoted(path: Path, line: int, text: str):
+    """`A[x₁]` silently kills the whole diagram; `A["x₁"]` is fine.
+
+    The mermaid build bundled with streamlit-mermaid has an ASCII-only lexer for unquoted
+    labels. One subscript and the diagram throws in the browser, which the reader sees as
+    a blank gap in the middle of the page and no other test can see at all.
+    """
+    for pattern in LABEL_PATTERNS:
+        for label in pattern.findall(text):
+            offender = next((ch for ch in label if not ch.isascii()), None)
+            assert offender is None, (
+                f"{path.name}:{line} — the mermaid label {label.strip()!r} contains "
+                f"{offender!r}, which the bundled mermaid parser cannot read. "
+                'Use plain letters and digits, or wrap the label: ["like this"]'
             )
 
 

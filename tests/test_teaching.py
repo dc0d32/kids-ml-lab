@@ -158,7 +158,7 @@ def test_the_creature_tree_asks_about_wings_first():
 
 
 def test_the_monster_model_finds_the_secret_rule():
-    """Chapter 06 and 09 reveal the rule and invite the reader to check the model found it."""
+    """Chapter 06 and 10 reveal the rule and invite the reader to check the model found it."""
     import pandas as pd
     from sklearn.ensemble import RandomForestClassifier
 
@@ -216,12 +216,12 @@ def test_q_is_followed_by_u():
 #
 # A table of five examples that are all the same class looks fine, runs fine, and teaches
 # the reader nothing — there is no contrast to notice. This bit us three times: chapter 00
-# dealt six all-negative creatures, chapters 02 and 12 took the first five dogs (all
-# puppies), and chapter 09 opened the penguin data with eight Adelie in a row.
+# dealt six all-negative creatures, chapters 02 and 13 took the first five dogs (all
+# puppies), and chapter 10 opened the penguin data with eight Adelie in a row.
 
 
 def test_the_by_hand_dogs_include_both_answers():
-    """Chapters 02 and 12 walk through five of the ten dogs by hand."""
+    """Chapters 02 and 13 walk through five of the ten dogs by hand."""
     from kidsml.datasets import two_blobs_tiny
 
     _, labels = two_blobs_tiny()
@@ -235,7 +235,7 @@ def test_the_by_hand_dogs_include_both_answers():
 
 
 def test_the_first_look_at_the_penguins_shows_every_species():
-    """Chapter 09 asks the reader to tell three species apart, so all three must appear."""
+    """Chapter 10 asks the reader to tell three species apart, so all three must appear."""
     from kidsml.datasets import load_table
 
     penguins = load_table("penguins")

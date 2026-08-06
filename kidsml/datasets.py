@@ -192,7 +192,7 @@ TABLES = {
 }
 
 # ``monsters`` is the one table where we know the true rule, because we invented it.
-# Chapter 9 uses this to check whether a model actually found the pattern or just
+# Chapter 10 uses this to check whether a model actually found the pattern or just
 # memorised the rows.
 MONSTER_SECRET_RULE = "is_boss  ⟺  (attack + magic) > 150  AND  speed < 90   (plus 5% flipped labels)"
 

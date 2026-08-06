@@ -277,7 +277,7 @@ Hold onto that. It's the whole reason Chapter 03 has to exist.
 
     lesson.careful(
         "A model never says *I don't know*. It always answers, even with almost nothing "
-        "to go on. Remember that in Chapter 10."
+        "to go on. Remember that in Chapter 11."
     )
 
 

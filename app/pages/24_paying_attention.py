@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from kidsml import lesson
+from kidsml import generate_ui, lesson
 from kidsml.datasets import load_corpus
 from kidsml.langmodels import (
     attention_snapshot,
@@ -89,7 +89,7 @@ def _():
         "What happens if a position is allowed to peek at future letters while training?",
         ["It learns honestly", "It cheats and the score looks too good", "It forgets older letters"],
         correct=1,
-        why="The future contains the answer. That is data leakage from Chapter 10 wearing a new costume.",
+        why="The future contains the answer. That is data leakage from Chapter 11 wearing a new costume.",
         key="ch24_mask",
     )
     if guess is None:
@@ -122,8 +122,11 @@ out = weights @ value
 @lesson.step("Inspect live attention", beat="play")
 def _():
     lesson.say("A trained tiny Transformer has several attention heads. A **head** is one separate clue-lookback machine; several heads can look for different habits at the same time.")
+    lesson.say("The model rolls dice to write its practice sentence, so press the button for a fresh one to inspect. A different sentence each time is the model working, not a bug.")
     bundle = trained_transformer()
-    made = generate_transformer(bundle, start="the ", temperature=0.9, length=160, seed=5)
+    roll = generate_ui.regenerate(label="🎲 New sentence to inspect", key="ch24_attn")
+    made = generate_transformer(bundle, start="the ", temperature=0.9, length=120, seed=5 + roll)
+    st.markdown("**Fresh sample being inspected:** `" + made.replace("\n", " ")[:90].strip() + "`")
     chars, heads = attention_snapshot(bundle, made)
     labels = [shown_char(c) for c in chars]
     knobs, picture = lesson.controls()
@@ -149,13 +152,14 @@ def _():
 @lesson.step("Generate with the Transformer", beat="play")
 def _():
     lesson.say("Now run the model as a text machine. Temperature still controls safe choices versus weird sparks.")
+    lesson.say("The model picks each letter by rolling weighted dice, so the same prompt can come out different every time. Press **Generate again** for another roll — a new answer is the model working, not a bug.")
     bundle = trained_transformer()
     start = st.text_input("Starting phrase", value="the ", key="ch24_start")
     temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch24_temp")
-    seed = st.slider("Random seed", 0, 99, 5, key="ch24_seed")
     length = st.slider("How many new characters?", 80, 260, 180, 20, key="ch24_length")
-    made = generate_transformer(bundle, start=start, temperature=temperature, length=length, seed=seed)
-    st.text_area("Tiny Transformer says", made, height=150, key="ch24_text")
+    roll = generate_ui.regenerate(label="🎲 Generate again", key="ch24_gen")
+    made = generate_transformer(bundle, start=start, temperature=temperature, length=length, seed=1000 + roll)
+    st.text_area("Tiny Transformer says", made, height=150)
     lesson.look_for("phrases that almost sound like a rhyme or fable, then wobble off the sidewalk.")
 
 
@@ -192,9 +196,11 @@ def _():
 @lesson.step("Same prompt, three machines", beat="forreal")
 def _():
     lesson.say("Send the same prompt through the last three machines and listen to the echoes.")
+    lesson.say("All three roll dice as they write, so each press gives a fresh set to compare. Different text every time is the models working, not a bug.")
     bundle, mlp, probs, _, _, _, _ = comparison_numbers()
     temperature = st.slider("Temperature", 0.05, 1.8, 0.9, 0.05, key="ch24_compare_temp")
-    seed = st.slider("Random seed", 0, 99, 5, key="ch24_compare_seed")
+    roll = generate_ui.regenerate(label="🎲 Roll all three again", key="ch24_compare")
+    seed = 5 + roll
     made = generate_transformer(bundle, start="the ", temperature=temperature, length=180, seed=seed)
     st.markdown("**Bigram sample**")
     st.text(sample_stream_bigram(probs, bundle.vocab, start="the ", temperature=temperature, length=150, seed=seed))

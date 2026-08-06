@@ -83,7 +83,7 @@ print("weighted average =", float((weights * values).sum()))
 #
 # A mask is a cover sheet for the score table. A **causal** mask blocks every future
 # square, because future letters would hand over the answer. That is data leakage from
-# Chapter 10 wearing a new costume.
+# Chapter 11 wearing a new costume.
 
 # %%
 mask = np.tril(np.ones((8, 8)))

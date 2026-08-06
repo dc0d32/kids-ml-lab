@@ -7,6 +7,10 @@
 #
 # ---
 #
+# Every model so far was shown the right answers. Somebody had to label the data.
+#
+# Part 5 asks a different question: what can you learn when nobody tells you the answers?
+#
 # Nobody labels anything this time. Here is a pile of dots. Find the clumps.
 #
 # The danger is that "clump" sounds like a thing everyone will agree on. Sometimes they
@@ -116,7 +120,8 @@ for stage in history[:4]:
 
 # %% [markdown]
 # Bad starts can trap k-means. Two centres can begin in the same clump and waste a centre,
-# so one real clump may never get its own centre. Gum-on-a-shoe stuck.
+# so one real clump may never get its own centre. A bad start can settle into that mistake
+# and never fix itself.
 #
 # That explains sklearn's defaults. k-means++ spreads the starting centres out on purpose,
 # then sklearn tries several starts and keeps the best result. It is not magic; it is a

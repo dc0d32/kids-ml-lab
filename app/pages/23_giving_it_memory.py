@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from kidsml import lesson
+from kidsml import generate_ui, lesson
 from kidsml.datasets import load_words
 from kidsml.langmodels import embedding_points, random_nll, sample_mlp, train_mlp_language_model
 from kidsml.plots import ACCENT, COOL, MUTED, WARM, loss_curve
@@ -121,16 +121,17 @@ def _():
 @lesson.step("Memory length changes the names", beat="play")
 def _():
     lesson.say("Now slide the memory wall shorter or longer and listen to the names change shape.")
+    lesson.say("The model rolls dice as it spells, so press the button for a fresh batch. A new set of names each time is the model working, not a bug.")
     models = trained_context_models()
     knobs, picture = lesson.controls()
     with knobs:
         block_size = st.select_slider("How many letters can it remember?", options=[1, 3, 5], value=3, key="ch23_block_size")
         temperature = st.slider("Temperature", 0.05, 2.0, 0.85, 0.05, key="ch23_temp")
-        seed = st.slider("Random seed", 0, 99, 4, key="ch23_seed")
         starter = st.text_input("Start a name with these letters", value="ma", key="ch23_starter")
+        roll = generate_ui.regenerate(label="🎲 New batch of names", key="ch23_names_roll")
     chosen = models[block_size]
     with picture:
-        samples = [sample_mlp(chosen, start=starter, temperature=temperature, seed=seed + i, max_len=18) for i in range(10)]
+        samples = [sample_mlp(chosen, start=starter, temperature=temperature, seed=roll * 100 + i, max_len=18) for i in range(10)]
         st.write(" · ".join(samples))
         st.metric("Held-out surprise", f"{chosen.test_loss:.3f}")
         lesson.look_for("whether the 1-letter model drops starts that the 3-letter or 5-letter model can still hold.")
@@ -187,17 +188,18 @@ def _():
 
 @lesson.step("Hear the difference", beat="forreal")
 def _():
-    lesson.say("Same seed, same temperature, two different memories. Listen for the longer echo.")
+    lesson.say("Same dice roll, same temperature, two different memories. Listen for the longer echo.")
+    lesson.say("Both models roll dice as they spell, so press the button for a fresh pair to compare. Different names each time is the models working, not a bug.")
     models = trained_context_models()
     main = models[3]
     vocab = main.vocab
     counts = bigram_counts(main.train_words, vocab)
     probs = counts_to_probs(counts, smoothing=1.0)
     temperature = st.slider("Temperature", 0.05, 2.0, 0.85, 0.05, key="ch23_compare_temp")
-    seed = st.slider("Random seed", 0, 99, 4, key="ch23_compare_seed")
-    rng = np.random.default_rng(seed)
+    roll = generate_ui.regenerate(label="🎲 Roll both again", key="ch23_compare_roll")
+    rng = np.random.default_rng(roll)
     bigram_names = [sample_bigram(probs, vocab, rng=rng, temperature=temperature, max_len=18) for _ in range(8)]
-    mlp_names = [sample_mlp(main, temperature=temperature, seed=seed + i, max_len=18) for i in range(8)]
+    mlp_names = [sample_mlp(main, temperature=temperature, seed=roll * 100 + i, max_len=18) for i in range(8)]
     st.markdown("**Bigram:** " + " · ".join(bigram_names))
     st.markdown("**MLP:** " + " · ".join(mlp_names))
     lesson.look_for("places where the MLP keeps a name habit alive for more than one letter.")

@@ -46,7 +46,7 @@ answer and the ring wants the other.
         draw_line(w1_fail, w2_fail, b_fail, ax=ax)
         ax.set_title("Try to make circles perfect with one line")
         lesson.show(fig)
-    lesson.look_for("the best-looking ruler still slicing through part of the ring or part of the middle. This ruler has, if I am using this correctly, no aura.")
+    lesson.look_for("the best-looking ruler still slicing through part of the ring or part of the middle. One straight line can cut left from right, but it can't wrap around the middle.")
 
 
 @lesson.step("Four dots are enough to prove it", beat="hook")

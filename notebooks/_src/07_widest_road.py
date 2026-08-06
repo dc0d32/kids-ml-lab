@@ -107,8 +107,8 @@ plt.show()
 
 # %% [markdown]
 # The ringed points are the support vectors. Delete a far-away point and the road barely
-# moves; that dot was, technically, an NPC. Delete a ringed point and the road can jump
-# because the old road was resting against it.
+# moves, because that dot sat far back on its own side and never touched the margin. Delete
+# a ringed point and the road can jump because the old road was resting against it.
 
 # %% [markdown]
 # ## 🎛️ Your turn
@@ -220,5 +220,5 @@ plt.show()
 # 4. 🧸 **Little Kid Corner:** Put two sticker colours on a table. Draw the widest road between them.
 #
 # ---
-# **Next up:** Chapter 08 · *The Model Zoo* — where we compare guessers without fooling
+# **Next up:** Chapter 08 · *You Are Like Your Neighbors* — the model that skips training
 # ourselves.

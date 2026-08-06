@@ -27,3 +27,7 @@ data/torchvision/
 
 # NixOS native-lib path cache (machine specific)
 .nix-libs
+
+# Playwright, used only for eyeballing pages in a real browser (see AGENTS.md)
+node_modules/
+package-lock.json

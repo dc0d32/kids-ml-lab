@@ -126,7 +126,7 @@ class Neuron:
 
     ``output = squish(w1*x1 + w2*x2 + ... + b)``
 
-    That is the whole thing. Chapter 12 builds this by hand; chapter 13 teaches it to
+    That is the whole thing. Chapter 13 builds this by hand; chapter 14 teaches it to
     learn with :meth:`step`.
     """
 
@@ -220,7 +220,7 @@ class MLP:
     """A plain feed-forward neural network, written out by hand.
 
     ``MLP([2, 3, 1])`` means: 2 inputs, a hidden layer of 3 neurons, 1 output neuron.
-    That is exactly the network in chapter 14.
+    That is exactly the network in chapter 15.
 
     Everything is stored in ``self.Ws`` and ``self.bs`` — ordinary NumPy arrays you can
     print, plot, or edit with a slider.
@@ -256,7 +256,7 @@ class MLP:
     def forward(self, X, keep: bool = False):
         """Run the network. With ``keep=True`` also return every in-between value.
 
-        The kept values are what chapter 14 draws: each hidden neuron's own output.
+        The kept values are what chapter 15 draws: each hidden neuron's own output.
         """
         a = np.asarray(X, dtype=float)
         zs, activations = [], [a]
@@ -351,7 +351,7 @@ class MLP:
 def numeric_gradient(model: MLP, X, y, eps: float = 1e-6):
     """Estimate the gradients the slow, obvious way: nudge a weight, see what happens.
 
-    Chapter 13 uses this to prove the backprop code is right — and chapter 16 uses the
+    Chapter 14 uses this to prove the backprop code is right — and chapter 17 uses the
     same trick to show PyTorch agrees with us.
     """
     dWs = [np.zeros_like(W) for W in model.Ws]

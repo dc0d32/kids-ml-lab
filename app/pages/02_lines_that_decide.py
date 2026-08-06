@@ -264,7 +264,7 @@ def _():
         "What happens if the correct boundary must bend, but the perceptron only owns one straight line?",
         ["It leaves mistakes behind", "It bends the line", "It refuses to answer"],
         correct=0,
-        why="The algorithm can keep patching mistakes, but one straight ruler cannot curl into a moon. Some errors stay on the floor!",
+        why="The algorithm can keep fixing one mistake at a time, but a single straight line can't wrap around a curved, moon-shaped group. Some points always end up on the wrong side!",
         key="ch02_bendy",
     )
     if guess is None:

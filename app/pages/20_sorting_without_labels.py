@@ -43,10 +43,12 @@ def cached_penguin_clusters():
 def _():
     lesson.say(
         """
-Nobody labels anything this time.
+Every model so far was shown the right answers. Somebody had to label the data.
 
-Here is a pile of dots. Find the clumps. You already do this when you sort laundry into
-piles before anyone hands you the pile names.
+Part 5 asks a different question: **what can you learn when nobody tells you the answers?**
+
+Nobody labels anything this time. Here is a pile of dots. Find the clumps. You already do
+this when you sort laundry into piles before anyone hands you the pile names.
 """
     )
     lesson.careful(
@@ -132,7 +134,7 @@ def _():
     step = st.slider("Bad-start stage", 0, len(history) - 1, len(history) - 1, key="ch20_bad_stage")
     fig = plot_kmeans_stage(history[step])
     lesson.show(fig)
-    lesson.look_for("the clump that shares or misses a centre. Bad starts can get stuck like gum on a shoe.")
+    lesson.look_for("the clump that shares or misses a centre. A bad start can settle into that mistake and never fix itself.")
     lesson.say("That explains sklearn's defaults. k-means++ spreads the starting centres out on purpose, then sklearn tries several starts and keeps the best result.")
 
 

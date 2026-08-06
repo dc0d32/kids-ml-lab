@@ -73,39 +73,39 @@ Every chapter — all 25 of them — follows the exact same six beats:
 |---|---------|--------------|
 | 01 | Lines That Predict | y = w·x + b, and the idea of 'how wrong am I?' |
 | 02 | Lines That Decide | One line can split the whole world in two |
-| 03 | When a Ruler Isn't Enough | Some things a straight line simply cannot do |
+| 03 | When a Ruler Isn't Enough | Some things a straight line can never do |
 | 04 | Maybe, Probably, Definitely | Squishing any number into a probability |
 | 05 | Twenty Questions | Decision trees ask their way to an answer |
 | 06 | A Crowd of Trees | Many weak guessers beat one strong one |
 | 07 | The Widest Road | Don't just separate — separate with the biggest gap |
-| 08 | The Model Zoo | Which model when, and how not to fool yourself |
+| 08 | You Are Like Your Neighbors | The model that does no training at all |
+| 09 | The Model Zoo | Which model when, and how not to fool yourself |
 
 ### Part 2 — Escaping Flatland
 | # | Chapter | The big idea |
 |---|---------|--------------|
-| 09 | Real Data, Real Mess | Penguins, mushrooms, monsters and bikes |
-| 10 | Where Models Go Wrong | Bias, leakage, and being confidently wrong |
+| 10 | Real Data, Real Mess | Penguins, mushrooms, monsters and bikes |
+| 11 | Where Models Go Wrong | Bias, leakage, and being confidently wrong |
 
 ### Part 3 — Neural networks
 | # | Chapter | The big idea |
 |---|---------|--------------|
-| 11 | Arrows and Grids | A matrix isn't a box of numbers. It's an instruction for moving space |
-| 12 | One Neuron | It's Chapter 2 plus a squish. That's all |
-| 13 | How a Neuron Learns | Backprop by hand, then in 30 lines of NumPy |
-| 14 | Two Layers, Three Neurons | Hidden neurons each draw a line — together they bend |
-| 15 | Deeper and Wider | More layers, different squishes, and over-studying |
-| 16 | Same Thing, in PyTorch | Nothing magic — we check its gradients against ours |
+| 12 | Arrows and Grids | A matrix isn't a box of numbers. It's an instruction for moving space |
+| 13 | One Neuron | It's Chapter 2 plus a squish. That's all |
+| 14 | How a Neuron Learns | Backprop by hand, then in 30 lines of NumPy |
+| 15 | Two Layers, Three Neurons | Hidden neurons each draw a line — together they bend |
+| 16 | Deeper and Wider | More layers, different squishes, and over-studying |
+| 17 | Same Thing, in PyTorch | Nothing magic — we check its gradients against ours |
 
 ### Part 4 — Seeing
 | # | Chapter | The big idea |
 |---|---------|--------------|
-| 17 | Pictures Are Just Numbers | Read a digit off a grid of numbers, then teach a net to |
-| 18 | The Sliding Window | Convolutions by pencil, then a tiny CNN |
+| 18 | Pictures Are Just Numbers | Read a digit off a grid of numbers, then teach a net to |
+| 19 | The Sliding Window | Convolutions by pencil, then a tiny CNN |
 
 ### Part 5 — Without answers
 | # | Chapter | The big idea |
 |---|---------|--------------|
-| 19 | You Are Like Your Neighbors | The model that does no training at all |
 | 20 | Sorting Without Labels | k-means — and your photo squeezed to 5 colours |
 | 21 | Squishing Dimensions | PCA is picking the best shadow to cast |
 

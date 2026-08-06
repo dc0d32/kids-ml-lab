@@ -144,7 +144,7 @@ plt.show()
 print("variance kept:", round(kept, 3))
 
 # %% [markdown]
-# Some digits still overlap. That matches the confusion-matrix idea from Chapter 17:
+# Some digits still overlap. That matches the confusion-matrix idea from Chapter 18:
 # shared strokes make shared mistakes. Two different tools are agreeing that look-alike
 # digits live near each other. Payoff!
 #
@@ -158,16 +158,29 @@ fig = plot_digits_tsne(n=600, seed=0)
 plt.show()
 
 # %% [markdown]
-# PCA is linear. It can pick a flat shadow, not unwrap every shape. If two curved arms
-# cross in every flat shadow, PCA cannot separate them no matter which angle it chooses.
+# Now the one thing PCA cannot do. PCA only picks **flat** angles — straight-line
+# directions through the cloud. Here are two rings, one tucked inside the other, like a
+# small hoop sitting inside a big hoop.
+#
+# The only thing that tells the rings apart is **distance from the middle**: inner dots sit
+# about 0.4 out, outer dots about 1.0 out. That is a curved idea, not a straight direction.
+# We even hand PCA a third number for every dot — its exact distance from the middle, the
+# perfect clue. But PCA keeps the directions with the most spread, and the widest spread is
+# the flat pancake of the rings. So it keeps the pancake and throws the distance number
+# away, and the two rings land right on top of each other again.
 
 # %%
 fig = plot_pca_linear_failure()
+fig.axes[0].set_title("Two rings, one flat shadow")
 plt.show()
 
 # %% [markdown]
-# On penguins, the first component mostly acts like a size direction. Look for body-mass
-# and flipper-length weights when the table appears.
+# The lesson is a ceiling: PCA is a flat tool. When two classes are wrapped around each
+# other, no flat angle can separate them, and you need a tool that can curve.
+#
+# Back to an easy shape. On a plain table of penguin measurements the same squishing works
+# fine. Look for body-mass and flipper-length getting the biggest weights, so the first
+# shadow reads mostly like body size.
 
 # %%
 loadings, first_kept = penguin_pca_table()

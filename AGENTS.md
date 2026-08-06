@@ -145,14 +145,20 @@ thing is wired together. Use **matplotlib** for data — boundaries, curves, poi
 On a page:
 
 ```python
-ui.mermaid("""
+lesson.mermaid("""
 graph LR
-    X1[x₁] --> S(( Σ ))
-    X2[x₂] --> S
+    X1[x1] --> S[add them up, plus b]
+    X2[x2] --> S
     S --> A[squish]
     A --> Y[output]
 """)
 ```
+
+**Node labels must be plain ASCII.** The mermaid build bundled with `streamlit-mermaid`
+has an ASCII-only lexer for unquoted labels: one `x₁` or `Σ` and the whole diagram throws
+in the browser, which the reader sees as a blank gap in the middle of the page and which
+no other test can see. `tests/test_diagrams.py` fails the build if you do it. Write `x1`,
+not `x₁`, and say "add them up, plus b" rather than reaching for a sigma.
 
 In a notebook, a fenced ```mermaid block inside a markdown cell — JupyterLab renders it
 natively, and so does GitHub. Keep the page version and the notebook version in step.
@@ -160,6 +166,28 @@ natively, and so does GitHub. Keep the page version and the notebook version in 
 Keep diagrams to six or seven boxes. A diagram that needs studying has stopped helping.
 Good uses: the neuron, the layers of a network, the boosting loop, the convolution slide,
 the train/test split, the attention flow, the course map.
+
+---
+
+## Colour
+
+The app is pure black (AMOLED). Every colour comes from `kidsml/plots.py` and nowhere
+else, because a colour picked against a white page usually vanishes on this one:
+
+| Name | For |
+|---|---|
+| `COOL` / `WARM` | class 0 / class 1, everywhere in the course |
+| `ACCENT` | the model's own line or prediction |
+| `AMBER`, `VIOLET`, `PINK`, `TEAL` | extra series when three colours are not enough |
+| `SHAPE` | a drawn outline that must be the brightest thing in the figure |
+| `GHOST` | the faint "before" layer: the original grid, the untrained boundary |
+| `MUTED` | unlabelled points |
+| `EDGE`, `GRIDLINE` | the axes box and the graph paper |
+| `PANEL`, `BACKGROUND`, `INK` | figure furniture |
+
+Never hardcode a hex. In particular never use a dark navy, slate or near-black as ink, and
+never outline a marker in white — the house style cuts markers out of the panel colour
+instead of putting a halo round them.
 
 
 ---
@@ -286,7 +314,16 @@ Rules for steps:
   challenge.
 
 Helpers: `lesson.say`, `predict`, `look_for`, `aha`, `careful`, `kid_corner`, `jargon`,
-`figure`, `show`, `mermaid`, `workbook`, `controls`.
+`figure`, `show`, `mermaid`, `workbook`, `controls`, `regenerate`.
+
+**Anything that rolls dice needs `lesson.regenerate(...)`.** Streamlit only re-runs when
+something changes, so a step that samples once looks frozen — the reader edits the prompt
+and the same words come back. `regenerate` draws a button and returns a number that goes
+up on every press; feed it in as the seed *and* into the `@st.cache_data` key. Say in one
+line that the model rolls dice, so a different answer is the model working, not a bug.
+
+**One jargon box per step.** Three `lesson.jargon(...)` calls in a row is a grey wall.
+Name all the words the step just taught in a single box.
 
 Notebooks stay linear — scrolling is the right shape for a document you edit and re-run.
 `kidsml/ui.py` keeps the older non-stepped helpers for the Home page.

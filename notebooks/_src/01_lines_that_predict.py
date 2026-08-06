@@ -114,7 +114,6 @@ plt.show()
 # Every pair of knob settings gets its own average squared mistake. If we draw all
 # those scores as a map, the good settings form a low valley. Tiny knob moves
 # make tiny prediction moves, so the score changes smoothly instead of rattling around.
-# The valley has, as I understand it, excellent aura.
 
 # %%
 w = 3.0
