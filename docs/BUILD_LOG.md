@@ -891,3 +891,34 @@ the full parser check is recorded at the bottom of that file for the next time a
 misbehaves.
 
 **749 tests pass.**
+
+---
+
+## 2026-08-05 — The stranded eyes emoji
+
+Owner: *"why is there a line gap between the eyes emoji and 'Look for' text?"*
+
+Self-inflicted, from the green-boxes commit. That change added:
+
+```css
+.kml-box > b { display: block; margin-bottom: 0.4rem; }
+```
+
+which is right for the boxes whose bold run is a **heading** — `<b>💡 Aha!</b>` followed by
+prose. But the look-for box puts the emoji *outside* the bold run:
+
+```html
+<div class="kml-box kml-look">👀 <b>Look for:</b> ...text...</div>
+```
+
+Making that `<b>` a block pushed "Look for:" onto its own line and left the 👀 sitting alone
+above it. Same for the jargon box, whose bold run is a term mid-sentence.
+
+The rule is now scoped to the three heading boxes (aha, kid corner, careful), with the
+mid-sentence ones explicitly kept inline.
+
+Worth noting the shape of this mistake, since it is a common one: a rule written for one
+member of a family, applied to the whole family. `.kml-box` covers eight boxes with two
+quite different internal structures, and the selector did not distinguish them.
+
+**750 tests pass.**

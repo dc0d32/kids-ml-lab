@@ -509,8 +509,18 @@ _STYLE = """
   .kml-wrong b { color: #FCA5A5; }
   .kml-surprise b { color: #C4B5FD; }
 
-  /* The heading line inside a box, then its prose. */
-  .kml-box > b { display: block; margin-bottom: 0.4rem; font-size: 1.02rem; }
+  /* Only the boxes whose bold text is a *heading* get their own line. In the
+     look-for and jargon boxes the bold run sits mid-sentence, and making it a
+     block stranded the emoji on the line above it. */
+  .kml-aha > b, .kml-kid > b, .kml-careful > b {
+      display: block; margin-bottom: 0.35rem; font-size: 1.02rem;
+  }
+  .kml-look > b, .kml-jargon > b, .kml-surprise > b, .kml-right > b, .kml-wrong > b {
+      display: inline;
+  }
+  /* The emoji and the words after it stay on one line. */
+  .kml-look, .kml-jargon { display: block; }
+  .kml-look > b { margin-right: 0.15rem; }
   .kml-box p { margin: 0 0 0.5rem 0; }
   .kml-box p:last-child { margin-bottom: 0; }
   .kml-aha, .kml-kid { animation: kmlPop 0.42s cubic-bezier(0.22, 1, 0.36, 1) both,

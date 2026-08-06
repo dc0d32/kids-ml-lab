@@ -328,6 +328,27 @@ def test_the_stylesheet_centres_and_animates():
         assert token in _STYLE, f"stylesheet is missing {description} ({token!r})"
 
 
+def test_only_heading_bold_runs_get_their_own_line():
+    """A bold run mid-sentence must stay inline.
+
+    `.kml-box > b { display: block }` was meant for the Aha heading, but the Look-for box
+    puts its emoji outside the bold run — so the bold text took its own line and left the
+    eyes emoji stranded on the line above.
+    """
+    from kidsml.lesson import _STYLE
+
+    assert ".kml-box > b { display: block" not in _STYLE, (
+        "the block-heading rule is applied to every box again; it strands the emoji in "
+        "the boxes whose bold text sits mid-sentence"
+    )
+    assert ".kml-aha > b, .kml-kid > b, .kml-careful > b" in _STYLE, (
+        "heading boxes lost their block-level heading"
+    )
+    assert ".kml-look > b" in _STYLE and "display: inline" in _STYLE, (
+        "the look-for box needs its bold run kept inline"
+    )
+
+
 def test_the_good_news_boxes_are_green():
     """The aha moment, the Little Kid Corner and a right answer are green.
 
