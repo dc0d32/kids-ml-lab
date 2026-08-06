@@ -70,7 +70,6 @@ graph LR
     H2 --> O
     H3 --> O
 """,
-        height=290,
     )
     lesson.look_for("the middle layer. It invents new reports before the final neuron makes the call.")
     lesson.jargon("hidden layer", "A layer between the inputs and the final output. You see its numbers, but they are not the final answer.")

@@ -32,14 +32,13 @@ line wearing a costume.
     )
     lesson.mermaid(
         """
-graph LR
+graph TD
     X1[x₁] --> M[weights times inputs]
     X2[x₂] --> M
     M --> S((Σ + b))
     S --> A[squish]
     A --> Y[output from 0 to 1]
 """,
-        height=260,
     )
     lesson.look_for("the weighted sum in the middle. That is the line machine you already built.")
     lesson.say("Read every arrow as `this number flows into the next box`. `x₁` and `x₂` are the two input numbers. The weights multiply them, `Σ + b` adds the weighted pieces plus the bias, the squish clips the raw score to 0..1, and the output is the neuron's answer.")

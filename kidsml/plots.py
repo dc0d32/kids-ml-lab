@@ -38,12 +38,18 @@ CLASS_NAMES = ("blue", "red")
 
 
 def use_house_style() -> None:
-    """Apply the course's matplotlib defaults. Call once at the top of a notebook."""
+    """Apply the course's matplotlib defaults. Call once at the top of a notebook.
+
+    Type looks small in point terms because Streamlit renders a figure at roughly 175 dpi
+    and then scales it into the column, so a point is worth about two screen pixels. These
+    sizes land a chart title near the size of the body text rather than shouting over the
+    heading two lines above it.
+    """
     _setup_plotly()
     mpl.rcParams.update(
         {
             "figure.figsize": (6.0, 5.0),
-            "figure.dpi": 110,
+            "figure.dpi": 100,
             "figure.facecolor": BACKGROUND,
             "savefig.facecolor": BACKGROUND,
             "axes.facecolor": PANEL,
@@ -53,18 +59,20 @@ def use_house_style() -> None:
             "xtick.color": "#9AA4B8",
             "ytick.color": "#9AA4B8",
             "grid.color": "#2A3040",
+            "xtick.labelsize": 7,
+            "ytick.labelsize": 7,
             "axes.grid": True,
             "grid.alpha": 0.55,
             "axes.spines.top": False,
             "axes.spines.right": False,
-            "axes.titlesize": 13,
+            "axes.titlesize": 8.5,
             "axes.titleweight": "bold",
             "axes.titlecolor": INK,
-            "axes.labelsize": 11,
-            "font.size": 11,
+            "axes.labelsize": 7.5,
+            "font.size": 7.5,
             "legend.frameon": False,
             "legend.labelcolor": INK,
-            "lines.linewidth": 2.2,
+            "lines.linewidth": 1.9,
             # Points are outlined in the panel colour, not white, so they read as cut out
             # of the background rather than stuck on with a halo.
             "scatter.edgecolors": PANEL,

@@ -46,7 +46,7 @@ use_house_style()
 # Same hand. Same wall. Different angle. The useful shadow keeps the story.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[High-dimensional cloud] --> B[Choose an angle]
 #     B --> C[Cast a shadow]
 #     C --> D[2D plot]

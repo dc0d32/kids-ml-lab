@@ -103,7 +103,7 @@ while sigmoid(-2) is about 0.12.
     )
     lesson.mermaid(
         """
-flowchart LR
+flowchart TD
     A[Point features] --> B[Raw score z]
     B --> C[Sigmoid S-curve]
     C --> D[Probability]
@@ -111,7 +111,6 @@ flowchart LR
     E -->|yes| F[red]
     E -->|no| G[blue]
 """,
-        height=260,
     )
     lesson.look_for("the threshold: p = 0.5 happens exactly when the raw score z is 0.")
     lesson.say("It also has a training-friendly meaning: adding 1 to the score multiplies the red-vs-blue odds by the same amount each time.")

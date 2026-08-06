@@ -357,3 +357,34 @@ say why in the commit message**. Raising a budget is a decision, not a fix.
 - Generated `.ipynb` files **are** committed, so the notebooks work on a fresh clone
   without a build step.
 - **Never `git push` without asking the repo owner first.** Every single time.
+
+---
+
+## Seeing the app
+
+Most of this project's bugs have been visual, and **none of them were visible to the test
+suite**. `AppTest` reports element values, not rendered geometry: it cannot see a white
+plotly box on a dark page, text wrapping one word per line, a mermaid syntax error, a
+clipped diagram, or a chart whose title is twice the size of the prose.
+
+So look at it. On NixOS the downloaded Playwright browser will not run, but a Nix one will:
+
+```bash
+npm install playwright
+nix build --no-link --print-out-paths nixpkgs#chromium     # gives CHROMIUM
+./run.sh app &                                             # or a fixed --server.port
+```
+
+```js
+import { chromium } from "playwright";
+const browser = await chromium.launch({ executablePath: CHROMIUM + "/bin/chromium",
+                                        args: ["--no-sandbox"] });
+const page = await browser.newPage({ viewport: { width: 1280, height: 1400 } });
+await page.goto("http://localhost:8501/04_maybe_probably", { waitUntil: "networkidle" });
+await page.waitForTimeout(3500);          // Streamlit renders after load
+await page.screenshot({ path: "shot.png", fullPage: true });
+```
+
+Worth checking every time: a 420px-wide viewport, `document.scrollWidth` against
+`clientWidth` for accidental horizontal scroll, and `naturalWidth` against the displayed
+width of any image to see whether a figure is being scaled up.

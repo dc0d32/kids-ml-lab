@@ -70,13 +70,12 @@ def _():
     st.dataframe(vision.digit_as_flat_row(images[example_index]), hide_index=True, width="stretch")
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[Image] --> B[Grid of pixels]
     B --> C[Flat row of 64 numbers]
     C --> D[Model]
     D --> E[Ten digit scores]
 """,
-        height=240,
     )
     lesson.look_for("the flattening step. The grid becomes a number snake: 0 through 63 in a row, then ten digit scores come back.")
     lesson.careful(

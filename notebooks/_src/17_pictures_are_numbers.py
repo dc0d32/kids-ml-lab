@@ -50,7 +50,7 @@ plt.show()
 # one long row.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[Image] --> B[Grid of pixels]
 #     B --> C[Flat row of 64 numbers]
 #     C --> D[Model]

@@ -64,14 +64,13 @@ def _():
     lesson.say("**Step 1:** every point joins the nearest centre. **Step 2:** every centre scoots to the middle of its members. Repeat until nothing changes.")
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[Choose centres] --> B[Assign points]
     B --> C[Move centres]
     C --> D{Anything changed?}
     D -->|yes| B
     D -->|no| E[Stop]
 """,
-        height=260,
     )
     lesson.look_for("the loop: assign, move, check. The same two-step dance repeats until the centres stop moving.")
     lesson.say("Why must it stop? Each round either makes total squared point-to-centre distance smaller, or nothing changes. There are only so many possible assignments, so the loop cannot shrink forever.")

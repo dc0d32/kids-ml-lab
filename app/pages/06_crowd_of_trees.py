@@ -47,14 +47,13 @@ disagreement by giving trees random rows and random column choices.
     )
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[training table] --> B[random row samples]
     A --> C[random column choices]
     B --> D[many different trees]
     C --> D
     D --> E[majority vote]
 """,
-        height=300,
     )
     lesson.look_for("why two trees can disagree even though they came from the same table.")
     lesson.jargon("random forest", "A crowd of decision trees trained with random row samples and random column choices, then combined by vote.")
@@ -142,14 +141,13 @@ new tree to the running prediction. Then repeat.
     )
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[predict] --> B[measure leftovers]
     B --> C[fit tiny tree]
     C --> D[add small fix]
     D --> E[better prediction]
     E --> B
 """,
-        height=250,
     )
     lesson.look_for("the loop returning to leftovers. The next tree learns the part the team still misses.")
 

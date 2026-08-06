@@ -56,7 +56,6 @@ graph TD
     C -->|yes| E{Lives in water?}
     C -->|no| F[can fly]
 """,
-        height=270,
     )
     lesson.look_for("one row walking one path. It never answers every question in the diagram.")
     lesson.jargon("decision tree", "A model that asks yes/no questions until it reaches an answer.")

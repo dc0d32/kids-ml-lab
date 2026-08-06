@@ -163,7 +163,7 @@ plt.show()
 # toward lower error.
 #
 # ```mermaid
-# flowchart LR
+# flowchart TD
 #     A[Choose w and b] --> B[Predict dollars]
 #     B --> C[Measure squared mistakes]
 #     C --> D[Find downhill direction]

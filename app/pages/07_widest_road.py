@@ -270,12 +270,11 @@ extra columns by hand.
 
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[2D circle dots] --> B[imagine extra features]
     B --> C[straight cut there]
     C --> D[curved road back here]
 """,
-        height=220,
     )
     lesson.look_for("the detour: make the data easier somewhere else, then read the cut back here.")
 

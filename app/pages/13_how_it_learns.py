@@ -39,7 +39,6 @@ graph LR
     O -. blame .-> Z
     Z -. blame .-> X
 """,
-        height=270,
     )
     lesson.look_for("solid arrows for the prediction zooming forward, dotted arrows for blame marching backward.")
     lesson.jargon("forward pass", "The left-to-right trip that turns inputs into an output before learning moves anything.")
@@ -86,7 +85,6 @@ graph LR
     Z -->|slope 0.25| O[output]
     O -->|"2(out-y) = -1"| L[loss]
 """,
-        height=220,
     )
     lesson.look_for("the three links in the chain. We will snap the small effects together by reading backward.")
     lesson.say(

@@ -51,7 +51,6 @@ flowchart LR
     C -->|yes| D[red]
     C -->|no| E[blue]
 """,
-        height=240,
     )
     lesson.look_for("the score machine first, then the sign check that turns a number into a colour.")
 

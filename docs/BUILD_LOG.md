@@ -922,3 +922,52 @@ member of a family, applied to the whole family. `.kml-box` covers eight boxes w
 quite different internal structures, and the selector did not distinguish them.
 
 **750 tests pass.**
+
+---
+
+## 2026-08-05 — Fit and finish, with a browser this time
+
+Owner: *"do a full sweep for such fit and finish issues"*
+
+Every visual bug so far had survived because the suite cannot see rendering. So this pass
+started by fixing that: Playwright driving a Nix-provided Chromium (the downloaded
+Playwright browser will not run on NixOS), screenshotting real pages at desktop and phone
+widths, and measuring the DOM. That turned a guessing game into a list.
+
+What it found, in order of how bad it was:
+
+**Mermaid diagrams were rendering on white.** Every diagram was a bright card in the middle
+of a dark page. `streamlit-mermaid` exposes no theme setting, so the theme is now declared
+in the diagram source itself with a `%%{init: ...}%%` directive carrying the course palette.
+
+**Mermaid reserved 424px whatever it drew.** A 55px flowchart sat in a 424px box, leaving a
+hole under it. The component ignores the height it is given, so the iframe is sized from CSS
+via a keyed container (`st.container(key=...)` puts a `st-key-<key>` class in the DOM), with
+the height estimated from the diagram — one row for a left-to-right flow, ~84px per box for
+a top-down one. Deliberately over-estimated: slack is untidy, clipping is broken.
+
+**Sixteen diagrams were unreadable.** A left-to-right flow with six long labels gets scaled
+down until the text is a few pixels tall. Those are now top-down, so each box gets a full-
+width row. A `graph LR` is fine for three or four short labels and nothing more.
+
+**Figures were being scaled up.** `width="stretch"` blew a 704px chart up to 884px and
+enlarged every label with it. Back to natural size, with the CSS cap handling narrow
+windows — scaling *down* does no harm.
+
+**Chart type was competing with the headings.** Streamlit renders a figure at about 175 dpi
+and then scales it into the column, so a matplotlib point is worth roughly two screen
+pixels — which made an 13pt chart title bigger than the step heading above it. Sizes are now
+chosen for that effective scale, which looks absurdly small in the rcParams and correct on
+screen.
+
+**Streamlit's Deploy button** was sitting in the top right of every chapter. Gone, along
+with the rest of its chrome.
+
+Verified afterwards: no horizontal overflow at 1280px or 420px, no console errors, no
+clipped diagrams (SVG height measured against iframe height on every page that has one).
+
+The Playwright recipe is written up in `AGENTS.md` under "Seeing the app". It is not wired
+into the suite — it needs Node and a browser, and this project runs from one `uv` command —
+but it should be the first thing reached for whenever something looks wrong.
+
+**750 tests pass.**

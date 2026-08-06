@@ -64,7 +64,7 @@ use_house_style()
 # loop cannot keep finding a new smaller setup forever.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[Choose centres] --> B[Assign points]
 #     B --> C[Move centres]
 #     C --> D{Anything changed?}

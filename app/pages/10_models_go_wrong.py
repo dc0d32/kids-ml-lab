@@ -50,7 +50,6 @@ graph TD
     B -->|hurts one group| E[Copied unfair history]
     B -->|far away| F[Outside its world]
 """,
-        height=330,
     )
     lesson.look_for("the four exits from a shiny score. A score is the first clue, not the finish line.")
     lesson.kid_corner(

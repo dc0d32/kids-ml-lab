@@ -53,12 +53,11 @@ The promise is bigger: PyTorch calls a recipe-tracking array a tensor. When you 
     )
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[NumPy arrays] --> B[torch tensors]
     C[linear layer] --> D[nn.Linear]
     E[manual gradients] --> F[loss.backward]
 """,
-        height=230,
     )
     lesson.look_for("the one-for-one swaps: arrays become tensors, layers become modules, and manual gradients become `backward()`.")
     lesson.say("If PyTorch remembers the forward recipe, it can walk that recipe backward and fill in gradients for every weight. Chapter 13, at framework speed!")

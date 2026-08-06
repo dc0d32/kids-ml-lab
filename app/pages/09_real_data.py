@@ -87,14 +87,13 @@ def _():
     lesson.say("The question changes: inspect the column, hunt the blanks, and ask what a boring guess scores before the model wakes up.")
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[Raw table] --> B[Encode words]
     B --> C[Fill or drop gaps]
     C --> D[Split rows]
     D --> E[Train model]
     E --> F[Score against baseline]
 """,
-        height=250,
     )
     lesson.look_for("the order. Clean first, train after. No mud in the engine.")
     lesson.say("The model eats the table we hand it. Every cleanup choice becomes part of the experiment.")

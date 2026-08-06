@@ -59,13 +59,12 @@ Same wall. Different angle. **Choosing the angle is the whole of PCA.**
     lesson.kid_corner("Use a flashlight and your hand. Turn your hand until the shadow tells the best story.")
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[High-dimensional cloud] --> B[Choose an angle]
     B --> C[Cast a shadow]
     C --> D[2D plot]
     D --> E[Check what stayed spread out]
 """,
-        height=240,
     )
     lesson.look_for("the last box. Spread means the points stayed far apart after the squish.")
 

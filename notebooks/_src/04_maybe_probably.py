@@ -94,7 +94,7 @@ pd.DataFrame({"z": z, "sigmoid(z)": np.round(p, 3)})
 # particular S-curve shows up everywhere.
 #
 # ```mermaid
-# flowchart LR
+# flowchart TD
 #     A[Point features] --> B[Raw score z]
 #     B --> C[Sigmoid S-curve]
 #     C --> D[Probability]

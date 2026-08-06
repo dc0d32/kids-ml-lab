@@ -44,14 +44,13 @@ fix: one small window slides across the image like a tiny inspector.
     )
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[Image patch] --> B[Same 3x3 kernel]
     B --> C[Multiply and add]
     C --> D[One feature-map cell]
     D --> E[Slide right]
     E --> B
 """,
-        height=260,
     )
     lesson.look_for("the word same. One little grid visits the top-left corner, the middle, and the bottom-right corner.")
     lesson.kid_corner("Put a sticky note with a 3 by 3 hole over a picture. Peek through the hole, move it one square, and peek again.")
@@ -169,7 +168,6 @@ graph LR
     C --> D[Pool]
     D --> E[Classify]
 """,
-        height=220,
     )
     lesson.look_for("the stack: find small patterns, squish the scores, keep the strongest signals, then guess.")
     lesson.jargon("pooling", "Shrink a feature map by keeping the strongest nearby signal, like saying 'something useful was around here.'")

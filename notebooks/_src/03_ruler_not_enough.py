@@ -135,7 +135,7 @@ plt.show()
 # the middle stays low. Pop!
 #
 # ```mermaid
-# flowchart LR
+# flowchart TD
 #     A[Original x1 and x2] --> B[Add x3 = x1^2 + x2^2]
 #     B --> C[Lift into 3D]
 #     C --> D[Cut with a flat plane]

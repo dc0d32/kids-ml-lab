@@ -190,7 +190,7 @@ print(f"support vectors: {len(support)} out of {len(X_peng)} penguins")
 # columns by hand.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[2D circle dots] --> B[imagine extra features]
 #     B --> C[straight cut there]
 #     C --> D[curved road back here]

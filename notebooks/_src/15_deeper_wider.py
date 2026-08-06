@@ -137,7 +137,7 @@ plt.show()
 # want the calmer rule underneath.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[broad pattern] --> B[practice loss falls]
 #     B --> C[tiny wiggles]
 #     C --> D[train loss lower]

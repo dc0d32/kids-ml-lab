@@ -37,7 +37,7 @@ use_house_style()
 # can say “barely yes”, “very yes”, or “I am near the fence”.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     X1[x₁] --> M[weights times inputs]
 #     X2[x₂] --> M
 #     M --> S((Σ + b))

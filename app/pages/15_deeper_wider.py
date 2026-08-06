@@ -91,7 +91,6 @@ graph LR
     H1 -. wider .-> H1
     H2 -. deeper .-> Y
 """,
-        height=260,
     )
     lesson.look_for("the repeated pattern: numbers zip forward, gradients run backward, and hidden layers stack the same move.")
     lesson.say("Wide means more neurons side by side in one layer. Deep means more layers in a row. That buys more flexible boundaries, and it also creates a new danger: memorising noise. Power tools need goggles!")
@@ -180,13 +179,12 @@ that do not help on fresh test dots.
 
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[broad pattern] --> B[practice loss falls]
     B --> C[tiny wiggles]
     C --> D[train loss lower]
     C --> E[test loss higher]
 """,
-        height=240,
     )
     lesson.look_for("the split: the same tiny wiggles can help train loss and hurt test loss. Same squiggle, opposite scoreboard.")
 

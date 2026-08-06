@@ -34,7 +34,7 @@ use_house_style()
 # key trick is that the same kernel visits every spot.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[Image patch] --> B[Same 3x3 kernel]
 #     B --> C[Multiply and add]
 #     C --> D[One feature-map cell]

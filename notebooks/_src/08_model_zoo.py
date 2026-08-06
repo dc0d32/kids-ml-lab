@@ -38,7 +38,7 @@ use_house_style()
 # score.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[all labelled rows] --> B[training rows]
 #     A --> C[hidden test rows]
 #     B --> D[train model]

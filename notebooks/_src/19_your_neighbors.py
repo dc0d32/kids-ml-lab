@@ -43,7 +43,7 @@ use_house_style()
 # That is kNN. It sounds tiny. It is embarrassingly good.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[New point] --> B[Measure distances]
 #     B --> C[Sort nearest first]
 #     C --> D[Take k neighbours]

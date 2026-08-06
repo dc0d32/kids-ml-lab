@@ -45,7 +45,7 @@ model can look brilliant on the rows it studied and stumble on new rows.
 
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[all labelled rows] --> B[training rows]
     A --> C[hidden test rows]
     B --> D[train model]
@@ -53,7 +53,6 @@ graph LR
     C --> E
     E --> F[test score]
 """,
-        height=260,
     )
     lesson.look_for("the wall between training rows and hidden test rows. That wall makes the race honest.")
     lesson.kid_corner(
@@ -85,7 +84,6 @@ graph TD
     D --> F
     E --> F
 """,
-        height=280,
     )
     lesson.look_for("the rotation. Every row gets a turn being hidden.")
 

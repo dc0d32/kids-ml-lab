@@ -42,7 +42,7 @@ def representative_preview(name):
 # learns anything?
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[Raw table] --> B[Encode words]
 #     B --> C[Fill or drop gaps]
 #     C --> D[Split rows]

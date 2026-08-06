@@ -40,7 +40,7 @@ use_house_style()
 # and is allowed to consider random columns while it grows.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[training table] --> B[random row samples]
 #     A --> C[random column choices]
 #     B --> D[many different trees]
@@ -139,7 +139,7 @@ forest_vote_counts(forest, [0.0, 0.0])
 # the running prediction. Then repeat.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[predict] --> B[measure leftovers]
 #     B --> C[fit tiny tree]
 #     C --> D[add small fix]

@@ -181,14 +181,13 @@ whole downhill-walking trick **gradient descent**.
 def _():
     lesson.mermaid(
         """
-flowchart LR
+flowchart TD
     A[Choose w and b] --> B[Predict dollars]
     B --> C[Measure squared mistakes]
     C --> D[Find downhill direction]
     D --> E[Nudge w and b]
     E --> B
 """,
-        height=260,
     )
     lesson.look_for("the loop: fit, measure, adjust, then try again.")
     st.code(

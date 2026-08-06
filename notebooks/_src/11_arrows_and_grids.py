@@ -101,7 +101,7 @@ def grid_figure(M, title="Matrix as a grid mover", limit=2.5, step=0.5):
 # 12 becomes something you can see.
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[An arrow] --> B[A grid full of arrows]
 #     B --> C[A matrix moves the grid]
 #     C --> D[A squish bends space]

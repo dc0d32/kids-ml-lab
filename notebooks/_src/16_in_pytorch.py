@@ -37,7 +37,7 @@ use_house_style()
 # Chapter 13, at framework speed!
 #
 # ```mermaid
-# graph LR
+# graph TD
 #     A[NumPy arrays] --> B[torch tensors]
 #     C[linear layer] --> D[nn.Linear]
 #     E[manual gradients] --> F[loss.backward]

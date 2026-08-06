@@ -176,14 +176,13 @@ Drag the instruction, and the grid skates, flips, stretches, and wakes up.
     )
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[An arrow] --> B[A grid full of arrows]
     B --> C[A matrix moves the whole grid]
     C --> D[A neuron uses the same arrow agreement]
     D --> E[A squish bends space]
     E --> F[Chapter 14 stacks bends into new features]
 """,
-        height=260,
     )
     lesson.look_for("the last box. Neural networks need the bend, not the box of numbers.")
 

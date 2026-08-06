@@ -33,6 +33,7 @@ Written like this::
 
 from __future__ import annotations
 
+import re
 import textwrap
 from dataclasses import dataclass, field
 from typing import Callable
@@ -363,20 +364,92 @@ def figure(width: float = 6.4, height: float = 4.8):
 def show(fig, clear: bool = True) -> None:
     """Render a matplotlib figure and free it.
 
-    Stretched to the container rather than drawn at its natural pixel size, so a wide
-    figure inside a narrow column scales down instead of overflowing. The page is a
-    centred column now, so natural size is often wider than the space available.
+    Drawn at its natural size. Stretching it to the container scaled a 704px figure up to
+    884px, which enlarged every label and title with it and left the charts shouting next
+    to the prose. The CSS caps images at 100% of the column, so a narrow window still
+    scales them *down* — which is the direction that does no harm.
     """
     fig.patch.set_alpha(0)
-    st.pyplot(fig, width="stretch")
+    st.pyplot(fig, width="content")
     if clear:
         plt.close(fig)
 
 
-def mermaid(diagram: str, height: int = 300) -> None:
+# streamlit-mermaid exposes no theme setting, so the theme is declared in the diagram
+# source itself. Without this every diagram renders on mermaid's default white card,
+# which on a dark page is a bright rectangle in the middle of the reading column.
+_MERMAID_THEME = (
+    '%%{init: {"theme":"base","themeVariables":{'
+    '"background":"#0E1117",'
+    '"primaryColor":"#1B212E","primaryTextColor":"#E6EDF3","primaryBorderColor":"#34D399",'
+    '"secondaryColor":"#171B26","secondaryTextColor":"#E6EDF3","secondaryBorderColor":"#3A4152",'
+    '"tertiaryColor":"#171B26","tertiaryTextColor":"#E6EDF3","tertiaryBorderColor":"#3A4152",'
+    '"lineColor":"#8B97AA","textColor":"#D5DEE9",'
+    '"mainBkg":"#1B212E","nodeBorder":"#34D399","clusterBkg":"#171B26",'
+    '"edgeLabelBackground":"#0E1117","fontSize":"15px",'
+    '"fontFamily":"ui-sans-serif, system-ui, sans-serif"'
+    "}}}%%\n"
+)
+
+
+def _estimated_height(diagram: str) -> int:
+    """Guess how tall a diagram needs to be.
+
+    The component reserves a fixed 424px whatever it draws, which left a hole under every
+    small flowchart, so the height is forced from CSS — which means we have to work it out
+    here. A left-to-right flow is one row of boxes however many there are; a top-down one
+    grows by about 84px per box.
+
+    Biased to over-estimate: slack under a diagram is untidy, but a clipped diagram is
+    broken.
+    """
+    lines = [ln.strip() for ln in diagram.strip().splitlines() if ln.strip()]
+    lines = [ln for ln in lines if not ln.startswith("%%")]
+    if not lines:
+        return 200
+
+    match = re.match(r"(?:graph|flowchart)\s+([A-Za-z]+)", lines[0])
+    direction = match.group(1).upper() if match else "TD"
+
+    if direction in ("LR", "RL"):
+        return 104
+
+    # One row per node, near enough. Branching diagrams get some slack, which is fine.
+    nodes = set(re.findall(r"\b([A-Za-z][A-Za-z0-9_]*)\s*[\[\(\{]", " ".join(lines[1:])))
+    return min(46 + 84 * max(len(nodes), 2), 760)
+
+
+def mermaid(diagram: str, height: int | None = None) -> None:
+    """Draw a Mermaid diagram — for flows, pipelines and "what connects to what".
+
+    Use this when the thing being explained is *structure* rather than data: how a
+    prediction flows through a model, what order the steps happen in, how one chapter
+    leads to the next. Use matplotlib when the thing being explained is *numbers*.
+
+    The notebook equivalent is a fenced ```mermaid block inside a markdown cell, which
+    JupyterLab renders natively. Keep the two in step.
+
+    Keep diagrams small — six or seven boxes. A diagram that needs studying is a diagram
+    that has stopped helping.
+    """
+    import hashlib
+
     from streamlit_mermaid import st_mermaid
 
-    st_mermaid(diagram.strip(), height=f"{height}px")
+    # The component ignores the height it is given and reserves 424px whatever the
+    # diagram, which left a large hole under every small flowchart. Streamlit puts a
+    # `st-key-<key>` class on a keyed container, so the iframe can be sized from CSS.
+    if height is None:
+        height = _estimated_height(diagram)
+
+    key = "kmlmmd" + hashlib.md5(diagram.encode()).hexdigest()[:10]
+    with st.container(key=key):
+        st.markdown(
+            f"<style>.st-key-{key} iframe {{ height: {height}px !important; "
+            f"min-height: 0 !important; }}</style>",
+            unsafe_allow_html=True,
+        )
+        st_mermaid(_MERMAID_THEME + diagram.strip(), height=f"{height}px")
 
 
 def workbook(chapter: int | None = None) -> None:
@@ -761,7 +834,12 @@ _STYLE = """
       box-shadow: inset 2px 0 0 #34D399;
   }
 
-  #MainMenu, footer { visibility: hidden; }
+  /* Streamlit's own chrome. The Deploy button is meaningless here and sat in the
+     top-right of every chapter. */
+  #MainMenu, footer, header [data-testid="stToolbar"],
+  [data-testid="stDecoration"], [data-testid="stStatusWidget"],
+  .stAppDeployButton, [data-testid="stAppDeployButton"] { display: none !important; }
+  header[data-testid="stHeader"] { background: transparent !important; height: 0 !important; }
 </style>
 """
 

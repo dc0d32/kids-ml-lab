@@ -54,14 +54,13 @@ until a new point arrives, then asks the nearby old points to vote.
     )
     lesson.mermaid(
         """
-graph LR
+graph TD
     A[New point] --> B[Measure distances]
     B --> C[Sort nearest first]
     C --> D[Take k neighbours]
     D --> E[Vote]
     E --> F[Prediction]
 """,
-        height=240,
     )
     lesson.look_for("the delayed work. kNN stores old cases, then pulls out the ruler when a new point asks for an answer.")
     lesson.kid_corner("If you move to a new lunch table, you might copy the kids sitting closest to you. No studying. Nearby people vote.")
