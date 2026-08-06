@@ -790,3 +790,35 @@ Everything stays behind `prefers-reduced-motion`, which now also neutralises tra
 timelines rather than only shortening durations.
 
 **641 tests pass.**
+
+---
+
+## 2026-08-05 — The green came back
+
+Owner: *"kids corner and 'Thats it' boxes etc used to be green. Bring that back"*
+
+They were green when the app used Streamlit's own `st.success` / `st.info` on a **light**
+theme. Switching to dark muted those alert colours into near-grey, and the green went with
+them. Nothing in the code changed — the theme underneath it did.
+
+The fix is not to re-tint Streamlit's alerts, because **Streamlit gives no reliable hook for
+styling an alert by kind**. Its DOM exposes `stAlert`, `stAlertContainer` and
+`stAlertContent`, with success/info/warning distinguished only inside baseweb's own
+component. Worth noting: an earlier commit had a rule targeting
+`[data-testid="stAlertContentSuccess"]`, which does not exist — dead CSS that had been
+sitting there doing nothing.
+
+So the boxes are ours now, like `kml-look` and `kml-jargon` already were:
+
+- **green** for good news — the aha moment, the Little Kid Corner, and a correct
+  prediction or workbook answer
+- amber for *Careful*, violet for a surprising reveal, red for a wrong answer
+
+The aha and Little Kid Corner boxes also get a one-shot glow on arrival, which is the
+animation that was previously attached to the selector that never matched anything.
+
+`kidsml/workbook.py` and `kidsml/ui.py` were moved onto the same boxes so feedback looks
+identical whether it comes from a chapter, a workbook or the landing page.
+
+**642 tests pass**, including one asserting the good-news boxes are on the course green and
+have not drifted back onto a Streamlit alert.

@@ -139,6 +139,11 @@ def render(chapter: int) -> None:
         _render_notebook(book)
 
 
+def _box(st, css_class: str, html: str) -> None:
+    """Same coloured boxes the chapters use, so feedback looks consistent everywhere."""
+    st.markdown(f"<div class='kml-box {css_class}'>{html}</div>", unsafe_allow_html=True)
+
+
 def _render_streamlit(book: Workbook) -> None:
     import streamlit as st
 
@@ -167,19 +172,19 @@ def _render_streamlit(book: Workbook) -> None:
         if st.button("Check", key=key + "_go"):
             verdict = q.check(given) if given not in (None, "") else None
             if verdict is True:
-                st.success("✅ That's it.")
+                _box(st, "kml-right", "✅ That's it.")
             elif verdict is False:
-                st.error(f"❌ Not quite. The answer is **{q.answer}**.")
+                _box(st, "kml-wrong", f"❌ Not quite. The answer is <b>{q.answer}</b>.")
             elif q.kind == "open":
-                st.info("💭 Here's one way to think about it:")
+                _box(st, "kml-surprise", "💭 Here's one way to think about it:")
             else:
-                st.warning("Type something in first.")
+                _box(st, "kml-careful", "Type something in first.")
             if q.why:
                 st.markdown(f"> {q.why}")
         st.divider()
 
     if book.kid_corner:
-        st.info(f"🧸 **Little Kid Corner**\n\n{book.kid_corner}")
+        _box(st, "kml-kid", f"<b>🧸 Little Kid Corner</b><br>{book.kid_corner}")
     if book.closing:
         st.markdown(book.closing)
 

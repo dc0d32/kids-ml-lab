@@ -300,9 +300,16 @@ def predict(question: str, choices: list[str], correct: int | None = None,
 
     if correct is not None:
         if chosen == choices[correct]:
-            st.success("Nice — that's what happens.")
+            st.markdown(
+                "<div class='kml-box kml-right'><b>✅ Nice — that's what happens.</b></div>",
+                unsafe_allow_html=True,
+            )
         else:
-            st.info(f"Turns out it's **{choices[correct]}**. Worth being surprised by.")
+            st.markdown(
+                "<div class='kml-box kml-surprise'><b>🙃 Turns out it's "
+                f"{_inline_html(choices[correct])}.</b> Worth being surprised by.</div>",
+                unsafe_allow_html=True,
+            )
     if why:
         st.markdown(f"> {why}")
     return chosen
@@ -317,15 +324,27 @@ def look_for(what: str) -> None:
 
 
 def aha(body: str) -> None:
-    st.success(f"💡 **Aha!**\n\n{body}")
+    """The moment worth stopping on. Green, like the good news it is."""
+    st.markdown(
+        f"<div class='kml-box kml-aha'><b>💡 Aha!</b>{_as_html(body)}</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def careful(body: str) -> None:
-    st.warning(f"⚠️ **Careful**\n\n{body}")
+    """A trap worth pointing out before they fall into it."""
+    st.markdown(
+        f"<div class='kml-box kml-careful'><b>⚠️ Careful</b>{_as_html(body)}</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def kid_corner(body: str) -> None:
-    st.info(f"🧸 **Little Kid Corner**\n\n{body}")
+    """The 🧸 box: the same idea with no algebra in it, for the younger sibling."""
+    st.markdown(
+        f"<div class='kml-box kml-kid'><b>🧸 Little Kid Corner</b>{_as_html(body)}</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def jargon(term: str, plain: str) -> None:
@@ -468,6 +487,35 @@ _STYLE = """
       color: #9FB0C4; font-size: 0.97rem;
   }
 
+  /* Green means "good news, stop and enjoy this": the aha moment, the Little Kid
+     Corner, and a correct prediction. */
+  .kml-aha, .kml-kid, .kml-right {
+      background: linear-gradient(135deg, #10241C 0%, #132E22 100%);
+      border-left: 3px solid #34D399;
+      color: #C9EBDA;
+      box-shadow: 0 0 22px rgba(52, 211, 153, 0.10);
+  }
+  .kml-aha b, .kml-kid b, .kml-right b { color: #6EE7B7; }
+  .kml-careful {
+      background: #241F14; border-left: 3px solid #F59E0B; color: #E8DCC2;
+  }
+  .kml-careful b { color: #FBBF24; }
+  .kml-surprise {
+      background: #221A2E; border-left: 3px solid #A78BFA; color: #DDD3F0;
+  }
+  .kml-wrong {
+      background: #2A1719; border-left: 3px solid #F87171; color: #F3D2D2;
+  }
+  .kml-wrong b { color: #FCA5A5; }
+  .kml-surprise b { color: #C4B5FD; }
+
+  /* The heading line inside a box, then its prose. */
+  .kml-box > b { display: block; margin-bottom: 0.4rem; font-size: 1.02rem; }
+  .kml-box p { margin: 0 0 0.5rem 0; }
+  .kml-box p:last-child { margin-bottom: 0; }
+  .kml-aha, .kml-kid { animation: kmlPop 0.42s cubic-bezier(0.22, 1, 0.36, 1) both,
+                                  kmlGlow 1.8s ease-in-out 1; }
+
   /* --------------------------------------------------------------- figures */
   [data-testid="stImage"] { display: flex; justify-content: center; }
   [data-testid="stImage"] img { background: transparent; border-radius: 8px; }
@@ -602,8 +650,6 @@ _STYLE = """
 
   .kml-box { animation: kmlPop 0.36s cubic-bezier(0.22, 1, 0.36, 1) both; }
   [data-testid="stAlert"] { animation: kmlPop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  /* The aha moment gets a one-shot glow. */
-  [data-testid="stAlertContentSuccess"] { animation: kmlGlow 1.5s ease-in-out 1; }
 
   /* Reveal each block as it scrolls into view, on browsers that support
      scroll-driven animations. Elements already on screen at load land at the end

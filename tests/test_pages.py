@@ -303,3 +303,31 @@ def test_the_stylesheet_centres_and_animates():
     }
     for description, token in required.items():
         assert token in _STYLE, f"stylesheet is missing {description} ({token!r})"
+
+
+def test_the_good_news_boxes_are_green():
+    """The aha moment, the Little Kid Corner and a right answer are green.
+
+    They used to be, then the switch to a dark theme muted Streamlit's own alert colours
+    and the green was lost. These are rendered as our own boxes now rather than as
+    st.success/st.info, because Streamlit does not expose a reliable hook for styling an
+    alert by kind.
+    """
+    from kidsml import lesson
+    from kidsml.lesson import _STYLE
+
+    green_boxes = (".kml-aha", ".kml-kid", ".kml-right")
+    for box in green_boxes:
+        assert box in _STYLE, f"{box} has no styling"
+
+    rule_start = _STYLE.index(".kml-aha, .kml-kid, .kml-right")
+    rule = _STYLE[rule_start : rule_start + 400]
+    assert "#34D399" in rule, "the good-news boxes are not using the course green"
+
+    import inspect
+
+    for func in (lesson.aha, lesson.kid_corner):
+        source = inspect.getsource(func)
+        assert "st.success" not in source and "st.info" not in source, (
+            f"{func.__name__} is back on a Streamlit alert, whose colour we cannot control"
+        )

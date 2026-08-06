@@ -134,17 +134,26 @@ def beat(name: str, subtitle: str = "") -> None:
 
 def little_kid_corner(body: str) -> None:
     """The 🧸 box: the same idea, explained without any algebra."""
-    st.info(f"🧸 **Little Kid Corner**\n\n{body}")
+    st.markdown(
+        f"<div class='kml-box kml-kid'><b>🧸 Little Kid Corner</b><br>{body}</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def aha(body: str) -> None:
     """The moment worth stopping on."""
-    st.success(f"💡 **Aha!**\n\n{body}")
+    st.markdown(
+        f"<div class='kml-box kml-aha'><b>💡 Aha!</b><br>{body}</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def careful(body: str) -> None:
     """A trap worth pointing out before they fall into it."""
-    st.warning(f"⚠️ **Careful**\n\n{body}")
+    st.markdown(
+        f"<div class='kml-box kml-careful'><b>⚠️ Careful</b><br>{body}</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def jargon(term: str, plain: str) -> None:
