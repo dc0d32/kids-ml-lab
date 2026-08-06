@@ -380,13 +380,13 @@ def show(fig, clear: bool = True) -> None:
 # which on a dark page is a bright rectangle in the middle of the reading column.
 _MERMAID_THEME = (
     '%%{init: {"theme":"base","themeVariables":{'
-    '"background":"#0E1117",'
-    '"primaryColor":"#1B212E","primaryTextColor":"#E6EDF3","primaryBorderColor":"#34D399",'
-    '"secondaryColor":"#171B26","secondaryTextColor":"#E6EDF3","secondaryBorderColor":"#3A4152",'
-    '"tertiaryColor":"#171B26","tertiaryTextColor":"#E6EDF3","tertiaryBorderColor":"#3A4152",'
-    '"lineColor":"#8B97AA","textColor":"#D5DEE9",'
-    '"mainBkg":"#1B212E","nodeBorder":"#34D399","clusterBkg":"#171B26",'
-    '"edgeLabelBackground":"#0E1117","fontSize":"15px",'
+    '"background":"#000000",'
+    '"primaryColor":"#131315","primaryTextColor":"#EDEDF0","primaryBorderColor":"#34D399",'
+    '"secondaryColor":"#0B0B0D","secondaryTextColor":"#EDEDF0","secondaryBorderColor":"#2B2B30",'
+    '"tertiaryColor":"#0B0B0D","tertiaryTextColor":"#EDEDF0","tertiaryBorderColor":"#2B2B30",'
+    '"lineColor":"#8E8E97","textColor":"#D6D6DB",'
+    '"mainBkg":"#131315","nodeBorder":"#34D399","clusterBkg":"#0B0B0D",'
+    '"edgeLabelBackground":"#000000","fontSize":"15px",'
     '"fontFamily":"ui-sans-serif, system-ui, sans-serif"'
     "}}}%%\n"
 )
@@ -493,13 +493,13 @@ _STYLE = """
   [data-testid="stMarkdownContainer"] p {
       font-size: clamp(0.98rem, 0.55vw + 0.86rem, 1.09rem);
       line-height: 1.72;
-      color: #D5DEE9;
+      color: #D6D6DB;
       margin-bottom: 0.75rem;
   }
-  [data-testid="stMarkdownContainer"] li { font-size: 1.05rem; line-height: 1.66; color: #D5DEE9; }
-  [data-testid="stMarkdownContainer"] strong { color: #F0F6FC; font-weight: 650; }
+  [data-testid="stMarkdownContainer"] li { font-size: 1.05rem; line-height: 1.66; color: #D6D6DB; }
+  [data-testid="stMarkdownContainer"] strong { color: #FAFAFA; font-weight: 650; }
   [data-testid="stMarkdownContainer"] code {
-      background: #1B212E; color: #9FD8B4; padding: 0.1em 0.36em; border-radius: 4px;
+      background: #131315; color: #9AD6B0; padding: 0.1em 0.36em; border-radius: 4px;
   }
 
   /* ------------------------------------------------------------------ head */
@@ -507,14 +507,14 @@ _STYLE = """
   .kml-chapter-head h1 {
       margin: 0.2rem 0 0.3rem 0;
       font-size: clamp(1.5rem, 3.2vw + 0.7rem, 2.15rem); letter-spacing: -0.02em;
-      color: #F0F6FC; line-height: 1.15;
+      color: #FAFAFA; line-height: 1.15;
   }
   .kml-part {
       text-transform: uppercase; letter-spacing: 0.13em; font-size: 0.7rem;
-      color: #7D8899; font-weight: 700;
+      color: #8A8A93; font-weight: 700;
   }
   .kml-idea {
-      color: #9FB0C4; font-size: clamp(0.95rem, 1vw + 0.72rem, 1.12rem);
+      color: #A0A0A9; font-size: clamp(0.95rem, 1vw + 0.72rem, 1.12rem);
       margin: 0 auto 0.5rem auto; max-width: 60ch;
   }
 
@@ -525,7 +525,7 @@ _STYLE = """
   }
   .kml-beat {
       font-size: 0.72rem; padding: 0.18rem 0.66rem; border-radius: 999px;
-      background: #1B212E; color: #6E7A8C; font-weight: 600;
+      background: #131315; color: #7A7A83; font-weight: 600;
       transition: all 0.35s ease;
   }
   .kml-beat-on {
@@ -538,46 +538,46 @@ _STYLE = """
   .kml-step-title h2 {
       margin: 0.25rem 0 0 0;
       font-size: clamp(1.18rem, 1.9vw + 0.66rem, 1.58rem);
-      letter-spacing: -0.015em; color: #F0F6FC;
+      letter-spacing: -0.015em; color: #FAFAFA;
   }
   .kml-step-count {
-      font-size: 0.7rem; color: #6E7A8C; font-weight: 700;
+      font-size: 0.7rem; color: #7A7A83; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.11em;
   }
 
   /* ------------------------------------------------------------------ boxes */
   .kml-box { padding: 0.85rem 1.1rem; border-radius: 10px; margin: 0.85rem 0; }
   .kml-predict {
-      background: linear-gradient(135deg, #14243B 0%, #16283F 100%);
-      border-left: 3px solid #60A5FA; color: #DCE7F5; font-size: 1.05rem;
+      background: linear-gradient(135deg, #06101B 0%, #08131F 100%);
+      border-left: 3px solid #60A5FA; color: #DCE4EE; font-size: 1.05rem;
   }
   .kml-look {
-      background: #241F14; border-left: 3px solid #D9A441;
-      color: #E8DCC2; font-size: 1.0rem;
+      background: #15110A; border-left: 3px solid #D9A441;
+      color: #E4D9C0; font-size: 1.0rem;
   }
   .kml-jargon {
-      background: #171B26; border-left: 3px solid #3A4152;
-      color: #9FB0C4; font-size: 0.97rem;
+      background: #0B0B0D; border-left: 3px solid #2B2B30;
+      color: #A0A0A9; font-size: 0.97rem;
   }
 
   /* Green means "good news, stop and enjoy this": the aha moment, the Little Kid
      Corner, and a correct prediction. */
   .kml-aha, .kml-kid, .kml-right {
-      background: linear-gradient(135deg, #10241C 0%, #132E22 100%);
+      background: linear-gradient(135deg, #04140D 0%, #071A11 100%);
       border-left: 3px solid #34D399;
-      color: #C9EBDA;
+      color: #C6E8D6;
       box-shadow: 0 0 22px rgba(52, 211, 153, 0.10);
   }
   .kml-aha b, .kml-kid b, .kml-right b { color: #6EE7B7; }
   .kml-careful {
-      background: #241F14; border-left: 3px solid #F59E0B; color: #E8DCC2;
+      background: #15110A; border-left: 3px solid #F59E0B; color: #E4D9C0;
   }
   .kml-careful b { color: #FBBF24; }
   .kml-surprise {
-      background: #221A2E; border-left: 3px solid #A78BFA; color: #DDD3F0;
+      background: #110B18; border-left: 3px solid #A78BFA; color: #DBD2EC;
   }
   .kml-wrong {
-      background: #2A1719; border-left: 3px solid #F87171; color: #F3D2D2;
+      background: #170809; border-left: 3px solid #F87171; color: #F0D0D0;
   }
   .kml-wrong b { color: #FCA5A5; }
   .kml-surprise b { color: #C4B5FD; }
@@ -604,13 +604,13 @@ _STYLE = """
   [data-testid="stImage"] img { background: transparent; border-radius: 8px; }
   [data-testid="stDataFrame"], [data-testid="stTable"] { margin: 0 auto; }
   [data-testid="stMetric"] {
-      background: #171B26; border: 1px solid #262C3A; border-radius: 10px;
+      background: #0B0B0D; border: 1px solid #1E1E21; border-radius: 10px;
       padding: 0.65rem 0.9rem; text-align: center;
   }
 
   /* ------------------------------------------------------------------- nav */
   .kml-nav-space {
-      margin-top: 2rem; border-top: 1px solid #262C3A; padding-top: 0.6rem;
+      margin-top: 2rem; border-top: 1px solid #1E1E21; padding-top: 0.6rem;
   }
   /* Button labels were sitting high because the label is a block inside a taller
      button box. Make the button a centring flex container and the label a plain
@@ -656,7 +656,7 @@ _STYLE = """
   [data-testid="stRadio"] label p, [data-testid="stCheckbox"] label p {
       margin: 0 !important; line-height: 1.3 !important;
   }
-  [data-testid="stRadio"] label:hover { color: #F0F6FC; transform: translateX(2px); }
+  [data-testid="stRadio"] label:hover { color: #FAFAFA; transform: translateX(2px); }
 
   /* List items: the marker and the first line should share a baseline. */
   [data-testid="stMarkdownContainer"] ul,
@@ -692,7 +692,7 @@ _STYLE = """
   }
   [data-testid="stMetric"]:hover { transform: translateY(-2px); border-color: #34D399; }
   .kml-beat { cursor: default; }
-  .kml-beat:hover { color: #B8C4D4; }
+  .kml-beat:hover { color: #C0C0C7; }
   .kml-box { transition: transform 0.18s ease, box-shadow 0.18s ease; }
   .kml-box:hover { transform: translateX(2px); }
   [data-testid="stExpander"] summary { transition: color 0.16s ease; }
@@ -802,6 +802,22 @@ _STYLE = """
      pushes a horizontal scrollbar onto the whole page. */
   [data-testid="stHorizontalBlock"] > div { min-width: 0; }
 
+  /* AMOLED means AMOLED everywhere. Streamlit lifts the sidebar to its secondary
+     colour by default, which leaves a visible grey slab beside a black page. */
+  [data-testid="stSidebar"], [data-testid="stSidebarContent"] {
+      background: #000000 !important;
+      border-right: 1px solid #161619;
+  }
+  [data-testid="stSidebarHeader"], [data-testid="stSidebarUserContent"] {
+      background: transparent !important;
+  }
+  .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+      background: #000000 !important;
+  }
+
+  /* Diagrams sit in the middle of the reading column like everything else. */
+  [data-testid="stCustomComponentV1"] { margin: 0 auto; display: block; }
+
   /* ------------------------------------------------------- the chapter list */
   /* Nothing in the sidebar animates. It is furniture, not content, and a nav that
      re-lays-itself-out on every click is maddening. */
@@ -827,10 +843,10 @@ _STYLE = """
       margin: 0 !important; line-height: 1.2 !important; font-size: 0.9rem;
   }
   [data-testid="stSidebarNav"] a:hover {
-      background: #1B212E; color: #F0F6FC; padding-left: 0.85rem !important;
+      background: #131315; color: #FAFAFA; padding-left: 0.85rem !important;
   }
   [data-testid="stSidebarNav"] a[aria-current="page"] {
-      background: #16302A; color: #6EE7B7;
+      background: #06150F; color: #6EE7B7;
       box-shadow: inset 2px 0 0 #34D399;
   }
 

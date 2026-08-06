@@ -375,3 +375,26 @@ def test_the_good_news_boxes_are_green():
         assert "st.success" not in source and "st.info" not in source, (
             f"{func.__name__} is back on a Streamlit alert, whose colour we cannot control"
         )
+
+
+def test_the_theme_is_amoled_black():
+    """True black, not a dark blue-grey.
+
+    On an OLED screen a black pixel is an off pixel, so the page disappears and only the
+    content is lit. It is also the least tiring thing to read at night, which is when this
+    gets used.
+    """
+    from kidsml.lesson import _STYLE
+    from kidsml.plots import BACKGROUND
+
+    assert BACKGROUND == "#000000", f"the plot background drifted off black: {BACKGROUND}"
+
+    config = (ROOT / ".streamlit" / "config.toml").read_text(encoding="utf-8")
+    assert 'backgroundColor = "#000000"' in config, "the Streamlit theme is not black"
+
+    for surface in ('[data-testid="stSidebar"]', ".stApp"):
+        assert surface in _STYLE, f"{surface} is not being forced to black"
+
+    # The old blue-grey palette, which should be gone everywhere.
+    for stale in ("#0E1117", "#171B26", "#1B212E", "#2A3040", "#3A4152"):
+        assert stale not in _STYLE, f"{stale} is a leftover from the blue-grey theme"

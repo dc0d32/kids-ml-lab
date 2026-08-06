@@ -971,3 +971,35 @@ into the suite — it needs Node and a browser, and this project runs from one `
 but it should be the first thing reached for whenever something looks wrong.
 
 **750 tests pass.**
+
+---
+
+## 2026-08-05 — AMOLED black
+
+Owner: *"instead of bluish gray, can we have amoled black theme across the board?"*
+
+The dark theme had been a blue-grey (`#0E1117` page, `#171B26` panels) — Streamlit's own
+dark palette. Now true black: on an OLED screen a black pixel is an off pixel, so the page
+disappears and only the content is lit, and it is the least tiring thing to read at night,
+which is when this gets used.
+
+Done as one palette map applied across `kidsml/plots.py`, `kidsml/lesson.py` and
+`.streamlit/config.toml`, so there is no chance of half the app moving and half staying:
+
+- page `#000000`, panels `#0B0B0D`, raised surfaces `#131315`
+- lines and dividers neutral grey rather than blue-tinted
+- the tinted boxes keep their hue and lose almost all their lightness — good news green sits
+  on `#04140D` now instead of `#10241C`
+
+`.stApp` and the sidebar are forced to black explicitly, because Streamlit paints the
+sidebar with its *secondary* background colour, which left a visible grey slab beside a
+black page. The sidebar keeps a one-pixel divider so it still reads as a separate column.
+
+Checked in the browser rather than assumed: `body` computes to `rgb(0, 0, 0)` on every page,
+and the plots, the confusion grid, the digit-number grid and the mermaid diagrams were all
+re-rendered and eyeballed against the new background.
+
+A test asserts the plot background, the Streamlit config and the forced surfaces are black,
+and fails if any of the five old blue-grey hexes reappears in the stylesheet.
+
+**750 tests pass.**

@@ -1,11 +1,11 @@
-# Dark by default. The kids will be reading this at night, and a white page at
-# full brightness is the fastest way to end a session early.
+# AMOLED: true black, so the page disappears on an OLED screen and only the content
+# is lit. Also the least tiring thing to read at night, which is when this gets used.
 [theme]
 base = "dark"
 primaryColor = "#34D399"
-backgroundColor = "#0E1117"
-secondaryBackgroundColor = "#171B26"
-textColor = "#E6EDF3"
+backgroundColor = "#000000"
+secondaryBackgroundColor = "#0B0B0D"
+textColor = "#EDEDF0"
 font = "sans serif"
 
 [browser]

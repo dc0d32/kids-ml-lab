@@ -18,21 +18,21 @@ from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 COOL = "#60A5FA"  # blue  — class 0
 WARM = "#F87171"  # red   — class 1
 ACCENT = "#34D399"  # green — the model's own line / prediction
-MUTED = "#94A3B8"
+MUTED = "#8E8E97"
 
 # The page background, so figures sit on the page instead of glowing on top of it.
-BACKGROUND = "#0E1117"
-PANEL = "#171B26"
-INK = "#E6EDF3"
+BACKGROUND = "#000000"
+PANEL = "#0B0B0D"
+INK = "#EDEDF0"
 
 POINT_CMAP = ListedColormap([COOL, WARM])
-REGION_CMAP = LinearSegmentedColormap.from_list("kidsml", ["#16304F", "#171B26", "#4A1D22"])
+REGION_CMAP = LinearSegmentedColormap.from_list("kidsml", ["#16304F", "#0B0B0D", "#4A1D22"])
 
 # Ramps that start at the panel colour instead of at white. Matplotlib's built-in
 # sequential maps (Blues, gray) bottom out at pure white, which on a dark page is a
 # rectangle of glare.
-COUNT_CMAP = LinearSegmentedColormap.from_list("kidsml_count", ["#171B26", "#1E3A5F", "#3B82F6"])
-PIXEL_CMAP = LinearSegmentedColormap.from_list("kidsml_pixel", ["#0E1117", "#7C8798", "#D5DEE9"])
+COUNT_CMAP = LinearSegmentedColormap.from_list("kidsml_count", ["#0B0B0D", "#1E3A5F", "#3B82F6"])
+PIXEL_CMAP = LinearSegmentedColormap.from_list("kidsml_pixel", ["#000000", "#7C8798", "#D6D6DB"])
 
 CLASS_NAMES = ("blue", "red")
 
@@ -53,12 +53,12 @@ def use_house_style() -> None:
             "figure.facecolor": BACKGROUND,
             "savefig.facecolor": BACKGROUND,
             "axes.facecolor": PANEL,
-            "axes.edgecolor": "#3A4152",
+            "axes.edgecolor": "#2B2B30",
             "axes.labelcolor": INK,
             "text.color": INK,
-            "xtick.color": "#9AA4B8",
-            "ytick.color": "#9AA4B8",
-            "grid.color": "#2A3040",
+            "xtick.color": "#9A9AA3",
+            "ytick.color": "#9A9AA3",
+            "grid.color": "#1A1A1D",
             "xtick.labelsize": 7,
             "ytick.labelsize": 7,
             "axes.grid": True,
@@ -116,12 +116,12 @@ def _setup_plotly() -> None:
             plot_bgcolor=PANEL,
             font=dict(color=INK, size=12),
             colorway=[COOL, WARM, ACCENT, "#F59E0B", "#A78BFA"],
-            xaxis=dict(gridcolor="#2A3040", zerolinecolor="#3A4152"),
-            yaxis=dict(gridcolor="#2A3040", zerolinecolor="#3A4152"),
+            xaxis=dict(gridcolor="#1A1A1D", zerolinecolor="#2B2B30"),
+            yaxis=dict(gridcolor="#1A1A1D", zerolinecolor="#2B2B30"),
             scene=dict(
-                xaxis=dict(backgroundcolor=PANEL, gridcolor="#2A3040", color=INK),
-                yaxis=dict(backgroundcolor=PANEL, gridcolor="#2A3040", color=INK),
-                zaxis=dict(backgroundcolor=PANEL, gridcolor="#2A3040", color=INK),
+                xaxis=dict(backgroundcolor=PANEL, gridcolor="#1A1A1D", color=INK),
+                yaxis=dict(backgroundcolor=PANEL, gridcolor="#1A1A1D", color=INK),
+                zaxis=dict(backgroundcolor=PANEL, gridcolor="#1A1A1D", color=INK),
             ),
         )
     )
