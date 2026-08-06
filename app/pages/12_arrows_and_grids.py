@@ -153,17 +153,24 @@ def basis_figure(M):
 
 
 def shadow_plot(points3d, shadow, spread, best):
+    """The 3D cloud beside the flat shadow it casts.
+
+    Both panels colour a point by its 3D x position, so the same point can be found in
+    both: a dot that is yellow in the cloud is yellow in the shadow. That is what makes it
+    possible to see *which* points landed on top of each other when the shadow goes skinny.
+    """
     fig = make_subplots(
         rows=1,
         cols=2,
         specs=[[{"type": "scene"}, {"type": "xy"}]],
-        subplot_titles=("3D cloud", "2D shadow"),
-        horizontal_spacing=0.06,
+        subplot_titles=("the cloud, floating in 3D", "its flat shadow"),
+        horizontal_spacing=0.08,
     )
     fig.add_trace(
         go.Scatter3d(
             x=points3d[:, 0], y=points3d[:, 1], z=points3d[:, 2],
-            mode="markers", marker=dict(size=3, color=points3d[:, 0], colorscale="Viridis", opacity=0.75),
+            mode="markers",
+            marker=dict(size=3, color=points3d[:, 0], colorscale="Viridis", opacity=0.85),
             showlegend=False,
         ),
         row=1, col=1,
@@ -171,18 +178,43 @@ def shadow_plot(points3d, shadow, spread, best):
     fig.add_trace(
         go.Scatter(
             x=shadow[:, 0], y=shadow[:, 1], mode="markers",
-            marker=dict(size=6, color=shadow[:, 0], colorscale="Viridis", opacity=0.75),
+            marker=dict(size=7, color=points3d[:, 0], colorscale="Viridis", opacity=0.85),
             showlegend=False,
         ),
         row=1, col=2,
     )
-    fig.update_xaxes(title_text="shadow width", scaleanchor="y", scaleratio=1, row=1, col=2)
-    fig.update_yaxes(title_text="shadow height", row=1, col=2)
-    fig.update_layout(
-        title=f"Spread kept: {spread:.2f} out of best {best:.2f}",
-        scene=dict(xaxis_title="3D x (left-right)", yaxis_title="3D y (front-back)", zaxis_title="3D z (up-down)"),
+
+    # The shadow is drawn on a fixed square window rather than one that resizes with the
+    # data. A window that auto-fits would zoom in as the shadow shrank, so a smear would
+    # look exactly as wide as a fat spread — hiding the one thing this step is about.
+    # Wide enough that no shadow is ever clipped: sweeping both sliders over their whole
+    # range, the furthest a point ever lands is 8.87 from the middle.
+    reach = 9.2
+    axis_style = dict(
+        gridcolor=GRIDLINE, zerolinecolor=EDGE, linecolor=EDGE,
+        showline=True, mirror=True, zeroline=True,
     )
-    return style_plotly(fig, height=430)
+    fig.update_xaxes(
+        title_text="shadow width", range=[-reach, reach],
+        scaleanchor="y", scaleratio=1, row=1, col=2, **axis_style,
+    )
+    fig.update_yaxes(title_text="shadow height", range=[-reach, reach], row=1, col=2, **axis_style)
+    fig.update_layout(
+        # No figure title: the two metrics directly under the chart already say the
+        # numbers, and a title here collided with the subplot headings.
+        # Room at the top for the two subplot headings to clear plotly's hover toolbar.
+        margin=dict(l=6, r=6, t=62, b=6),
+        scene=dict(
+            xaxis_title="x (left-right)",
+            yaxis_title="y (front-back)",
+            zaxis_title="z (up-down)",
+            # True proportions, not a filled cube. This cloud really is a flat pancake,
+            # and that is the whole reason a well-aimed shadow can keep almost all of it.
+            aspectmode="data",
+            camera=dict(eye=dict(x=1.35, y=1.35, z=0.85)),
+        ),
+    )
+    return style_plotly(fig, height=460)
 
 
 @lesson.step("A matrix is not a box", beat="hook")
@@ -401,17 +433,30 @@ Some angles give a fat, spread-out shadow. Others squash the cloud into a skinny
 A wide shadow keeps the differences between points. A skinny one throws them away.
 """
     )
-    knobs, picture = lesson.controls()
-    with knobs:
+    # Full width, not the usual knobs-beside-picture split. This is two charts in one
+    # figure, and squeezed into two thirds of the column each one ended up smaller than a
+    # postcard — the 3D cloud in particular was unreadable.
+    left, right = st.columns(2, gap="large")
+    with left:
         angle_a = st.slider("spin the lamp", -180, 180, 20, 5, key="ch12_shadow_a")
+    with right:
         angle_b = st.slider("tilt the lamp", -80, 80, 25, 5, key="ch12_shadow_b")
     points = cloud3d()
     shadow = la.shadow_on_plane(points, angle_a, angle_b)
     spread = la.spread_of(shadow)
     best = best_shadow_score()
-    with picture:
-        st.plotly_chart(shadow_plot(points, shadow, spread, best), width="stretch")
-        lesson.look_for("whether the 2D shadow stays wide or becomes a skinny smear.")
+    # No hover toolbar: it sat on top of the right-hand heading, and its buttons are
+    # clutter here. Dragging still spins the 3D cloud, which is the only control needed.
+    st.plotly_chart(
+        shadow_plot(points, shadow, spread, best),
+        width="stretch",
+        config={"displayModeBar": False},
+    )
+    lesson.look_for(
+        "the colours. Each dot keeps its colour in both pictures, so when the shadow goes "
+        "skinny you can watch two differently-coloured dots land on the same spot — that is "
+        "the moment the flattening threw something away."
+    )
     a, b = st.columns(2)
     a.metric("your spread kept", f"{spread:.2f}")
     b.metric("best possible", f"{best:.2f}")

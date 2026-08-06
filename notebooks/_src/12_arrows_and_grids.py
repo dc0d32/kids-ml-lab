@@ -312,14 +312,29 @@ best = la.best_shadow_spread(points3d)
 def shadow_widget(angle_a, angle_b):
     shadow = la.shadow_on_plane(points3d, angle_a, angle_b)
     spread = la.spread_of(shadow)
-    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "scene"}, {"type": "xy"}]], subplot_titles=("3D cloud", "2D shadow"))
-    fig.add_trace(go.Scatter3d(x=points3d[:, 0], y=points3d[:, 1], z=points3d[:, 2], mode="markers", marker=dict(size=3, opacity=0.75), showlegend=False), row=1, col=1)
-    fig.add_trace(go.Scatter(x=shadow[:, 0], y=shadow[:, 1], mode="markers", marker=dict(size=6, opacity=0.75), showlegend=False), row=1, col=2)
-    fig.update_xaxes(title_text="shadow width", scaleanchor="y", scaleratio=1, row=1, col=2)
-    fig.update_yaxes(title_text="shadow height", row=1, col=2)
-    fig.update_layout(scene=dict(xaxis_title="3D x (left-right)", yaxis_title="3D y (front-back)", zaxis_title="3D z (up-down)"))
-    fig.update_layout(title=f"Your spread {spread:.2f}; best {best:.2f}")
-    style_plotly(fig, height=420).show()
+    fig = make_subplots(
+        rows=1, cols=2, specs=[[{"type": "scene"}, {"type": "xy"}]],
+        subplot_titles=("the cloud, floating in 3D", "its flat shadow"), horizontal_spacing=0.08,
+    )
+    # Colour by 3D x in both panels, so the same dot can be found in each. When the shadow
+    # goes skinny you can watch two differently-coloured dots land on the same spot.
+    colour = dict(color=points3d[:, 0], colorscale="Viridis", opacity=0.85)
+    fig.add_trace(go.Scatter3d(x=points3d[:, 0], y=points3d[:, 1], z=points3d[:, 2], mode="markers", marker=dict(size=3, **colour), showlegend=False), row=1, col=1)
+    fig.add_trace(go.Scatter(x=shadow[:, 0], y=shadow[:, 1], mode="markers", marker=dict(size=7, **colour), showlegend=False), row=1, col=2)
+    # A fixed square window. One that resized with the data would zoom in as the shadow
+    # shrank, so a smear would look as wide as a fat spread — hiding the whole point.
+    # Wide enough that no shadow is ever clipped: sweeping both sliders over their whole
+    # range, the furthest a point ever lands is 8.87 from the middle.
+    reach = 9.2
+    axis_style = dict(gridcolor=GRIDLINE, zerolinecolor=EDGE, linecolor=EDGE, showline=True, mirror=True)
+    fig.update_xaxes(title_text="shadow width", range=[-reach, reach], scaleanchor="y", scaleratio=1, row=1, col=2, **axis_style)
+    fig.update_yaxes(title_text="shadow height", range=[-reach, reach], row=1, col=2, **axis_style)
+    fig.update_layout(
+        margin=dict(l=6, r=6, t=62, b=6),
+        scene=dict(xaxis_title="x (left-right)", yaxis_title="y (front-back)", zaxis_title="z (up-down)", aspectmode="data", camera=dict(eye=dict(x=1.35, y=1.35, z=0.85))),
+    )
+    print(f"spread kept {spread:.2f} out of best {best:.2f}")
+    style_plotly(fig, height=460).show()
 
 interact(
     shadow_widget,
