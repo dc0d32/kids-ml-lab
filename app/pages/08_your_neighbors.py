@@ -242,15 +242,35 @@ model.predict(new_penguins)
 """,
         language="python",
     )
+    lesson.look_for("the scaler sitting in front of the model. The ruler-fixing happens first, every single time, including on birds the model has never seen.")
+
+
+@lesson.step("Same idea, much longer rows", beat="forreal")
+def _():
     lesson.say(
-        "And one last surprise. A scanned digit is a small grid of brightness numbers: an "
-        "8×8 square is 64 numbers, which you can lay out as one long row exactly like the "
-        "four penguin measurements. (Chapter 18 does pictures properly.) Point this same "
-        "never-trains algorithm at 1797 of those rows and it does this:"
+        """
+Every row you have fed this thing so far has been short. Two numbers for the toy points,
+four measurements for a penguin. Which raises a fair question: does anything break if a
+row gets *long*?
+"""
     )
-    st.metric("8x8 digit accuracy with k = 3", f"{cached_digits(3):.1%}")
-    lesson.look_for("the scaler in the pipeline. The ruler-fixing step happens before the neighbour vote.")
-    lesson.aha("The algorithm sounds tiny, but on small images it hits hard because similar-looking digits often sit near each other in pixel-number space!")
+    lesson.say(
+        """
+Here is a row that is not a bird. Scan a handwritten digit into an 8-by-8 grid and write
+down how bright each little square is. That is 64 numbers, laid out in one long row —
+exactly the same shape of thing as the four penguin measurements, just more of them.
+
+Nothing about the algorithm changes. It still measures the distance from your new row to
+every stored row, keeps the closest three, and lets them vote.
+"""
+    )
+    st.metric("Handwriting read correctly, k = 3", f"{cached_digits(3):.1%}")
+    lesson.aha(
+        "A model that does no training at all reads handwriting this well. Two digits that "
+        "look alike have similar brightness numbers in the same places, so their rows land "
+        "near each other — and near is the only thing this algorithm has ever needed."
+    )
+    lesson.say("Chapter 18 takes pictures seriously. This is just a taste of why it works.")
 
 
 @lesson.step("Check yourself", beat="challenge")
