@@ -1212,3 +1212,25 @@ without a break, an 8×8 handwritten-digit score. Its `look_for` pointed at the 
 its `aha` talked about digits. Split into two steps: the pipeline stays with the penguins,
 and the digit result gets its own screen with the setup question that earns it ("does
 anything break if a row gets *long*?").
+
+---
+
+## 2026-08-06 — direnv, and a lock file to go with the flake
+
+`flake.nix` had been here since early on, but there was never a committed `.envrc` — so
+`nix develop` had to be typed by hand every time, and any local `.envrc` a contributor made
+was theirs alone and could vanish with a stray clean.
+
+Added:
+
+- **`.envrc`** — `use flake`, plus `watch_file` on the flake and its lock so the shell
+  reloads when either changes. `use flake` is built into direnv 2.30+, so nix-direnv is
+  optional; it only makes repeat entries faster. Requires `direnv allow` once per clone.
+- **`flake.lock`** — the flake tracked `nixos-unstable` unpinned, which meant two people
+  (or the same person a week apart) could get different toolchains from the same repo. Now
+  pinned. First shell entry builds in a few minutes; warm entries are ~0.1s.
+- `.direnv/` and `.envrc.local` are gitignored. The `.envrc` itself is committed, which is
+  the point — the setup travels with the repo.
+
+None of it is required. `./run.sh app` still works with nothing but `uv`, and that stays
+true: the whole suite passes inside the direnv shell and outside it.

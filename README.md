@@ -44,6 +44,10 @@ Everything runs on the CPU — there is no GPU anywhere in this course, and noth
 an account, a key, or an internet connection (except a one-time 30 MB dataset in
 Chapter 18).
 
+**Using nix?** There's a `flake.nix` devShell (`nix develop`), pinned by `flake.lock`. With
+[direnv](https://direnv.net) it loads itself when you `cd` in — run `direnv allow` once per
+clone and `uv` is on your path from then on. Neither is required.
+
 ---
 
 ## How every chapter works

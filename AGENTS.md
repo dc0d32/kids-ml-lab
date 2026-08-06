@@ -288,11 +288,24 @@ export LD_LIBRARY_PATH=$(cat .nix-libs)     # .nix-libs is created by run.sh on 
 ./run.sh lab          # JupyterLab
 ./run.sh test         # all tests
 ./run.sh build        # regenerate every notebook from notebooks/_src/
-./run.sh build 13 14  # regenerate only chapters 14 and 14
+./run.sh build 13 14  # regenerate only chapters 13 and 14
 ```
 
 There is also a `flake.nix` devShell (`nix develop`) that sets the same paths
-declaratively.
+declaratively, pinned by a committed `flake.lock` so everyone gets the same `uv`.
+
+With [direnv](https://direnv.net), the shell loads itself when you `cd` in:
+
+```bash
+direnv allow      # once, per clone
+```
+
+After that `uv`, `git` and the native libs the Python wheels link against are on the path
+automatically, and go away again when you leave. `use flake` is built into direnv 2.30+,
+so nix-direnv is optional (it only makes repeat entries faster). The first entry builds
+the shell and takes a few minutes; every one after that is instant.
+
+None of this is required — `./run.sh app` works without nix or direnv.
 
 **Windows** uses `run.ps1`, which takes the same subcommands. Both launchers set
 `PYTHONUTF8=1`, because the chapters are full of emoji and the Windows console default

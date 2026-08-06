@@ -31,3 +31,7 @@ data/torchvision/
 # Playwright, used only for eyeballing pages in a real browser (see AGENTS.md)
 node_modules/
 package-lock.json
+
+# direnv's cached dev shell (the .envrc itself is committed)
+.direnv/
+.envrc.local
