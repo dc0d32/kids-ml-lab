@@ -856,3 +856,38 @@ Chapter URLs are unchanged. Adding a chapter to `CHAPTERS` still adds it to the 
 own.
 
 **644 tests pass.**
+
+---
+
+## 2026-08-05 — A mermaid diagram that would not parse
+
+Owner: *"the one neuron page says there's syntax error in mermaid"*
+
+Chapter 13 had this edge label:
+
+```
+O -->|2(out-y) = -1| L[loss]
+```
+
+Mermaid reads an opening bracket inside an **unquoted** label as the start of a node shape,
+so the label ended at `2` and the rest was nonsense to the parser. Quoting it fixes it:
+`O -->|"2(out-y) = -1"| L[loss]`.
+
+**Why no test caught it.** Mermaid renders in the browser. A syntax error is a red box on
+the page and produces nothing at all on the Python side — the same blind spot as the plotly
+white backgrounds and the one-word-per-line wrapping. Everything about how this app *looks*
+is invisible to the suite.
+
+So the diagrams were checked properly, once, with the real parser: `npm install mermaid
+jsdom`, then `mermaid.parse()` over every diagram extracted from the pages and notebook
+sources, with a jsdom window because mermaid pulls in DOMPurify. **52 diagrams, 2 broken**
+(the page and its notebook), both the same label.
+
+That Node check is not wired into the suite — adding a JavaScript toolchain to a project
+whose whole point is that it runs from one `uv` command is a bad trade. Instead
+`tests/test_diagrams.py` lints for the mistakes that actually break diagrams: unquoted
+brackets inside a label, and a missing diagram type on the first line. The command to run
+the full parser check is recorded at the bottom of that file for the next time a diagram
+misbehaves.
+
+**749 tests pass.**

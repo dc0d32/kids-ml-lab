@@ -86,7 +86,7 @@ rows
 # graph LR
 #     W[w1] -->|x1 = 1| Z[z]
 #     Z -->|slope 0.25| O[output]
-#     O -->|2(out-y) = -1| L[loss]
+#     O -->|"2(out-y) = -1"| L[loss]
 # ```
 #
 # When one number changes another number, and that one changes a third, multiply the little
